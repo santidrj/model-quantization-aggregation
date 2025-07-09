@@ -1,0 +1,56 @@
+{
+    "overall": {
+        "inference_energy_consumption": {
+            "improvement": 50.463,
+            "std": 2.296,
+            "iqr": 3.247,
+            "discount": 0.006,
+            "belief": 0.184,
+            "intensity": "strongly positive"
+        },
+        "inference_latency": {
+            "improvement": 80.436,
+            "std": 2.1,
+            "iqr": 2.97,
+            "discount": 0.004,
+            "belief": 0.184,
+            "intensity": "strongly positive"
+        }
+    },
+    "w-int1, a-fp32": {
+        "inference_energy_consumption": {
+            "improvement": 52.086,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.185,
+            "intensity": "strongly positive"
+        },
+        "inference_latency": {
+            "improvement": 81.921,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.185,
+            "intensity": "strongly positive"
+        }
+    },
+    "w-int4, a-fp16": {
+        "inference_energy_consumption": {
+            "improvement": 48.84,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.185,
+            "intensity": "positive - strongly positive"
+        },
+        "inference_latency": {
+            "improvement": 78.951,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.185,
+            "intensity": "strongly positive"
+        }
+    }
+}

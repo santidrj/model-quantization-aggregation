@@ -1,0 +1,63 @@
+{
+  "id": "S5",
+  "key": "gonzalezImpactMLOptimization2024",
+  "title": "Impact of ML Optimization Tactics on Greener Pre-Trained ML Models",
+  "study_type": "controlled experiment",
+  "data_quality": "precise",
+  "energy_measurement": {
+    "measurement_method": ["software-based", "hardware-based"],
+    "software_tools": ["nvidia-smi", "EnergyBridge"],
+    "repetitions": 10
+  },
+  "quantization_schema": {
+    "baseline_precision": "fp32",
+    "target_precision": ["int8"],
+    "quantization_targets": ["w8a8"],
+    "quantization_method": "dynamic quantization",
+    "frameworks": ["PyTorch"]
+  },
+  "hardware": [{
+    "device": {
+      "CPU": "AMD Ryzen 9 7950X",
+      "GPU": "NVIDIA RTX 4090",
+      "RAM": "32 GB"
+    }
+  }],
+  "models": [
+    "facebook/deit-tiny-distilled-patch16-224",
+    "google/vit-large-patch16-384",
+    "gchabcou/my_awesome_food_model",
+    "jennyc/my_awesome_food_model",
+    "sshreshtha/vit-base-patch32-224-in21k-finetuned-eurosat",
+    "eslamxm/vit-base-food101",
+    "yujiepan/internal.swin-base-food101-int8-structured38.63",
+    "AtomGradient/food_vision_inner_lab",
+    "nvidia/mit-b0",
+    "wang1215/my_awesome_food_model",
+    "sail/poolformer_s36",
+    "sayakpaul/vit-base-patch16-224-in21k-finetuned-lora-food101",
+    "Neruoy/swin-finetuned-food101-e3",
+    "nateraw/food",
+    "facebook/convnextv2-tiny-22k-384",
+    "PedroSampaio/vit-base-patch16-224-food101-16-7",
+    "pankajgharai/my_awesome_food_model",
+    "yujiepan/internal.swin-base-food101-int8-structured38.01",
+    "Neruoy/swin-finetuned-food101",
+    "lu5/swinv2-small-patch4-window8-256-finetuned-eurosat",
+    "kwc20140710/my_awesome_food_model",
+    "Charlottebenett/my_awesome_food_model",
+    "skylord/swin-finetuned-food101",
+    "juns/my_awesome_food_model",
+    "facebook/convnextv2-large-22k-224",
+    "RickyIG/image_classification",
+    "william7642/my_awesome_food_model",
+    "jjluo/my_awesome_food_model"
+  ],
+  "datasets": [
+    "imagenet",
+    "imagenet_1k",
+    "imagenet_21k",
+    "imagenet_22k",
+    "food101"
+  ]
+}

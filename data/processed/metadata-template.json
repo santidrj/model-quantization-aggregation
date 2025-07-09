@@ -1,0 +1,33 @@
+{
+  "id": "your_experiment_id",
+  "title": "Your experiment title",
+  "study_type": "your_study_type",
+  "data_quality": "your_data_quality",
+  "energy_measurement": {
+    "measurement_method": ["your_energy_measurement_type"],
+    "software_tools": ["your_software_tool_1", "your_software_tool_2"],
+    "repetitions": 1
+  },
+  "quantization_schema": {
+    "baseline_precision": "your_baseline_precision",
+    "target_precision": ["your_target_precision_1", "your_target_precision_2"],
+    "quantization_targets": ["your_target_value_1", "your_target_value_2"],
+    "quantization_method": "your_quantization_type",
+    "frameworks": ["your_frameworks"],
+    "formats": ["your_format_1", "your_format_2"]
+  },
+  "hardware": [
+    {
+      "device": {
+        "model": "your_device_model",
+        "board": "your_board",
+        "CPU": "your_CPU",
+        "GPU": "your_GPU",
+        "RAM": "your_RAM",
+        "Flash": "your_Flash"
+      }
+    }
+  ],
+  "models": ["your_model_1"],
+  "datasets": ["your_dataset_1"]
+}

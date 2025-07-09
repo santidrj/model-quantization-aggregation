@@ -1,0 +1,30 @@
+{
+  "id": "S1",
+  "key": "paulEnergyEfficientRespiratoryAnomaly2022",
+  "title": "Energy-Efficient Respiratory Anomaly Detection in Premature Newborn Infants",
+  "study_type": "controlled experiment",
+  "data_quality": "comparative",
+  "energy_measurement": {
+    "measurement_method": ["analytical"],
+    "software_tools": ["QTools"],
+    "repetitions": 1
+  },
+  "quantization_schema": {
+    "baseline_precision": "fp64",
+    "target_precision": ["q0.2", "q0.4", "q0.8", "q0.16", "q0.32"],
+    "quantization_targets": ["w2a2", "w4a4", "w8a8", "w16a16", "w32a32"],
+    "quantization_method": "quantization-aware training",
+    "frameworks": ["QKeras"]
+  },
+  "hardware": [
+    {
+      "device": {
+        "CPU": "AMD Threadripper 3960X",
+        "GPU": "2x NVIDIA RTX 3090",
+        "RAM": "128 GB"
+      }
+    }
+  ],
+  "models": ["1DCNN"],
+  "datasets": ["SimBaby"]
+}

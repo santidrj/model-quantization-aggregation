@@ -1,0 +1,5 @@
+*.csv
+*.xlsx
+
+!paper-data.csv
+!geensEnergyCostModelling2024/*

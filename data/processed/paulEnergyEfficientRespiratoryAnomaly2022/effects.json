@@ -1,0 +1,158 @@
+{
+    "overall": {
+        "accuracy": {
+            "improvement": -4.377,
+            "std": 4.037,
+            "iqr": 7.792,
+            "discount": 0.163,
+            "belief": 0.312,
+            "intensity": "weakly negative - indiferent"
+        },
+        "inference_energy_consumption": {
+            "improvement": 66.722,
+            "std": 31.83,
+            "iqr": 30.938,
+            "discount": 0.045,
+            "belief": 0.357,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 80.625,
+            "std": 19.06,
+            "iqr": 18.75,
+            "discount": 0.023,
+            "belief": 0.365,
+            "intensity": "strongly positive"
+        }
+    },
+    "q0.16": {
+        "accuracy": {
+            "improvement": -0.618,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "indiferent"
+        },
+        "inference_energy_consumption": {
+            "improvement": 57.181,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 75.0,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "strongly positive"
+        }
+    },
+    "q0.2": {
+        "accuracy": {
+            "improvement": -8.461,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "weakly negative"
+        },
+        "inference_energy_consumption": {
+            "improvement": 94.734,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 96.875,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "strongly positive"
+        }
+    },
+    "q0.32": {
+        "accuracy": {
+            "improvement": -0.124,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "indiferent"
+        },
+        "inference_energy_consumption": {
+            "improvement": 15.769,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "weakly positive"
+        },
+        "storage_size": {
+            "improvement": 50.0,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "positive - strongly positive"
+        }
+    },
+    "q0.4": {
+        "accuracy": {
+            "improvement": -8.41,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "weakly negative"
+        },
+        "inference_energy_consumption": {
+            "improvement": 88.119,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 93.75,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "strongly positive"
+        }
+    },
+    "q0.8": {
+        "accuracy": {
+            "improvement": -4.272,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "weakly negative - indiferent"
+        },
+        "inference_energy_consumption": {
+            "improvement": 77.81,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 87.5,
+            "std": null,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.373,
+            "intensity": "strongly positive"
+        }
+    }
+}

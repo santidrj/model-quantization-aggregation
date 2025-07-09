@@ -1,0 +1,31 @@
+{
+  "id": "S2",
+  "key": "satishVerifiableEnergyEfficient2022",
+  "title": "Verifiable and Energy Efficient Medical Image Analysis with Quantised Self-attentive Deep Neural Networks",
+  "study_type": "controlled experiment",
+  "data_quality": "comparative",
+  "energy_measurement": {
+    "measurement_method": "analytical"
+  },
+  "quantization_schema": {
+    "baseline_precision": "fp32",
+    "target_precision": ["int8"],
+    "quantization_targets": ["w8a8"],
+    "quantization_method": "post-training quantization",
+    "frameworks": ["PyTorch"],
+    "formats": ["FBGEMM"]
+  },
+  "hardware": [
+    {
+      "device": {
+        "CPU": "Intel Xeon Silver 4110",
+        "GPU": "NVIDIA V100",
+        "RAM": "96 GB",
+        "Storage": "1 TB HDD",
+        "OS": "Ubuntu 18.01.1"
+      }
+    }
+  ],
+  "models": ["ResNet-18", "UNet-small", "SUMNet", "SaDNN"],
+  "datasets": ["ChestX-ray8", "Medical Segmentation Decathlon Dataset"]
+}

@@ -1,0 +1,29 @@
+{
+    "id": "S3",
+    "key": "taoExperimentalEnergyConsumption2022",
+    "title": "Experimental energy consumption analysis of neural network model compression methods on microcontrollers with applications in bird call classification",
+    "study_type": "controlled experiment",
+    "data_quality": "comparative",
+    "energy_measurement": {
+        "measurement_method": "hardware-based",
+        "repetitions": 5
+    },
+    "quantization_schema": {
+        "baseline_precision": "fp32",
+        "target_precision": ["q0.8", "q0.16"],
+        "quantization_targets": ["w32a16", "w32a8", "w16a32", "w16a16", "w16a8", "w8a32", "w8a16", "w8a8"],
+        "quantization_method": "quantization-aware training",
+        "frameworks": ["QKeras"]
+    },
+    "hardware": [{
+        "device": {
+            "model": "STM32H7",
+            "board": "Nucleo-144",
+            "CPU": "Cortex-M4",
+            "RAM": "1.4 MB",
+            "Flash": "2 MB"
+        }
+    }],
+    "models": ["ResNet-18"],
+    "datasets": ["Xeno-Canto"]
+}

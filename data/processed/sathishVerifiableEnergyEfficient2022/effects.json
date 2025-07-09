@@ -1,0 +1,70 @@
+{
+    "overall": {
+        "accuracy": {
+            "improvement": -1.142,
+            "std": 0.043,
+            "iqr": 0.012,
+            "discount": 0.001,
+            "belief": 0.394,
+            "intensity": "indiferent"
+        },
+        "dsc": {
+            "improvement": -1.136,
+            "std": 1.968,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.394,
+            "intensity": "indiferent"
+        },
+        "inference_energy_consumption": {
+            "improvement": 95.026,
+            "std": 0.036,
+            "iqr": 0.032,
+            "discount": 0.0,
+            "belief": 0.394,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 74.371,
+            "std": 0.481,
+            "iqr": 0.834,
+            "discount": 0.001,
+            "belief": 0.394,
+            "intensity": "strongly positive"
+        }
+    },
+    "int8": {
+        "accuracy": {
+            "improvement": -1.142,
+            "std": 0.043,
+            "iqr": 0.012,
+            "discount": 0.001,
+            "belief": 0.394,
+            "intensity": "indiferent"
+        },
+        "dsc": {
+            "improvement": -1.136,
+            "std": 1.968,
+            "iqr": 0.0,
+            "discount": 0.0,
+            "belief": 0.394,
+            "intensity": "indiferent"
+        },
+        "inference_energy_consumption": {
+            "improvement": 95.026,
+            "std": 0.036,
+            "iqr": 0.032,
+            "discount": 0.0,
+            "belief": 0.394,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 74.371,
+            "std": 0.481,
+            "iqr": 0.834,
+            "discount": 0.001,
+            "belief": 0.394,
+            "intensity": "strongly positive"
+        }
+    }
+}

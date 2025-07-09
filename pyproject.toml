@@ -1,0 +1,71 @@
+[project]
+name = "model-quantization-aggregation"
+version = "1.0.0"
+description = ""
+authors = ["Santiago del Rey <santiago.del.rey@upc.edu>"]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "altair[all]>=5.5.0",
+    "anthropic>=0.44.0",
+    "fastexcel>=0.14.0",
+    "forestplot>=0.4.1",
+    "google-genai>=1.24.0",
+    "hvplot>=0.11.1",
+    "itables>=2.2.4",
+    "jsonlines>=4.0.0",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.10.3",
+    "numpy>=2.2.0",
+    "pandarallel>=1.6.5",
+    "pandas>=2.2.3",
+    "polars>=1.29.0",
+    "python-dotenv>=1.0.1",
+    "requests>=2.32.3",
+    "scikit-learn>=1.6.1",
+    "seaborn>=0.13.2",
+    "statsmodels>=0.14.4",
+    "tiktoken>=0.8.0",
+    "tqdm>=4.67.1",
+    "xlsxwriter>=3.2.0",
+    "xmltodict>=0.14.2",
+]
+
+[dependency-groups]
+dev = [
+    "deptry>=0.21.1",
+    "nbqa>=1.9.1",
+    "openpyxl>=3.1.5",
+    "pre-commit>=4.0.1",
+    "ruff>=0.8.2",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    #Pylint
+    "PL",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+force-sort-within-sections = true

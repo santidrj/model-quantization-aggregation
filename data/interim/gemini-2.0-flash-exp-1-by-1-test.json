@@ -1,0 +1,352 @@
+{
+  "TAIT: One-Shot Full-Integer Lightweight DNN Quantization via Tunable Activation Imbalance Transfer": [
+    7,
+    7,
+    6,
+    6,
+    5
+  ],
+  "Towards ADC-Less Compute-In-Memory Accelerators for Energy Efficient Deep Learning": [
+    7,
+    6,
+    7,
+    6,
+    4
+  ],
+  "WDM equipped universal linear optics for programmable neuromorphic photonic processors": [
+    7,
+    6,
+    6,
+    6,
+    4
+  ],
+  "ESCALATE: Boosting the efficiency of sparse CNN accelerator with kernel decomposition": [
+    7,
+    5,
+    6,
+    6,
+    4
+  ],
+  "Synchronization of fractional-order reaction\u2013diffusion neural networks with Markov parameter jumping: Asynchronous boundary quantization control": [
+    7,
+    1,
+    1,
+    1,
+    1
+  ],
+  "A Study on the energy-efficiency of the Object Tracking Algorithms in Edge Devices": [
+    7,
+    6,
+    7,
+    6,
+    5
+  ],
+  "An Open-Source And Extensible Framework for Fast Prototyping and Benchmarking of Spiking Neural Network Hardware": [
+    7,
+    2,
+    2,
+    3,
+    1
+  ],
+  "Hardware-Aware DNN Compression via Diverse Pruning and Mixed-Precision Quantization": [
+    7,
+    7,
+    7,
+    6,
+    5
+  ],
+  "A Survey on the Optimization of Neural Network Accelerators for Micro-AI On-Device Inference": [
+    6,
+    6,
+    5,
+    6,
+    4
+  ],
+  "QeiHaN: An Energy-Efficient DNN Accelerator that Leverages Log Quantization in NDP Architectures": [
+    7,
+    6,
+    6,
+    6,
+    2
+  ],
+  "An energy-efficient task and virtual machine placement in virtualised cloud server using FY-SFLA and RMMS-DLVQ": [
+    7,
+    1,
+    1,
+    1,
+    1
+  ],
+  "Dynamic Quantization Range Control for Analog-in-Memory Neural Networks Acceleration": [
+    7,
+    6,
+    5,
+    5,
+    3
+  ],
+  "Waist Tightening of CNNs: A Case study on Tiny YOLOv3 for Distributed IoT Implementations": [
+    7,
+    6,
+    6,
+    6,
+    7
+  ],
+  "Custom precision accelerators for energy-efficient image-to-image transformations in motion picture workflows": [
+    7,
+    7,
+    7,
+    7,
+    4
+  ],
+  "Energy-efficient and Privacy-aware Social Distance Monitoring with Low-resolution Infrared Sensors and Adaptive Inference": [
+    7,
+    6,
+    6,
+    6,
+    5
+  ],
+  "A Lightweight Quantized CNN Model for Plant Disease Recognition": [
+    7,
+    7,
+    6,
+    7,
+    6
+  ],
+  "Low-Bit Mixed-Precision Quantization and Acceleration of CNN for FPGA Deployment": [
+    7,
+    7,
+    7,
+    6,
+    4
+  ],
+  "ParaML: A Polyvalent Multicore Accelerator for Machine Learning": [
+    7,
+    2,
+    2,
+    1,
+    1
+  ],
+  "Improving model robustness to weight noise via consistency regularization": [
+    7,
+    1,
+    1,
+    1,
+    1
+  ],
+  "ReD-LUT: Reconfigurable in-DRAM LUTs enabling massive parallel computation": [
+    7,
+    6,
+    6,
+    6,
+    3
+  ],
+  "UAV-deployed deep learning network for real-time multi-class damage detection using model quantization techniques": [
+    7,
+    7,
+    7,
+    7,
+    7
+  ],
+  "XOR-net: An efficient computation pipeline for binary neural network inference on edge devices": [
+    7,
+    7,
+    6,
+    7,
+    7
+  ],
+  "FTW-GAT: An FPGA-Based Accelerator for Graph Attention Networks With Ternary Weights": [
+    7,
+    6,
+    7,
+    6,
+    4
+  ],
+  "APQ: Automated DNN Pruning and Quantization for ReRAM-Based Accelerators": [
+    7,
+    7,
+    7,
+    6,
+    4
+  ],
+  "Embedded Face Recognition for Personalized Services in the Assistive Robotics": [
+    7,
+    6,
+    7,
+    6,
+    4
+  ],
+  "Performance Assessment of an Extremely Energy-Efficient Binary Neural Network Using Adiabatic Superconductor Devices": [
+    7,
+    6,
+    7,
+    4,
+    2
+  ],
+  "FQP: A Fibonacci Quantization Processor with Multiplication-Free Computing and Topological-Order Routing": [
+    7,
+    6,
+    6,
+    5,
+    3
+  ],
+  "An Energy-Efficient Low Power LSTM Processor for Human Activity Monitoring": [
+    7,
+    6,
+    7,
+    6,
+    4
+  ],
+  "Mix-GEMM: Extending RISC-V CPUs for Energy-Efficient Mixed-Precision DNN Inference using Binary Segmentation": [
+    7,
+    7,
+    7,
+    7,
+    4
+  ],
+  "GQNA: Generic Quantized DNN Accelerator With Weight-Repetition-Aware Activation Aggregating": [
+    7,
+    6,
+    4,
+    6,
+    3
+  ],
+  "PCQNet: A Trainable Feedback Scheme of Precoder for the Uplink Multi-User MIMO Systems": [
+    7,
+    2,
+    2,
+    3,
+    1
+  ],
+  "Training Quantized Neural Networks to Global Optimality via Semidefinite Programming": [
+    7,
+    6,
+    5,
+    3,
+    5
+  ],
+  "Ps and Qs: Quantization-Aware Pruning for Efficient Low Latency Neural Network Inference": [
+    7,
+    7,
+    6,
+    7,
+    7
+  ],
+  "A 95.6-TOPS/W Deep Learning Inference Accelerator With Per-Vector Scaled 4-bit Quantization in 5 nm": [
+    7,
+    7,
+    6,
+    7,
+    3
+  ],
+  "ConvSNN: A surrogate gradient spiking neural framework for radar gesture recognition[Formula presented]": [
+    7,
+    6,
+    6,
+    6,
+    7
+  ],
+  "Exploiting Parallelism with Vertex-Clustering in Processing-In-Memory-based GCN Accelerators": [
+    7,
+    6,
+    4,
+    4,
+    3
+  ],
+  "A novel conversion method for spiking neural network using median quantization": [
+    7,
+    6,
+    5,
+    6,
+    4
+  ],
+  "A HYBRID MODEL OF RNN-LSTM GOLDEN EAGLE OPTIMIZATION ALGORITHM BASED ON PRUNING AND INT8 QUANTIZATION FOR MULTI-CORE ARCHITECTURE SERVICE APPLICATIONS": [
+    7,
+    6,
+    6,
+    6,
+    4
+  ],
+  "An FPGA Accelerator Design of Spiking Neural Network for Energy-Efficient Object Detection": [
+    7,
+    6,
+    6,
+    6,
+    4
+  ],
+  "Redistribution of Weights and Activations for AdderNet Quantization": [
+    7,
+    6,
+    5,
+    6,
+    7
+  ],
+  "From Quantitative Analysis to Synthesis of Efficient Binary Neural Networks": [
+    7,
+    7,
+    7,
+    6,
+    6
+  ],
+  "AdderNet 2.0: Optimal FPGA Acceleration of AdderNet with Activation-Oriented Quantization and Fused Bias Removal based Memory Optimization": [
+    7,
+    6,
+    5,
+    5,
+    4
+  ],
+  "Open-source FPGA-ML codesign for the MLPerf Tiny Benchmark": [
+    7,
+    6,
+    7,
+    7,
+    3
+  ],
+  "SUN: Dynamic Hybrid-Precision SRAM-Based CIM Accelerator with High Macro Utilization Using Structured Pruning Mixed-Precision Networks": [
+    7,
+    6,
+    4,
+    4,
+    3
+  ],
+  "FDCA: Fine-grained Digital-CIM based CNN Accelerator with Hybrid Quantization and Weight-Stationary Dataflow": [
+    7,
+    6,
+    6,
+    5,
+    3
+  ],
+  "DSP-Based Traffic Target Detection for Intelligent Transportation": [
+    7,
+    6,
+    5,
+    5,
+    4
+  ],
+  "A Study on the Application of TensorFlow Compression Techniques to Human Activity Recognition": [
+    7,
+    6,
+    7,
+    7,
+    7
+  ],
+  "XpulpNN: Enabling Energy Efficient and Flexible Inference of Quantized Neural Networks on RISC-V Based IoT End Nodes": [
+    7,
+    7,
+    7,
+    7,
+    4
+  ],
+  "Unleashing the Low-Precision Computation Potential of Tensor Cores on GPUs": [
+    7,
+    6,
+    5,
+    6,
+    4
+  ],
+  "Cyclic Sparsely Connected Architectures for Compact Deep Convolutional Neural Networks": [
+    7,
+    5,
+    6,
+    6,
+    4
+  ]
+}

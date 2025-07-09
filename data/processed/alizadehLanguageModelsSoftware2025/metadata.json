@@ -1,0 +1,49 @@
+{
+  "id": "S6",
+  "key": "alizadehLanguageModelsSoftware2025",
+  "title": "Language Models in Software Development Tasks: An Experimental Analysis of Energy and Accuracy",
+  "study_type": "controlled experiment",
+  "data_quality": "precise",
+  "energy_measurement": {
+    "measurement_method": "software-based",
+    "software_tools": ["pyNVML", "pyRAPL"],
+    "repetitions": 1
+  },
+  "quantization_schema": {
+    "baseline_precision": "fp16",
+    "target_precision": ["int4", "int8"],
+    "quantization_targets": ["w4a16", "w8a16"],
+    "quantization_method": "post-training quantization",
+    "frameworks": ["Ollama"],
+    "formats": ["GGUF"]
+  },
+  "hardware": [{
+    "device": {
+      "CPU": "2x AMD 7313",
+      "GPU": "NVIDIA A100",
+      "RAM": "1 TB",
+      "OS": "AlmaLinux 8.10"
+    }
+  }],
+  "models": [
+    "gemma:7b-instruct",
+    "starcoder2:15b-instruct-v0.1",
+    "granite-code:3b-instruct",
+    "granite-code:8b-instruct",
+    "mistral:7b-instruct-v0.3",
+    "phi3:14b-medium-4k-instruct",
+    "llama2:13b-chat",
+    "llama3:8b-instruct",
+    "codellama:13b-instruct",
+    "llama2:7b-chat",
+    "codegemma:7b-instruct",
+    "codellama:7b-instruct",
+    "granite-code:20b-instruct-8k",
+    "deepseek-coder:1.3b-instruct",
+    "deepseek-coder:6.7b-instruct",
+    "gemma:2b-instruct",
+    "deepseek-llm:7b-chat",
+    "phi3:3.8b-mini-4k-instruct"
+  ],
+  "datasets": ["HumanEvalPack"]
+}
