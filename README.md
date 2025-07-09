@@ -1,4 +1,5 @@
 # model-quantization-aggregation
+[![DOI](https://zenodo.org/badge/1016917936.svg)](https://doi.org/10.5281/zenodo.15850733)
 
 Replication package for the paper:
 
