@@ -1,0 +1,40 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Aggregating empirical evidence from data strategy studies:
+  a case on model quantization – Replication package
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Santiago
+    family-names: del Rey
+    email: santiago.del.rey@upc.edu
+    affiliation: Universitat Politècnica de Catalunya
+    orcid: 'https://orcid.org/0000-0003-4979-414X'
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.15850734
+    description: The Zenodo link for version 1.0.
+  - type: doi
+    value: 10.48550/arXiv.2505.00816
+    description: The ArXiv deposit of the pre-print.
+repository-code: 'https://github.com/santidrj/model-quantization-aggregation'
+abstract: >-
+  Replication package for the paper "Aggregating empirical
+  evidence from data strategies studies: a case on model
+  quantization" published in the 19th ACM/IEEE International
+  Symposium on Empirical Software Engineering and
+  Measurement (ESEM).
+keywords:
+  - Software Engineering
+  - Research Synthesis
+  - Structured Synthesis Method
+  - Green IN AI
+  - Model Quantization
+license: Apache-2.0
+version: '1.0'
+date-released: '2025-07-09'
