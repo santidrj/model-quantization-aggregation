@@ -1,5 +1,7 @@
 # Replication Package
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18401926.svg)](https://doi.org/10.5281/zenodo.18401926)
+
 Replication package for the paper:
 
 "Toward Theory Building from Data Strategy Studies: Aggregating Evidence on Model Quantization in Deep Learning Systems" submitted to the Empirical Software Engineering Journal.
