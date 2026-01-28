@@ -1,0 +1,48 @@
+[
+    {
+        "mAP": {
+            "improvement": -0.033,
+            "std": 0.088,
+            "iqr": 0.05,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indiferent"
+        },
+        "inference_latency": {
+            "improvement": 52.539,
+            "std": 7.897,
+            "iqr": 10.962,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly positive"
+        },
+        "gpu_energy_consumption": {
+            "improvement": 53.635,
+            "std": 16.183,
+            "iqr": 32.531,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly positive"
+        },
+        "gpu_power_draw": {
+            "improvement": 4.617,
+            "std": 21.864,
+            "iqr": 34.398,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indiferent - weakly positive"
+        }
+    }
+]

@@ -1,17 +1,15 @@
 {
-    "id": "S4",
-    "key": "geensEnergyCostModelling2024",
     "title": "Energy Cost Modelling for Optimizing Large Language Model Inference on Hardware Accelerators",
     "study_type": "simulation study",
-    "data_quality": "comparative (barchart)",
+    "data_quality": "comparative (charts)",
     "energy_measurement": {
         "measurement_method": ["analytical"],
-        "repetitions": 1
+        "software_tools": ["Zigzag"]
     },
     "quantization_schema": {
         "baseline_precision": "fp32",
-        "target_precision": ["int4", "int1"],
-        "quantization_targets": ["w4a16", "w1a32"]
+        "target_precision": ["int4", "int1", "fp16"],
+        "quantization_targets": ["w-int4, a-fp16", "w-int1, a-fp16"]
     },
     "models": ["Llama-2-7B"]
 }

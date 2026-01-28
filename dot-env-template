@@ -2,4 +2,3 @@ ROOT = /path/to/your/project/root
 PYTHONPATH = ${ROOT}
 
 GEMINI_API_KEY = API-KEY
-ANTHROPIC_API_KEY = API-KEY

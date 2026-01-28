@@ -1,0 +1,36 @@
+[
+    {
+        "configuration": {
+            "Dataset": "CIFAR-10",
+            "quantization_precision": "mixed"
+        },
+        "inference_energy_consumption": {
+            "improvement": 80.476,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.108,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Dataset": "CIFAR-100",
+            "quantization_precision": "mixed"
+        },
+        "inference_energy_consumption": {
+            "improvement": 79.194,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.108,
+            "intensity": "strongly positive"
+        }
+    }
+]

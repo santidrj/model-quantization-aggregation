@@ -22,8 +22,6 @@ def read_paper_metadata(paper: Paper) -> pl.DataFrame:
         PROCESSED_DATA_DIR / paper.KEY / "metadata.json",
         schema=pl.Schema(
             {
-                "id": pl.String,
-                "key": pl.String,
                 "title": pl.String,
                 "study_type": pl.String,
                 "data_quality": pl.String,
@@ -54,7 +52,9 @@ def read_paper_metadata(paper: Paper) -> pl.DataFrame:
                                     "CPU": pl.String,
                                     "GPU": pl.String,
                                     "RAM": pl.String,
-                                    "Flash": pl.String,
+                                    "SRAM": pl.String,
+                                    "SDRAM": pl.String,
+                                    "Storage": pl.String,
                                 }
                             )
                         }
@@ -64,4 +64,4 @@ def read_paper_metadata(paper: Paper) -> pl.DataFrame:
                 "datasets": pl.List(pl.String),
             }
         ),
-    ).with_columns(pl.lit(paper.YEAR).alias("year"))
+    ).with_columns(pl.lit(paper.YEAR).alias("year"), pl.lit(paper.ID).alias("id"), pl.lit(paper.KEY).alias("key"))

@@ -1,0 +1,70 @@
+[
+    {
+        "precision": {
+            "improvement": -16.842,
+            "std": 10.421,
+            "iqr": 14.737,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.193,
+            "intensity": "negative"
+        },
+        "recall": {
+            "improvement": -20.652,
+            "std": 7.686,
+            "iqr": 10.87,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.193,
+            "intensity": "strongly negative - negative"
+        },
+        "mAP_5": {
+            "improvement": -19.588,
+            "std": 2.916,
+            "iqr": 4.124,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.193,
+            "intensity": "negative"
+        },
+        "mAP_5_95": {
+            "improvement": -38.235,
+            "std": 4.159,
+            "iqr": 5.882,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.193,
+            "intensity": "strongly negative"
+        },
+        "inference_latency": {
+            "improvement": 27.083,
+            "std": 2.946,
+            "iqr": 4.167,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.193,
+            "intensity": "weakly positive - positive"
+        },
+        "storage_size": {
+            "improvement": 54.444,
+            "std": 1.571,
+            "iqr": 2.222,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.193,
+            "intensity": "strongly positive"
+        }
+    }
+]

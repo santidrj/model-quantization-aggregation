@@ -1,36 +1,51 @@
-from typing import Dict, List
-
 import numpy as np
+
+
+class CorrectnessMetrics:
+    @staticmethod
+    def metrics() -> list[str]:
+        return ["Accuracy", "Precision", "Recall", "F1 Score", "DSC", "mAP", "mAP@0.5", "mAP@0.5:0.95", "mIoU"]
+
+
+class ResourceEfficiencyMetrics:
+    @staticmethod
+    def metrics() -> list[str]:
+        return [
+            "Storage Size",
+            "GPU Utilization",
+            "GPU Memory Utilization",
+            "GPU Power Draw",
+            "GPU Energy Consumption",
+            "RAM Usage",
+            "RAM Energy Consumption",
+            "Inference Power Draw",
+            "Inference Energy Consumption",
+            "Inference Latency",
+        ]
 
 
 class EffectIntensity:
     @property
-    @staticmethod
     def STRONG_EFFECT(self) -> int:
         return 50
 
     @property
-    @staticmethod
     def STRONG_MODERATE_EFFECT(self) -> int:
         return 40
 
     @property
-    @staticmethod
     def MODERATE_EFFECT(self) -> int:
         return 30
 
     @property
-    @staticmethod
     def WEAK_MODERATE_EFFECT(self) -> int:
         return 20
 
     @property
-    @staticmethod
     def WEAK_EFFECT(self) -> int:
         return 10
 
     @property
-    @staticmethod
     def WEAK_INDIFERENT_EFFECT(self) -> int:
         return 2
 
@@ -75,7 +90,7 @@ class EffectIntensity:
         else:
             return f"strongly {sign}"
 
-    def get_ranges(self) -> Dict[str, tuple]:
+    def get_ranges(self) -> dict[str, tuple]:
         """
         Get the ranges of the effect intensity.
 
@@ -103,122 +118,99 @@ class EffectIntensity:
 
 class EnergyIntensity(EffectIntensity):
     @property
-    @staticmethod
     def STRONG_EFFECT(self):
         return 50
 
     @property
-    @staticmethod
     def STRONG_MODERATE_EFFECT(self):
         return 40
 
     @property
-    @staticmethod
     def MODERATE_EFFECT(self):
         return 30
 
     @property
-    @staticmethod
     def WEAK_MODERATE_EFFECT(self):
         return 20
 
     @property
-    @staticmethod
     def WEAK_EFFECT(self):
         return 10
 
     @property
-    @staticmethod
     def WEAK_INDIFERENT_EFFECT(self):
         return 2
 
 
 class ResourceUsageIntensity(EffectIntensity):
     @property
-    @staticmethod
     def STRONG_EFFECT(self):
         return 50
 
     @property
-    @staticmethod
     def STRONG_MODERATE_EFFECT(self):
         return 40
 
     @property
-    @staticmethod
     def MODERATE_EFFECT(self):
         return 30
 
     @property
-    @staticmethod
     def WEAK_MODERATE_EFFECT(self):
         return 20
 
     @property
-    @staticmethod
     def WEAK_EFFECT(self):
         return 10
 
     @property
-    @staticmethod
     def WEAK_INDIFERENT_EFFECT(self):
         return 2
 
 
 class LatencyIntensity(EffectIntensity):
     @property
-    @staticmethod
     def STRONG_EFFECT(self):
         return 50
 
     @property
-    @staticmethod
     def STRONG_MODERATE_EFFECT(self):
         return 40
 
     @property
-    @staticmethod
     def MODERATE_EFFECT(self):
         return 30
 
     @property
-    @staticmethod
     def WEAK_MODERATE_EFFECT(self):
         return 20
 
     @property
-    @staticmethod
     def WEAK_EFFECT(self):
         return 10
 
     @property
-    @staticmethod
     def WEAK_INDIFERENT_EFFECT(self):
         return 2
 
 
 class CorrectnessIntensity(EffectIntensity):
     @property
-    @staticmethod
     def STRONG_EFFECT(self):
         return 25
 
     @property
-    @staticmethod
     def STRONG_MODERATE_EFFECT(self):
         return 20
 
     @property
-    @staticmethod
     def MODERATE_EFFECT(self):
         return 15
 
     @property
-    @staticmethod
     def WEAK_MODERATE_EFFECT(self):
         return 10
 
     @property
-    @staticmethod
     def WEAK_EFFECT(self):
         return 5

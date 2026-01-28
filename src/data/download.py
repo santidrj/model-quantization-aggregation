@@ -9,7 +9,20 @@ ARXIV_API = "http://export.arxiv.org/api/query"
 
 
 def download_arxiv_papers(query: str, max_results: int) -> list[dict[str, str]]:
-    """Download papers from arXiv based on the query."""
+    """Download papers from arXiv based on the query.
+
+    Parameters
+    ----------
+    query : str
+        The query to use for searching the papers.
+    max_results : int
+        The maximum number of papers to download.
+
+    Returns
+    -------
+    list[dict[str, str]]
+        A list of dictionaries containing the papers.
+    """
     # Prepare the query parameters
     params = {
         "search_query": query,
@@ -25,7 +38,18 @@ def download_arxiv_papers(query: str, max_results: int) -> list[dict[str, str]]:
 
 
 def papers_dict_to_polars_df(papers: list[dict[str, str]]) -> pl.DataFrame:
-    """Convert a list of dictionaries to a Polars DataFrame."""
+    """Convert a list of dictionaries to a Polars DataFrame.
+
+    Parameters
+    ----------
+    papers : list[dict[str, str]]
+        A list of dictionaries containing the papers.
+
+    Returns
+    -------
+    pl.DataFrame
+        A Polars DataFrame containing the papers.
+    """
 
     tmp_list = []
     for paper in papers:
@@ -58,7 +82,18 @@ def papers_dict_to_polars_df(papers: list[dict[str, str]]) -> pl.DataFrame:
 
 
 def clean_titles(papers: pl.DataFrame) -> pl.DataFrame:
-    """Clean the titles of the papers."""
+    """Clean the titles of the papers.
+
+    Parameters
+    ----------
+    papers : pl.DataFrame
+        A Polars DataFrame containing the papers.
+
+    Returns
+    -------
+    pl.DataFrame
+        A Polars DataFrame containing the papers with cleaned titles.
+    """
     return papers.with_columns(
         pl.col("Title")
         .str.normalize("NFKC")

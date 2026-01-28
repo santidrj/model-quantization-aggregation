@@ -5,8 +5,8 @@ import os
 from pathlib import Path
 import time
 
-import anthropic
 from google import genai
+from google.genai.types import GenerateContentConfig, ThinkingConfig
 import polars as pl
 
 from src.config import INTERIM_DATA_DIR
@@ -22,109 +22,117 @@ class LikertScale(IntEnum):
     STRONGLY_AGREE = 7
 
 
-GEMINI_MODEL = "gemini-2.0-flash-exp"
+GEMINI_MODEL = "gemini-3-flash-preview"
 
 
-GEMINI_CONFIG = {
-    "temperature": 0,
-    "top_p": 0.1,
-    "top_k": 40,
-    "max_output_tokens": 8192,
-    "response_mime_type": "application/json",
-}
+GEMINI_CONFIG = GenerateContentConfig(
+    temperature=1.0,
+    top_p=0.1,
+    top_k=40,
+    thinking_config=ThinkingConfig(thinking_level="high"),
+    max_output_tokens=8192,
+    response_mime_type="application/json",
+)
+
+QUERY_CONTEXT = """**Role:** You are an expert Software Engineering Researcher conducting a Systematic Literature Review (SLR) on "Resource-Efficient Deep Learning via Quantization."
+
+**Objective:** Evaluate research papers to determine if they provide empirical, software-level evidence of the impact of model quantization on resource efficiency (energy, memory, storage) or performance (latency) during inference.
+
+---
+
+### 1. The Evidence-Based Rating Scale (1-7)
+
+For each criterion, assign a score based on the level of evidence found in the Title, Abstract, or Keywords:
+
+* **7 (Strongly Agree):** Evidence is **explicit and numerical** (e.g., "30% energy reduction," "reduced from 120MB to 12MB," "5x speedup").
+* **6 (Agree):** Evidence is **explicit but non-numerical** (e.g., "compared to full-precision baseline," "measured on a Jetson Nano").
+* **4-5 (Somewhat Agree):** Evidence is **qualitative/vague** (e.g., "energy-efficient approach," "fast inference," "lightweight model") without mentioning specific metrics or baselines.
+* **1-3 (Disagree):** The information is **absent, contradictory, or refers to a different domain** (e.g., hardware circuit design, signal processing).
+
+---
+
+### 2. The 6 Evaluation Criteria
+
+1. **[Primary Study]:** Is this an original empirical experiment? (7 = clear experiment; 1 = survey, review, or vision paper).
+2. **[DL Quantization]:** Does the study quantize a Deep Learning model (weights/activations/biases)? (7 = explicitly mentions DL model quantization; 1 = signal/MIMO quantization or JPEG/video compression).
+3. **[Software-Level Focus]:** Is the primary contribution an algorithm, flow, or software framework?
+    * **Rate 6-7:** If implemented in software (PyTorch, TensorFlow, etc.) or as an algorithmic optimization.
+    * **Rate 1-3 (REJECT):** If the primary novelty is a **physical hardware component** (e.g., a new 40nm CMOS circuit, SRAM design, ASIC multiplier, or TCI interface).
+
+4. **[Inference Phase]:** Is the study focused on the deployment/inference phase? (7 = mentions "inference," "edge deployment," or "real-time execution").
+5. **[Efficiency Metrics]:** Does the study report Energy, Latency, RAM, or Model Size?
+    * **Rate 7:** If numerical data/percentages are provided.
+    * **Rate 4-5:** If it claims "efficiency" or "speed" but provides no numbers.
 
 
-QUERY_CONTEXT = """Assume you are a software engineering researcher conducting a systematic literature review (SLR). Consider the title, abstract, and keywords of the following studies.
+6. **[Controlled Comparison]:** Does the study compare the quantized model to a non-quantized baseline?
+    * **Rate 6-7:** If it mentions "vs FP32," "vs full precision," or "compared to the original model."
+    * **Rate 1-3:** If it only compares one quantized method against a different quantized method.
 
-Follow these steps:
-1. Read the title, abstract, and keywords of the study. Consider that the input structure is as follows:
+---
 
-<BOI>
-Title: <Title>
-Abstract: <Abstract>
-Keywords: <Keywords>
-<EOI>
+### 3. Strict Red Flags (Forcing Low Scores)
 
-2. Use a 1-7 Likert scale (1 - Strongly disagree, 2 - Disagree, 3 - Somewhat disagree, 4 - Neither agree nor disagree, 5 - Somewhat agree, 6 - Agree, and 7 - Strongly agree) to rate your agreement with the following statement (report only the number): The study is a primary study and not a secondary or tertiary study.
-3. Use a 1-7 Likert scale (1 - Strongly disagree, 2 - Disagree, 3 - Somewhat disagree, 4 - Neither agree nor disagree, 5 - Somewhat agree, 6 - Agree, and 7 - Strongly agree) to rate your agreement with the following statement (report only the number): The study regards the application of model quantization to optimize a deep learning (DL) model.
-4. Use a 1-7 Likert scale (1 - Strongly disagree, 2 - Disagree, 3 - Somewhat disagree, 4 - Neither agree nor disagree, 5 - Somewhat agree, 6 - Agree, and 7 - Strongly agree) to rate your agreement with the following statement (report only the number): The study regards the environmental sustainability and/or energy efficiency of applying model quantization.
-5. Use a 1-7 Likert scale (1 - Strongly disagree, 2 - Disagree, 3 - Somewhat disagree, 4 - Neither agree nor disagree, 5 - Somewhat agree, 6 - Agree, and 7 - Strongly agree) to rate your agreement with the following statement (report only the number): The study analyzes the application of model quantization for model inference and not only for model training or any other purpose.
-6. Use a 1-7 Likert scale (1 - Strongly disagree, 2 - Disagree, 3 - Somewhat disagree, 4 - Neither agree nor disagree, 5 - Somewhat agree, 6 - Agree, and 7 - Strongly agree) to rate your agreement with the following statement (report only the number): The study regards the application of model quantization at the software level.
-7. Format your agreement ratings for each paper as an array under the paper's title in JSON format.
+* **Signal Processing:** If the keywords involve "CSI," "MIMO," or "Channel Estimation," **Rate Criterion 2 as 1.**
+* **Hardware Architecture:** If the abstract focuses on "Transistors," "SRAM stacking," "Clock frequency," or "Circuit Area," **Rate Criterion 3 as 1-2.**
+* **Training-Only:** If the focus is "Faster training" or "Convergence rate" without inference metrics, **Rate Criterion 4 as 1.**
 
-Provide the results in JSON format, where keys are paper titles and values are arrays of agreement ratings. Ensure accuracy in the JSON structure and do not include any additional text or information.
+---
 
-Here is an example of how a paper should be rated:
+### 4. Output Instructions
 
-<BOI>
+* **Format:** Provide a single JSON object.
+* **Structure:** `{"Paper Title": [C1, C2, C3, C4, C5, C6]}`
+* **No extra text:** Do not provide reasoning, introductions, or summaries.
+
+---
+
+### 5. Input Data Structure
+
+Process the following study:
+
+Title: [INSERT TITLE]
+Abstract: [INSERT ABSTRACT]
+Keywords: [INSERT KEYWORDS]
+
+---
+
+### 6. Examples for Calibration
+
+*(Use these to understand the logic, but do not include the reasoning in your final output)*
+
+**Input:**
 Title: A Reconfigurable Approximate Multiplier for Quantized CNN Applications
 Abstract: Quantized CNNs, featured with different bit-widths at different layers, have been widely deployed in mobile and embedded applications. The implementation of a quantized CNN may have multiple multipliers at different precisions with limited resource reuse or one multiplier at higher precision than needed causing area overhead. It is then highly desired to design a multiplier by accounting for the characteristics of quantized CNNs to ensure both flexibility and energy efficiency. In this work, we present a reconfigurable approximate multiplier to support multiplications at various precisions, i.e., bit-widths. Moreover, unlike prior works assuming uniform distribution with bit-wise independence, a quantized CNN may have centralized weight distribution and hence follow a Gaussian-like distribution with correlated adjacent bits. Thus, a new block-based approximate adder is also proposed as part of the multiplier to ensure energy efficient operation with awareness of bit-wise correlation. Our experimental results show that the proposed adder significantly reduces the error rate by 76-98% over a state-of-the-art approximate adder for such scenarios. Moreover, with the deployment of the proposed multiplier, which is 17% faster and 22% more power saving than a Xilinx multiplier IP at the same precision, a quantized CNN implemented in FPGA achieves 17% latency reduction and 15% power saving compared with a full precision case. © 2020 IEEE.
 Keywords: None
-<EOI>
 
-Should be rated as: {"A Reconfigurable Approximate Multiplier for Quantized CNN Applications": [7, 6, 7, 5, 3]}
+**Output:** `{"A Reconfigurable Approximate Multiplier for Quantized CNN Applications": [7, 6, 7, 5, 3]}`
 
-The reasoning behind the ratings is as follows:
-1. The study proposes a concrete solution.
-2. The study focuses on model quantization, but maybe too much on the arithmetic part.
-3. The study reports the energy consumption of quantizing a CNN.
-4. The study reports results of deploying a quantized CNN suggesting the use of quantization for inference.
-5. It looks like it, but it implements "a new block-based approximate adder" which looks closer to hardware than to software.
-
-Here is a second example:
-
-<BOI>
+**Input:**
 Title: Energy Adaptive Convolution Neural Network Using Dynamic Partial Reconfiguration
 Abstract: Convolutional Neural Network (CNN) is a good candidate for computer vision applications. CNN is well known for its great classification accuracy at image recognition tasks. The cost of CNN is its large power consumption as it needs a lot of multiplication and addition operations. Approximation can reduce the power consumption. CNNs can be implemented by CPUs, GPUs or FPGAs. In this paper, the proposed CNN is implemented on Xilinx XC7Z020 FPGA and is trained to recognize MNIST dataset This CNN is approximated through quantization which reduces the accuracy only by 0.53% while using 7-bits for the implementation. A reduction of 2.7X is achieved in energy consumption compared to the conventional design which uses 16-bits. Dynamic Partial Reconfiguration (DPR) reconfigures the FPGA during the run time with appropriate power consumption design if the battery level decreases. This enables recognition applications to run with low power budget but with sacrificing minor accuracy instead of termination. © 2020 IEEE.
 Keywords: Approximate Computing; Convolutional Neural Network; DPR; MNIST; Precision Scaling
-<EOI>
 
-Should be rated as: {"Energy Adaptive Convolution Neural Network Using Dynamic Partial Reconfiguration": [7, 7, 7, 6, 4]}
+**Output:** `{"Energy Adaptive Convolution Neural Network Using Dynamic Partial Reconfiguration": [7, 7, 7, 6, 4]}`
 
-The reasoning behind the ratings is as follows:
-1. The study analyzes the effect of Dynamic Partial Reconfiguration on energy consumption when used for CNN applications.
-2. The study uses model quantization to approximate a CNN.
-3. The study reports reduction in energy consumption when using a quantized CNN.
-4. It looks like it uses quantization for inference. It mentions "run time" and "low power budget" rather than inference.
-5. The study reports the use of model quantization, but it is unclear how it is applied.
-
-Here is a third example:
-
-<BOI>
+**Input:**
 Title: Impact of ML Optimization Tactics on Greener Pre-Trained ML Models
 Abstract: Background: Given the fast-paced nature of today's technology, which has surpassed human performance in tasks like image classification, visual reasoning, and English understanding, assessing the impact of Machine Learning (ML) on energy consumption is crucial. Traditionally, ML projects have prioritized accuracy over energy, creating a gap in energy consumption during model inference. Aims: This study aims to (i) analyze image classification datasets and pre-trained models, (ii) improve inference efficiency by comparing optimized and non-optimized models, and (iii) assess the economic impact of the optimizations. Method: We conduct a controlled experiment to evaluate the impact of various PyTorch optimization techniques (dynamic quantization, torch.compile, local pruning, and global pruning) to 42 Hugging Face models for image classification. The metrics examined include GPU utilization, power and energy consumption, accuracy, time, computational complexity, and economic costs. The models are repeatedly evaluated to quantify the effects of these software engineering tactics. Results: Dynamic quantization demonstrates significant reductions in inference time and energy consumption, making it highly suitable for large-scale systems. Additionally, torch.compile balances accuracy and energy. In contrast, local pruning shows no positive impact on performance, and global pruning's longer optimization times significantly impact costs. Conclusions: This study highlights the role of software engineering tactics in achieving greener ML models, offering guidelines for practitioners to make informed decisions on optimization methods that align with sustainability goals.
 Keywords: None
-<EOI>
 
-Should be rated as: {"Impact of ML Optimization Tactics on Greener Pre-Trained ML Models": [7, 6, 7, 7, 7]}
+**Output:** `{"Impact of ML Optimization Tactics on Greener Pre-Trained ML Models": [7, 6, 7, 7, 7]}`
 
-The reasoning behind the ratings is as follows:
-1. The study is a controlled expriment.
-2. The study analyzes "various PyTorch optimization techniques (dynamic quantization, torch.compile, local pruning, and global pruning)" which includes model quantization.
-3. The study reports "Dynamic quantization demonstrates significant reductions in inference time and energy consumption".
-4. The study explicitly mentions inference time and efficiency.
-5. The study analyzes various optimization techniques implemented in PyTorch.
-
-Here is a fourth example:
-
-<BOI>
+**Input:**
 Title: An Efficient Deep Learning Framework for Low Rate Massive MIMO CSI Reporting
 Abstract: Channel state information (CSI) reporting is important for multiple-input multiple-output (MIMO) wireless transceivers to achieve high capacity and energy efficiency in frequency division duplex (FDD) mode. CSI reporting for massive MIMO systems could consume large bandwidth and degrade spectrum efficiency. Deep learning (DL)-based CSI reporting integrated with channel characteristics has demonstrated success in improving CSI compression and recovery. To further improve the encoding efficiency of CSI feedback, we develop an efficient DL-based compression framework CQNet to jointly tackle CSI compression, codeword quantization, and recovery under the bandwidth constraint. CQNet is directly compatible with other DL-based CSI feedback works for further enhancement. We propose a more efficient quantization scheme in the radial coordinate by introducing a novel magnitude-adaptive phase quantization framework. Compared with traditional CSI reporting, CQNet demonstrates superior CSI feedback efficiency and better CSI reconstruction accuracy.  © 2020 IEEE.
 Keywords: CSI feedback; deep learning; FDD; Massive MIMO; quantization
-<EOI>
 
-Should be rated as: {"An Efficient Deep Learning Framework for Low Rate Massive MIMO CSI Reporting": [7, 2, 2, 3, 1]}
+**Output:** `{"An Efficient Deep Learning Framework for Low Rate Massive MIMO CSI Reporting": [7, 2, 2, 3, 1]}`
 
-The reasoning behind the ratings is as follows:
-1. The study proposes a new framework.
-2. Codeword quanitization seems not to be directly related to ML models (although I'm not sure if the concepts can be linked; but it seems not).
-3. It talks about encoding efficiency, which eventually could be linked to environmental sustainability (?).
-4. The study doesn't report using model quantization for model inference.
-5. It uses hardware-level jargon in all the abstract.
+---
 
-You must provide all five ratings for each paper, do not miss any. Remember that each paper is identified by its title. ENSURE YOU PICK THE PAPER'S TITLE CORRECTLY. Think step by step. THINK CAREFULLY YOUR RATING IN STEPS 2-6 AND CONSIDER EACH PAPER INDIVIDUALLY.
+### Papers to Process
 
-The list of papers you must process starts below. ENSURE YOU PROCESS ALL THE PAPERS. LIMIT TO REPORT THE ASKED INFORMATION ONLY. DO NOT INCLUDE ANY ADDITIONAL TEXT OR INFORMATION.
 """  # noqa: E501
 
 
@@ -136,6 +144,8 @@ def gemini_query(client: genai.Client, query: str, json_file: str | os.PathLike[
 
     Parameters
     ----------
+    client : genai.Client
+        The Gemini client.
     client : genai.Client
         The Gemini client.
     query : str
@@ -200,65 +210,6 @@ def gemini_batched_query(client: genai.Client, batch_number: int, query: str) ->
     return result_df
 
 
-def claude_query(client: anthropic.Anthropic, query: str, json_file: str | os.PathLike[str] | None = None) -> dict:
-    """
-    Query a Claude model. If the query fails due to rate limiting, the function will wait 60 seconds before retrying.
-
-    When a json file is provided, the results are saved to the file.
-
-    Parameters
-    ----------
-    client : anthropic.Anthropic
-        The Claude client.
-    query : str
-        The query message.
-    json_file : str, optional
-        The path to a json file to save the results to, by default None.
-
-    Returns
-    -------
-    dict
-        The response from the Claude model.
-    """
-
-    query_completed = False
-
-    while not query_completed:
-        try:
-            message = client.messages.create(
-                model="claude-3-5-sonnet-20241022",
-                max_tokens=8192,
-                temperature=0,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "text",
-                                "text": query,
-                            }
-                        ],
-                    }
-                ],
-            )
-            json_response = message.to_json()
-            response = json.loads(json_response)["content"][0]["text"]
-            query_completed = True
-        except Exception as e:
-            if "429" in str(e):
-                print("Requests per minute rate limit exceeded, waiting 60 seconds to retry...")
-                time.sleep(60)
-            else:
-                raise e
-    json_response = json.loads(response)
-
-    if json_file:
-        with open(json_file, "w") as f:
-            json.dump(json_response, f, indent=2)
-
-    return json_response
-
-
 def combine_llm_scores(llm_scores: list[pl.DataFrame]) -> pl.DataFrame:
     """
     Combine the scores of the LLMs. The scores are concatenated and then the mean of the inclusion criteria
@@ -278,10 +229,7 @@ def combine_llm_scores(llm_scores: list[pl.DataFrame]) -> pl.DataFrame:
 
 
 def create_paper_context_message(paper: dict) -> str:
-    return (
-        f"<BOI>\nTitle: {paper['Title']}\nAbstract: {paper['Abstract']}\n"
-        f"Keywords: {paper.get('Author Keywords', '')}\n<EOI>"
-    )
+    return f"Title: {paper['Title']}\nAbstract: {paper['Abstract']}\nKeywords: {paper.get('Author Keywords', '')}\n"
 
 
 def read_llm_output(json_path: str | Path) -> pl.DataFrame:
@@ -296,7 +244,8 @@ def read_llm_output(json_path: str | Path) -> pl.DataFrame:
             "IC2": 0.0,
             "IC3": 0.0,
             "IC4": 0.0,
-            "IC5": 0.0
+            "IC5": 0.0,
+            "IC6": 0.0,
         },
         ...
     }
@@ -318,7 +267,7 @@ def read_llm_output(json_path: str | Path) -> pl.DataFrame:
     return pl.from_dict(results).transpose(
         include_header=True,
         header_name="Title",
-        column_names=["IC1", "IC2", "IC3", "IC4", "IC5"],
+        column_names=["IC1", "IC2", "IC3", "IC4", "IC5", "IC6"],
     )
 
 

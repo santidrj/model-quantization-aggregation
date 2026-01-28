@@ -1,0 +1,15 @@
+[
+    {
+        "inference_energy_consumption": {
+            "improvement": 79.835,
+            "std": 0.907,
+            "iqr": 1.283,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.108,
+            "intensity": "strongly positive"
+        }
+    }
+]

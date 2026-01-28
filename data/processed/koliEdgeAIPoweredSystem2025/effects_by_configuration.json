@@ -1,0 +1,18 @@
+[
+    {
+        "configuration": {
+            "quantization_precision": "w-int8, a-fp32"
+        },
+        "storage_size": {
+            "improvement": 77.148,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.185,
+            "intensity": "strongly positive"
+        }
+    }
+]

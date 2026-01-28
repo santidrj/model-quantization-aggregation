@@ -1,0 +1,70 @@
+[
+    {
+        "accuracy": {
+            "improvement": -4.9,
+            "std": 3.376,
+            "iqr": 5.35,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.182,
+            "intensity": "weakly negative - indiferent"
+        },
+        "f1_score": {
+            "improvement": -5.475,
+            "std": 7.084,
+            "iqr": 10.197,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.182,
+            "intensity": "weakly negative"
+        },
+        "inference_energy_consumption": {
+            "improvement": 23.164,
+            "std": 11.491,
+            "iqr": 15.797,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.182,
+            "intensity": "weakly positive - positive"
+        },
+        "inference_power_draw": {
+            "improvement": 19.522,
+            "std": 10.499,
+            "iqr": 11.236,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.182,
+            "intensity": "weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 4.698,
+            "std": 3.67,
+            "iqr": 5.024,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.182,
+            "intensity": "indiferent - weakly positive"
+        },
+        "storage_size": {
+            "improvement": 51.243,
+            "std": 28.554,
+            "iqr": 28.281,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.182,
+            "intensity": "strongly positive"
+        }
+    }
+]

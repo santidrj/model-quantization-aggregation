@@ -22,16 +22,19 @@ def extract_knowledge_from(paper: Paper):
     )
 
     statistics = knowledge_extractor.get_improvement_statistics()
-    statistics.write_parquet(PROCESSED_DATA_DIR / paper.KEY / "improvement_statistics.parquet")
+    statistics.write_parquet(PROCESSED_DATA_DIR / paper.KEY / "improvement_statistics_by_configuration.parquet")
 
-    statistics_by_precision = knowledge_extractor.get_improvement_statistics(by_quantization_precision=True)
+    statistics_by_precision = knowledge_extractor.get_improvement_statistics(by_precision=True)
     statistics_by_precision.write_parquet(
         PROCESSED_DATA_DIR / paper.KEY / "improvement_statistics_by_precision.parquet"
     )
 
-    knowledge_extractor.write_json(PROCESSED_DATA_DIR / paper.KEY / "effects.json")
+    knowledge_extractor.save_effects_by_configuration(PROCESSED_DATA_DIR / paper.KEY / "effects_by_configuration.json")
+    knowledge_extractor.save_effects_by_precision(PROCESSED_DATA_DIR / paper.KEY / "effects_by_precision.json")
 
 
-for paper in Papers:
-    print(f"Extracting knowledge from {paper.value.AUTHOR}")
-    extract_knowledge_from(paper.value)
+# for paper in Papers:
+#     print(f"Extracting knowledge from {paper.value.AUTHOR}")
+#     extract_knowledge_from(paper.value)
+
+extract_knowledge_from(Papers.DEPUTTER.value)

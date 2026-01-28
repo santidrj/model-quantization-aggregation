@@ -1,42 +1,42 @@
-# model-quantization-aggregation
-[![DOI](https://zenodo.org/badge/1016917936.svg)](https://doi.org/10.5281/zenodo.15850733)
+# Replication Package
 
 Replication package for the paper:
 
-"Aggregating empirical evidence from data strategies studies: a case on model quantization" submitted to the 19th ACM/IEEE International Symposium on Empirical Software Engineering and Measurement (ESEM).
+"Toward Theory Building from Data Strategy Studies: Aggregating Evidence on Model Quantization in Deep Learning Systems" submitted to the Empirical Software Engineering Journal.
 
 ## Contents
 
-This replication package contains the following components:
+This replication package consists of the following components:
 
 1. **Data**:
-   - Raw, external, interim, and processed data are stored in the `data/` directory.
+   - Raw, external, interim, and processed data are stored in the [data](data) directory.
 
 2. **Source Code**:
-   - Located in the `src/` directory, it includes scripts for data processing, analysis, and evidence extraction.
+   - Located in the [src](src) directory, it includes scripts for data processing, analysis, and evidence extraction.
    - Key modules:
-     - `data/papers/entities.py` & `data/papers/knowledge_extraction.py`: Define the structure and data extraction logic for the papers analyzed.
-     - `data/download.py`: Downloads the list of papers from arXiv and merges them with the Scopus list.
-     - `data/selection/llm.py`: Implements logic for selecting studies using large language models.
+     - [data/papers/entities.py](data/papers/entities.py) & [data/papers/knowledge_extraction.py](data/papers/knowledge_extraction.py): Define the structure and data extraction logic for the papers analyzed.
+     - [data/download.py](data/download.py): Downloads the list of papers from arXiv and merges them with the Scopus list.
+     - [data/selection/llm.py](data/selection/llm.py): Implements logic for selecting studies using Gemini 3.0 Flash.
 
 3. **Jupyter Notebooks**:
-   - Located in the `notebooks/` directory, these notebooks contain the analysis and visualization of the data.
+   - Located in the [notebooks](notebooks) directory, these notebooks contain the analysis and visualization of the data.
    - Notebooks include:
-     - `1.0-llm-promt-refinement.ipynb`: Refines the prompt for LLMs and the selection of LLM.
-     - `2.0-model-quantization-paper-selection.ipynb`: Filters the raw list of papers using the selected GEMINI 2.0.
-     - `3.0-final-selection-analysis.ipynb`: Analyzes the final selection of papers.
-     - `4.0-paper-metadata-analysis.ipynb`: Analyzes metadata from selected papers.
-     - `5.0-evidence-analysis.ipynb`: Analyzes evidence extracted from the papers and generates the forest plot.
+     - [1.0-llm-promt-refinement.ipynb](notebooks/1.0-llm-promt-refinement.ipynb): Refines the prompt for LLMs and the selection of LLM.
+     - [2.0-model-quantization-paper-selection.ipynb](notebooks/2.0-model-quantization-paper-selection.ipynb): Filters the raw list of papers using the selected GEMINI 3.0.
+     - [3.0-final-selection-analysis.ipynb](notebooks/3.0-final-selection-analysis.ipynb): Analyzes the final selection of papers.
+     - [4.0-paper-metadata-analysis.ipynb](notebooks/4.0-paper-metadata-analysis.ipynb): Analyzes metadata from selected papers.
+     - [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb): Analyzes evidence extracted from the papers and generates the forest plot.
 
 4. **Documentation**:
-   - `data/processed/evidence-diagrams-mapping.md`: Links to evidence diagrams generated during the study.
-   - `data/processed/paperkey/metadata.json`: Contains metadata for the specific paper.
-   - `data/processed/paperkey/systematic-studies-quality-evaluation.md`: Contains the filled quality evaluation form for the specific paper.
+   - [data/processed/evidence-diagrams-mapping.md](data/processed/evidence-diagrams-mapping.md): Links to evidence diagrams generated during the study.
+   - `data/processed/{paperkey}/metadata.json`: Contains metadata for the specific paper.
+   - `data/processed/{paperkey}/systematic-studies-quality-evaluation.md`: Contains the filled quality evaluation form for the specific paper.
 
 ### Project Structure
 
 The project is organized as follows:
-```
+
+```text
 ├── data/
 │   ├── raw/                                <- Contains the original list of papers retrieved from Scopus
 │   ├── external/                           <- Contains the raw data obtained from the selected papers
@@ -75,34 +75,70 @@ The project is organized as follows:
 ## Usage Instructions
 
 1. **Setup**:
-   - Clone the repository:  
+   - Clone the repository:
+
      ```bash
      git clone <repository-url>
      cd green-tactics-synthesis
      ```
+
    - Install dependencies:  
-    The project is managed with [uv](https://docs.astral.sh/uv/). To install the dependencies, run:  
-        ```bash
-        uv sync
-        ```
-        Alternatively, you can use pip to install the dependencies listed in `requirements.txt`:  
-        ```bash
-        pip install -r requirements.txt
-        ```
+     The project is managed with [uv](https://docs.astral.sh/uv/). To install the dependencies, run:
+
+     ```bash
+     uv sync
+     ```
+
+     Alternatively, you can use pip to install the dependencies listed in `requirements.txt`:
+
+     ```bash
+     pip install -r requirements.txt
+     ```
+
+   - **Using Docker** (recommended for reproducibility):  
+     A pre-built Docker image is available on Docker Hub:
+
+     ```bash
+     docker pull santidr/model-quantization-aggregation
+     ```
+
+     Run the container with Jupyter Lab:
+
+     ```bash
+     docker run -it -p 8888:8888 santidr/model-quantization-aggregation
+     ```
+
+     To use LLM features (paper selection), pass your API key:
+
+     ```bash
+     docker run -it -p 8888:8888 \
+       -e GEMINI_API_KEY=your_key \
+       santidr/model-quantization-aggregation
+     ```
+
+     To persist data changes, mount local directories:
+
+     ```bash
+     docker run -it -p 8888:8888 \
+       -v $(pwd)/data:/app/data \
+       -v $(pwd)/reports:/app/reports \
+       santidr/model-quantization-aggregation
+     ```
 
 2. **Getting the Data**:
-   - Run the download script to fetch the list of papers from arXiv and merge it with the Scopus list:  
+   - Run the download script to fetch the list of papers from arXiv and merge it with the Scopus list:
+
      ```bash
      python src/data/downlad.py
      ```
 
-   - We do not provide the raw data from the selected papers to prevent potential copyright issues. However, we provide instructions on how to obtain the data in each paper's README file. Located in the `data/external/` directory.
+   - We do not provide the raw data from the selected papers to prevent potential copyright issues. However, we provide instructions on how to obtain the data in each paper's README file. Located in the [data/external](data/external) directory.
 
 3. **Extracting the evidence**:
-   - Use the `run_evidence_extraction.py` module to extract the evidence from the selected papers.
+   - Use the [run_evidence_extraction.py](src/run_evidence_extraction.py) module to extract the evidence from the selected papers.
 
 4. **Explore the data with Jupyter Notebooks**:
-   - Open the Jupyter notebooks in the `notebooks/` directory to explore the data and analysis.
+   - Open the Jupyter notebooks in the [notebooks](notebooks) directory to explore the data and analysis.
 
 ## Notes
 
@@ -110,4 +146,5 @@ The project is organized as follows:
 - For any issues or questions, please contact the authors of the paper.
 
 ## License
+
 This project is licensed under the Apache 2.0 License. See the [LICENSE](LICENSE) file for details.

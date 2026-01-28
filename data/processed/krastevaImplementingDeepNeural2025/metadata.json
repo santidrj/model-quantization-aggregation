@@ -1,0 +1,31 @@
+{
+  "title": "Implementing Deep Neural Networks on ARM-Based Microcontrollers: Application for Ventricular Fibrillation Detection",
+  "study_type": "controlled experiment",
+  "data_quality": "comparative",
+  "energy_measurement": {
+    "measurement_method": ["hardware-based"]
+  },
+  "quantization_schema": {
+    "baseline_precision": "fp32",
+    "target_precision": ["int8"],
+    "quantization_targets": ["w-int8, a-int8", "full-int8"],
+    "quantization_method": "post-training quantization",
+    "quantization_techniques": ["static quantization"],
+    "frameworks": ["TensorFlow"],
+    "formats": ["LiteRT"]
+  },
+  "hardware": [
+    {
+      "device": {
+        "board": "STM32F7",
+        "OS": "STM32CubeOS",
+        "CPU": "ARM Cortex-M7",
+        "Storage": "2MB",
+        "SRAM": "512KB",
+        "SDRAM": "16MB"
+      }
+    }
+  ],
+  "models": ["Custom CNN"],
+  "datasets": ["Private ECG dataset"]
+}

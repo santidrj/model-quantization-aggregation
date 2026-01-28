@@ -1,0 +1,27 @@
+[
+    {
+        "quantization_precision": "w-int2, a-int8, b-int8",
+        "accuracy": {
+            "improvement": -2.932,
+            "std": 2.23,
+            "iqr": 2.499,
+            "sample_size_discount": 0.903,
+            "variability_discount": 0.918,
+            "discount_factor": 0.829,
+            "p_value": 0.171,
+            "belief": 0.565,
+            "intensity": "weakly negative - indiferent"
+        },
+        "storage_size": {
+            "improvement": 86.062,
+            "std": 20.312,
+            "iqr": 0.293,
+            "sample_size_discount": 0.903,
+            "variability_discount": 1.0,
+            "discount_factor": 0.903,
+            "p_value": 0.097,
+            "belief": 0.616,
+            "intensity": "strongly positive"
+        }
+    }
+]

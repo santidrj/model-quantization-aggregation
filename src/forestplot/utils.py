@@ -1,11 +1,13 @@
-from typing import Any, List, Optional, Sequence, Tuple, Union
+from collections.abc import Sequence
+from typing import Any
 
 from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 import numpy as np
+import pandas as pd
 import polars as pl
 
-from src.effect_intensity import CorrectnessIntensity, EffectIntensity
+from src.effect_intensity import CorrectnessIntensity, CorrectnessMetrics, EffectIntensity
 
 
 def draw_ci(
@@ -36,15 +38,15 @@ def draw_ci(
     """
     ecolor = kwargs.get("ecolor", "black")
 
-    estimate = data.select(estimate).to_numpy().flatten()
+    estimate_values = data.select(estimate).to_numpy().flatten()
     lower_ci = data.select(lower_ci_col).to_numpy().flatten()
     upper_ci = data.select(higher_ci_col).to_numpy().flatten()
-    y_tick_label = data.select(y_tick_label).to_numpy().flatten()
+    y_tick_label_values = data.select(y_tick_label).to_numpy().flatten()
 
     ax.errorbar(
-        estimate,
-        y=y_tick_label,
-        xerr=[estimate - lower_ci, upper_ci - estimate],
+        estimate_values,
+        y=y_tick_label_values,
+        xerr=[estimate_values - lower_ci, upper_ci - estimate_values],
         ecolor=ecolor,
         elinewidth=1.4,
         ls="none",
@@ -98,7 +100,7 @@ def format_xticks(
     lower_ci_col: str,
     upper_ci_col: str,
     ax: Axes,
-    xlim: Optional[Union[Tuple, List]] = None,
+    xlim: tuple | list | None = None,
     **kwargs: Any,
 ) -> Axes:
     """
@@ -124,7 +126,7 @@ def format_xticks(
     """
     nticks = kwargs.get("nticks", 5)
     xtick_size = kwargs.get("xtick_size", 10)
-    xticklabels = kwargs.get("xticklabels", None)
+    xticklabels = kwargs.get("xticklabels")
 
     x_min = data.select(lower_ci_col).min().item(0, 0)
     x_max = data.select(upper_ci_col).max().item(0, 0)
@@ -145,8 +147,8 @@ def format_xticks(
 def draw_ref_xline(
     ax: Axes,
     y_max: float,
-    annoteheaders: Optional[Union[Sequence[str], None]],
-    right_annoteheaders: Optional[Union[Sequence[str], None]],
+    annoteheaders: Sequence[str] | None | None,
+    right_annoteheaders: Sequence[str] | None | None,
     **kwargs: Any,
 ) -> Axes:
     """
@@ -335,7 +337,7 @@ def draw_intensity_labels(ax: Axes, metric: str, y: float, x_min: float, x_max: 
                 ax=ax,
                 rotation=text_rotation,
             )
-        elif range[0] < x_min and x_min < range[1] and range[1] < x_max:
+        elif range[0] < x_min < range[1] and range[1] < x_max:
             ax = draw_text(
                 x=(range[1] + x_min) / 2,
                 y=y + offset,
@@ -343,7 +345,7 @@ def draw_intensity_labels(ax: Axes, metric: str, y: float, x_min: float, x_max: 
                 ax=ax,
                 rotation=text_rotation,
             )
-        elif x_min < range[0] and range[0] < x_max and x_max < range[1]:
+        elif x_min < range[0] and range[0] < x_max < range[1]:
             ax = draw_text(
                 x=(range[0] + x_max) / 2,
                 y=y + offset,
@@ -373,8 +375,8 @@ intensity_colors = {
 }
 
 
-def draw_intensity_areas(ax: Axes, metric: str, y: np.array, x_min: float, x_max: float) -> Axes:
-    if metric in ["Accuracy", "F1 Score"]:
+def draw_intensity_areas(ax: Axes, metric: str, y: np.ndarray, x_min: float, x_max: float) -> Axes:
+    if metric in CorrectnessMetrics.metrics():
         intensities = CorrectnessIntensity()
     else:
         intensities = EffectIntensity()
@@ -392,7 +394,7 @@ def draw_intensity_areas(ax: Axes, metric: str, y: np.array, x_min: float, x_max
                 zorder=-1,
             )
             x_ticks.append(range[0])
-        elif range[0] < x_min and x_min < range[1] and range[1] < x_max:
+        elif range[0] < x_min < range[1] and range[1] < x_max:
             ax.fill_betweenx(
                 y=y,
                 x1=x_min,
@@ -402,7 +404,7 @@ def draw_intensity_areas(ax: Axes, metric: str, y: np.array, x_min: float, x_max
                 zorder=-1,
             )
             x_ticks.append(range[1])
-        elif x_min < range[0] and range[0] < x_max and x_max < range[1]:
+        elif x_min < range[0] and range[0] < x_max < range[1]:
             ax.fill_betweenx(
                 y=y,
                 x1=range[0],
@@ -430,5 +432,115 @@ def draw_intensity_areas(ax: Axes, metric: str, y: np.array, x_min: float, x_max
     x_ticks = x_ticks[(x_ticks >= x_min) & (x_ticks <= x_max)]
     # Add the x-ticks to the axis
     ax.set_xticks(x_ticks)
+
+    return ax
+
+
+def draw_forestplot(
+    df: pd.DataFrame,
+    ax: Axes,
+    main_effects: list[str],
+    contains_header: bool = False,
+    xlim: float | None = None,
+) -> Axes:
+    """
+    Draws a forest plot on the given axis.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The data frame containing the data to plot.
+    ax : Axes
+        The axis to draw on.
+    main_effects : list[str]
+        The list of main effects to plot.
+    contains_header : bool
+        Whether the data frame contains a header.
+    xlim : float
+        The x-axis limit.
+
+    Returns
+    -------
+    Axes
+        The axis with the forest plot drawn.
+    """
+    if xlim is not None:
+        x_lim = xlim + 5
+    else:
+        x_min = df["lower_ci"].min()
+        x_max = df["upper_ci"].max()
+        x_lim = round(max(abs(x_min), x_max) + 5)
+    ax.set_xlim(-x_lim, x_lim)
+    last_y = -1
+    ordered_df = []
+    for metric in reversed(main_effects):
+        tmp = df[df["mean"].notnull() & df["effect"].str.contains(metric)].copy()
+        if tmp.empty:
+            continue
+
+        y_min = last_y + 1
+        y_max = y_min + len(tmp) - 1
+        intensities_y = np.arange(y_min - 0.5, y_max + 1, 1)
+        draw_intensity_areas(ax, metric, intensities_y, -x_lim, x_lim)
+
+        metric_header = df[df["mean"].isnull() & df["effect"].str.contains(metric)]
+        tmp = tmp.sort_values(by=["id", "evidence_id"], ascending=False).reset_index(drop=True)
+        tmp = pd.concat([tmp, metric_header], ignore_index=True).reset_index()
+
+        tmp["index"] += y_min
+        last_y = tmp["index"].iloc[-1] + 1
+
+        if metric_header["yticklabel"].str.contains("\n").any():
+            tmp.iat[-1, 0] += 1
+            last_y += 1
+
+        ordered_df.append(tmp)
+
+    ordered_df = pd.concat(ordered_df).reset_index(drop=True)
+
+    if contains_header:
+        header_offset = 3 if ordered_df["yticklabel"].str.contains("\n").any() else 1.5
+        main_header = df[df["yticklabel"].str.contains("Belief")]
+        main_header["index"] = ordered_df["index"].max() + header_offset
+        ordered_df = pd.concat([ordered_df, main_header])
+
+    effects_data = ordered_df.loc[~ordered_df["yticklabel"].str.contains("Aggregated")]
+    ax.scatter(effects_data["mean"], effects_data["index"], marker="s", color="black")
+    draw_ci(pl.from_pandas(effects_data), "mean", "index", "lower_ci", "upper_ci", ax)
+    summary_data = ordered_df.loc[ordered_df["yticklabel"].str.contains("Aggregated")]
+    ax.scatter(summary_data["mean"], summary_data["index"], marker="D", color="blue", s=50, label="Aggregated")
+    draw_ci(pl.from_pandas(summary_data), "mean", "index", "lower_ci", "upper_ci", ax, ecolor="blue")
+
+    tmp = ordered_df[ordered_df["mean"].notnull()].iloc[-1]
+    top_effect = tmp["effect"]
+    y_max = tmp["index"].max() + 0.5
+    draw_intensity_labels(ax, top_effect, y_max, -x_lim, x_lim, rotation=90)
+
+    draw_ref_xline(ax, y_max, ["precision", "nobs"], [])
+
+    ax.set_yticks(ordered_df["index"], labels=ordered_df["yticklabel"], multialignment="left")
+    right_flush_yticklabels(pl.from_pandas(ordered_df), "yticklabel", True, ax)
+
+    header_labels_idx = ordered_df[ordered_df["mean"].isnull()].index
+    for idx in header_labels_idx:
+        label = ax.get_yticklabels()[idx]
+        label.set_fontweight("bold")
+        label.set_fontsize(12)
+
+    ax.set_ylim(ordered_df["index"].min() - 0.5, ordered_df["index"].max())
+    ax.tick_params(
+        top=False, right=False, left=False, bottom=True, labelleft=True, labelbottom=True, labelfontfamily="monospace"
+    )
+
+    ax.tick_params(axis="x", labelsize=9)
+    # Align negative x-axis labels to the right
+    for label in ax.get_xticklabels():
+        label.set_horizontalalignment("center")
+        label.set_rotation(45)
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_visible(True)
 
     return ax

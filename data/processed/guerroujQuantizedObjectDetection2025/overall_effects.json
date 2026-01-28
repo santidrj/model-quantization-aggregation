@@ -1,0 +1,37 @@
+[
+    {
+        "mAP": {
+            "improvement": -20.596,
+            "std": 23.646,
+            "iqr": 43.634,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "strongly negative - negative"
+        },
+        "inference_latency": {
+            "improvement": 67.051,
+            "std": 9.523,
+            "iqr": 12.186,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 71.504,
+            "std": 13.584,
+            "iqr": 17.111,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "strongly positive"
+        }
+    }
+]

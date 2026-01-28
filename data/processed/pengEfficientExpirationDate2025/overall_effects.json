@@ -1,0 +1,26 @@
+[
+    {
+        "inference_latency": {
+            "improvement": -0.287,
+            "std": 24.971,
+            "iqr": 10.663,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.194,
+            "intensity": "indiferent"
+        },
+        "storage_size": {
+            "improvement": 60.882,
+            "std": 11.535,
+            "iqr": 21.154,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.194,
+            "intensity": "strongly positive"
+        }
+    }
+]

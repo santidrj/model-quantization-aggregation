@@ -1,0 +1,82 @@
+[
+    {
+        "samples": 72,
+        "accuracy": {
+            "improvement": 0.944,
+            "std": 23.123,
+            "iqr": 10.469,
+            "sample_size_discount": 1.0,
+            "variability_discount": 1.0,
+            "discount_factor": 1.0,
+            "p_value": 0.0,
+            "belief": 0.713,
+            "intensity": "indiferent"
+        },
+        "inference_latency": {
+            "improvement": 33.338,
+            "std": 10.333,
+            "iqr": 11.796,
+            "sample_size_discount": 1.0,
+            "variability_discount": 1.0,
+            "discount_factor": 1.0,
+            "p_value": 0.0,
+            "belief": 0.713,
+            "intensity": "positive"
+        },
+        "gpu_energy_consumption": {
+            "improvement": 36.663,
+            "std": 8.088,
+            "iqr": 9.959,
+            "sample_size_discount": 1.0,
+            "variability_discount": 1.0,
+            "discount_factor": 1.0,
+            "p_value": 0.0,
+            "belief": 0.713,
+            "intensity": "positive"
+        },
+        "gpu_power_draw": {
+            "improvement": 3.563,
+            "std": 4.75,
+            "iqr": 3.818,
+            "sample_size_discount": 1.0,
+            "variability_discount": 1.0,
+            "discount_factor": 1.0,
+            "p_value": 0.0,
+            "belief": 0.713,
+            "intensity": "indiferent - weakly positive"
+        },
+        "gpu_utilization": {
+            "improvement": 7.105,
+            "std": 2.888,
+            "iqr": 4.031,
+            "sample_size_discount": 1.0,
+            "variability_discount": 1.0,
+            "discount_factor": 1.0,
+            "p_value": 0.0,
+            "belief": 0.713,
+            "intensity": "indiferent - weakly positive"
+        },
+        "gpu_memory_utilization": {
+            "improvement": 34.615,
+            "std": 13.441,
+            "iqr": 25.083,
+            "sample_size_discount": 1.0,
+            "variability_discount": 1.0,
+            "discount_factor": 1.0,
+            "p_value": 0.0,
+            "belief": 0.713,
+            "intensity": "positive"
+        },
+        "storage_size": {
+            "improvement": 62.5,
+            "std": 12.544,
+            "iqr": 25.0,
+            "sample_size_discount": 1.0,
+            "variability_discount": 1.0,
+            "discount_factor": 1.0,
+            "p_value": 0.0,
+            "belief": 0.713,
+            "intensity": "strongly positive"
+        }
+    }
+]

@@ -1,0 +1,38 @@
+{
+  "title": "Quantized Object Detection for Real-Time Inference on Embedded GPU Architectures",
+  "study_type": "controlled experiment",
+  "data_quality": "comparative",
+  "quantization_schema": {
+    "baseline_precision": "fp32",
+    "target_precision": ["fp16", "int8"],
+    "quantization_targets": ["w-fp16, a-fp16", "w-int8, a-int8"],
+    "quantization_method": "post-training quantization",
+    "frameworks": ["TensorRT"]
+  },
+  "hardware": [
+    {
+      "device": {
+        "CPU": "Intel Xeon W-2265 @ 3.5GHz",
+        "GPU": "Nvidia Quadro RTX 6000"
+      }
+    },
+    {
+      "device": {
+        "model": "Jetson AGX Xavier",
+        "CPU": "8-core ARM Carmel @ 2.26GHz",
+        "GPU": "512-core Volta GPU",
+        "RAM": "16GB"
+      }
+    },
+    {
+      "device": {
+        "model": "Nvidia Jetson Nano",
+        "CPU": "4-core ARM Cortex-A57 @ 2.26GHz",
+        "GPU": "128-core Maxwell GPU",
+        "RAM": "4GB"
+      }
+    }
+  ],
+  "models": ["YOLOv4"],
+  "datasets": ["KITTI"]
+}

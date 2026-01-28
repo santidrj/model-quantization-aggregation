@@ -1,0 +1,26 @@
+[
+    {
+        "accuracy": {
+            "improvement": -3.975,
+            "std": 3.63,
+            "iqr": 4.81,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.127,
+            "intensity": "weakly negative - indiferent"
+        },
+        "ram_energy_consumption": {
+            "improvement": 47.955,
+            "std": 13.114,
+            "iqr": 13.683,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.127,
+            "intensity": "positive - strongly positive"
+        }
+    }
+]

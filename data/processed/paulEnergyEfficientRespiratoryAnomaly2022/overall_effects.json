@@ -1,0 +1,37 @@
+[
+    {
+        "accuracy": {
+            "improvement": -4.377,
+            "std": 4.037,
+            "iqr": 7.792,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.106,
+            "intensity": "weakly negative - indiferent"
+        },
+        "inference_energy_consumption": {
+            "improvement": 66.722,
+            "std": 31.83,
+            "iqr": 30.938,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.106,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 80.625,
+            "std": 19.06,
+            "iqr": 18.75,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.106,
+            "intensity": "strongly positive"
+        }
+    }
+]

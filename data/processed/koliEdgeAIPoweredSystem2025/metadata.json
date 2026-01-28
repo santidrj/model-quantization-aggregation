@@ -1,0 +1,25 @@
+{
+  "title": "Edge AI-Powered System Architecture for Aloe Vera Plant Disease Detection",
+  "study_type": "controlled experiment",
+  "data_quality": "comparative",
+  "quantization_schema": {
+    "baseline_precision": "fp32",
+    "target_precision": ["int8"],
+    "quantization_targets": ["w-int8"],
+    "quantization_method": "post-training quantization",
+    "frameworks": ["TensorFlow"],
+    "formats": ["TF Lite"]
+  },
+  "hardware": [
+    {
+      "device": {
+        "model": "Raspberry Pi 4B",
+        "board": "Raspberry Pi 4B",
+        "OS": "Raspberry Pi OS",
+        "CPU": "Quad-core Cortex-A72 (ARM v8) 64-bit SoC @ 1.8GHz"
+      }
+    }
+  ],
+  "models": ["ResNet50", "Custom ResNet50"],
+  "datasets": ["Custom Aloe Vera Plant Disease Dataset"]
+}
