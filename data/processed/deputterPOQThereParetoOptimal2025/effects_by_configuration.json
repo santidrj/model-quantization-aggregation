@@ -3,11 +3,11 @@
         "configuration": {
             "Device": "Meta VR",
             "Dataset": "ImageNet",
-            "Filter Multiplier": 0.5,
+            "Filter Multiplier": 0.75,
             "quantization_precision": "full-int4"
         },
         "accuracy": {
-            "improvement": -4.989,
+            "improvement": -11.96,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -15,7 +15,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.129,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "negative - weakly negative"
         },
         "mIoU": {
             "improvement": null,
@@ -29,48 +29,7 @@
             "intensity": null
         },
         "inference_energy_consumption": {
-            "improvement": 78.552,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "Meta VR 2",
-            "Dataset": "Cifar100",
-            "Filter Multiplier": 0.5,
-            "quantization_precision": "full-int4"
-        },
-        "accuracy": {
-            "improvement": -3.001,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "weakly negative - indiferent"
-        },
-        "mIoU": {
-            "improvement": null,
-            "std": null,
-            "iqr": null,
-            "sample_size_discount": 0.0,
-            "variability_discount": 1.0,
-            "discount_factor": 0.0,
-            "p_value": 1.0,
-            "belief": 0.0,
-            "intensity": null
-        },
-        "inference_energy_consumption": {
-            "improvement": 84.038,
+            "improvement": 82.838,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -124,13 +83,13 @@
     },
     {
         "configuration": {
-            "Device": "Meta VR",
-            "Dataset": "ImageNet",
-            "Filter Multiplier": 0.75,
+            "Device": "Meta VR 2",
+            "Dataset": "Cifar100",
+            "Filter Multiplier": 0.5,
             "quantization_precision": "full-int4"
         },
         "accuracy": {
-            "improvement": -11.96,
+            "improvement": -3.001,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -138,7 +97,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.129,
-            "intensity": "negative - weakly negative"
+            "intensity": "weakly negative - indiferent"
         },
         "mIoU": {
             "improvement": null,
@@ -152,7 +111,7 @@
             "intensity": null
         },
         "inference_energy_consumption": {
-            "improvement": 82.838,
+            "improvement": 84.038,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -248,6 +207,47 @@
     {
         "configuration": {
             "Device": "Meta VR",
+            "Dataset": "ImageNet",
+            "Filter Multiplier": 0.5,
+            "quantization_precision": "full-int4"
+        },
+        "accuracy": {
+            "improvement": -4.989,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "weakly negative - indiferent"
+        },
+        "mIoU": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
+        },
+        "inference_energy_consumption": {
+            "improvement": 78.552,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "Meta VR",
             "Dataset": "PascalVOC2012",
             "Filter Multiplier": 1.0,
             "quantization_precision": "full-int4"
@@ -276,47 +276,6 @@
         },
         "inference_energy_consumption": {
             "improvement": 83.949,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "Meta VR",
-            "Dataset": "PascalVOC2012",
-            "Filter Multiplier": 0.75,
-            "quantization_precision": "full-int8"
-        },
-        "accuracy": {
-            "improvement": null,
-            "std": null,
-            "iqr": null,
-            "sample_size_discount": 0.0,
-            "variability_discount": 1.0,
-            "discount_factor": 0.0,
-            "p_value": 1.0,
-            "belief": 0.0,
-            "intensity": null
-        },
-        "mIoU": {
-            "improvement": 3.821,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "indiferent - weakly positive"
-        },
-        "inference_energy_consumption": {
-            "improvement": 63.019,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -358,47 +317,6 @@
         },
         "inference_energy_consumption": {
             "improvement": 64.632,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "Meta VR 2",
-            "Dataset": "Cifar100",
-            "Filter Multiplier": 0.75,
-            "quantization_precision": "full-int8"
-        },
-        "accuracy": {
-            "improvement": -0.68,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "indiferent"
-        },
-        "mIoU": {
-            "improvement": null,
-            "std": null,
-            "iqr": null,
-            "sample_size_discount": 0.0,
-            "variability_discount": 1.0,
-            "discount_factor": 0.0,
-            "p_value": 1.0,
-            "belief": 0.0,
-            "intensity": null
-        },
-        "inference_energy_consumption": {
-            "improvement": 64.577,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -453,49 +371,8 @@
     {
         "configuration": {
             "Device": "Meta VR",
-            "Dataset": "ImageNet",
-            "Filter Multiplier": 0.5,
-            "quantization_precision": "full-int8"
-        },
-        "accuracy": {
-            "improvement": 0.388,
-            "std": 1.263,
-            "iqr": 1.786,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.221,
-            "intensity": "indiferent"
-        },
-        "mIoU": {
-            "improvement": null,
-            "std": null,
-            "iqr": null,
-            "sample_size_discount": 0.0,
-            "variability_discount": 1.0,
-            "discount_factor": 0.0,
-            "p_value": 1.0,
-            "belief": 0.0,
-            "intensity": null
-        },
-        "inference_energy_consumption": {
-            "improvement": 64.416,
-            "std": 7.56,
-            "iqr": 10.691,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.221,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "Meta VR",
             "Dataset": "PascalVOC2012",
-            "Filter Multiplier": 1.0,
+            "Filter Multiplier": 0.75,
             "quantization_precision": "full-int8"
         },
         "accuracy": {
@@ -510,7 +387,7 @@
             "intensity": null
         },
         "mIoU": {
-            "improvement": 3.774,
+            "improvement": 3.821,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -521,7 +398,7 @@
             "intensity": "indiferent - weakly positive"
         },
         "inference_energy_consumption": {
-            "improvement": 61.79,
+            "improvement": 63.019,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -616,6 +493,88 @@
     },
     {
         "configuration": {
+            "Device": "Meta VR 2",
+            "Dataset": "Cifar100",
+            "Filter Multiplier": 0.75,
+            "quantization_precision": "full-int8"
+        },
+        "accuracy": {
+            "improvement": -0.68,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "indiferent"
+        },
+        "mIoU": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
+        },
+        "inference_energy_consumption": {
+            "improvement": 64.577,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "Meta VR",
+            "Dataset": "PascalVOC2012",
+            "Filter Multiplier": 1.0,
+            "quantization_precision": "full-int8"
+        },
+        "accuracy": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
+        },
+        "mIoU": {
+            "improvement": 3.774,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "indiferent - weakly positive"
+        },
+        "inference_energy_consumption": {
+            "improvement": 61.79,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
             "Device": "BrainTTA",
             "Dataset": "Imagenet",
             "Filter Multiplier": 1.0,
@@ -657,21 +616,21 @@
     },
     {
         "configuration": {
-            "Device": "BrainTTA",
-            "Dataset": "Imagenet",
-            "Filter Multiplier": 1.0,
-            "quantization_precision": "int2"
+            "Device": "Meta VR",
+            "Dataset": "ImageNet",
+            "Filter Multiplier": 0.5,
+            "quantization_precision": "full-int8"
         },
         "accuracy": {
-            "improvement": -22.152,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
+            "improvement": 0.388,
+            "std": 1.263,
+            "iqr": 1.786,
+            "sample_size_discount": 0.487,
             "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "strongly negative - negative"
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.221,
+            "intensity": "indiferent"
         },
         "mIoU": {
             "improvement": null,
@@ -685,14 +644,14 @@
             "intensity": null
         },
         "inference_energy_consumption": {
-            "improvement": 80.806,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
+            "improvement": 64.416,
+            "std": 7.56,
+            "iqr": 10.691,
+            "sample_size_discount": 0.487,
             "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.221,
             "intensity": "strongly positive"
         }
     },
@@ -727,6 +686,47 @@
         },
         "inference_energy_consumption": {
             "improvement": 87.974,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "BrainTTA",
+            "Dataset": "Imagenet",
+            "Filter Multiplier": 1.0,
+            "quantization_precision": "int2"
+        },
+        "accuracy": {
+            "improvement": -22.152,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "strongly negative - negative"
+        },
+        "mIoU": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
+        },
+        "inference_energy_consumption": {
+            "improvement": 80.806,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -809,6 +809,88 @@
         },
         "inference_energy_consumption": {
             "improvement": 85.88,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "Meta VR",
+            "Dataset": "PascalVOC2012",
+            "Filter Multiplier": 1.0,
+            "quantization_precision": "int4"
+        },
+        "accuracy": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
+        },
+        "mIoU": {
+            "improvement": -5.111,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "weakly negative"
+        },
+        "inference_energy_consumption": {
+            "improvement": 83.949,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "BrainTTA",
+            "Dataset": "Imagenet",
+            "Filter Multiplier": 0.5,
+            "quantization_precision": "int4"
+        },
+        "accuracy": {
+            "improvement": -4.43,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "weakly negative - indiferent"
+        },
+        "mIoU": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
+        },
+        "inference_energy_consumption": {
+            "improvement": 70.863,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -905,88 +987,6 @@
         "configuration": {
             "Device": "BrainTTA",
             "Dataset": "Imagenet",
-            "Filter Multiplier": 0.5,
-            "quantization_precision": "int4"
-        },
-        "accuracy": {
-            "improvement": -4.43,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "weakly negative - indiferent"
-        },
-        "mIoU": {
-            "improvement": null,
-            "std": null,
-            "iqr": null,
-            "sample_size_discount": 0.0,
-            "variability_discount": 1.0,
-            "discount_factor": 0.0,
-            "p_value": 1.0,
-            "belief": 0.0,
-            "intensity": null
-        },
-        "inference_energy_consumption": {
-            "improvement": 70.863,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "Meta VR",
-            "Dataset": "ImageNet",
-            "Filter Multiplier": 1.0,
-            "quantization_precision": "int4"
-        },
-        "accuracy": {
-            "improvement": -3.005,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "weakly negative - indiferent"
-        },
-        "mIoU": {
-            "improvement": null,
-            "std": null,
-            "iqr": null,
-            "sample_size_discount": 0.0,
-            "variability_discount": 1.0,
-            "discount_factor": 0.0,
-            "p_value": 1.0,
-            "belief": 0.0,
-            "intensity": null
-        },
-        "inference_energy_consumption": {
-            "improvement": 83.004,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "BrainTTA",
-            "Dataset": "Imagenet",
             "Filter Multiplier": 1.0,
             "quantization_precision": "int4"
         },
@@ -1014,47 +1014,6 @@
         },
         "inference_energy_consumption": {
             "improvement": 73.033,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "Meta VR",
-            "Dataset": "PascalVOC2012",
-            "Filter Multiplier": 1.0,
-            "quantization_precision": "int4"
-        },
-        "accuracy": {
-            "improvement": null,
-            "std": null,
-            "iqr": null,
-            "sample_size_discount": 0.0,
-            "variability_discount": 1.0,
-            "discount_factor": 0.0,
-            "p_value": 1.0,
-            "belief": 0.0,
-            "intensity": null
-        },
-        "mIoU": {
-            "improvement": -5.111,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "weakly negative"
-        },
-        "inference_energy_consumption": {
-            "improvement": 83.949,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -1096,6 +1055,47 @@
         },
         "inference_energy_consumption": {
             "improvement": 81.268,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "Meta VR",
+            "Dataset": "ImageNet",
+            "Filter Multiplier": 1.0,
+            "quantization_precision": "int4"
+        },
+        "accuracy": {
+            "improvement": -3.005,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "weakly negative - indiferent"
+        },
+        "mIoU": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
+        },
+        "inference_energy_consumption": {
+            "improvement": 83.004,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -1190,54 +1190,13 @@
     },
     {
         "configuration": {
-            "Device": "Meta VR",
-            "Dataset": "PascalVOC2012",
-            "Filter Multiplier": 1.0,
+            "Device": "Meta VR 2",
+            "Dataset": "Cifar100",
+            "Filter Multiplier": 0.5,
             "quantization_precision": "int8"
         },
         "accuracy": {
-            "improvement": null,
-            "std": null,
-            "iqr": null,
-            "sample_size_discount": 0.0,
-            "variability_discount": 1.0,
-            "discount_factor": 0.0,
-            "p_value": 1.0,
-            "belief": 0.0,
-            "intensity": null
-        },
-        "mIoU": {
-            "improvement": 4.914,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "indiferent - weakly positive"
-        },
-        "inference_energy_consumption": {
-            "improvement": 61.79,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "Meta VR",
-            "Dataset": "ImageNet",
-            "Filter Multiplier": 0.75,
-            "quantization_precision": "int8"
-        },
-        "accuracy": {
-            "improvement": 0.626,
+            "improvement": 0.802,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -1259,7 +1218,48 @@
             "intensity": null
         },
         "inference_energy_consumption": {
-            "improvement": 68.879,
+            "improvement": 60.094,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "BrainTTA",
+            "Dataset": "Imagenet",
+            "Filter Multiplier": 0.5,
+            "quantization_precision": "int8"
+        },
+        "accuracy": {
+            "improvement": -0.533,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "indiferent"
+        },
+        "mIoU": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
+        },
+        "inference_energy_consumption": {
+            "improvement": 52.617,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -1354,13 +1354,13 @@
     },
     {
         "configuration": {
-            "Device": "BrainTTA",
-            "Dataset": "Imagenet",
-            "Filter Multiplier": 0.5,
+            "Device": "Meta VR",
+            "Dataset": "ImageNet",
+            "Filter Multiplier": 0.75,
             "quantization_precision": "int8"
         },
         "accuracy": {
-            "improvement": -0.533,
+            "improvement": 0.626,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -1382,7 +1382,89 @@
             "intensity": null
         },
         "inference_energy_consumption": {
-            "improvement": 52.617,
+            "improvement": 68.879,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "Meta VR",
+            "Dataset": "PascalVOC2012",
+            "Filter Multiplier": 1.0,
+            "quantization_precision": "int8"
+        },
+        "accuracy": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
+        },
+        "mIoU": {
+            "improvement": 4.914,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "indiferent - weakly positive"
+        },
+        "inference_energy_consumption": {
+            "improvement": 61.79,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "Meta VR",
+            "Dataset": "PascalVOC2012",
+            "Filter Multiplier": 0.75,
+            "quantization_precision": "int8"
+        },
+        "accuracy": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
+        },
+        "mIoU": {
+            "improvement": 5.837,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "weakly positive"
+        },
+        "inference_energy_consumption": {
+            "improvement": 62.46,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -1465,88 +1547,6 @@
         },
         "inference_energy_consumption": {
             "improvement": 56.351,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "Meta VR 2",
-            "Dataset": "Cifar100",
-            "Filter Multiplier": 0.5,
-            "quantization_precision": "int8"
-        },
-        "accuracy": {
-            "improvement": 0.802,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "indiferent"
-        },
-        "mIoU": {
-            "improvement": null,
-            "std": null,
-            "iqr": null,
-            "sample_size_discount": 0.0,
-            "variability_discount": 1.0,
-            "discount_factor": 0.0,
-            "p_value": 1.0,
-            "belief": 0.0,
-            "intensity": null
-        },
-        "inference_energy_consumption": {
-            "improvement": 60.094,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "Meta VR",
-            "Dataset": "PascalVOC2012",
-            "Filter Multiplier": 0.75,
-            "quantization_precision": "int8"
-        },
-        "accuracy": {
-            "improvement": null,
-            "std": null,
-            "iqr": null,
-            "sample_size_discount": 0.0,
-            "variability_discount": 1.0,
-            "discount_factor": 0.0,
-            "p_value": 1.0,
-            "belief": 0.0,
-            "intensity": null
-        },
-        "mIoU": {
-            "improvement": 5.837,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "weakly positive"
-        },
-        "inference_energy_consumption": {
-            "improvement": 62.46,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -1643,47 +1643,6 @@
         "configuration": {
             "Device": "Meta VR",
             "Dataset": "ImageNet",
-            "Filter Multiplier": 0.75,
-            "quantization_precision": "w-int2, a-int8"
-        },
-        "accuracy": {
-            "improvement": -9.706,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "weakly negative"
-        },
-        "mIoU": {
-            "improvement": null,
-            "std": null,
-            "iqr": null,
-            "sample_size_discount": 0.0,
-            "variability_discount": 1.0,
-            "discount_factor": 0.0,
-            "p_value": 1.0,
-            "belief": 0.0,
-            "intensity": null
-        },
-        "inference_energy_consumption": {
-            "improvement": 76.776,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "Meta VR",
-            "Dataset": "ImageNet",
             "Filter Multiplier": 1.0,
             "quantization_precision": "w-int2, a-int8"
         },
@@ -1711,6 +1670,47 @@
         },
         "inference_energy_consumption": {
             "improvement": 70.37,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "Meta VR",
+            "Dataset": "ImageNet",
+            "Filter Multiplier": 0.75,
+            "quantization_precision": "w-int2, a-int8"
+        },
+        "accuracy": {
+            "improvement": -9.706,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "weakly negative"
+        },
+        "mIoU": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
+        },
+        "inference_energy_consumption": {
+            "improvement": 76.776,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,

@@ -222,9 +222,9 @@
 [ ] Not applicable  
 
 8.2) If the study was a quasi-experiment, do the authors discuss the design components that were used to address any study weaknesses?  
-[ ] No  
+[x] No  
 [ ] Yes  
-[x] Not applicable  
+[ ] Not applicable  
 
 8.3) If the study used novel measures, is the construct validity of the measures discussed?  
 [ ] No  

@@ -1,0 +1,1514 @@
+[
+    {
+        "quantization_precision": "mixed | ADMM (layer level variable) | Hes | 1 | lm16",
+        "perplexity": {
+            "improvement": 3.97,
+            "std": 1.996,
+            "iqr": 2.823,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent - weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 49.749,
+            "std": 9.399,
+            "iqr": 13.292,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 93.622,
+            "std": 0.104,
+            "iqr": 0.147,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (layer level variable) | Hes | 1 | lm20",
+        "perplexity": {
+            "improvement": 13.514,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly positive - positive"
+        },
+        "inference_latency": {
+            "improvement": 46.829,
+            "std": 6.154,
+            "iqr": 8.703,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 93.501,
+            "std": 0.149,
+            "iqr": 0.21,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (layer level variable) | Hes | 4 | lm17",
+        "perplexity": {
+            "improvement": 3.774,
+            "std": 1.9,
+            "iqr": 2.687,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent - weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 43.103,
+            "std": 9.753,
+            "iqr": 13.793,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 87.24,
+            "std": 0.196,
+            "iqr": 0.278,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (layer level variable) | Hes | 4 | lm21",
+        "perplexity": {
+            "improvement": 7.248,
+            "std": 1.911,
+            "iqr": 2.703,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 41.861,
+            "std": 5.385,
+            "iqr": 7.616,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 87.035,
+            "std": 0.057,
+            "iqr": 0.081,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (layer level variable) | KL | 1 | lm18",
+        "perplexity": {
+            "improvement": 2.135,
+            "std": 0.909,
+            "iqr": 1.285,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent - weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 49.695,
+            "std": 10.298,
+            "iqr": 14.563,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 93.662,
+            "std": 0.047,
+            "iqr": 0.067,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (layer level variable) | KL | 1 | lm22",
+        "perplexity": {
+            "improvement": 12.776,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly positive - positive"
+        },
+        "inference_latency": {
+            "improvement": 45.6,
+            "std": 5.666,
+            "iqr": 8.013,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 93.501,
+            "std": 0.149,
+            "iqr": 0.21,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (layer level variable) | KL | 3 | lm19",
+        "perplexity": {
+            "improvement": 2.083,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.0,
+            "intensity": "indiferent - weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 36.897,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "storage_size": {
+            "improvement": 87.581,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (layer level variable) | KL | 4 | lm19",
+        "perplexity": {
+            "improvement": 4.264,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.0,
+            "intensity": "indiferent - weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 50.581,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 87.101,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (layer level variable) | KL | 4 | lm23",
+        "perplexity": {
+            "improvement": 5.528,
+            "std": 3.648,
+            "iqr": 5.16,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 41.689,
+            "std": 4.516,
+            "iqr": 6.386,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 87.062,
+            "std": 0.019,
+            "iqr": 0.026,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (layer level variable) | NAS | 1 | lm20",
+        "perplexity": {
+            "improvement": 6.183,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.0,
+            "intensity": "weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 55.233,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 93.478,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (layer level variable) | NAS | 2 | lm20",
+        "perplexity": {
+            "improvement": 10.417,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.0,
+            "intensity": "weakly positive - positive"
+        },
+        "inference_latency": {
+            "improvement": 41.034,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 93.468,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (layer level variable) | NAS | 2 | lm24",
+        "perplexity": {
+            "improvement": 18.673,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "inference_latency": {
+            "improvement": 44.321,
+            "std": 6.361,
+            "iqr": 8.996,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 92.883,
+            "std": 0.059,
+            "iqr": 0.083,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (layer level variable) | NAS | 3 | lm21",
+        "perplexity": {
+            "improvement": 6.544,
+            "std": 0.812,
+            "iqr": 1.148,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 42.64,
+            "std": 9.586,
+            "iqr": 13.557,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 87.377,
+            "std": 0.288,
+            "iqr": 0.407,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (layer level variable) | NAS | 4 | lm25",
+        "perplexity": {
+            "improvement": 13.759,
+            "std": 1.737,
+            "iqr": 2.457,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly positive - positive"
+        },
+        "inference_latency": {
+            "improvement": 42.034,
+            "std": 6.255,
+            "iqr": 8.846,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 87.286,
+            "std": 0.103,
+            "iqr": 0.145,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit layer) | manual define | 1 | lm12",
+        "perplexity": {
+            "improvement": 22.218,
+            "std": 0.24,
+            "iqr": 0.339,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "inference_latency": {
+            "improvement": 60.814,
+            "std": 1.151,
+            "iqr": 1.628,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 96.567,
+            "std": 0.064,
+            "iqr": 0.091,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit layer) | manual define | 1 | lm16",
+        "perplexity": {
+            "improvement": 23.587,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "inference_latency": {
+            "improvement": 61.633,
+            "std": 0.808,
+            "iqr": 1.143,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 96.588,
+            "std": 0.111,
+            "iqr": 0.157,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit layer) | manual define | 2 | lm13",
+        "perplexity": {
+            "improvement": 11.171,
+            "std": 2.294,
+            "iqr": 3.245,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly positive - positive"
+        },
+        "inference_latency": {
+            "improvement": 40.67,
+            "std": 8.262,
+            "iqr": 11.684,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 93.437,
+            "std": 0.044,
+            "iqr": 0.062,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit layer) | manual define | 2 | lm17",
+        "perplexity": {
+            "improvement": 18.428,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "inference_latency": {
+            "improvement": 39.698,
+            "std": 7.332,
+            "iqr": 10.369,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "storage_size": {
+            "improvement": 93.38,
+            "std": 0.243,
+            "iqr": 0.344,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit layer) | manual define | 4 | lm14",
+        "perplexity": {
+            "improvement": 4.054,
+            "std": 1.805,
+            "iqr": 2.553,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent - weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 40.206,
+            "std": 8.095,
+            "iqr": 11.447,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 87.164,
+            "std": 0.19,
+            "iqr": 0.269,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit layer) | manual define | 4 | lm18",
+        "perplexity": {
+            "improvement": 13.759,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly positive - positive"
+        },
+        "inference_latency": {
+            "improvement": 38.91,
+            "std": 6.218,
+            "iqr": 8.794,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "storage_size": {
+            "improvement": 87.07,
+            "std": 0.125,
+            "iqr": 0.177,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit layer) | manual define | 8 | lm15",
+        "perplexity": {
+            "improvement": 2.187,
+            "std": 1.129,
+            "iqr": 1.596,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent - weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 40.152,
+            "std": 8.993,
+            "iqr": 12.719,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 74.658,
+            "std": 0.028,
+            "iqr": 0.04,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit layer) | manual define | 8 | lm19",
+        "perplexity": {
+            "improvement": 7.862,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 39.131,
+            "std": 5.905,
+            "iqr": 8.351,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "storage_size": {
+            "improvement": 74.641,
+            "std": 0.16,
+            "iqr": 0.226,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit node) | manual define | 1 | lm12",
+        "perplexity": {
+            "improvement": 21.376,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "inference_latency": {
+            "improvement": 54.205,
+            "std": 0.936,
+            "iqr": 1.324,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 95.895,
+            "std": 0.068,
+            "iqr": 0.096,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit node) | manual define | 1 | lm8",
+        "perplexity": {
+            "improvement": 18.157,
+            "std": 0.348,
+            "iqr": 0.492,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "inference_latency": {
+            "improvement": 54.651,
+            "std": 6.578,
+            "iqr": 9.302,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 95.947,
+            "std": 0.314,
+            "iqr": 0.445,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit node) | manual define | 2 | lm13",
+        "perplexity": {
+            "improvement": 11.302,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly positive - positive"
+        },
+        "inference_latency": {
+            "improvement": 35.787,
+            "std": 6.181,
+            "iqr": 8.742,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "storage_size": {
+            "improvement": 92.734,
+            "std": 0.003,
+            "iqr": 0.004,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit node) | manual define | 2 | lm9",
+        "perplexity": {
+            "improvement": 5.758,
+            "std": 2.414,
+            "iqr": 3.414,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 36.167,
+            "std": 9.696,
+            "iqr": 13.713,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "storage_size": {
+            "improvement": 92.72,
+            "std": 0.26,
+            "iqr": 0.367,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit node) | manual define | 4 | lm10",
+        "perplexity": {
+            "improvement": 3.02,
+            "std": 2.061,
+            "iqr": 2.915,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent - weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 35.822,
+            "std": 10.184,
+            "iqr": 14.403,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "storage_size": {
+            "improvement": 86.318,
+            "std": 0.531,
+            "iqr": 0.752,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit node) | manual define | 4 | lm14",
+        "perplexity": {
+            "improvement": 9.828,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 36.844,
+            "std": 5.799,
+            "iqr": 8.202,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "storage_size": {
+            "improvement": 86.007,
+            "std": 0.624,
+            "iqr": 0.882,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit node) | manual define | 8 | lm11",
+        "perplexity": {
+            "improvement": 1.753,
+            "std": 1.742,
+            "iqr": 2.464,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent"
+        },
+        "inference_latency": {
+            "improvement": 36.921,
+            "std": 10.275,
+            "iqr": 14.531,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "storage_size": {
+            "improvement": 73.844,
+            "std": 0.21,
+            "iqr": 0.296,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "mixed | ADMM (multiple eql. #bit node) | manual define | 8 | lm15",
+        "perplexity": {
+            "improvement": 3.44,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent - weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 35.123,
+            "std": 7.12,
+            "iqr": 10.069,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "storage_size": {
+            "improvement": 73.578,
+            "std": 0.658,
+            "iqr": 0.931,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "uniform | ADMM (global) | manual define | 1 | lm10",
+        "perplexity": {
+            "improvement": 24.201,
+            "std": 2.259,
+            "iqr": 3.194,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "inference_latency": {
+            "improvement": 63.527,
+            "std": 0.357,
+            "iqr": 0.505,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 96.635,
+            "std": 0.044,
+            "iqr": 0.063,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "uniform | ADMM (global) | manual define | 1 | lm6",
+        "perplexity": {
+            "improvement": 28.269,
+            "std": 0.778,
+            "iqr": 1.101,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        },
+        "inference_latency": {
+            "improvement": 63.011,
+            "std": 1.333,
+            "iqr": 1.885,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 96.644,
+            "std": 0.07,
+            "iqr": 0.099,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "uniform | ADMM (global) | manual define | 8 | lm11",
+        "perplexity": {
+            "improvement": 6.88,
+            "std": 1.737,
+            "iqr": 2.457,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 43.732,
+            "std": 10.534,
+            "iqr": 14.898,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 74.641,
+            "std": 0.16,
+            "iqr": 0.226,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "uniform | ADMM (global) | manual define | 8 | lm7",
+        "perplexity": {
+            "improvement": 4.461,
+            "std": 2.135,
+            "iqr": 3.019,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent - weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 44.655,
+            "std": 7.559,
+            "iqr": 10.69,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 74.658,
+            "std": 0.028,
+            "iqr": 0.04,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "uniform | BP [31], [32] (modified) | manual define | 1 | lm2",
+        "perplexity": {
+            "improvement": 32.763,
+            "std": 4.645,
+            "iqr": 7.711,
+            "sample_size_discount": 0.736,
+            "variability_discount": 1.0,
+            "discount_factor": 0.736,
+            "p_value": 0.264,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        },
+        "inference_latency": {
+            "improvement": 64.282,
+            "std": 2.252,
+            "iqr": 3.383,
+            "sample_size_discount": 0.736,
+            "variability_discount": 1.0,
+            "discount_factor": 0.736,
+            "p_value": 0.264,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 96.64,
+            "std": 0.048,
+            "iqr": 0.063,
+            "sample_size_discount": 0.736,
+            "variability_discount": 1.0,
+            "discount_factor": 0.736,
+            "p_value": 0.264,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "uniform | BP [31], [32] (modified) | manual define | 2 | lm3",
+        "perplexity": {
+            "improvement": 22.148,
+            "std": 2.923,
+            "iqr": 0.0,
+            "sample_size_discount": 0.736,
+            "variability_discount": 1.0,
+            "discount_factor": 0.736,
+            "p_value": 0.264,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "inference_latency": {
+            "improvement": 45.722,
+            "std": 8.351,
+            "iqr": 13.36,
+            "sample_size_discount": 0.736,
+            "variability_discount": 1.0,
+            "discount_factor": 0.736,
+            "p_value": 0.264,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 93.426,
+            "std": 0.151,
+            "iqr": 0.011,
+            "sample_size_discount": 0.736,
+            "variability_discount": 1.0,
+            "discount_factor": 0.736,
+            "p_value": 0.264,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "uniform | BP [31], [32] (modified) | manual define | 4 | lm4",
+        "perplexity": {
+            "improvement": 17.065,
+            "std": 6.434,
+            "iqr": 6.761,
+            "sample_size_discount": 0.736,
+            "variability_discount": 1.0,
+            "discount_factor": 0.736,
+            "p_value": 0.264,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "inference_latency": {
+            "improvement": 44.832,
+            "std": 8.318,
+            "iqr": 12.118,
+            "sample_size_discount": 0.736,
+            "variability_discount": 1.0,
+            "discount_factor": 0.736,
+            "p_value": 0.264,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 87.117,
+            "std": 0.142,
+            "iqr": 0.129,
+            "sample_size_discount": 0.736,
+            "variability_discount": 1.0,
+            "discount_factor": 0.736,
+            "p_value": 0.264,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "uniform | BP [31], [32] (modified) | manual define | 8 | lm5",
+        "perplexity": {
+            "improvement": 8.563,
+            "std": 3.135,
+            "iqr": 0.0,
+            "sample_size_discount": 0.736,
+            "variability_discount": 1.0,
+            "discount_factor": 0.736,
+            "p_value": 0.264,
+            "belief": 0.0,
+            "intensity": "weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 44.457,
+            "std": 6.881,
+            "iqr": 9.164,
+            "sample_size_discount": 0.736,
+            "variability_discount": 1.0,
+            "discount_factor": 0.736,
+            "p_value": 0.264,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 74.649,
+            "std": 0.094,
+            "iqr": 0.04,
+            "sample_size_discount": 0.736,
+            "variability_discount": 1.0,
+            "discount_factor": 0.736,
+            "p_value": 0.264,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "uniform | Post-training [94] Offline Quant | manual define | 1 | lm6",
+        "perplexity": {
+            "improvement": 24.079,
+            "std": 0.695,
+            "iqr": 0.983,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "inference_latency": {
+            "improvement": 63.872,
+            "std": 2.097,
+            "iqr": 2.965,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 96.635,
+            "std": 0.044,
+            "iqr": 0.063,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "uniform | Post-training [94] Offline Quant | manual define | 2 | lm7",
+        "perplexity": {
+            "improvement": 18.919,
+            "std": 2.78,
+            "iqr": 3.931,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "inference_latency": {
+            "improvement": 44.79,
+            "std": 10.153,
+            "iqr": 14.358,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 93.38,
+            "std": 0.243,
+            "iqr": 0.344,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "uniform | Post-training [94] Offline Quant | manual define | 4 | lm8",
+        "perplexity": {
+            "improvement": 15.971,
+            "std": 0.347,
+            "iqr": 0.491,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive"
+        },
+        "inference_latency": {
+            "improvement": 45.356,
+            "std": 11.579,
+            "iqr": 16.375,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 87.07,
+            "std": 0.125,
+            "iqr": 0.177,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_precision": "uniform | Post-training [94] Offline Quant | manual define | 8 | lm9",
+        "perplexity": {
+            "improvement": 10.319,
+            "std": 0.347,
+            "iqr": 0.491,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly positive - positive"
+        },
+        "inference_latency": {
+            "improvement": 44.396,
+            "std": 9.596,
+            "iqr": 13.57,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 74.641,
+            "std": 0.16,
+            "iqr": 0.226,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "strongly positive"
+        }
+    }
+]

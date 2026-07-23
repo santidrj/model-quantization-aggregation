@@ -40,6 +40,45 @@
     },
     {
         "configuration": {
+            "Device": "workstation",
+            "quantization_precision": "fp16"
+        },
+        "mAP": {
+            "improvement": -43.896,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "strongly negative"
+        },
+        "inference_latency": {
+            "improvement": 52.638,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 67.257,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
             "Device": "Jetson Nano",
             "quantization_precision": "fp16"
         },
@@ -79,11 +118,11 @@
     },
     {
         "configuration": {
-            "Device": "workstation",
-            "quantization_precision": "fp16"
+            "Device": "Jetson Nano",
+            "quantization_precision": "int8"
         },
         "mAP": {
-            "improvement": -43.896,
+            "improvement": -0.262,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -91,10 +130,10 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.19,
-            "intensity": "strongly negative"
+            "intensity": "indiferent"
         },
         "inference_latency": {
-            "improvement": 52.638,
+            "improvement": 80.0,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -105,7 +144,7 @@
             "intensity": "strongly positive"
         },
         "storage_size": {
-            "improvement": 67.257,
+            "improvement": 65.627,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -184,45 +223,6 @@
         },
         "storage_size": {
             "improvement": 86.874,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.19,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "Jetson Nano",
-            "quantization_precision": "int8"
-        },
-        "mAP": {
-            "improvement": -0.262,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.19,
-            "intensity": "indiferent"
-        },
-        "inference_latency": {
-            "improvement": 80.0,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.19,
-            "intensity": "strongly positive"
-        },
-        "storage_size": {
-            "improvement": 65.627,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,

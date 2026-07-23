@@ -201,56 +201,6 @@
     },
     {
         "configuration": {
-            "Device": "Nvidia Tesla T4",
-            "quantization_precision": "int8"
-        },
-        "mAP": {
-            "improvement": 0.0,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "indiferent"
-        },
-        "inference_latency": {
-            "improvement": 53.174,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "strongly positive"
-        },
-        "gpu_energy_consumption": {
-            "improvement": 50.531,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "strongly positive"
-        },
-        "gpu_power_draw": {
-            "improvement": -5.645,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "weakly negative - indiferent"
-        }
-    },
-    {
-        "configuration": {
             "Device": "Nvidia Titan RTX",
             "quantization_precision": "int8"
         },
@@ -297,6 +247,56 @@
             "p_value": 0.717,
             "belief": 0.189,
             "intensity": "weakly negative"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "Nvidia Tesla T4",
+            "quantization_precision": "int8"
+        },
+        "mAP": {
+            "improvement": 0.0,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indiferent"
+        },
+        "inference_latency": {
+            "improvement": 53.174,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly positive"
+        },
+        "gpu_energy_consumption": {
+            "improvement": 50.531,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly positive"
+        },
+        "gpu_power_draw": {
+            "improvement": -5.645,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "weakly negative - indiferent"
         }
     }
 ]

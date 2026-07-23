@@ -16,6 +16,8 @@ class CorrectnessMetrics:
     f1_score: str | None = None
     auc: str | None = None
     perplexity: str | None = None
+    word_error_rate: str | None = None
+    bleu: str | None = None
     dsc: str | None = None
     mIoU: str | None = None
     mAP: str | None = None
@@ -89,28 +91,6 @@ class Paper(ABC):
             The data read from the paper.
         """
         pass
-
-
-class HashemiPaper(Paper):
-    KEY = "hashemiUnderstandingImpactPrecision2017"
-    ID = "S1"
-    AUTHOR = "Hashemi et al."
-    YEAR = 2017
-    QUANTIZATION_PRECISION_COL = "Precision (w, in)"
-    BASELINE_PRECISION = "fp32"
-    BELIEF = 0.4437487500000001
-    RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(inference_energy_consumption="Energy (uJ)")
-    CORRECTNESS_COLUMNS = CorrectnessMetrics(accuracy="Class. Acc. (%)")
-    GROUPING_COLUMNS = ["Model", "Dataset"]
-
-    def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
-            schema_overrides={
-                "Class. Acc. (%)": pl.Float32,
-                "Energy (uJ)": pl.Float32,
-            },
-        )
 
 
 class DenkingerPaper(Paper):
@@ -288,43 +268,6 @@ class TaoPaper(Paper):
                 "Power Consumption (mW)": "system_power",
                 "Inference Time (ms)": "inference_latency",
                 "Energy Consumption (µJ)": "system_energy",
-            }
-        )
-
-
-class GeensPaper(Paper):
-    KEY = "geensEnergyCostModelling2024"
-    ID = "S9"
-    AUTHOR = "Geens et al."
-    YEAR = 2024
-    QUANTIZATION_PRECISION_COL = "quantization_precision"
-    BASELINE_PRECISION = "w-fp32, a-fp32"
-    BELIEF = 0.185
-    RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
-        inference_energy_consumption="inference_energy",
-        inference_latency="inference_clock_cycles",
-    )
-    CORRECTNESS_COLUMNS = CorrectnessMetrics()
-
-    def read_data(self) -> pl.LazyFrame:
-        baseline_energy = (
-            pl.read_csv(EXTERNAL_DATA_DIR / self.KEY / "w32a32-energy.csv").select(pl.col("y") * 1e14).sum()
-        )
-        baseline_latency = (
-            pl.read_csv(EXTERNAL_DATA_DIR / self.KEY / "w32a32-latency.csv").select(pl.col("y") * 1e10).sum()
-        )
-
-        w4a16_energy = pl.read_csv(EXTERNAL_DATA_DIR / self.KEY / "w4a16-energy.csv").select(pl.col("y") * 1e14).sum()
-        w4a16_latency = pl.read_csv(EXTERNAL_DATA_DIR / self.KEY / "w4a16-latency.csv").select(pl.col("y") * 1e9).sum()
-
-        w1a32_energy = pl.read_csv(EXTERNAL_DATA_DIR / self.KEY / "w1a32-energy.csv").select(pl.col("y") * 1e14).sum()
-        w1a32_latency = pl.read_csv(EXTERNAL_DATA_DIR / self.KEY / "w1a32-latency.csv").select(pl.col("y") * 1e9).sum()
-
-        return pl.LazyFrame(
-            {
-                "quantization_precision": ["w-fp32, a-fp32", "w-int4, a-fp16", "w-int1, a-fp32"],
-                "inference_energy": pl.concat([baseline_energy, w4a16_energy, w1a32_energy]),
-                "inference_clock_cycles": pl.concat([baseline_latency, w4a16_latency, w1a32_latency]),
             }
         )
 
@@ -714,8 +657,210 @@ class PengPaper(Paper):
         )
 
 
+class FlichPaper(Paper):
+    KEY = "flichEfficientInferenceImageBased2022"
+    ID = "S19"
+    AUTHOR = "Flich et al."
+    YEAR = 2022
+    QUANTIZATION_PRECISION_COL = "precision_configuration"
+    BASELINE_PRECISION = "fp32"
+    BELIEF = 0.6595820833333333
+    RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
+        inference_latency="inference_time_ms",
+        storage_size="memory_kb",
+    )
+    CORRECTNESS_COLUMNS = CorrectnessMetrics(accuracy="accuracy")
+    GROUPING_COLUMNS = ["Model", "task", "device"]
+
+    def read_data(self) -> pl.LazyFrame:
+        return pl.scan_csv(
+            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+            schema_overrides={
+                "memory_kb": pl.Float32,
+                "error_value": pl.Float32,
+                "inference_time_ms": pl.Float32,
+                "fps": pl.Float32,
+            },
+        ).with_columns(
+            pl.col("precision_configuration").str.to_lowercase().alias("precision_configuration"),
+            (100 - pl.col("error_value")).alias("accuracy"),
+        ).rename(
+            {
+                "model": "Model",
+            }
+        )
+
+
+class XuPaper(Paper):
+    KEY = "xuMixedPrecisionLowBit2021"
+    ID = "S20"
+    AUTHOR = "Xu et al."
+    YEAR = 2021
+    QUANTIZATION_PRECISION_COL = "quantization_configuration"
+    BASELINE_PRECISION = "fp32"
+    BELIEF = 0.0
+    RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
+        inference_latency="eval_time_ms_per_word",
+        storage_size="model_size_mb",
+    )
+    CORRECTNESS_COLUMNS = CorrectnessMetrics(perplexity="ppl")
+    GROUPING_COLUMNS = ["dataset", "Model"]
+
+    def read_data(self) -> pl.LazyFrame:
+        return pl.scan_csv(
+            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+            null_values=[""],
+            schema_overrides={
+                "avg_bits_or_bitwidth": pl.Float32,
+                "ppl": pl.Float32,
+                "wer_avg_pct": pl.Float32,
+                "model_size_mb": pl.Float32,
+                "compression_ratio": pl.Float32,
+                "eval_time_ms_per_word": pl.Float32,
+            },
+        ).with_columns(
+            pl.when(pl.col("avg_bits_or_bitwidth") == 32)
+            .then(pl.lit("fp32"))
+            .otherwise(pl.format("int{}", pl.col("avg_bits_or_bitwidth").cast(pl.Int32)))
+            .alias("quantization_precision"),
+            pl.when(pl.col("avg_bits_or_bitwidth") == 32)
+            .then(pl.lit("fp32"))
+            .otherwise(
+                pl.concat_str(
+                    [
+                        pl.col("quantization_group"),
+                        pl.col("param_estimation"),
+                        pl.col("quantization_method"),
+                        pl.format("{}", pl.col("avg_bits_or_bitwidth").cast(pl.Int32)),
+                    ],
+                    separator=" | ",
+                )
+            )
+            .alias("quantization_configuration"),
+        ).rename(
+            {
+                "model_family": "Model",
+            }
+        )
+
+
+class DubhirPaper(Paper):
+    KEY = "dubhirBenchmarkingQuantizationLibraries2021"
+    ID = "S21"
+    AUTHOR = "Dubhir et al."
+    YEAR = 2021
+    QUANTIZATION_PRECISION_COL = "precision_config"
+    BASELINE_PRECISION = "fp32"
+    BELIEF = 0.6670808333333333
+    RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
+        inference_latency="testing_time_seconds",
+        storage_size="storage_size_kb",
+    )
+    CORRECTNESS_COLUMNS = CorrectnessMetrics(accuracy="testing_accuracy")
+    GROUPING_COLUMNS = ["library", "Model"]
+
+    def read_data(self) -> pl.LazyFrame:
+        return pl.scan_csv(
+            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+            schema_overrides={
+                "testing_accuracy": pl.Float32,
+                "testing_time_seconds": pl.Float32,
+                "memory_occupied": pl.Float32,
+            },
+        ).with_columns(
+            pl.when(pl.col("memory_unit") == "MB")
+            .then(pl.col("memory_occupied") * 1024)
+            .otherwise(pl.col("memory_occupied"))
+            .alias("storage_size_kb"),
+        ).rename(
+            {
+                "model": "Model",
+            }
+        )
+
+
+class AjiPaper(Paper):
+    KEY = "ajiCompressingNeuralMachine2020"
+    ID = "S22"
+    AUTHOR = "Aji and Heafield"
+    YEAR = 2020
+    QUANTIZATION_PRECISION_COL = "quantization_precision"
+    BASELINE_PRECISION = "fp32"
+    BELIEF = 0.6720820833333333
+    RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(storage_size="model_size_mb")
+    CORRECTNESS_COLUMNS = CorrectnessMetrics(bleu="bleu")
+    GROUPING_COLUMNS = ["Model"]
+
+    def read_data(self) -> pl.LazyFrame:
+        return pl.scan_csv(
+            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+            null_values=[""],
+            schema_overrides={
+                "bit_width": pl.UInt8,
+                "model_size_mb": pl.Float32,
+                "compression_rate": pl.Float32,
+                "bleu": pl.Float32,
+                "bleu_delta": pl.Float32,
+            },
+        ).with_columns(
+            pl.when(pl.col("bit_width") == 32)
+            .then(pl.lit("fp32"))
+            .otherwise(pl.format("log{}", pl.col("bit_width")))
+            .alias("quantization_precision"),
+        ).rename(
+            {
+                "model_family": "Model",
+            }
+        )
+
+
+class ChenPaper(Paper):
+    KEY = "chenImplementingUltralightweightCoinference2023"
+    ID = "S23"
+    AUTHOR = "Chen et al."
+    YEAR = 2023
+    QUANTIZATION_PRECISION_COL = "quantization_precision"
+    BASELINE_PRECISION = "fp32"
+    BELIEF = 0.67624875
+    RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(storage_size="storage_size")
+    CORRECTNESS_COLUMNS = CorrectnessMetrics(f1_score="f1_score")
+    GROUPING_COLUMNS = ["Model"]
+
+    def read_data(self) -> pl.LazyFrame:
+        data = pl.scan_csv(
+            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+            schema_overrides={
+                "Quantization precision (bits)": pl.UInt8,
+                "Original size (B)": pl.Float32,
+                "Compressed size (B)": pl.Float32,
+                "CR": pl.Float32,
+                "F1 loss": pl.Float32,
+            },
+        ).with_columns(
+            pl.col("Original F1-score").str.extract(r"([0-9]+(?:\.[0-9]+)?)", 1).cast(pl.Float32).alias("f1_original"),
+            pl.col("Rebuilt F1-score").str.extract(r"([0-9]+(?:\.[0-9]+)?)", 1).cast(pl.Float32).alias("f1_rebuilt"),
+        ).rename({"Model architecture": "Model"})
+
+        baseline = data.select(
+            pl.col("Model"),
+            pl.lit("fp32").alias("quantization_precision"),
+            pl.col("Original size (B)").alias("storage_size"),
+            pl.col("f1_original").alias("f1_score"),
+        )
+
+        quantized = data.select(
+            pl.col("Model"),
+            pl.concat_str([pl.lit("int"), pl.col("Quantization precision (bits)").cast(pl.String)]).alias(
+                "quantization_precision"
+            ),
+            pl.col("Compressed size (B)").alias("storage_size"),
+            pl.col("f1_rebuilt").alias("f1_score"),
+        )
+
+        return pl.concat([baseline, quantized], how="vertical").lazy()
+
+
 class Papers(Enum):
-    HASHEMI = HashemiPaper()
     DENKINGER = DenkingerPaper()
     BARNELL = BarnellPaper()
     VASQUEZ = VasquezPaper()
@@ -723,7 +868,6 @@ class Papers(Enum):
     PAUL = PaulPaper()
     SATHISH = SathishPaper()
     TAO = TaoPaper()
-    GEENS = GeensPaper()
     ALIZADEH = AlizadehPaper()
     ALSHAMMRY = AlshammryPaper()
     DEPUTTER = DeputterPaper()
@@ -733,3 +877,8 @@ class Papers(Enum):
     KOLI = KoliPaper()
     KRASTEVA = KrastevaPaper()
     PENG = PengPaper()
+    FLICH = FlichPaper()
+    XU = XuPaper()
+    DUBHIR = DubhirPaper()
+    AJI = AjiPaper()
+    CHEN = ChenPaper()

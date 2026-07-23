@@ -37,4 +37,4 @@ def extract_knowledge_from(paper: Paper):
 #     print(f"Extracting knowledge from {paper.value.AUTHOR}")
 #     extract_knowledge_from(paper.value)
 
-extract_knowledge_from(Papers.DEPUTTER.value)
+extract_knowledge_from(Papers.DUBHIR.value)

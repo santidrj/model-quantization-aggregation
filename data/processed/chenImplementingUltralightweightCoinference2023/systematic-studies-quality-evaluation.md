@@ -221,14 +221,14 @@
 
 ### 7.1) Were the authors the developers of some or all of the treatments? If yes, do the authors discuss the implications anywhere in the paper?
 
-[x] No
-[ ] Yes
+[x] No  
+[ ] Yes  
 [ ] Not applicable
 
 ### 7.2) Was training and conduct equivalent for all treatment groups?
 
-[ ] No
-[x] Yes
+[ ] No  
+[x] Yes  
 [ ] Not applicable
 
 **Evidence:**
@@ -236,8 +236,8 @@
 
 ### 7.3) Was there allocation concealment, i.e., did the researchers know to what treatment each subject was assigned?
 
-[ ] No
-[ ] Yes
+[ ] No  
+[ ] Yes  
 [x] Not applicable
 
 ---
@@ -246,20 +246,20 @@
 
 ### 8.1) Do the authors discuss external validity with respect to subjects, materials, and tasks?
 
-[x] No
-[ ] Yes
+[x] No  
+[ ] Yes  
 [ ] Not applicable
 
 ### 8.2) If the study was a quasi-experiment, do the authors discuss the design components that were used to address any study weaknesses?
 
-[ ] No
-[ ] Yes
-[x] Not applicable
+[x] No  
+[ ] Yes  
+[ ] Not applicable  
 
 ### 8.3) If the study used novel measures, is the construct validity of the measures discussed?
 
-[ ] No
-[ ] Yes
+[ ] No  
+[ ] Yes  
 [x] Not applicable
 
 ---
@@ -268,8 +268,8 @@
 
 ### 9.1) Do the authors present results clearly?
 
-[ ] No
-[x] Yes
+[ ] No  
+[x] Yes  
 [ ] Not applicable
 
 **Evidence:**
@@ -279,8 +279,8 @@
 
 ### 9.2) Do the authors present conclusions clearly?
 
-[ ] No
-[x] Yes
+[ ] No  
+[x] Yes  
 [ ] Not applicable
 
 **Evidence:**
@@ -290,8 +290,8 @@
 
 ### 9.3) Are the conclusions warranted by the results and are the connections between the results and conclusions presented clearly?
 
-[ ] No
-[x] Yes
+[ ] No  
+[x] Yes  
 [ ] Not applicable
 
 **Evidence:**
@@ -301,8 +301,8 @@
 
 ### 9.4) Do the authors discuss their conclusions in relation to the original research questions?
 
-[ ] No
-[x] Yes
+[ ] No  
+[x] Yes  
 [ ] Not applicable
 
 **Evidence:**
@@ -312,8 +312,8 @@
 
 ### 9.5) Are limitations of the study discussed explicitly?
 
-[x] No
-[ ] Yes
+[x] No  
+[ ] Yes  
 [ ] Not applicable
 
 ---
@@ -322,8 +322,8 @@
 
 ### 10.1) Do the authors discuss whether or how the findings can be transferred to other populations, or consider other ways in which the research can be used?
 
-[ ] No
-[x] Yes
+[ ] No  
+[x] Yes  
 [ ] Not applicable
 
 **Evidence:**
@@ -333,8 +333,8 @@
 
 ### 10.2) To what extent do authors interpret results in the context of other studies / the existing body of knowledge?
 
-[ ] No
-[x] Yes
+[ ] No  
+[x] Yes  
 [ ] Not applicable
 
 **Evidence:**

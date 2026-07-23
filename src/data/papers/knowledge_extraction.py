@@ -38,7 +38,7 @@ class KnowledgeExtractor:
 
     def __init__(  # noqa: PLR0913
         self,
-        df: pl.DataFrame,
+        df: pl.DataFrame | pl.LazyFrame,
         paper: Paper,
     ):
         """

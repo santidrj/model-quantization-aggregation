@@ -62,11 +62,11 @@
     },
     {
         "configuration": {
-            "Frequency (MHz)": 16,
+            "Frequency (MHz)": 8,
             "quantization_precision": "int8"
         },
         "inference_energy_consumption": {
-            "improvement": 73.831,
+            "improvement": 77.022,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -77,7 +77,7 @@
             "intensity": "strongly positive"
         },
         "inference_power_draw": {
-            "improvement": 3.508,
+            "improvement": 15.24,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -85,10 +85,10 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.187,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "weakly positive"
         },
         "inference_latency": {
-            "improvement": 72.881,
+            "improvement": 72.905,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -184,67 +184,6 @@
     },
     {
         "configuration": {
-            "Frequency (MHz)": 32,
-            "quantization_precision": "int8"
-        },
-        "inference_energy_consumption": {
-            "improvement": 74.177,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.187,
-            "intensity": "strongly positive"
-        },
-        "inference_power_draw": {
-            "improvement": 4.565,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.187,
-            "intensity": "indiferent - weakly positive"
-        },
-        "inference_latency": {
-            "improvement": 72.947,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.187,
-            "intensity": "strongly positive"
-        },
-        "ram_usage": {
-            "improvement": 61.224,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.187,
-            "intensity": "strongly positive"
-        },
-        "storage_size": {
-            "improvement": 29.487,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.187,
-            "intensity": "weakly positive - positive"
-        }
-    },
-    {
-        "configuration": {
             "Frequency (MHz)": 128,
             "quantization_precision": "int8"
         },
@@ -306,11 +245,11 @@
     },
     {
         "configuration": {
-            "Frequency (MHz)": 8,
+            "Frequency (MHz)": 16,
             "quantization_precision": "int8"
         },
         "inference_energy_consumption": {
-            "improvement": 77.022,
+            "improvement": 73.831,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -321,7 +260,7 @@
             "intensity": "strongly positive"
         },
         "inference_power_draw": {
-            "improvement": 15.24,
+            "improvement": 3.508,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -329,10 +268,71 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.187,
-            "intensity": "weakly positive"
+            "intensity": "indiferent - weakly positive"
         },
         "inference_latency": {
-            "improvement": 72.905,
+            "improvement": 72.881,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.187,
+            "intensity": "strongly positive"
+        },
+        "ram_usage": {
+            "improvement": 61.224,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.187,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 29.487,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.187,
+            "intensity": "weakly positive - positive"
+        }
+    },
+    {
+        "configuration": {
+            "Frequency (MHz)": 32,
+            "quantization_precision": "int8"
+        },
+        "inference_energy_consumption": {
+            "improvement": 74.177,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.187,
+            "intensity": "strongly positive"
+        },
+        "inference_power_draw": {
+            "improvement": 4.565,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.187,
+            "intensity": "indiferent - weakly positive"
+        },
+        "inference_latency": {
+            "improvement": 72.947,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,

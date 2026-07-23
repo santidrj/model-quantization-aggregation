@@ -1,14 +1,5 @@
 # Links to the evidence diagrams
 
-## S1
-
-- Evidence 1: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/276095>
-- Evidence 2: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/276096>
-- Evidence 3: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/276093>
-- Evidence 4: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/276094>
-- Evidence 5: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/276043>
-- Evidence 6: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/263565>
-
 ## S2
 
 - Evidence 1: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/279216>
@@ -50,11 +41,6 @@
 - Evidence 6: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/260827>
 - Evidence 7: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/261290>
 - Evidence 8: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/261196>
-
-## S9
-
-- Evidence 1: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/273683>
-- Evidence 2: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/273737>
 
 ## S10
 
@@ -103,3 +89,32 @@
 
 - Evidence 1: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/281872>
 - Evidence 2: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/281871>
+
+## S19
+
+- Evidence 1: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319319>
+
+## S21
+
+- Evidence 1: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319499>
+- Evidence 2: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319538>
+- Evidence 3: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319574>
+- Evidence 4: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319452>
+- Evidence 5: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319288>
+- Evidence 6: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319288>
+- Evidence 7: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319288>
+- Evidence 8: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319288>
+- Evidence 9: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319288>
+- Evidence 10: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319288>
+- Evidence 11: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319288>
+
+## S22
+
+- Evidence 1: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319366>
+- Evidence 2: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319396>
+- Evidence 3: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319424>
+- Evidence 4: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319452>
+
+## S23
+
+- Evidence 1: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319288>
