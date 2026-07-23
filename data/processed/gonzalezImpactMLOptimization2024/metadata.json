@@ -12,7 +12,7 @@
   "quantization_schema": {
     "baseline_precision": "fp32",
     "target_precision": ["int8"],
-    "quantization_targets": ["w-int8, a-int8"],
+    "quantization_targets": ["w-int8"],
     "quantization_method": "quantization-aware training",
     "quantization_techniques": ["dynamic quantization"],
     "frameworks": ["PyTorch"]

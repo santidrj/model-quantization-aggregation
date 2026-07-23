@@ -456,7 +456,7 @@ class GonzalezPaper(Paper):
         quantization_data = raw_data.filter(
             pl.col("Optimization").is_in(["no_optimization", "dynamic_quantization"])
         ).with_columns(
-            pl.col("Optimization").str.replace("dynamic_quantization", "int8"),
+            pl.col("Optimization").str.replace("dynamic_quantization", "w-int8"),
         )
 
         # Check if there are any missing values

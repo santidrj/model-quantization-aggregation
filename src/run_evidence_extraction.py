@@ -33,8 +33,9 @@ def extract_knowledge_from(paper: Paper):
     knowledge_extractor.save_effects_by_precision(processed_paper_path(paper.KEY, "effects_by_precision.json"))
 
 
-def main(paper: Paper = Papers.DUBHIR.value):
-    extract_knowledge_from(paper)
+def main():
+    for paper in Papers:
+        extract_knowledge_from(paper.value)
 
 
 if __name__ == "__main__":
