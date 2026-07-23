@@ -1,6 +1,6 @@
 import polars as pl
 
-from src.config import PROCESSED_DATA_DIR
+from src.config import processed_paper_path
 from src.data.papers.entities import Paper
 
 
@@ -19,7 +19,7 @@ def read_paper_metadata(paper: Paper) -> pl.DataFrame:
         The metadata for the paper.
     """
     return pl.read_json(
-        PROCESSED_DATA_DIR / paper.KEY / "metadata.json",
+        processed_paper_path(paper.KEY, "metadata.json"),
         schema=pl.Schema(
             {
                 "title": pl.String,

@@ -1,0 +1,13 @@
+{
+  "xlim": [-20.0, 20.0],
+  "xticks": [-20.0, -15.0, -10.0, -5.0, -2.0, 2.0, 5.0, 10.0, 15.0, 20.0],
+  "yticklabels": [
+    "Quantized B",
+    "Aggregated Inference Latency",
+    "Inference Latency Belief",
+    "Quantized A",
+    "Aggregated Accuracy",
+    "Accuracy Belief"
+  ],
+  "ylim": [2.5, 9.0]
+}

@@ -58,10 +58,17 @@ select = [
 known-first-party = ["src"]
 force-sort-within-sections = true
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
 [dependency-groups]
 dev = [
     "deptry>=0.24.0",
     "openpyxl>=3.1.5",
     "pre-commit>=4.5.1",
     "ruff>=0.14.10",
+]
+test = [
+    "pytest>=9.1.1",
 ]

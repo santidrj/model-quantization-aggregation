@@ -4,7 +4,9 @@ from enum import Enum
 
 import polars as pl
 
-from src.config import EXTERNAL_DATA_DIR
+from src.config import external_paper_path
+
+FULL_PRECISION_BITS = 32
 
 
 @dataclass
@@ -92,6 +94,18 @@ class Paper(ABC):
         """
         pass
 
+    def external_data_path(self, filename: str = "paper-data.csv") -> str:
+        return external_paper_path(self.KEY, filename)
+
+    def scan_csv(self, filename: str = "paper-data.csv", **kwargs) -> pl.LazyFrame:
+        return pl.scan_csv(self.external_data_path(filename), **kwargs)
+
+    def read_csv(self, filename: str = "paper-data.csv", **kwargs) -> pl.DataFrame:
+        return pl.read_csv(self.external_data_path(filename), **kwargs)
+
+    def read_excel(self, filename: str, **kwargs) -> pl.DataFrame:
+        return pl.read_excel(self.external_data_path(filename), **kwargs)
+
 
 class DenkingerPaper(Paper):
     KEY = "denkingerImpactMemoryVoltage2020"
@@ -105,8 +119,7 @@ class DenkingerPaper(Paper):
     CORRECTNESS_COLUMNS = CorrectnessMetrics(accuracy="accuracy")
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             schema_overrides={
                 "accuracy": pl.Float32,
                 "ram_energy_consumption (uJ)": pl.Float32,
@@ -137,8 +150,7 @@ class BarnellPaper(Paper):
     GROUPING_COLUMNS = ["Device", "Model"]
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             schema_overrides={
                 "Power Consumed (W)": pl.Float16,
                 "FPS": pl.Float16,
@@ -165,8 +177,7 @@ class VasquezPaper(Paper):
     GROUPING_COLUMNS = ["Model", "Dataset"]
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             schema_overrides={
                 "Energy Consumption (uJ)": pl.Float32,
             },
@@ -186,8 +197,7 @@ class ZhanPaper(Paper):
     GROUPING_COLUMNS = ["Dataset", "Model"]
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             schema_overrides={
                 "Accuracy": pl.Float16,
                 "Storage size (MB)": pl.Float16,
@@ -210,7 +220,7 @@ class PaulPaper(Paper):
     CORRECTNESS_COLUMNS = CorrectnessMetrics(accuracy="accuracy")
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv")
+        return self.scan_csv()
 
 
 class SathishPaper(Paper):
@@ -229,7 +239,7 @@ class SathishPaper(Paper):
     GROUPING_COLUMNS = ["Model", "Dataset"]
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv").rename(
+        return self.scan_csv().rename(
             {"model": "Model", "dataset": "Dataset"}
         )
 
@@ -252,7 +262,7 @@ class TaoPaper(Paper):
 
     def read_data(self):
         return (
-            pl.read_csv(EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv")
+            self.read_csv()
             .with_columns(
                 ("w-" + pl.col("Weight Encoding") + ", a-" + pl.col("Activation Encoding")).alias(
                     "quantization_precision"
@@ -292,16 +302,15 @@ class AlizadehPaper(Paper):
     GROUPING_COLUMNS = ["Model", "Dataset"]
 
     def read_data(self) -> pl.LazyFrame:
-        target_file = EXTERNAL_DATA_DIR / self.KEY / "A100.xlsx"
-        model_info = pl.read_excel(target_file, sheet_name="model_info", engine="xlsx2csv")
-        code_gen_acc = pl.read_excel(target_file, sheet_name="code_gen_eval", engine="xlsx2csv")
-        code_gen_eff = pl.read_excel(target_file, sheet_name="code_gen_energy", engine="xlsx2csv")
-        bug_fix_acc = pl.read_excel(target_file, sheet_name="bug_fix_eval", engine="xlsx2csv")
-        bug_fix_eff = pl.read_excel(target_file, sheet_name="bug_fix_energy", engine="xlsx2csv")
-        test_gen_acc = pl.read_excel(target_file, sheet_name="test_gen_eval", engine="xlsx2csv")
-        test_gen_eff = pl.read_excel(target_file, sheet_name="test_gen_energy", engine="xlsx2csv")
-        doc_gen_acc = pl.read_excel(target_file, sheet_name="doc_gen_eval", engine="xlsx2csv")
-        doc_gen_eff = pl.read_excel(target_file, sheet_name="doc_gen_energy", engine="xlsx2csv")
+        model_info = self.read_excel("A100.xlsx", sheet_name="model_info", engine="xlsx2csv")
+        code_gen_acc = self.read_excel("A100.xlsx", sheet_name="code_gen_eval", engine="xlsx2csv")
+        code_gen_eff = self.read_excel("A100.xlsx", sheet_name="code_gen_energy", engine="xlsx2csv")
+        bug_fix_acc = self.read_excel("A100.xlsx", sheet_name="bug_fix_eval", engine="xlsx2csv")
+        bug_fix_eff = self.read_excel("A100.xlsx", sheet_name="bug_fix_energy", engine="xlsx2csv")
+        test_gen_acc = self.read_excel("A100.xlsx", sheet_name="test_gen_eval", engine="xlsx2csv")
+        test_gen_eff = self.read_excel("A100.xlsx", sheet_name="test_gen_energy", engine="xlsx2csv")
+        doc_gen_acc = self.read_excel("A100.xlsx", sheet_name="doc_gen_eval", engine="xlsx2csv")
+        doc_gen_eff = self.read_excel("A100.xlsx", sheet_name="doc_gen_energy", engine="xlsx2csv")
 
         # Merge accuracy with energy
         merged_code_gen = code_gen_acc.join(code_gen_eff, on="model_name")
@@ -369,8 +378,7 @@ class AlshammryPaper(Paper):
     )
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             schema_overrides={
                 "Precision": pl.Float32,
                 "Recall": pl.Float32,
@@ -397,8 +405,7 @@ class DeputterPaper(Paper):
     GROUPING_COLUMNS = ["Device", "Dataset", "Model", "Filter Multiplier"]
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             schema_overrides={
                 "Accuracy": pl.Float32,
                 "mIoU": pl.Float32,
@@ -481,8 +488,8 @@ class GonzalezPaper(Paper):
         # )
 
     def read_data(self) -> pl.LazyFrame:
-        data = pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "final_ds_image-classification.csv",
+        data = self.scan_csv(
+            "final_ds_image-classification.csv",
             has_header=True,
             separator=",",
             schema_overrides={
@@ -535,8 +542,7 @@ class GuerroujPaper(Paper):
     GROUPING_COLUMNS = ["Device", "Model"]
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             schema_overrides={
                 "mAP": pl.Float32,
                 "FPS": pl.Float32,
@@ -564,8 +570,7 @@ class KhalilPaper(Paper):
     GROUPING_COLUMNS = ["Frequency (MHz)", "Model"]
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             schema_overrides={
                 "Inference Time (ms)": pl.Float32,
                 "RAM (KB)": pl.Float32,
@@ -590,8 +595,7 @@ class KoliPaper(Paper):
     CORRECTNESS_COLUMNS = CorrectnessMetrics()
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             schema_overrides={
                 "Model Size (MB)": pl.Float32,
             },
@@ -617,8 +621,7 @@ class KrastevaPaper(Paper):
     CORRECTNESS_COLUMNS = CorrectnessMetrics()
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             schema={
                 "Model": pl.String,
                 "Precision Format": pl.String,
@@ -648,8 +651,7 @@ class PengPaper(Paper):
     EXPERIMENT_RUN_KEY = ["device"]
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             schema_overrides={
                 "latency": pl.Float32,
                 "model_size": pl.Float32,
@@ -673,8 +675,7 @@ class FlichPaper(Paper):
     GROUPING_COLUMNS = ["Model", "task", "device"]
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             schema_overrides={
                 "memory_kb": pl.Float32,
                 "error_value": pl.Float32,
@@ -707,8 +708,7 @@ class XuPaper(Paper):
     GROUPING_COLUMNS = ["dataset", "Model"]
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             null_values=[""],
             schema_overrides={
                 "avg_bits_or_bitwidth": pl.Float32,
@@ -719,11 +719,11 @@ class XuPaper(Paper):
                 "eval_time_ms_per_word": pl.Float32,
             },
         ).with_columns(
-            pl.when(pl.col("avg_bits_or_bitwidth") == 32)
+            pl.when(pl.col("avg_bits_or_bitwidth") == FULL_PRECISION_BITS)
             .then(pl.lit("fp32"))
             .otherwise(pl.format("int{}", pl.col("avg_bits_or_bitwidth").cast(pl.Int32)))
             .alias("quantization_precision"),
-            pl.when(pl.col("avg_bits_or_bitwidth") == 32)
+            pl.when(pl.col("avg_bits_or_bitwidth") == FULL_PRECISION_BITS)
             .then(pl.lit("fp32"))
             .otherwise(
                 pl.concat_str(
@@ -760,8 +760,7 @@ class DubhirPaper(Paper):
     GROUPING_COLUMNS = ["library", "Model"]
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             schema_overrides={
                 "testing_accuracy": pl.Float32,
                 "testing_time_seconds": pl.Float32,
@@ -792,8 +791,7 @@ class AjiPaper(Paper):
     GROUPING_COLUMNS = ["Model"]
 
     def read_data(self) -> pl.LazyFrame:
-        return pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        return self.scan_csv(
             null_values=[""],
             schema_overrides={
                 "bit_width": pl.UInt8,
@@ -803,7 +801,7 @@ class AjiPaper(Paper):
                 "bleu_delta": pl.Float32,
             },
         ).with_columns(
-            pl.when(pl.col("bit_width") == 32)
+            pl.when(pl.col("bit_width") == FULL_PRECISION_BITS)
             .then(pl.lit("fp32"))
             .otherwise(pl.format("log{}", pl.col("bit_width")))
             .alias("quantization_precision"),
@@ -827,8 +825,7 @@ class ChenPaper(Paper):
     GROUPING_COLUMNS = ["Model"]
 
     def read_data(self) -> pl.LazyFrame:
-        data = pl.scan_csv(
-            EXTERNAL_DATA_DIR / self.KEY / "paper-data.csv",
+        data = self.scan_csv(
             schema_overrides={
                 "Quantization precision (bits)": pl.UInt8,
                 "Original size (B)": pl.Float32,

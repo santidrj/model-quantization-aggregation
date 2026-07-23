@@ -20,6 +20,7 @@ Q3 = 0.75
 DISCOUNT_FACTOR = 0.1
 STABILIZATION_SIZE = 3  # Computed as the median of the number of observations per study
 EPSILON = 1e-10
+MIN_SAMPLE_SIZE_FOR_VARIABILITY_DISCOUNT = 4
 
 STATS_COLUMNS_ORDER = [
     "configuration",
@@ -323,59 +324,12 @@ class KnowledgeExtractor:
         eff_df = []
         for k, group in df.group_by(pl.col("configuration").struct.field(self.PRECISION_COLUMN)):
             key = k[0]
-            n_subjects = (
-                1
-                if self.paper.GROUPING_COLUMNS is None
-                else self.improvement_metrics.filter(pl.col("configuration").struct.field(self.PRECISION_COLUMN) == key)
-                .select("Model")
-                .n_unique()
-            )
+            n_subjects = self._count_subjects(pl.col("configuration").struct.field(self.PRECISION_COLUMN) == key)
             metrics = group.drop(pl.col("configuration"))
-            if group.height == 1:
-                stats = (
-                    metrics.transpose(include_header=True, header_name="effect", column_names=["mean"])
-                    .with_columns(nobs=1, lower_ci=None, upper_ci=None)
-                    .select(["effect", "nobs", "mean", "lower_ci", "upper_ci"])
-                )
-            else:
-                # Select only metrics with more than one unique value to avoid NaN in stats
-                # This is important for the statsmodels function to work properly
-                metrics_with_change = metrics.select(
-                    col.name for col in metrics.select(pl.all().n_unique() > 1) if col.all()
-                )
-
-                stats = (
-                    pl.from_pandas(sms.describe(metrics_with_change, stats=["nobs", "mean", "ci"], alpha=0.05).T)
-                    .with_columns(pl.Series(name="effect", values=metrics_with_change.columns))
-                    .select(["effect", "nobs", "mean", "lower_ci", "upper_ci"])
-                )
-
-                # Add the metrics with no change to the stats
-                metrics_no_change = metrics.select(
-                    col.name for col in metrics.select(pl.all().n_unique() == 1) if col.all()
-                )
-                if metrics_no_change.height > 0:
-                    no_change_stats = (
-                        metrics_no_change.unique()
-                        .transpose(include_header=True, header_name="effect", column_names=["mean"])
-                        .with_columns(nobs=metrics_no_change.height, lower_ci=None, upper_ci=None)
-                    )
-
-                    # Reorder the columns to match the stats DataFrame
-                    no_change_stats = no_change_stats.select(stats.columns)
-                    stats = pl.concat([stats, no_change_stats], how="vertical_relaxed")
-
-            beliefs = pl.concat(
-                [
-                    self.effects_by_precision.filter(pl.col(self.PRECISION_COLUMN) == key)
-                    .unnest(metric)
-                    .select("belief")
-                    .unique()
-                    .rename({"belief": f"{metric}_improvement"})
-                    for metric, _ in self.correctness_columns + self.resource_efficiency_columns
-                ],
-                how="horizontal",
-            ).transpose(include_header=True, header_name="effect", column_names=["belief"])
+            stats = self._build_statistics_frame(metrics)
+            beliefs = self._collect_beliefs(
+                self.effects_by_precision.filter(pl.col(self.PRECISION_COLUMN) == key),
+            )
             stats = stats.join(beliefs, on="effect", how="inner")
 
             stats = stats.with_columns(
@@ -407,53 +361,12 @@ class KnowledgeExtractor:
         eff_df = []
         for k, group in df.group_by("configuration"):
             key = k[0]
-            n_subjects = (
-                1
-                if self.paper.GROUPING_COLUMNS is None
-                else self.improvement_metrics.filter(pl.col("configuration") == key).select("Model").n_unique()
-            )
+            n_subjects = self._count_subjects(pl.col("configuration") == key)
             metrics = group.drop(pl.col("configuration"))
-            if group.height == 1:
-                stats = metrics.transpose(
-                    include_header=True, header_name="effect", column_names=["mean"]
-                ).with_columns(nobs=1, lower_ci=None, upper_ci=None)
-            else:
-                # Select only metrics with more than one unique value to avoid NaN in stats
-                # This is important for the statsmodels function to work properly
-                metrics_with_change = metrics.select(
-                    col.name for col in metrics.select(pl.all().n_unique() > 1) if col.all()
-                )
-
-                stats = pl.from_pandas(
-                    sms.describe(metrics_with_change, stats=["nobs", "mean", "ci"], alpha=0.05).T
-                ).with_columns(pl.Series(name="effect", values=metrics_with_change.columns))
-
-                # Add the metrics with no change to the stats
-                metrics_no_change = metrics.select(
-                    col.name for col in metrics.select(pl.all().n_unique() == 1) if col.all()
-                )
-                if metrics_no_change.height > 0:
-                    no_change_stats = (
-                        metrics_no_change.unique()
-                        .transpose(include_header=True, header_name="effect", column_names=["mean"])
-                        .with_columns(nobs=metrics_no_change.height, lower_ci=None, upper_ci=None)
-                    )
-
-                    # Reorder the columns to match the stats DataFrame
-                    no_change_stats = no_change_stats.select(stats.columns)
-                    stats = pl.concat([stats, no_change_stats], how="vertical_relaxed")
-
-            beliefs = pl.concat(
-                [
-                    self.effects_by_configuration.filter(pl.col("configuration") == key)
-                    .unnest(metric)
-                    .select("belief")
-                    .unique()
-                    .rename({"belief": f"{metric}_improvement"})
-                    for metric, _ in self.correctness_columns + self.resource_efficiency_columns
-                ],
-                how="horizontal",
-            ).transpose(include_header=True, header_name="effect", column_names=["belief"])
+            stats = self._build_statistics_frame(metrics)
+            beliefs = self._collect_beliefs(
+                self.effects_by_configuration.filter(pl.col("configuration") == key),
+            )
             stats = stats.join(beliefs, on="effect", how="inner")
 
             stats = stats.with_columns(
@@ -487,6 +400,52 @@ class KnowledgeExtractor:
             sms.describe(df.drop("configuration"), stats=["nobs", "mean", "ci"], alpha=0.05).T
         ).with_columns(col_names)
         return stats
+
+    def _count_subjects(self, predicate: pl.Expr) -> int:
+        if self.paper.GROUPING_COLUMNS is None:
+            return 1
+        return self.improvement_metrics.filter(predicate).select("Model").n_unique()
+
+    def _build_statistics_frame(self, metrics: pl.DataFrame) -> pl.DataFrame:
+        if metrics.height == 1:
+            return (
+                metrics.transpose(include_header=True, header_name="effect", column_names=["mean"])
+                .with_columns(nobs=1, lower_ci=None, upper_ci=None)
+                .select(["effect", "nobs", "mean", "lower_ci", "upper_ci"])
+            )
+
+        metrics_with_change = self._select_metrics_by_uniqueness(metrics, has_change=True)
+        stats = (
+            pl.from_pandas(sms.describe(metrics_with_change, stats=["nobs", "mean", "ci"], alpha=0.05).T)
+            .with_columns(pl.Series(name="effect", values=metrics_with_change.columns))
+            .select(["effect", "nobs", "mean", "lower_ci", "upper_ci"])
+        )
+
+        metrics_without_change = self._select_metrics_by_uniqueness(metrics, has_change=False)
+        if metrics_without_change.height == 0:
+            return stats
+
+        no_change_stats = (
+            metrics_without_change.unique()
+            .transpose(include_header=True, header_name="effect", column_names=["mean"])
+            .with_columns(nobs=metrics_without_change.height, lower_ci=None, upper_ci=None)
+            .select(stats.columns)
+        )
+        return pl.concat([stats, no_change_stats], how="vertical_relaxed")
+
+    def _select_metrics_by_uniqueness(self, metrics: pl.DataFrame, *, has_change: bool) -> pl.DataFrame:
+        unique_counts = metrics.select(pl.all().n_unique())
+        selected_columns = [col.name for col in unique_counts if (col.item() > 1) is has_change]
+        return metrics.select(selected_columns)
+
+    def _collect_beliefs(self, effects_frame: pl.DataFrame) -> pl.DataFrame:
+        return pl.concat(
+            [
+                effects_frame.unnest(metric).select("belief").unique().rename({"belief": f"{metric}_improvement"})
+                for metric, _ in self.correctness_columns + self.resource_efficiency_columns
+            ],
+            how="horizontal",
+        ).transpose(include_header=True, header_name="effect", column_names=["belief"])
 
     def get_improvement_statistics(self, by_precision=False, by_study=False) -> pl.DataFrame:
         """
@@ -606,8 +565,8 @@ class KnowledgeExtractor:
             df = df.with_columns(
                 (pl.col(f"{metric}_q3") - pl.col(f"{metric}_q1")).round(3).alias(f"{metric}_iqr")
             ).with_columns(
-                pl.when(pl.col(f"{metric}_sample_size") > 4)
-                .then((np.e ** (-DISCOUNT_FACTOR * (pl.col(f"{metric}_iqr") / (pl.col(metric) + EPSILON).abs()))))
+                pl.when(pl.col(f"{metric}_sample_size") > MIN_SAMPLE_SIZE_FOR_VARIABILITY_DISCOUNT)
+                .then(np.e ** (-DISCOUNT_FACTOR * (pl.col(f"{metric}_iqr") / (pl.col(metric) + EPSILON).abs())))
                 .otherwise(pl.lit(1))
                 .round(3)
                 .alias(f"{metric}_variability_discount")
