@@ -1,6 +1,7 @@
 [
     {
-        "quantization_precision": "int8",
+        "quantization_method": "ptq",
+        "precision_configuration": "w-int8",
         "f1_score": {
             "improvement": -0.249,
             "std": 0.527,

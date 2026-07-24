@@ -88,6 +88,10 @@ class Paper(ABC):
     CONFIGURATION_COLUMNS: list[str] | None = None
     EXPERIMENT_RUN_KEY: list[str] | None = None
     REMOTE_ARCHIVE_SOURCE: RemoteArchiveSource | None = None
+    # Canonical method token when the paper has a single method (`qat`, `ptq`, `ptq-retrain`).
+    QUANTIZATION_METHOD: str | None = None
+    # Optional per-row method column already present in loaded data (canonical or alias).
+    QUANTIZATION_METHOD_COL: str | None = None
 
     @abstractmethod
     def read_data(self) -> pl.DataFrame | pl.LazyFrame:
@@ -126,7 +130,8 @@ class DenkingerPaper(Paper):
     AUTHOR = "Denkinger et al."
     YEAR = 2020
     QUANTIZATION_PRECISION_COL = "numeric_format"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "qat"
     BELIEF = 0.44707958333333336
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(ram_energy_consumption="ram_energy_consumption (uJ)")
     CORRECTNESS_COLUMNS = CorrectnessMetrics(accuracy="accuracy")
@@ -152,7 +157,8 @@ class BarnellPaper(Paper):
     AUTHOR = "Barnell et al."
     YEAR = 2021
     QUANTIZATION_PRECISION_COL = "Precision Format"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "ptq"
     BELIEF = 0.6679141666666667
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         gpu_power_draw="Power Consumed (W)",
@@ -181,7 +187,8 @@ class VasquezPaper(Paper):
     AUTHOR = "Vasquez et al."
     YEAR = 2021
     QUANTIZATION_PRECISION_COL = "Precision Format"
-    BASELINE_PRECISION = "fp16"
+    BASELINE_PRECISION = "full-fp16"
+    QUANTIZATION_METHOD = "qat"
     BELIEF = 0.3804154166666667
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         inference_energy_consumption="Energy Consumption (uJ)",
@@ -203,7 +210,8 @@ class ZhanPaper(Paper):
     AUTHOR = "Zhan et al."
     YEAR = 2021
     QUANTIZATION_PRECISION_COL = "Precision Format"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "qat"
     BELIEF = 0.6816654166666667
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(storage_size="Storage Size (MB)")
     CORRECTNESS_COLUMNS = CorrectnessMetrics(accuracy="Accuracy")
@@ -224,7 +232,8 @@ class PaulPaper(Paper):
     AUTHOR = "Paul et al."
     YEAR = 2022
     QUANTIZATION_PRECISION_COL = "quantization_precision"
-    BASELINE_PRECISION = "fp64"
+    BASELINE_PRECISION = "full-fp64"
+    QUANTIZATION_METHOD = "qat"
     BELIEF = 0.37333333333333335
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         inference_energy_consumption="inference_energy",
@@ -242,7 +251,8 @@ class SathishPaper(Paper):
     AUTHOR = "Sathish et al."
     YEAR = 2022
     QUANTIZATION_PRECISION_COL = "quantization_precision"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "ptq"
     BELIEF = 0.3939814814814815
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         inference_energy_consumption="system_energy_J",
@@ -263,7 +273,8 @@ class TaoPaper(Paper):
     AUTHOR = "Tao et al."
     YEAR = 2022
     QUANTIZATION_PRECISION_COL = "quantization_precision"
-    BASELINE_PRECISION = "w-fp32, a-fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "qat"
     BELIEF = 0.6429166666666667
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         inference_energy_consumption="system_energy",
@@ -277,9 +288,10 @@ class TaoPaper(Paper):
         return (
             self.read_csv()
             .with_columns(
-                ("w-" + pl.col("Weight Encoding") + ", a-" + pl.col("Activation Encoding")).alias(
-                    "quantization_precision"
-                )
+                pl.when((pl.col("Weight Encoding") == "fp32") & (pl.col("Activation Encoding") == "fp32"))
+                .then(pl.lit("full-fp32"))
+                .otherwise("w-" + pl.col("Weight Encoding") + ", a-" + pl.col("Activation Encoding"))
+                .alias("quantization_precision")
             )
             .filter(pl.col("Pruning Sparsity") == "0%")
             .drop(["Exp", "Pruning Sparsity", "Weight Encoding", "Activation Encoding"])
@@ -301,7 +313,8 @@ class AlizadehPaper(Paper):
     AUTHOR = "Alizadeh et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "quantization_level"
-    BASELINE_PRECISION = "fp16"
+    BASELINE_PRECISION = "full-fp16"
+    QUANTIZATION_METHOD = "ptq"
     BELIEF = 0.7129601851851852
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         gpu_energy_consumption="total_energy_J",
@@ -375,8 +388,8 @@ class AlizadehPaper(Paper):
                 pl.when(pl.col("quantization_level") == "F16")
                 .then(pl.lit("fp16"))
                 .when(pl.col("quantization_level") == "Q8_0")
-                .then(pl.lit("int8"))
-                .otherwise(pl.lit("int4"))
+                .then(pl.lit("w-int8"))
+                .otherwise(pl.lit("w-int4"))
                 .alias("quantization_level"),
             )
             .rename({"model_name": "Model", "task": "Dataset"})
@@ -389,7 +402,7 @@ class AlshammryPaper(Paper):
     AUTHOR = "Alshammry et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "Precision Format"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
     BELIEF = 0.6833308333333333
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         storage_size="Model Size (MB)",
@@ -418,7 +431,8 @@ class DeputterPaper(Paper):
     AUTHOR = "De Putter et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "quantization_precision"
-    BASELINE_PRECISION = "fp16"
+    BASELINE_PRECISION = "full-fp16"
+    QUANTIZATION_METHOD = "qat"
     BELIEF = 0.4541629166666667
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         inference_energy_consumption="Energy (mJ)",
@@ -458,7 +472,8 @@ class GonzalezPaper(Paper):
     AUTHOR = "Gonzalez Alvarez et al."
     YEAR = 2024
     QUANTIZATION_PRECISION_COL = "Optimization"
-    BASELINE_PRECISION = "no_optimization"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "qat"
     BELIEF = 0.7361083333333334
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         inference_energy_consumption="sys_energy",
@@ -487,7 +502,9 @@ class GonzalezPaper(Paper):
         quantization_data = raw_data.filter(
             pl.col("Optimization").is_in(["no_optimization", "dynamic_quantization"])
         ).with_columns(
-            pl.col("Optimization").str.replace("dynamic_quantization", "w-int8"),
+            pl.col("Optimization")
+            .str.replace("dynamic_quantization", "w-int8")
+            .str.replace("no_optimization", "fp32"),
         )
 
         # Check if there are any missing values
@@ -563,7 +580,8 @@ class GuerroujPaper(Paper):
     AUTHOR = "Guerrouj et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "Precision Format"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "ptq"
     BELIEF = 0.6720808333333333
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         storage_size="Storage Size",
@@ -588,7 +606,8 @@ class KhalilPaper(Paper):
     AUTHOR = "Khalil et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "Precision Format"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "ptq"
     BELIEF = 0.6608320833333333
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         inference_latency="Inference Time (ms)",
@@ -618,7 +637,8 @@ class KoliPaper(Paper):
     AUTHOR = "Koli et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "Precision Format"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "ptq"
     BELIEF = 0.6533320833333334
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         storage_size="Model Size (MB)",
@@ -641,7 +661,8 @@ class KrastevaPaper(Paper):
     AUTHOR = "Krasteva et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "Precision Format"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "ptq"
     BELIEF = 0.6762487500000001
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         inference_latency="Execution Time (ms)",
@@ -664,7 +685,6 @@ class KrastevaPaper(Paper):
             },
         ).with_columns(
             (pl.col("SRAM Usage (B)") + pl.col("SDRAM Usage (B)")).alias("RAM Usage (B)"),
-            pl.col("Precision Format").str.replace(r"^w8a8$", "int8").alias("Precision Format"),
         )
 
 
@@ -674,7 +694,8 @@ class PengPaper(Paper):
     AUTHOR = "Peng et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "precision_format"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "ptq"
     BELIEF = 0.6845808333333333
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(inference_latency="latency", storage_size="model_size")
     CORRECTNESS_COLUMNS = CorrectnessMetrics()
@@ -696,7 +717,8 @@ class FlichPaper(Paper):
     AUTHOR = "Flich et al."
     YEAR = 2022
     QUANTIZATION_PRECISION_COL = "precision_configuration"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "ptq"
     BELIEF = 0.6595820833333333
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         inference_latency="inference_time_ms",
@@ -714,7 +736,10 @@ class FlichPaper(Paper):
                 "fps": pl.Float32,
             },
         ).with_columns(
-            pl.col("precision_configuration").str.to_lowercase().alias("precision_configuration"),
+            pl.col("precision_configuration")
+            .str.to_lowercase()
+            .str.replace(r"^int8$", "w-int8")
+            .alias("precision_configuration"),
             (100 - pl.col("error_value")).alias("accuracy"),
         ).rename(
             {
@@ -729,7 +754,8 @@ class XuPaper(Paper):
     AUTHOR = "Xu et al."
     YEAR = 2021
     QUANTIZATION_PRECISION_COL = "quantization_precision"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD_COL = "quantization_method"
     BELIEF = 0.0
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         inference_latency="eval_time_ms_per_word",
@@ -755,6 +781,10 @@ class XuPaper(Paper):
             .then(pl.lit("fp32"))
             .otherwise(pl.format("int{}", pl.col("avg_bits_or_bitwidth").cast(pl.Int32)))
             .alias("quantization_precision"),
+            pl.when(pl.col("param_estimation").str.contains("(?i)post-training"))
+            .then(pl.lit("ptq"))
+            .otherwise(pl.lit("qat"))
+            .alias("quantization_method"),
             pl.when(pl.col("avg_bits_or_bitwidth") == FULL_PRECISION_BITS)
             .then(pl.lit("fp32"))
             .otherwise(
@@ -782,7 +812,8 @@ class DubhirPaper(Paper):
     AUTHOR = "Dubhir et al."
     YEAR = 2021
     QUANTIZATION_PRECISION_COL = "precision_config"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "ptq"
     BELIEF = 0.6670808333333333
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         inference_latency="testing_time_seconds",
@@ -816,7 +847,8 @@ class AjiPaper(Paper):
     AUTHOR = "Aji and Heafield"
     YEAR = 2020
     QUANTIZATION_PRECISION_COL = "quantization_precision"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "ptq-retrain"
     BELIEF = 0.6720820833333333
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(storage_size="model_size_mb")
     CORRECTNESS_COLUMNS = CorrectnessMetrics(bleu="bleu")
@@ -835,7 +867,7 @@ class AjiPaper(Paper):
         ).with_columns(
             pl.when(pl.col("bit_width") == FULL_PRECISION_BITS)
             .then(pl.lit("fp32"))
-            .otherwise(pl.format("log{}", pl.col("bit_width")))
+            .otherwise(pl.format("w-log{}", pl.col("bit_width")))
             .alias("quantization_precision"),
         ).rename(
             {
@@ -850,7 +882,8 @@ class ChenPaper(Paper):
     AUTHOR = "Chen et al."
     YEAR = 2023
     QUANTIZATION_PRECISION_COL = "quantization_precision"
-    BASELINE_PRECISION = "fp32"
+    BASELINE_PRECISION = "full-fp32"
+    QUANTIZATION_METHOD = "ptq"
     BELIEF = 0.67624875
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(storage_size="storage_size")
     CORRECTNESS_COLUMNS = CorrectnessMetrics(f1_score="f1_score")
@@ -879,7 +912,7 @@ class ChenPaper(Paper):
 
         quantized = data.select(
             pl.col("Model"),
-            pl.concat_str([pl.lit("int"), pl.col("Quantization precision (bits)").cast(pl.String)]).alias(
+            pl.concat_str([pl.lit("w-int"), pl.col("Quantization precision (bits)").cast(pl.String)]).alias(
                 "quantization_precision"
             ),
             pl.col("Compressed size (B)").alias("storage_size"),

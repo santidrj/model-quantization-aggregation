@@ -2,6 +2,7 @@ import polars as pl
 import pytest
 
 from src.data.papers.entities import Papers
+from src.data.papers.precision_nomenclature import parse_precision_label
 
 REPRESENTATIVE_PAPERS = (
     Papers.DUBHIR.value,
@@ -16,7 +17,12 @@ def test_representative_papers_load_non_empty_data(paper):
     frame = loaded.collect() if isinstance(loaded, pl.LazyFrame) else loaded
     assert frame.height > 0
     assert paper.QUANTIZATION_PRECISION_COL in frame.columns
-    assert paper.BASELINE_PRECISION in frame.get_column(paper.QUANTIZATION_PRECISION_COL).unique().to_list()
+    raw_labels = frame.get_column(paper.QUANTIZATION_PRECISION_COL).unique().to_list()
+    canonical_labels = {
+        parse_precision_label(label, baseline_precision_configuration=paper.BASELINE_PRECISION)[1]
+        for label in raw_labels
+    }
+    assert paper.BASELINE_PRECISION in canonical_labels
 
     for metric_name, column_name in paper.CORRECTNESS_COLUMNS.metrics():
         assert column_name in frame.columns, f"{paper.KEY} missing correctness column for {metric_name}"

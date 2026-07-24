@@ -6,6 +6,10 @@ import polars as pl
 from statsmodels.stats import descriptivestats as sms
 
 from src.data.papers.entities import CorrectnessMetrics, Paper, Papers
+from src.data.papers.precision_nomenclature import (
+    normalize_quantization_method,
+    parse_precision_label,
+)
 from src.effect_intensity import (
     CorrectnessIntensity,
     EffectIntensity,
@@ -35,7 +39,8 @@ STATS_COLUMNS_ORDER = [
 
 
 class KnowledgeExtractor:
-    PRECISION_COLUMN = "quantization_precision"
+    PRECISION_COLUMN = "precision_configuration"
+    METHOD_COLUMN = "quantization_method"
 
     def __init__(  # noqa: PLR0913
         self,
@@ -58,25 +63,84 @@ class KnowledgeExtractor:
         self.resource_efficiency_columns = paper.RESOURCE_EFFICIENCY_COLUMNS.metrics()
 
         columns = df.collect_schema().names() if type(df) is pl.LazyFrame else df.columns
-        self.df = df.drop(
-            [
-                col
-                for col in columns
-                if col
-                not in [self.paper.QUANTIZATION_PRECISION_COL]
-                + [col_name for _, col_name in self.correctness_columns + self.resource_efficiency_columns]
-                + (self.paper.GROUPING_COLUMNS or [])
-                + (self.paper.CONFIGURATION_COLUMNS or [])
-                + (self.paper.EXPERIMENT_RUN_KEY or [])
-            ]
-        ).rename({self.paper.QUANTIZATION_PRECISION_COL: self.PRECISION_COLUMN})
+        method_source = self.paper.QUANTIZATION_METHOD_COL
+        keep = (
+            [self.paper.QUANTIZATION_PRECISION_COL]
+            + ([method_source] if method_source and method_source in columns else [])
+            + [col_name for _, col_name in self.correctness_columns + self.resource_efficiency_columns]
+            + (self.paper.GROUPING_COLUMNS or [])
+            + (self.paper.CONFIGURATION_COLUMNS or [])
+            + (self.paper.EXPERIMENT_RUN_KEY or [])
+        )
+        self.df = df.drop([col for col in columns if col not in keep]).rename(
+            {self.paper.QUANTIZATION_PRECISION_COL: self.PRECISION_COLUMN}
+        )
+        if method_source and method_source in keep and method_source != self.METHOD_COLUMN:
+            self.df = self.df.rename({method_source: self.METHOD_COLUMN})
+
+        self.df = self._canonicalize_precision_and_method(self.df)
+
+    def _canonicalize_precision_and_method(self, df: pl.DataFrame | pl.LazyFrame) -> pl.DataFrame | pl.LazyFrame:
+        columns = df.collect_schema().names() if type(df) is pl.LazyFrame else df.columns
+        default_method = self.paper.QUANTIZATION_METHOD
+        baseline = self.paper.BASELINE_PRECISION
+
+        def _parse_label(label: str) -> dict[str, str | None]:
+            method, config = parse_precision_label(label, baseline_precision_configuration=baseline)
+            return {"method": method, "config": config}
+
+        df = (
+            df.with_columns(
+                pl.col(self.PRECISION_COLUMN)
+                .map_elements(_parse_label, return_dtype=pl.Struct({"method": pl.String, "config": pl.String}))
+                .alias("_parsed")
+            )
+            .with_columns(
+                pl.col("_parsed").struct.field("config").alias(self.PRECISION_COLUMN),
+                pl.col("_parsed").struct.field("method").alias("_method_from_label"),
+            )
+            .drop("_parsed")
+        )
+
+        if self.METHOD_COLUMN in columns:
+            df = df.with_columns(
+                pl.col(self.METHOD_COLUMN)
+                .map_elements(
+                    lambda value: normalize_quantization_method(value) if value is not None else None,
+                    return_dtype=pl.String,
+                )
+                .alias(self.METHOD_COLUMN)
+            )
+            df = df.with_columns(
+                pl.coalesce(pl.col(self.METHOD_COLUMN), pl.col("_method_from_label")).alias(self.METHOD_COLUMN)
+            )
+        else:
+            df = df.with_columns(pl.col("_method_from_label").alias(self.METHOD_COLUMN))
+
+        if default_method is not None:
+            df = df.with_columns(pl.col(self.METHOD_COLUMN).fill_null(default_method))
+
+        quantized = df.filter(pl.col(self.PRECISION_COLUMN) != baseline)
+        null_methods = quantized.select(pl.col(self.METHOD_COLUMN).is_null().any())
+        has_null = null_methods.collect().item() if type(null_methods) is pl.LazyFrame else null_methods.item()
+        if has_null:
+            raise ValueError(
+                f"Paper {self.paper.KEY} is missing quantization_method on one or more quantized rows "
+                "and has no single QUANTIZATION_METHOD default"
+            )
+
+        # Baseline rows are excluded from by-precision aggregation; fill only for a typed column.
+        return df.with_columns(pl.col(self.METHOD_COLUMN).fill_null(default_method or "qat")).drop("_method_from_label")
+
+    def _by_precision_key(self) -> list[str]:
+        return [self.METHOD_COLUMN, self.PRECISION_COLUMN]
 
     def _configuration_key(self) -> list[str]:
         if self.paper.GROUPING_COLUMNS is None:
-            return [self.PRECISION_COLUMN]
+            return self._by_precision_key()
         return [
             *[variable for variable in self.paper.GROUPING_COLUMNS if variable != "Model"],
-            self.PRECISION_COLUMN,
+            *self._by_precision_key(),
             *(self.paper.CONFIGURATION_COLUMNS or []),
         ]
 
@@ -106,7 +170,7 @@ class KnowledgeExtractor:
             DataFrame containing improvement metrics.
         """
         baseline_data = self.df.filter(pl.col(self.PRECISION_COLUMN) == self.paper.BASELINE_PRECISION).drop(
-            self.PRECISION_COLUMN
+            *self._by_precision_key()
         )
         quantization_data = self.df.filter(pl.col(self.PRECISION_COLUMN) != self.paper.BASELINE_PRECISION)
 
@@ -122,7 +186,7 @@ class KnowledgeExtractor:
             ).with_columns(pl.struct(pl.col(*group_key)).alias("configuration"))
         else:
             quantization_data = quantization_data.join(baseline_data, how="cross", suffix="_baseline").with_columns(
-                pl.struct(pl.col(self.PRECISION_COLUMN)).alias("configuration")
+                pl.struct(pl.col(*self._by_precision_key())).alias("configuration")
             )
 
         # Compute the relative improvement for each metric
@@ -173,7 +237,7 @@ class KnowledgeExtractor:
         if not hasattr(self, "improvement_metrics"):
             self.compute_improvement()
 
-        self.effects_by_precision = self.improvement_metrics.group_by(self.PRECISION_COLUMN).agg(
+        self.effects_by_precision = self.improvement_metrics.group_by(self._by_precision_key()).agg(
             [
                 pl.col("^*_improvement$").mean().cast(pl.Float64),
                 pl.col("^*_improvement$").std().cast(pl.Float64).name.suffix("_std"),
@@ -185,23 +249,25 @@ class KnowledgeExtractor:
         if self.paper.GROUPING_COLUMNS is not None:
             sample_size_by_precision = (
                 self.improvement_metrics.with_columns(
-                    pl.struct(self.paper.GROUPING_COLUMNS + [self.PRECISION_COLUMN]).alias("samples")
+                    pl.struct(self.paper.GROUPING_COLUMNS + self._by_precision_key()).alias("samples")
                 )
                 .unique("samples")
-                .group_by(self.PRECISION_COLUMN)
+                .group_by(self._by_precision_key())
                 .agg(pl.col("^*_improvement$").count().name.suffix("_sample_size"))
             )
         else:
             sample_size_by_precision = (
                 self.improvement_metrics.unique("configuration")
-                .group_by(self.PRECISION_COLUMN)
+                .group_by(self._by_precision_key())
                 .agg(pl.col("^*_improvement$").count().name.suffix("_sample_size"))
             )
 
-        self.effects_by_precision = self.effects_by_precision.join(sample_size_by_precision, on=self.PRECISION_COLUMN)
+        self.effects_by_precision = self.effects_by_precision.join(
+            sample_size_by_precision, on=self._by_precision_key()
+        )
 
         self.effects_by_precision = (
-            self._enrich_data(self.effects_by_precision).sort(self.PRECISION_COLUMN).drop(pl.col("^*_sample_size$"))
+            self._enrich_data(self.effects_by_precision).sort(self._by_precision_key()).drop(pl.col("^*_sample_size$"))
         )
 
         return self.effects_by_precision
@@ -233,7 +299,7 @@ class KnowledgeExtractor:
 
         if self.paper.GROUPING_COLUMNS is not None:
             sample_columns = (
-                self.paper.GROUPING_COLUMNS + [self.PRECISION_COLUMN] + (self.paper.CONFIGURATION_COLUMNS or [])
+                self.paper.GROUPING_COLUMNS + self._by_precision_key() + (self.paper.CONFIGURATION_COLUMNS or [])
             )
             sample_size = (
                 self.improvement_metrics.with_columns(pl.struct(sample_columns).alias("samples"))
@@ -252,7 +318,10 @@ class KnowledgeExtractor:
 
         self.effects_by_configuration = (
             self._enrich_data(self.effects_by_configuration)
-            .sort(pl.col("configuration").struct.field(self.PRECISION_COLUMN))
+            .sort(
+                pl.col("configuration").struct.field(self.METHOD_COLUMN),
+                pl.col("configuration").struct.field(self.PRECISION_COLUMN),
+            )
             .drop(pl.col("^*_sample_size$"))
         )
 
@@ -330,20 +399,35 @@ class KnowledgeExtractor:
             DataFrame containing detailed statistics for each precision group.
         """
         df = self.improvement_metrics.select(pl.col("configuration", "^.+_improvement$"))
+        precision_key = pl.struct(
+            pl.col("configuration").struct.field(self.METHOD_COLUMN),
+            pl.col("configuration").struct.field(self.PRECISION_COLUMN),
+        )
         eff_df = []
-        for k, group in df.group_by(pl.col("configuration").struct.field(self.PRECISION_COLUMN)):
+        for k, group in df.group_by(precision_key):
             key = k[0]
-            n_subjects = self._count_subjects(pl.col("configuration").struct.field(self.PRECISION_COLUMN) == key)
+            method = key[self.METHOD_COLUMN]
+            precision = key[self.PRECISION_COLUMN]
+            n_subjects = self._count_subjects(precision_key == key)
             metrics = group.drop(pl.col("configuration"))
             stats = self._build_statistics_frame(metrics)
             beliefs = self._collect_beliefs(
-                self.effects_by_precision.filter(pl.col(self.PRECISION_COLUMN) == key),
+                self.effects_by_precision.filter(
+                    (pl.col(self.METHOD_COLUMN) == method) & (pl.col(self.PRECISION_COLUMN) == precision)
+                ),
             )
             stats = stats.join(beliefs, on="effect", how="inner")
 
             stats = stats.with_columns(
                 pl.Series(
-                    "configuration", [key] * stats.height, dtype=pl.Struct([pl.Field(self.PRECISION_COLUMN, pl.String)])
+                    "configuration",
+                    [key] * stats.height,
+                    dtype=pl.Struct(
+                        [
+                            pl.Field(self.METHOD_COLUMN, pl.String),
+                            pl.Field(self.PRECISION_COLUMN, pl.String),
+                        ]
+                    ),
                 ),
                 pl.lit(n_subjects).alias("n_subjects"),
             )

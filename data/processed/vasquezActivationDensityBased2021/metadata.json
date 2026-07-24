@@ -3,14 +3,25 @@
   "study_type": "simulation-based experiment",
   "data_quality": "comparative",
   "energy_measurement": {
-    "measurement_method": ["model-based"]
+    "measurement_method": [
+      "model-based"
+    ]
   },
   "quantization_schema": {
-    "baseline_precision": "fp16",
-    "target_precision": ["mixed"],
-    "quantization_targets": ["wkak"],
-    "quantization_method": "quantization-aware training"
+    "baseline_precision_configuration": "full-fp16",
+    "precision_configurations": [
+      "mixed"
+    ],
+    "quantization_method": [
+      "qat"
+    ]
   },
-  "models": ["VGG19", "ResNet18"],
-  "datasets": ["CIFAR-10", "CIFAR-100"]
+  "models": [
+    "VGG19",
+    "ResNet18"
+  ],
+  "datasets": [
+    "CIFAR-10",
+    "CIFAR-100"
+  ]
 }

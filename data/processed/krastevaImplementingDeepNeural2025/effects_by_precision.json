@@ -1,6 +1,7 @@
 [
     {
-        "quantization_precision": "full-int8",
+        "quantization_method": "ptq",
+        "precision_configuration": "full-int8",
         "inference_energy_consumption": {
             "improvement": 87.26,
             "std": null,
@@ -47,7 +48,8 @@
         }
     },
     {
-        "quantization_precision": "int8",
+        "quantization_method": "ptq",
+        "precision_configuration": "w-int8, a-int8",
         "inference_energy_consumption": {
             "improvement": 87.239,
             "std": null,

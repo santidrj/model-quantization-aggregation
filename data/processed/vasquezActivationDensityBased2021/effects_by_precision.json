@@ -1,6 +1,7 @@
 [
     {
-        "quantization_precision": "mixed",
+        "quantization_method": "qat",
+        "precision_configuration": "mixed",
         "inference_energy_consumption": {
             "improvement": 79.835,
             "std": 0.907,

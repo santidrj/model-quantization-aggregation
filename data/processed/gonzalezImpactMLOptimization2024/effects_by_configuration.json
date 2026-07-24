@@ -1,8 +1,294 @@
 [
     {
         "configuration": {
+            "Dataset": "['imagenet']",
+            "quantization_method": "qat",
+            "precision_configuration": "w-int8"
+        },
+        "accuracy": {
+            "improvement": -2.762,
+            "std": 0.464,
+            "iqr": 0.927,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "weakly negative - indiferent"
+        },
+        "inference_energy_consumption": {
+            "improvement": 16.432,
+            "std": 23.992,
+            "iqr": 28.229,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "weakly positive"
+        },
+        "inference_power_draw": {
+            "improvement": -1.123,
+            "std": 26.145,
+            "iqr": 31.827,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "indiferent"
+        },
+        "inference_latency": {
+            "improvement": 17.525,
+            "std": 7.427,
+            "iqr": 11.141,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "weakly positive"
+        },
+        "gpu_energy_consumption": {
+            "improvement": 18.329,
+            "std": 7.876,
+            "iqr": 11.819,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "weakly positive"
+        },
+        "gpu_power_draw": {
+            "improvement": 1.01,
+            "std": 2.132,
+            "iqr": 3.293,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "indiferent"
+        },
+        "gpu_utilization": {
+            "improvement": 0.15,
+            "std": 8.063,
+            "iqr": 0.0,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "indiferent"
+        },
+        "storage_size": {
+            "improvement": 49.176,
+            "std": 47.526,
+            "iqr": 95.028,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "positive - strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Dataset": "['imagenet-22k']",
+            "quantization_method": "qat",
+            "precision_configuration": "w-int8"
+        },
+        "accuracy": {
+            "improvement": -4.772,
+            "std": 0.605,
+            "iqr": 1.21,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "weakly negative - indiferent"
+        },
+        "inference_energy_consumption": {
+            "improvement": 65.939,
+            "std": 11.809,
+            "iqr": 13.402,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "strongly positive"
+        },
+        "inference_power_draw": {
+            "improvement": 22.979,
+            "std": 23.635,
+            "iqr": 26.868,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "weakly positive - positive"
+        },
+        "inference_latency": {
+            "improvement": 55.156,
+            "std": 10.073,
+            "iqr": 19.566,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "strongly positive"
+        },
+        "gpu_energy_consumption": {
+            "improvement": 57.279,
+            "std": 8.967,
+            "iqr": 17.2,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "strongly positive"
+        },
+        "gpu_power_draw": {
+            "improvement": 4.362,
+            "std": 3.166,
+            "iqr": 4.522,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "indiferent - weakly positive"
+        },
+        "gpu_utilization": {
+            "improvement": 0.1,
+            "std": 7.747,
+            "iqr": 0.0,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "indiferent"
+        },
+        "storage_size": {
+            "improvement": 94.608,
+            "std": 1.435,
+            "iqr": 2.868,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.358,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Dataset": "['imagenet', 'imagenet-21k']",
+            "quantization_method": "qat",
+            "precision_configuration": "w-int8"
+        },
+        "accuracy": {
+            "improvement": -100.0,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.208,
+            "intensity": "strongly negative"
+        },
+        "inference_energy_consumption": {
+            "improvement": 70.543,
+            "std": 10.385,
+            "iqr": 9.753,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.208,
+            "intensity": "strongly positive"
+        },
+        "inference_power_draw": {
+            "improvement": 46.717,
+            "std": 18.172,
+            "iqr": 17.593,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.208,
+            "intensity": "positive - strongly positive"
+        },
+        "inference_latency": {
+            "improvement": 44.778,
+            "std": 3.182,
+            "iqr": 4.155,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.208,
+            "intensity": "positive - strongly positive"
+        },
+        "gpu_energy_consumption": {
+            "improvement": 46.649,
+            "std": 11.812,
+            "iqr": 4.378,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.208,
+            "intensity": "positive - strongly positive"
+        },
+        "gpu_power_draw": {
+            "improvement": 3.558,
+            "std": 18.366,
+            "iqr": 5.157,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.208,
+            "intensity": "indiferent - weakly positive"
+        },
+        "gpu_utilization": {
+            "improvement": 4.9,
+            "std": 38.827,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.208,
+            "intensity": "indiferent - weakly positive"
+        },
+        "storage_size": {
+            "improvement": 99.514,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.208,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
             "Dataset": "['food101']",
-            "quantization_precision": "int8"
+            "quantization_method": "qat",
+            "precision_configuration": "w-int8"
         },
         "accuracy": {
             "improvement": -12.626,
@@ -96,7 +382,8 @@
     {
         "configuration": {
             "Dataset": "['imagenet_1k']",
-            "quantization_precision": "int8"
+            "quantization_method": "qat",
+            "precision_configuration": "w-int8"
         },
         "accuracy": {
             "improvement": 6.667,
@@ -185,288 +472,6 @@
             "p_value": 0.717,
             "belief": 0.208,
             "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Dataset": "['imagenet', 'imagenet-21k']",
-            "quantization_precision": "int8"
-        },
-        "accuracy": {
-            "improvement": -100.0,
-            "std": 0.0,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.208,
-            "intensity": "strongly negative"
-        },
-        "inference_energy_consumption": {
-            "improvement": 70.543,
-            "std": 10.385,
-            "iqr": 9.753,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.208,
-            "intensity": "strongly positive"
-        },
-        "inference_power_draw": {
-            "improvement": 46.717,
-            "std": 18.172,
-            "iqr": 17.593,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.208,
-            "intensity": "positive - strongly positive"
-        },
-        "inference_latency": {
-            "improvement": 44.778,
-            "std": 3.182,
-            "iqr": 4.155,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.208,
-            "intensity": "positive - strongly positive"
-        },
-        "gpu_energy_consumption": {
-            "improvement": 46.649,
-            "std": 11.812,
-            "iqr": 4.378,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.208,
-            "intensity": "positive - strongly positive"
-        },
-        "gpu_power_draw": {
-            "improvement": 3.558,
-            "std": 18.366,
-            "iqr": 5.157,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.208,
-            "intensity": "indiferent - weakly positive"
-        },
-        "gpu_utilization": {
-            "improvement": 4.9,
-            "std": 38.827,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.208,
-            "intensity": "indiferent - weakly positive"
-        },
-        "storage_size": {
-            "improvement": 99.514,
-            "std": 0.0,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.208,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Dataset": "['imagenet-22k']",
-            "quantization_precision": "int8"
-        },
-        "accuracy": {
-            "improvement": -4.772,
-            "std": 0.605,
-            "iqr": 1.21,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "weakly negative - indiferent"
-        },
-        "inference_energy_consumption": {
-            "improvement": 65.939,
-            "std": 11.809,
-            "iqr": 13.402,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "strongly positive"
-        },
-        "inference_power_draw": {
-            "improvement": 22.979,
-            "std": 23.635,
-            "iqr": 26.868,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "weakly positive - positive"
-        },
-        "inference_latency": {
-            "improvement": 55.156,
-            "std": 10.073,
-            "iqr": 19.566,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "strongly positive"
-        },
-        "gpu_energy_consumption": {
-            "improvement": 57.279,
-            "std": 8.967,
-            "iqr": 17.2,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "strongly positive"
-        },
-        "gpu_power_draw": {
-            "improvement": 4.362,
-            "std": 3.166,
-            "iqr": 4.522,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "indiferent - weakly positive"
-        },
-        "gpu_utilization": {
-            "improvement": 0.1,
-            "std": 7.747,
-            "iqr": 0.0,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "indiferent"
-        },
-        "storage_size": {
-            "improvement": 94.608,
-            "std": 1.435,
-            "iqr": 2.868,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Dataset": "['imagenet']",
-            "quantization_precision": "int8"
-        },
-        "accuracy": {
-            "improvement": -2.762,
-            "std": 0.464,
-            "iqr": 0.927,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "weakly negative - indiferent"
-        },
-        "inference_energy_consumption": {
-            "improvement": 16.432,
-            "std": 23.992,
-            "iqr": 28.229,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "weakly positive"
-        },
-        "inference_power_draw": {
-            "improvement": -1.123,
-            "std": 26.145,
-            "iqr": 31.827,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "indiferent"
-        },
-        "inference_latency": {
-            "improvement": 17.525,
-            "std": 7.427,
-            "iqr": 11.141,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "weakly positive"
-        },
-        "gpu_energy_consumption": {
-            "improvement": 18.329,
-            "std": 7.876,
-            "iqr": 11.819,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "weakly positive"
-        },
-        "gpu_power_draw": {
-            "improvement": 1.01,
-            "std": 2.132,
-            "iqr": 3.293,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "indiferent"
-        },
-        "gpu_utilization": {
-            "improvement": 0.15,
-            "std": 8.063,
-            "iqr": 0.0,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "indiferent"
-        },
-        "storage_size": {
-            "improvement": 49.176,
-            "std": 47.526,
-            "iqr": 95.028,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.358,
-            "intensity": "positive - strongly positive"
         }
     }
 ]

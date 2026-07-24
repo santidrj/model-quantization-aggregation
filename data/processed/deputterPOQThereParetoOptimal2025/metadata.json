@@ -3,14 +3,29 @@
   "study_type": "experimental simulation study",
   "data_quality": "comparative (charts)",
   "energy_measurement": {
-    "measurement_method": ["analytical"],
-    "software_tools": ["Zigzag"]
+    "measurement_method": [
+      "analytical"
+    ],
+    "software_tools": [
+      "Zigzag"
+    ]
   },
   "quantization_schema": {
-    "baseline_precision": "fp16",
-    "target_precision": ["int8", "int4", "int2"],
-    "quantization_targets": ["full-int8", "full-int4", "full-int2", "w-int8, a-int8", "w-int4, a-int8", "w-int2, a-int8", "w-int4, a-int4", "w-int2, a-int4", "w-int2, a-int2"],
-    "quantization_method": "quantization-aware training"
+    "baseline_precision_configuration": "full-fp16",
+    "precision_configurations": [
+      "full-int8",
+      "full-int4",
+      "full-int2",
+      "w-int8, a-int8",
+      "w-int4, a-int8",
+      "w-int2, a-int8",
+      "w-int4, a-int4",
+      "w-int2, a-int4",
+      "w-int2, a-int2"
+    ],
+    "quantization_method": [
+      "qat"
+    ]
   },
   "hardware": [
     {
@@ -21,6 +36,11 @@
       }
     }
   ],
-  "models": ["MobileNetV2", "ResNet18"],
-  "datasets": ["ImageNet"]
+  "models": [
+    "MobileNetV2",
+    "ResNet18"
+  ],
+  "datasets": [
+    "ImageNet"
+  ]
 }

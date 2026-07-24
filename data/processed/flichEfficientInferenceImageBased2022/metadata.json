@@ -3,11 +3,16 @@
   "study_type": "controlled experiment",
   "data_quality": "comparative",
   "quantization_schema": {
-    "baseline_precision": "fp32",
-    "target_precision": ["int8"],
-    "quantization_targets": ["w-int8"],
-    "quantization_method": "post-training quantization",
-    "frameworks": ["N2D2"]
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
+      "w-int8"
+    ],
+    "quantization_method": [
+      "ptq"
+    ],
+    "frameworks": [
+      "N2D2"
+    ]
   },
   "hardware": [
     {
@@ -18,6 +23,10 @@
       }
     }
   ],
-  "models": ["VGG16"],
-  "datasets": ["ISIC skin lesion dataset"]
+  "models": [
+    "VGG16"
+  ],
+  "datasets": [
+    "ISIC skin lesion dataset"
+  ]
 }

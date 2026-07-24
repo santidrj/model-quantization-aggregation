@@ -26,7 +26,7 @@ def test_improvement_metrics_match_processed_baseline(dubhir_extractor):
     assert_frame_equal_with_tolerance(
         actual,
         expected,
-        sort_by=["library", "Model", "quantization_precision"],
+        sort_by=["library", "Model", "precision_configuration"],
     )
 
 

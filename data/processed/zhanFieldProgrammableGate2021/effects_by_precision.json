@@ -1,6 +1,7 @@
 [
     {
-        "quantization_precision": "w-int2, a-int8, b-int8",
+        "quantization_method": "qat",
+        "precision_configuration": "w-int2, a-int8, b-int8",
         "accuracy": {
             "improvement": -2.932,
             "std": 2.23,

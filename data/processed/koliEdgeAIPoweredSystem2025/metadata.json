@@ -3,12 +3,19 @@
   "study_type": "controlled experiment",
   "data_quality": "comparative",
   "quantization_schema": {
-    "baseline_precision": "fp32",
-    "target_precision": ["int8"],
-    "quantization_targets": ["w-int8"],
-    "quantization_method": "post-training quantization",
-    "frameworks": ["TensorFlow"],
-    "formats": ["TF Lite"]
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
+      "w-int8, a-fp32"
+    ],
+    "quantization_method": [
+      "ptq"
+    ],
+    "frameworks": [
+      "TensorFlow"
+    ],
+    "formats": [
+      "TF Lite"
+    ]
   },
   "hardware": [
     {
@@ -20,6 +27,11 @@
       }
     }
   ],
-  "models": ["ResNet50", "Custom ResNet50"],
-  "datasets": ["Custom Aloe Vera Plant Disease Dataset"]
+  "models": [
+    "ResNet50",
+    "Custom ResNet50"
+  ],
+  "datasets": [
+    "Custom Aloe Vera Plant Disease Dataset"
+  ]
 }

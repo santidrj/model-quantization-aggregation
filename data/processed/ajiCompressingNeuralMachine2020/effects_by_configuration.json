@@ -1,7 +1,8 @@
 [
     {
         "configuration": {
-            "quantization_precision": "log1"
+            "quantization_method": "ptq-retrain",
+            "precision_configuration": "w-log1"
         },
         "bleu": {
             "improvement": -12.484,
@@ -28,7 +29,8 @@
     },
     {
         "configuration": {
-            "quantization_precision": "log2"
+            "quantization_method": "ptq-retrain",
+            "precision_configuration": "w-log2"
         },
         "bleu": {
             "improvement": -5.357,
@@ -55,7 +57,8 @@
     },
     {
         "configuration": {
-            "quantization_precision": "log3"
+            "quantization_method": "ptq-retrain",
+            "precision_configuration": "w-log3"
         },
         "bleu": {
             "improvement": -1.243,
@@ -82,7 +85,8 @@
     },
     {
         "configuration": {
-            "quantization_precision": "log4"
+            "quantization_method": "ptq-retrain",
+            "precision_configuration": "w-log4"
         },
         "bleu": {
             "improvement": -0.354,

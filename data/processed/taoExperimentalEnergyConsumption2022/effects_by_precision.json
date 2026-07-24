@@ -1,6 +1,7 @@
 [
     {
-        "quantization_precision": "w-fp32, a-q0.16",
+        "quantization_method": "qat",
+        "precision_configuration": "w-fp32, a-q0.16",
         "accuracy": {
             "improvement": -2.039,
             "std": null,
@@ -69,7 +70,8 @@
         }
     },
     {
-        "quantization_precision": "w-fp32, a-q0.8",
+        "quantization_method": "qat",
+        "precision_configuration": "w-fp32, a-q0.8",
         "accuracy": {
             "improvement": -1.383,
             "std": null,
@@ -138,7 +140,8 @@
         }
     },
     {
-        "quantization_precision": "w-q0.16, a-fp32",
+        "quantization_method": "qat",
+        "precision_configuration": "w-q0.16, a-fp32",
         "accuracy": {
             "improvement": -0.752,
             "std": null,
@@ -207,7 +210,8 @@
         }
     },
     {
-        "quantization_precision": "w-q0.16, a-q0.16",
+        "quantization_method": "qat",
+        "precision_configuration": "w-q0.16, a-q0.16",
         "accuracy": {
             "improvement": -3.463,
             "std": null,
@@ -276,7 +280,8 @@
         }
     },
     {
-        "quantization_precision": "w-q0.16, a-q0.8",
+        "quantization_method": "qat",
+        "precision_configuration": "w-q0.16, a-q0.8",
         "accuracy": {
             "improvement": -7.389,
             "std": null,
@@ -345,7 +350,8 @@
         }
     },
     {
-        "quantization_precision": "w-q0.8, a-fp32",
+        "quantization_method": "qat",
+        "precision_configuration": "w-q0.8, a-fp32",
         "accuracy": {
             "improvement": -9.264,
             "std": null,
@@ -414,7 +420,8 @@
         }
     },
     {
-        "quantization_precision": "w-q0.8, a-q0.16",
+        "quantization_method": "qat",
+        "precision_configuration": "w-q0.8, a-q0.16",
         "accuracy": {
             "improvement": -8.365,
             "std": null,
@@ -483,7 +490,8 @@
         }
     },
     {
-        "quantization_precision": "w-q0.8, a-q0.8",
+        "quantization_method": "qat",
+        "precision_configuration": "w-q0.8, a-q0.8",
         "accuracy": {
             "improvement": -6.547,
             "std": null,

@@ -1,6 +1,7 @@
 [
     {
-        "quantization_precision": "a-q12.0",
+        "quantization_method": "ptq",
+        "precision_configuration": "a-q12.0",
         "accuracy": {
             "improvement": -89.272,
             "std": null,
@@ -36,7 +37,8 @@
         }
     },
     {
-        "quantization_precision": "a-q12.4",
+        "quantization_method": "ptq",
+        "precision_configuration": "a-q12.4",
         "accuracy": {
             "improvement": -2.616,
             "std": null,
@@ -72,7 +74,8 @@
         }
     },
     {
-        "quantization_precision": "a-q16.0",
+        "quantization_method": "ptq",
+        "precision_configuration": "a-q16.0",
         "accuracy": {
             "improvement": -89.272,
             "std": null,
@@ -108,7 +111,8 @@
         }
     },
     {
-        "quantization_precision": "a-q4.0",
+        "quantization_method": "ptq",
+        "precision_configuration": "a-q4.0",
         "accuracy": {
             "improvement": -89.272,
             "std": null,
@@ -144,7 +148,8 @@
         }
     },
     {
-        "quantization_precision": "a-q4.4",
+        "quantization_method": "ptq",
+        "precision_configuration": "a-q4.4",
         "accuracy": {
             "improvement": -0.701,
             "std": null,
@@ -180,7 +185,8 @@
         }
     },
     {
-        "quantization_precision": "a-q4.8",
+        "quantization_method": "ptq",
+        "precision_configuration": "a-q4.8",
         "accuracy": {
             "improvement": -3.361,
             "std": null,
@@ -216,7 +222,8 @@
         }
     },
     {
-        "quantization_precision": "a-q8.0",
+        "quantization_method": "ptq",
+        "precision_configuration": "a-q8.0",
         "accuracy": {
             "improvement": -89.272,
             "std": null,
@@ -252,7 +259,8 @@
         }
     },
     {
-        "quantization_precision": "a-q8.4",
+        "quantization_method": "ptq",
+        "precision_configuration": "a-q8.4",
         "accuracy": {
             "improvement": 0.022,
             "std": null,
@@ -288,7 +296,8 @@
         }
     },
     {
-        "quantization_precision": "a-q8.8",
+        "quantization_method": "ptq",
+        "precision_configuration": "a-q8.8",
         "accuracy": {
             "improvement": -0.361,
             "std": null,
@@ -324,7 +333,8 @@
         }
     },
     {
-        "quantization_precision": "w-int8",
+        "quantization_method": "ptq",
+        "precision_configuration": "w-int8",
         "accuracy": {
             "improvement": -91.168,
             "std": null,
@@ -360,7 +370,8 @@
         }
     },
     {
-        "quantization_precision": "wa-int8",
+        "quantization_method": "ptq",
+        "precision_configuration": "w-int8, a-int8",
         "accuracy": {
             "improvement": -0.138,
             "std": 0.022,

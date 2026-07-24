@@ -1,6 +1,7 @@
 [
     {
-        "quantization_precision": "w-q0.4, a-q0.32",
+        "quantization_method": "qat",
+        "precision_configuration": "w-q0.4, a-q0.32",
         "accuracy": {
             "improvement": -4.81,
             "std": null,
@@ -25,7 +26,8 @@
         }
     },
     {
-        "quantization_precision": "w-q0.4, a-q0.8",
+        "quantization_method": "qat",
+        "precision_configuration": "w-q0.4, a-q0.8",
         "accuracy": {
             "improvement": -7.114,
             "std": null,
@@ -50,7 +52,8 @@
         }
     },
     {
-        "quantization_precision": "w-q0.8, a-q0.16",
+        "quantization_method": "qat",
+        "precision_configuration": "w-q0.8, a-q0.16",
         "accuracy": {
             "improvement": 0.0,
             "std": null,

@@ -2,7 +2,8 @@
     {
         "configuration": {
             "Dataset": "ImageNet-Top1",
-            "quantization_precision": "w-int2, a-int8, b-int8"
+            "quantization_method": "qat",
+            "precision_configuration": "w-int2, a-int8, b-int8"
         },
         "accuracy": {
             "improvement": -5.66,
@@ -30,7 +31,8 @@
     {
         "configuration": {
             "Dataset": "Cifar-100",
-            "quantization_precision": "w-int2, a-int8, b-int8"
+            "quantization_method": "qat",
+            "precision_configuration": "w-int2, a-int8, b-int8"
         },
         "accuracy": {
             "improvement": -1.646,
@@ -57,36 +59,9 @@
     },
     {
         "configuration": {
-            "Dataset": "ImageNet-Top5",
-            "quantization_precision": "w-int2, a-int8, b-int8"
-        },
-        "accuracy": {
-            "improvement": -3.335,
-            "std": 0.073,
-            "iqr": 0.104,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.332,
-            "intensity": "weakly negative - indiferent"
-        },
-        "storage_size": {
-            "improvement": 93.666,
-            "std": 0.109,
-            "iqr": 0.153,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.332,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
             "Dataset": "MNIST",
-            "quantization_precision": "w-int2, a-int8, b-int8"
+            "quantization_method": "qat",
+            "precision_configuration": "w-int2, a-int8, b-int8"
         },
         "accuracy": {
             "improvement": 0.0,
@@ -114,7 +89,8 @@
     {
         "configuration": {
             "Dataset": "Cifar-10",
-            "quantization_precision": "w-int2, a-int8, b-int8"
+            "quantization_method": "qat",
+            "precision_configuration": "w-int2, a-int8, b-int8"
         },
         "accuracy": {
             "improvement": -0.888,
@@ -136,6 +112,35 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.193,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Dataset": "ImageNet-Top5",
+            "quantization_method": "qat",
+            "precision_configuration": "w-int2, a-int8, b-int8"
+        },
+        "accuracy": {
+            "improvement": -3.335,
+            "std": 0.073,
+            "iqr": 0.104,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.332,
+            "intensity": "weakly negative - indiferent"
+        },
+        "storage_size": {
+            "improvement": 93.666,
+            "std": 0.109,
+            "iqr": 0.153,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.332,
             "intensity": "strongly positive"
         }
     }

@@ -1,7 +1,8 @@
 [
     {
         "configuration": {
-            "quantization_precision": "w-fp32, a-q0.16"
+            "quantization_method": "qat",
+            "precision_configuration": "w-fp32, a-q0.16"
         },
         "accuracy": {
             "improvement": -2.039,
@@ -72,7 +73,8 @@
     },
     {
         "configuration": {
-            "quantization_precision": "w-fp32, a-q0.8"
+            "quantization_method": "qat",
+            "precision_configuration": "w-fp32, a-q0.8"
         },
         "accuracy": {
             "improvement": -1.383,
@@ -143,7 +145,8 @@
     },
     {
         "configuration": {
-            "quantization_precision": "w-q0.16, a-fp32"
+            "quantization_method": "qat",
+            "precision_configuration": "w-q0.16, a-fp32"
         },
         "accuracy": {
             "improvement": -0.752,
@@ -214,7 +217,8 @@
     },
     {
         "configuration": {
-            "quantization_precision": "w-q0.16, a-q0.16"
+            "quantization_method": "qat",
+            "precision_configuration": "w-q0.16, a-q0.16"
         },
         "accuracy": {
             "improvement": -3.463,
@@ -285,7 +289,8 @@
     },
     {
         "configuration": {
-            "quantization_precision": "w-q0.16, a-q0.8"
+            "quantization_method": "qat",
+            "precision_configuration": "w-q0.16, a-q0.8"
         },
         "accuracy": {
             "improvement": -7.389,
@@ -356,7 +361,8 @@
     },
     {
         "configuration": {
-            "quantization_precision": "w-q0.8, a-fp32"
+            "quantization_method": "qat",
+            "precision_configuration": "w-q0.8, a-fp32"
         },
         "accuracy": {
             "improvement": -9.264,
@@ -427,7 +433,8 @@
     },
     {
         "configuration": {
-            "quantization_precision": "w-q0.8, a-q0.16"
+            "quantization_method": "qat",
+            "precision_configuration": "w-q0.8, a-q0.16"
         },
         "accuracy": {
             "improvement": -8.365,
@@ -498,7 +505,8 @@
     },
     {
         "configuration": {
-            "quantization_precision": "w-q0.8, a-q0.8"
+            "quantization_method": "qat",
+            "precision_configuration": "w-q0.8, a-q0.8"
         },
         "accuracy": {
             "improvement": -6.547,

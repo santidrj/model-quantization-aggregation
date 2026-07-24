@@ -2,7 +2,8 @@
     {
         "configuration": {
             "Dataset": "CIFAR-100",
-            "quantization_precision": "mixed"
+            "quantization_method": "qat",
+            "precision_configuration": "mixed"
         },
         "inference_energy_consumption": {
             "improvement": 79.194,
@@ -19,7 +20,8 @@
     {
         "configuration": {
             "Dataset": "CIFAR-10",
-            "quantization_precision": "mixed"
+            "quantization_method": "qat",
+            "precision_configuration": "mixed"
         },
         "inference_energy_consumption": {
             "improvement": 80.476,

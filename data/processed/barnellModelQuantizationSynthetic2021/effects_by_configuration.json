@@ -2,7 +2,8 @@
     {
         "configuration": {
             "Device": "Nvidia Tesla T4",
-            "quantization_precision": "fp16"
+            "quantization_method": "ptq",
+            "precision_configuration": "w-fp16, a-fp16"
         },
         "mAP": {
             "improvement": 0.0,
@@ -51,58 +52,9 @@
     },
     {
         "configuration": {
-            "Device": "Nvidia Jetson AGX Xavier",
-            "quantization_precision": "fp16"
-        },
-        "mAP": {
-            "improvement": 0.05,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "indiferent"
-        },
-        "inference_latency": {
-            "improvement": 58.008,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "strongly positive"
-        },
-        "gpu_energy_consumption": {
-            "improvement": 74.0,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "strongly positive"
-        },
-        "gpu_power_draw": {
-            "improvement": 38.125,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "positive"
-        }
-    },
-    {
-        "configuration": {
             "Device": "Nvidia Titan RTX",
-            "quantization_precision": "fp16"
+            "quantization_method": "ptq",
+            "precision_configuration": "w-fp16, a-fp16"
         },
         "mAP": {
             "improvement": 0.0,
@@ -152,7 +104,59 @@
     {
         "configuration": {
             "Device": "Nvidia Jetson AGX Xavier",
-            "quantization_precision": "int8"
+            "quantization_method": "ptq",
+            "precision_configuration": "w-fp16, a-fp16"
+        },
+        "mAP": {
+            "improvement": 0.05,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indiferent"
+        },
+        "inference_latency": {
+            "improvement": 58.008,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly positive"
+        },
+        "gpu_energy_consumption": {
+            "improvement": 74.0,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly positive"
+        },
+        "gpu_power_draw": {
+            "improvement": 38.125,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "positive"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "Nvidia Jetson AGX Xavier",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8, a-int8"
         },
         "mAP": {
             "improvement": -0.05,
@@ -202,7 +206,8 @@
     {
         "configuration": {
             "Device": "Nvidia Titan RTX",
-            "quantization_precision": "int8"
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8, a-int8"
         },
         "mAP": {
             "improvement": -0.2,
@@ -252,7 +257,8 @@
     {
         "configuration": {
             "Device": "Nvidia Tesla T4",
-            "quantization_precision": "int8"
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8, a-int8"
         },
         "mAP": {
             "improvement": 0.0,

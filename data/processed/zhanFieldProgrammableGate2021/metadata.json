@@ -3,10 +3,13 @@
   "study_type": "controlled experiment",
   "data_quality": "comparative",
   "quantization_schema": {
-    "baseline_precision": "fp32",
-    "target_precision": ["int2", "int8"],
-    "quantization_targets": ["w-int2, a-int8, b-int8"],
-    "quantization_method": "quantization-aware training"
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
+      "w-int2, a-int8, b-int8"
+    ],
+    "quantization_method": [
+      "qat"
+    ]
   },
   "hardware": [
     {
@@ -15,6 +18,16 @@
       }
     }
   ],
-  "models": ["LeNet-5", "VGG-Modified", "VGG-16", "ResNet-18"],
-  "datasets": ["ImageNet", "Cifar-10", "Cifar-100", "MNIST"]
+  "models": [
+    "LeNet-5",
+    "VGG-Modified",
+    "VGG-16",
+    "ResNet-18"
+  ],
+  "datasets": [
+    "ImageNet",
+    "Cifar-10",
+    "Cifar-100",
+    "MNIST"
+  ]
 }

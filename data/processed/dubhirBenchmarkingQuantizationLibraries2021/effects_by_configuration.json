@@ -2,7 +2,8 @@
     {
         "configuration": {
             "library": "TensorQuant",
-            "quantization_precision": "a-q12.0"
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q12.0"
         },
         "accuracy": {
             "improvement": -89.272,
@@ -41,7 +42,8 @@
     {
         "configuration": {
             "library": "TensorQuant",
-            "quantization_precision": "a-q12.4"
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q12.4"
         },
         "accuracy": {
             "improvement": -2.616,
@@ -80,7 +82,8 @@
     {
         "configuration": {
             "library": "TensorQuant",
-            "quantization_precision": "a-q16.0"
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q16.0"
         },
         "accuracy": {
             "improvement": -89.272,
@@ -119,7 +122,8 @@
     {
         "configuration": {
             "library": "TensorQuant",
-            "quantization_precision": "a-q4.0"
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q4.0"
         },
         "accuracy": {
             "improvement": -89.272,
@@ -158,7 +162,8 @@
     {
         "configuration": {
             "library": "TensorQuant",
-            "quantization_precision": "a-q4.4"
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q4.4"
         },
         "accuracy": {
             "improvement": -0.701,
@@ -197,7 +202,8 @@
     {
         "configuration": {
             "library": "TensorQuant",
-            "quantization_precision": "a-q4.8"
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q4.8"
         },
         "accuracy": {
             "improvement": -3.361,
@@ -236,7 +242,8 @@
     {
         "configuration": {
             "library": "TensorQuant",
-            "quantization_precision": "a-q8.0"
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q8.0"
         },
         "accuracy": {
             "improvement": -89.272,
@@ -275,7 +282,8 @@
     {
         "configuration": {
             "library": "TensorQuant",
-            "quantization_precision": "a-q8.4"
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q8.4"
         },
         "accuracy": {
             "improvement": 0.022,
@@ -314,7 +322,8 @@
     {
         "configuration": {
             "library": "TensorQuant",
-            "quantization_precision": "a-q8.8"
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q8.8"
         },
         "accuracy": {
             "improvement": -0.361,
@@ -353,7 +362,8 @@
     {
         "configuration": {
             "library": "PyTorch_dynamic_quantization",
-            "quantization_precision": "w-int8"
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8"
         },
         "accuracy": {
             "improvement": -91.168,
@@ -391,11 +401,12 @@
     },
     {
         "configuration": {
-            "library": "PyTorch_quantization_static_convert",
-            "quantization_precision": "wa-int8"
+            "library": "PyTorch_quantization_static_quantize",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8, a-int8"
         },
         "accuracy": {
-            "improvement": -0.122,
+            "improvement": -0.153,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -406,7 +417,7 @@
             "intensity": "indiferent"
         },
         "inference_latency": {
-            "improvement": -483.557,
+            "improvement": -482.068,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -430,11 +441,12 @@
     },
     {
         "configuration": {
-            "library": "PyTorch_quantization_static_quantize",
-            "quantization_precision": "wa-int8"
+            "library": "PyTorch_quantization_static_convert",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8, a-int8"
         },
         "accuracy": {
-            "improvement": -0.153,
+            "improvement": -0.122,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -445,7 +457,7 @@
             "intensity": "indiferent"
         },
         "inference_latency": {
-            "improvement": -482.068,
+            "improvement": -483.557,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,

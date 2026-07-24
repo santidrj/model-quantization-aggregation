@@ -3,20 +3,8 @@
   "study_type": "controlled experiment",
   "data_quality": "comparative",
   "quantization_schema": {
-    "baseline_precision": "fp32",
-    "target_precision": [
-      "q8.8",
-      "q16.0",
-      "q12.4",
-      "q4.8",
-      "q8.4",
-      "q8.0",
-      "q12.0",
-      "q4.4",
-      "q4.0",
-      "int8"
-    ],
-    "quantization_targets": [
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
       "a-q8.8",
       "a-q16.0",
       "a-q12.4",
@@ -27,16 +15,25 @@
       "a-q4.4",
       "a-q4.0",
       "w-int8",
-      "wa-int8"
+      "w-int8, a-int8"
     ],
-    "quantization_method": "post-training quantization",
+    "quantization_method": [
+      "ptq"
+    ],
     "quantization_techniques": [
       "extrinsic quantization",
       "dynamic quantization",
       "static quantization"
     ],
-    "frameworks": ["PyTorch 1.9.0", "TensorQuant"]
+    "frameworks": [
+      "PyTorch 1.9.0",
+      "TensorQuant"
+    ]
   },
-  "models": ["LeNet"],
-  "datasets": ["MNIST"]
+  "models": [
+    "LeNet"
+  ],
+  "datasets": [
+    "MNIST"
+  ]
 }

@@ -3,21 +3,31 @@
   "study_type": "controlled experiment",
   "data_quality": "comparative",
   "quantization_schema": {
-    "baseline_precision": "fp32",
-    "target_precision": ["int4", "int3", "int2", "int1"],
-    "quantization_targets": [
-      "w-int4",
-      "w-int3",
-      "w-int2",
-      "w-int1"
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
+      "w-log4",
+      "w-log3",
+      "w-log2",
+      "w-log1"
     ],
-    "quantization_method": "post-training quantization with re-training",
+    "quantization_method": [
+      "ptq-retrain"
+    ],
     "quantization_techniques": [
       "logarithmic quantization"
     ],
-    "frameworks": ["Marian toolkit"],
-    "formats": ["logarithmic"]
+    "frameworks": [
+      "Marian toolkit"
+    ],
+    "formats": [
+      "logarithmic"
+    ]
   },
-  "models": ["Transformer", "RNN"],
-  "datasets": ["WMT 2017 English-to-German"]
+  "models": [
+    "Transformer",
+    "RNN"
+  ],
+  "datasets": [
+    "WMT 2017 English-to-German"
+  ]
 }

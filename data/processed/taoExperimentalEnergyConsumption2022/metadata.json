@@ -1,27 +1,45 @@
 {
-    "title": "Experimental energy consumption analysis of neural network model compression methods on microcontrollers with applications in bird call classification",
-    "study_type": "controlled experiment",
-    "data_quality": "comparative",
-    "energy_measurement": {
-        "measurement_method": "hardware-based",
-        "repetitions": 5
-    },
-    "quantization_schema": {
-        "baseline_precision": "fp32",
-        "target_precision": ["q0.8", "q0.16"],
-        "quantization_targets": ["a-q0.16", "a-q0.8", "w-q.016", "w-q0.16, a-q0.16", "w-q0.16, a-q0.8", "w-q0.8, a-q0.16", "w-q0.8, a-q0.8"],
-        "quantization_method": "quantization-aware training",
-        "frameworks": ["QKeras"]
-    },
-    "hardware": [{
-        "device": {
-            "model": "STM32H7",
-            "board": "Nucleo-144",
-            "CPU": "Cortex-M4",
-            "RAM": "1.4 MB",
-            "Storage": "2 MB"
-        }
-    }],
-    "models": ["ResNet18"],
-    "datasets": ["Xeno-Canto"]
+  "title": "Experimental energy consumption analysis of neural network model compression methods on microcontrollers with applications in bird call classification",
+  "study_type": "controlled experiment",
+  "data_quality": "comparative",
+  "energy_measurement": {
+    "measurement_method": "hardware-based",
+    "repetitions": 5
+  },
+  "quantization_schema": {
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
+      "w-fp32, a-q0.16",
+      "w-fp32, a-q0.8",
+      "w-q0.16, a-fp32",
+      "w-q0.16, a-q0.16",
+      "w-q0.16, a-q0.8",
+      "w-q0.8, a-fp32",
+      "w-q0.8, a-q0.16",
+      "w-q0.8, a-q0.8"
+    ],
+    "quantization_method": [
+      "qat"
+    ],
+    "frameworks": [
+      "QKeras"
+    ]
+  },
+  "hardware": [
+    {
+      "device": {
+        "model": "STM32H7",
+        "board": "Nucleo-144",
+        "CPU": "Cortex-M4",
+        "RAM": "1.4 MB",
+        "Storage": "2 MB"
+      }
+    }
+  ],
+  "models": [
+    "ResNet18"
+  ],
+  "datasets": [
+    "Xeno-Canto"
+  ]
 }

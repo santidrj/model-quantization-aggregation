@@ -1,6 +1,7 @@
 [
     {
-        "quantization_precision": "fp16",
+        "quantization_method": "ptq",
+        "precision_configuration": "w-fp16, a-fp16",
         "mAP": {
             "improvement": 0.017,
             "std": 0.029,
@@ -47,7 +48,8 @@
         }
     },
     {
-        "quantization_precision": "int8",
+        "quantization_method": "ptq",
+        "precision_configuration": "w-int8, a-int8",
         "mAP": {
             "improvement": -0.083,
             "std": 0.104,
