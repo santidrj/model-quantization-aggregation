@@ -27,5 +27,8 @@ def test_representative_papers_load_non_empty_data(paper):
     for grouping_column in paper.GROUPING_COLUMNS or []:
         assert grouping_column in frame.columns
 
+    for configuration_column in paper.CONFIGURATION_COLUMNS or []:
+        assert configuration_column in frame.columns
+
     for run_key in paper.EXPERIMENT_RUN_KEY or []:
         assert run_key in frame.columns

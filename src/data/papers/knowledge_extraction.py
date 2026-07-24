@@ -66,9 +66,19 @@ class KnowledgeExtractor:
                 not in [self.paper.QUANTIZATION_PRECISION_COL]
                 + [col_name for _, col_name in self.correctness_columns + self.resource_efficiency_columns]
                 + (self.paper.GROUPING_COLUMNS or [])
+                + (self.paper.CONFIGURATION_COLUMNS or [])
                 + (self.paper.EXPERIMENT_RUN_KEY or [])
             ]
         ).rename({self.paper.QUANTIZATION_PRECISION_COL: self.PRECISION_COLUMN})
+
+    def _configuration_key(self) -> list[str]:
+        if self.paper.GROUPING_COLUMNS is None:
+            return [self.PRECISION_COLUMN]
+        return [
+            *[variable for variable in self.paper.GROUPING_COLUMNS if variable != "Model"],
+            self.PRECISION_COLUMN,
+            *(self.paper.CONFIGURATION_COLUMNS or []),
+        ]
 
     def extract_knowledge(self):
         """
@@ -106,9 +116,7 @@ class KnowledgeExtractor:
                 if self.paper.EXPERIMENT_RUN_KEY is not None
                 else self.paper.GROUPING_COLUMNS
             )
-            group_key = [variable for variable in self.paper.GROUPING_COLUMNS if variable != "Model"] + [
-                self.PRECISION_COLUMN
-            ]
+            group_key = self._configuration_key()
             quantization_data = quantization_data.join(
                 baseline_data, on=join_key, how="inner", suffix="_baseline"
             ).with_columns(pl.struct(pl.col(*group_key)).alias("configuration"))
@@ -224,10 +232,11 @@ class KnowledgeExtractor:
         )
 
         if self.paper.GROUPING_COLUMNS is not None:
+            sample_columns = (
+                self.paper.GROUPING_COLUMNS + [self.PRECISION_COLUMN] + (self.paper.CONFIGURATION_COLUMNS or [])
+            )
             sample_size = (
-                self.improvement_metrics.with_columns(
-                    pl.struct(self.paper.GROUPING_COLUMNS + [self.PRECISION_COLUMN]).alias("samples")
-                )
+                self.improvement_metrics.with_columns(pl.struct(sample_columns).alias("samples"))
                 .unique("samples")
                 .group_by("configuration")
                 .agg(pl.col("^*_improvement$").count().name.suffix("_sample_size"))

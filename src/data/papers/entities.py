@@ -80,6 +80,7 @@ class Paper(ABC):
     RESOURCE_EFFICIENCY_COLUMNS: ResourceEfficiencyMetrics
     CORRECTNESS_COLUMNS: CorrectnessMetrics
     GROUPING_COLUMNS: list[str] | None = None
+    CONFIGURATION_COLUMNS: list[str] | None = None
     EXPERIMENT_RUN_KEY: list[str] | None = None
 
     @abstractmethod
@@ -697,7 +698,7 @@ class XuPaper(Paper):
     ID = "S20"
     AUTHOR = "Xu et al."
     YEAR = 2021
-    QUANTIZATION_PRECISION_COL = "quantization_configuration"
+    QUANTIZATION_PRECISION_COL = "quantization_precision"
     BASELINE_PRECISION = "fp32"
     BELIEF = 0.0
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
@@ -706,6 +707,7 @@ class XuPaper(Paper):
     )
     CORRECTNESS_COLUMNS = CorrectnessMetrics(perplexity="ppl")
     GROUPING_COLUMNS = ["dataset", "Model"]
+    CONFIGURATION_COLUMNS = ["quantization_configuration"]
 
     def read_data(self) -> pl.LazyFrame:
         return self.scan_csv(
