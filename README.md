@@ -134,7 +134,8 @@ The project is organized as follows:
      python src/data/downlad.py
      ```
 
-   - We do not provide the raw data from the selected papers to prevent potential copyright issues. However, we provide instructions on how to obtain the data in each paper's README file. Located in the [data/external](data/external) directory.
+   - We do not commit external paper data from the selected studies (copyright / size). Most papers expect a local `paper-data.csv` under [data/external](data/external); each paper folder's README explains how to obtain it.
+   - Papers with a remote archive descriptor (currently Alizadeh and Gonzalez) **auto-download on first read** when their required files are missing. That needs network access; Gonzalez's first fetch pulls an ~853 MB Zenodo archive, extracts only the required CSV, and discards the rest. Files still are not shipped in git.
 
 3. **Extracting the evidence**:
    - Use the [run_evidence_extraction.py](src/run_evidence_extraction.py) module to extract the evidence from the selected papers.

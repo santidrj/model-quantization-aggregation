@@ -19,3 +19,7 @@ _Avoid_: Grouping columns (when referring to configuration identity only)
 **Grouping columns**:
 The columns that identify which experimental runs share a baseline for improvement calculation, typically dataset and model architecture.
 _Avoid_: Grouping key, join key
+
+**External paper data**:
+The study-provided experimental datasets consumed by evidence extraction for a given paper, kept under that paper's external data folder.
+_Avoid_: Raw data (when referring to these study inputs), replication package (when referring to the full upstream archive rather than the files this project keeps)

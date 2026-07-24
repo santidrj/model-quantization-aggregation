@@ -4,7 +4,12 @@ from enum import Enum
 
 import polars as pl
 
-from src.config import external_paper_path
+from src.config import external_paper_dir, external_paper_path
+from src.data.ensure_external_paper_data import (
+    ArchiveMember,
+    RemoteArchiveSource,
+    ensure_external_paper_data,
+)
 
 FULL_PRECISION_BITS = 32
 
@@ -82,6 +87,7 @@ class Paper(ABC):
     GROUPING_COLUMNS: list[str] | None = None
     CONFIGURATION_COLUMNS: list[str] | None = None
     EXPERIMENT_RUN_KEY: list[str] | None = None
+    REMOTE_ARCHIVE_SOURCE: RemoteArchiveSource | None = None
 
     @abstractmethod
     def read_data(self) -> pl.DataFrame | pl.LazyFrame:
@@ -98,13 +104,19 @@ class Paper(ABC):
     def external_data_path(self, filename: str = "paper-data.csv") -> str:
         return external_paper_path(self.KEY, filename)
 
+    def ensure_external_data(self) -> None:
+        ensure_external_paper_data(external_paper_dir(self.KEY), self.REMOTE_ARCHIVE_SOURCE)
+
     def scan_csv(self, filename: str = "paper-data.csv", **kwargs) -> pl.LazyFrame:
+        self.ensure_external_data()
         return pl.scan_csv(self.external_data_path(filename), **kwargs)
 
     def read_csv(self, filename: str = "paper-data.csv", **kwargs) -> pl.DataFrame:
+        self.ensure_external_data()
         return pl.read_csv(self.external_data_path(filename), **kwargs)
 
     def read_excel(self, filename: str, **kwargs) -> pl.DataFrame:
+        self.ensure_external_data()
         return pl.read_excel(self.external_data_path(filename), **kwargs)
 
 
@@ -301,6 +313,15 @@ class AlizadehPaper(Paper):
     )
     CORRECTNESS_COLUMNS = CorrectnessMetrics(accuracy="accuracy")
     GROUPING_COLUMNS = ["Model", "Dataset"]
+    REMOTE_ARCHIVE_SOURCE = RemoteArchiveSource(
+        archive_url="https://zenodo.org/api/records/14064267/files/Replication_package.zip/content",
+        members=(
+            ArchiveMember(
+                archive_path="Replication_package/data/xlsx/A100.xlsx",
+                local_filename="A100.xlsx",
+            ),
+        ),
+    )
 
     def read_data(self) -> pl.LazyFrame:
         model_info = self.read_excel("A100.xlsx", sheet_name="model_info", engine="xlsx2csv")
@@ -451,6 +472,15 @@ class GonzalezPaper(Paper):
     CORRECTNESS_COLUMNS = CorrectnessMetrics(accuracy="accuracy")
     GROUPING_COLUMNS = ["Model", "Dataset"]
     EXPERIMENT_RUN_KEY = ["Experiment", "Image ID"]
+    REMOTE_ARCHIVE_SOURCE = RemoteArchiveSource(
+        archive_url="https://zenodo.org/api/records/14845545/files/replication_package.zip/content",
+        members=(
+            ArchiveMember(
+                archive_path="replication_package/metrics/final_ds_image-classification.csv",
+                local_filename="final_ds_image-classification.csv",
+            ),
+        ),
+    )
 
     def clean_data(self, raw_data: pl.LazyFrame) -> pl.LazyFrame:
         # Get only quantization data and baseline
