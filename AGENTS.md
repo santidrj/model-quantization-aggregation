@@ -17,3 +17,17 @@ Recent history favors short, imperative commit messages such as `Add two more pa
 
 ## Data & Configuration Notes
 Copy `dot-env-template` to `.env` when working with LLM-assisted selection and keep secrets out of version control. Large raw source files may trip the pre-commit size check, so avoid committing new binaries unless they are essential and reviewed.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live as markdown files under `.scratch/<feature-slug>/`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Five canonical triage roles mapped to `Status:` lines in issue files. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout: `CONTEXT.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
