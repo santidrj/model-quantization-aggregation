@@ -1,6 +1,126 @@
 [
     {
         "configuration": {
+            "library": "PyTorch_dynamic_quantization",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8"
+        },
+        "accuracy": {
+            "improvement": -91.168,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly negative"
+        },
+        "inference_latency": {
+            "improvement": -0.006,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indiferent"
+        },
+        "storage_size": {
+            "improvement": 0.0,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indiferent"
+        }
+    },
+    {
+        "configuration": {
+            "library": "PyTorch_quantization_static_convert",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8, a-int8"
+        },
+        "accuracy": {
+            "improvement": -0.122,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indiferent"
+        },
+        "inference_latency": {
+            "improvement": -483.557,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly negative"
+        },
+        "storage_size": {
+            "improvement": 69.818,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "library": "PyTorch_quantization_static_quantize",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8, a-int8"
+        },
+        "accuracy": {
+            "improvement": -0.153,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indiferent"
+        },
+        "inference_latency": {
+            "improvement": -482.068,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly negative"
+        },
+        "storage_size": {
+            "improvement": 69.818,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
             "library": "TensorQuant",
             "quantization_method": "ptq",
             "precision_configuration": "a-q12.0"
@@ -357,126 +477,6 @@
             "p_value": 0.717,
             "belief": 0.189,
             "intensity": "indiferent"
-        }
-    },
-    {
-        "configuration": {
-            "library": "PyTorch_dynamic_quantization",
-            "quantization_method": "ptq",
-            "precision_configuration": "w-int8"
-        },
-        "accuracy": {
-            "improvement": -91.168,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "strongly negative"
-        },
-        "inference_latency": {
-            "improvement": -0.006,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "indiferent"
-        },
-        "storage_size": {
-            "improvement": 0.0,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "indiferent"
-        }
-    },
-    {
-        "configuration": {
-            "library": "PyTorch_quantization_static_quantize",
-            "quantization_method": "ptq",
-            "precision_configuration": "w-int8, a-int8"
-        },
-        "accuracy": {
-            "improvement": -0.153,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "indiferent"
-        },
-        "inference_latency": {
-            "improvement": -482.068,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "strongly negative"
-        },
-        "storage_size": {
-            "improvement": 69.818,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "library": "PyTorch_quantization_static_convert",
-            "quantization_method": "ptq",
-            "precision_configuration": "w-int8, a-int8"
-        },
-        "accuracy": {
-            "improvement": -0.122,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "indiferent"
-        },
-        "inference_latency": {
-            "improvement": -483.557,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "strongly negative"
-        },
-        "storage_size": {
-            "improvement": 69.818,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "strongly positive"
         }
     }
 ]

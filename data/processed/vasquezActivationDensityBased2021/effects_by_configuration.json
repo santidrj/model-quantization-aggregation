@@ -1,12 +1,12 @@
 [
     {
         "configuration": {
-            "Dataset": "CIFAR-100",
+            "Dataset": "CIFAR-10",
             "quantization_method": "qat",
             "precision_configuration": "mixed"
         },
         "inference_energy_consumption": {
-            "improvement": 79.194,
+            "improvement": 80.476,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -19,12 +19,12 @@
     },
     {
         "configuration": {
-            "Dataset": "CIFAR-10",
+            "Dataset": "CIFAR-100",
             "quantization_method": "qat",
             "precision_configuration": "mixed"
         },
         "inference_energy_consumption": {
-            "improvement": 80.476,
+            "improvement": 79.194,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,

@@ -1,258 +1,6 @@
 [
     {
         "configuration": {
-            "Dataset": "code_gen",
-            "quantization_method": "ptq",
-            "precision_configuration": "w-int4"
-        },
-        "accuracy": {
-            "improvement": -0.13,
-            "std": 29.431,
-            "iqr": 18.912,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.0,
-            "discount_factor": 0.0,
-            "p_value": 1.0,
-            "belief": 0.0,
-            "intensity": "indiferent"
-        },
-        "inference_latency": {
-            "improvement": 34.637,
-            "std": 7.643,
-            "iqr": 11.693,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.967,
-            "discount_factor": 0.965,
-            "p_value": 0.035,
-            "belief": 0.688,
-            "intensity": "positive"
-        },
-        "gpu_energy_consumption": {
-            "improvement": 38.87,
-            "std": 5.689,
-            "iqr": 10.16,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.974,
-            "discount_factor": 0.972,
-            "p_value": 0.028,
-            "belief": 0.693,
-            "intensity": "positive"
-        },
-        "gpu_power_draw": {
-            "improvement": 4.853,
-            "std": 4.83,
-            "iqr": 4.224,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.917,
-            "discount_factor": 0.915,
-            "p_value": 0.085,
-            "belief": 0.652,
-            "intensity": "indiferent - weakly positive"
-        },
-        "gpu_utilization": {
-            "improvement": 9.536,
-            "std": 2.513,
-            "iqr": 5.23,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.947,
-            "discount_factor": 0.945,
-            "p_value": 0.055,
-            "belief": 0.674,
-            "intensity": "indiferent - weakly positive"
-        },
-        "gpu_memory_utilization": {
-            "improvement": 47.645,
-            "std": 4.327,
-            "iqr": 4.539,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.991,
-            "discount_factor": 0.989,
-            "p_value": 0.011,
-            "belief": 0.705,
-            "intensity": "positive - strongly positive"
-        },
-        "storage_size": {
-            "improvement": 75.0,
-            "std": 0.0,
-            "iqr": 0.0,
-            "sample_size_discount": 0.998,
-            "variability_discount": 1.0,
-            "discount_factor": 0.998,
-            "p_value": 0.002,
-            "belief": 0.712,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Dataset": "doc_gen",
-            "quantization_method": "ptq",
-            "precision_configuration": "w-int4"
-        },
-        "accuracy": {
-            "improvement": -0.357,
-            "std": 5.623,
-            "iqr": 8.406,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.095,
-            "discount_factor": 0.095,
-            "p_value": 0.905,
-            "belief": 0.068,
-            "intensity": "indiferent"
-        },
-        "inference_latency": {
-            "improvement": 40.275,
-            "std": 5.777,
-            "iqr": 6.932,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.983,
-            "discount_factor": 0.981,
-            "p_value": 0.019,
-            "belief": 0.699,
-            "intensity": "positive - strongly positive"
-        },
-        "gpu_energy_consumption": {
-            "improvement": 44.346,
-            "std": 2.922,
-            "iqr": 4.18,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.991,
-            "discount_factor": 0.989,
-            "p_value": 0.011,
-            "belief": 0.705,
-            "intensity": "positive - strongly positive"
-        },
-        "gpu_power_draw": {
-            "improvement": 5.01,
-            "std": 5.422,
-            "iqr": 2.634,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.949,
-            "discount_factor": 0.947,
-            "p_value": 0.053,
-            "belief": 0.675,
-            "intensity": "indiferent - weakly positive"
-        },
-        "gpu_utilization": {
-            "improvement": 9.833,
-            "std": 2.538,
-            "iqr": 4.979,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.951,
-            "discount_factor": 0.949,
-            "p_value": 0.051,
-            "belief": 0.677,
-            "intensity": "indiferent - weakly positive"
-        },
-        "gpu_memory_utilization": {
-            "improvement": 46.888,
-            "std": 5.413,
-            "iqr": 5.276,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.989,
-            "discount_factor": 0.987,
-            "p_value": 0.013,
-            "belief": 0.704,
-            "intensity": "positive - strongly positive"
-        },
-        "storage_size": {
-            "improvement": 75.0,
-            "std": 0.0,
-            "iqr": 0.0,
-            "sample_size_discount": 0.998,
-            "variability_discount": 1.0,
-            "discount_factor": 0.998,
-            "p_value": 0.002,
-            "belief": 0.712,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Dataset": "test_gen",
-            "quantization_method": "ptq",
-            "precision_configuration": "w-int4"
-        },
-        "accuracy": {
-            "improvement": 12.396,
-            "std": 47.87,
-            "iqr": 25.062,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.817,
-            "discount_factor": 0.815,
-            "p_value": 0.185,
-            "belief": 0.581,
-            "intensity": "weakly positive - positive"
-        },
-        "inference_latency": {
-            "improvement": 39.855,
-            "std": 12.606,
-            "iqr": 16.001,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.961,
-            "discount_factor": 0.959,
-            "p_value": 0.041,
-            "belief": 0.684,
-            "intensity": "positive"
-        },
-        "gpu_energy_consumption": {
-            "improvement": 42.428,
-            "std": 10.106,
-            "iqr": 9.462,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.978,
-            "discount_factor": 0.976,
-            "p_value": 0.024,
-            "belief": 0.696,
-            "intensity": "positive - strongly positive"
-        },
-        "gpu_power_draw": {
-            "improvement": 2.843,
-            "std": 4.794,
-            "iqr": 2.564,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.914,
-            "discount_factor": 0.912,
-            "p_value": 0.088,
-            "belief": 0.65,
-            "intensity": "indiferent - weakly positive"
-        },
-        "gpu_utilization": {
-            "improvement": 7.284,
-            "std": 1.997,
-            "iqr": 3.476,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.953,
-            "discount_factor": 0.951,
-            "p_value": 0.049,
-            "belief": 0.678,
-            "intensity": "indiferent - weakly positive"
-        },
-        "gpu_memory_utilization": {
-            "improvement": 44.933,
-            "std": 4.353,
-            "iqr": 3.763,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.992,
-            "discount_factor": 0.99,
-            "p_value": 0.01,
-            "belief": 0.706,
-            "intensity": "positive - strongly positive"
-        },
-        "storage_size": {
-            "improvement": 75.0,
-            "std": 0.0,
-            "iqr": 0.0,
-            "sample_size_discount": 0.998,
-            "variability_discount": 1.0,
-            "discount_factor": 0.998,
-            "p_value": 0.002,
-            "belief": 0.712,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
             "Dataset": "bug_fix",
             "quantization_method": "ptq",
             "precision_configuration": "w-int4"
@@ -333,90 +81,6 @@
             "p_value": 0.002,
             "belief": 0.712,
             "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Dataset": "test_gen",
-            "quantization_method": "ptq",
-            "precision_configuration": "w-int8"
-        },
-        "accuracy": {
-            "improvement": 3.185,
-            "std": 11.899,
-            "iqr": 8.155,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.774,
-            "discount_factor": 0.772,
-            "p_value": 0.228,
-            "belief": 0.551,
-            "intensity": "indiferent - weakly positive"
-        },
-        "inference_latency": {
-            "improvement": 29.823,
-            "std": 9.12,
-            "iqr": 11.341,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.963,
-            "discount_factor": 0.961,
-            "p_value": 0.039,
-            "belief": 0.685,
-            "intensity": "weakly positive - positive"
-        },
-        "gpu_energy_consumption": {
-            "improvement": 32.229,
-            "std": 5.327,
-            "iqr": 7.19,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.978,
-            "discount_factor": 0.976,
-            "p_value": 0.024,
-            "belief": 0.696,
-            "intensity": "positive"
-        },
-        "gpu_power_draw": {
-            "improvement": 2.25,
-            "std": 4.464,
-            "iqr": 2.011,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.914,
-            "discount_factor": 0.912,
-            "p_value": 0.088,
-            "belief": 0.65,
-            "intensity": "indiferent - weakly positive"
-        },
-        "gpu_utilization": {
-            "improvement": 4.899,
-            "std": 2.264,
-            "iqr": 4.074,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.92,
-            "discount_factor": 0.918,
-            "p_value": 0.082,
-            "belief": 0.655,
-            "intensity": "indiferent - weakly positive"
-        },
-        "gpu_memory_utilization": {
-            "improvement": 21.501,
-            "std": 8.553,
-            "iqr": 12.915,
-            "sample_size_discount": 0.998,
-            "variability_discount": 0.942,
-            "discount_factor": 0.94,
-            "p_value": 0.06,
-            "belief": 0.67,
-            "intensity": "weakly positive - positive"
-        },
-        "storage_size": {
-            "improvement": 50.0,
-            "std": 0.0,
-            "iqr": 0.0,
-            "sample_size_discount": 0.998,
-            "variability_discount": 1.0,
-            "discount_factor": 0.998,
-            "p_value": 0.002,
-            "belief": 0.712,
-            "intensity": "positive - strongly positive"
         }
     },
     {
@@ -505,6 +169,258 @@
     },
     {
         "configuration": {
+            "Dataset": "code_gen",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int4"
+        },
+        "accuracy": {
+            "improvement": -0.13,
+            "std": 29.431,
+            "iqr": 18.912,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": "indiferent"
+        },
+        "inference_latency": {
+            "improvement": 34.637,
+            "std": 7.643,
+            "iqr": 11.693,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.967,
+            "discount_factor": 0.965,
+            "p_value": 0.035,
+            "belief": 0.688,
+            "intensity": "positive"
+        },
+        "gpu_energy_consumption": {
+            "improvement": 38.87,
+            "std": 5.689,
+            "iqr": 10.16,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.974,
+            "discount_factor": 0.972,
+            "p_value": 0.028,
+            "belief": 0.693,
+            "intensity": "positive"
+        },
+        "gpu_power_draw": {
+            "improvement": 4.853,
+            "std": 4.83,
+            "iqr": 4.224,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.917,
+            "discount_factor": 0.915,
+            "p_value": 0.085,
+            "belief": 0.652,
+            "intensity": "indiferent - weakly positive"
+        },
+        "gpu_utilization": {
+            "improvement": 9.536,
+            "std": 2.513,
+            "iqr": 5.23,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.947,
+            "discount_factor": 0.945,
+            "p_value": 0.055,
+            "belief": 0.674,
+            "intensity": "indiferent - weakly positive"
+        },
+        "gpu_memory_utilization": {
+            "improvement": 47.645,
+            "std": 4.327,
+            "iqr": 4.539,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.991,
+            "discount_factor": 0.989,
+            "p_value": 0.011,
+            "belief": 0.705,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 75.0,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.998,
+            "variability_discount": 1.0,
+            "discount_factor": 0.998,
+            "p_value": 0.002,
+            "belief": 0.712,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Dataset": "code_gen",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8"
+        },
+        "accuracy": {
+            "improvement": -1.457,
+            "std": 11.984,
+            "iqr": 6.909,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.622,
+            "discount_factor": 0.621,
+            "p_value": 0.379,
+            "belief": 0.443,
+            "intensity": "indiferent"
+        },
+        "inference_latency": {
+            "improvement": 27.217,
+            "std": 8.125,
+            "iqr": 9.284,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.966,
+            "discount_factor": 0.964,
+            "p_value": 0.036,
+            "belief": 0.687,
+            "intensity": "weakly positive - positive"
+        },
+        "gpu_energy_consumption": {
+            "improvement": 31.303,
+            "std": 4.302,
+            "iqr": 6.84,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.978,
+            "discount_factor": 0.976,
+            "p_value": 0.024,
+            "belief": 0.696,
+            "intensity": "positive"
+        },
+        "gpu_power_draw": {
+            "improvement": 4.116,
+            "std": 4.131,
+            "iqr": 3.131,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.927,
+            "discount_factor": 0.925,
+            "p_value": 0.075,
+            "belief": 0.66,
+            "intensity": "indiferent - weakly positive"
+        },
+        "gpu_utilization": {
+            "improvement": 6.822,
+            "std": 2.433,
+            "iqr": 4.274,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.939,
+            "discount_factor": 0.937,
+            "p_value": 0.063,
+            "belief": 0.668,
+            "intensity": "indiferent - weakly positive"
+        },
+        "gpu_memory_utilization": {
+            "improvement": 24.9,
+            "std": 7.423,
+            "iqr": 11.223,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.956,
+            "discount_factor": 0.954,
+            "p_value": 0.046,
+            "belief": 0.68,
+            "intensity": "weakly positive - positive"
+        },
+        "storage_size": {
+            "improvement": 50.0,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.998,
+            "variability_discount": 1.0,
+            "discount_factor": 0.998,
+            "p_value": 0.002,
+            "belief": 0.712,
+            "intensity": "positive - strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Dataset": "doc_gen",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int4"
+        },
+        "accuracy": {
+            "improvement": -0.357,
+            "std": 5.623,
+            "iqr": 8.406,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.095,
+            "discount_factor": 0.095,
+            "p_value": 0.905,
+            "belief": 0.068,
+            "intensity": "indiferent"
+        },
+        "inference_latency": {
+            "improvement": 40.275,
+            "std": 5.777,
+            "iqr": 6.932,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.983,
+            "discount_factor": 0.981,
+            "p_value": 0.019,
+            "belief": 0.699,
+            "intensity": "positive - strongly positive"
+        },
+        "gpu_energy_consumption": {
+            "improvement": 44.346,
+            "std": 2.922,
+            "iqr": 4.18,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.991,
+            "discount_factor": 0.989,
+            "p_value": 0.011,
+            "belief": 0.705,
+            "intensity": "positive - strongly positive"
+        },
+        "gpu_power_draw": {
+            "improvement": 5.01,
+            "std": 5.422,
+            "iqr": 2.634,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.949,
+            "discount_factor": 0.947,
+            "p_value": 0.053,
+            "belief": 0.675,
+            "intensity": "indiferent - weakly positive"
+        },
+        "gpu_utilization": {
+            "improvement": 9.833,
+            "std": 2.538,
+            "iqr": 4.979,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.951,
+            "discount_factor": 0.949,
+            "p_value": 0.051,
+            "belief": 0.677,
+            "intensity": "indiferent - weakly positive"
+        },
+        "gpu_memory_utilization": {
+            "improvement": 46.888,
+            "std": 5.413,
+            "iqr": 5.276,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.989,
+            "discount_factor": 0.987,
+            "p_value": 0.013,
+            "belief": 0.704,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 75.0,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.998,
+            "variability_discount": 1.0,
+            "discount_factor": 0.998,
+            "p_value": 0.002,
+            "belief": 0.712,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
             "Dataset": "doc_gen",
             "quantization_method": "ptq",
             "precision_configuration": "w-int8"
@@ -589,36 +505,120 @@
     },
     {
         "configuration": {
-            "Dataset": "code_gen",
+            "Dataset": "test_gen",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int4"
+        },
+        "accuracy": {
+            "improvement": 12.396,
+            "std": 47.87,
+            "iqr": 25.062,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.817,
+            "discount_factor": 0.815,
+            "p_value": 0.185,
+            "belief": 0.581,
+            "intensity": "weakly positive - positive"
+        },
+        "inference_latency": {
+            "improvement": 39.855,
+            "std": 12.606,
+            "iqr": 16.001,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.961,
+            "discount_factor": 0.959,
+            "p_value": 0.041,
+            "belief": 0.684,
+            "intensity": "positive"
+        },
+        "gpu_energy_consumption": {
+            "improvement": 42.428,
+            "std": 10.106,
+            "iqr": 9.462,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.978,
+            "discount_factor": 0.976,
+            "p_value": 0.024,
+            "belief": 0.696,
+            "intensity": "positive - strongly positive"
+        },
+        "gpu_power_draw": {
+            "improvement": 2.843,
+            "std": 4.794,
+            "iqr": 2.564,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.914,
+            "discount_factor": 0.912,
+            "p_value": 0.088,
+            "belief": 0.65,
+            "intensity": "indiferent - weakly positive"
+        },
+        "gpu_utilization": {
+            "improvement": 7.284,
+            "std": 1.997,
+            "iqr": 3.476,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.953,
+            "discount_factor": 0.951,
+            "p_value": 0.049,
+            "belief": 0.678,
+            "intensity": "indiferent - weakly positive"
+        },
+        "gpu_memory_utilization": {
+            "improvement": 44.933,
+            "std": 4.353,
+            "iqr": 3.763,
+            "sample_size_discount": 0.998,
+            "variability_discount": 0.992,
+            "discount_factor": 0.99,
+            "p_value": 0.01,
+            "belief": 0.706,
+            "intensity": "positive - strongly positive"
+        },
+        "storage_size": {
+            "improvement": 75.0,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.998,
+            "variability_discount": 1.0,
+            "discount_factor": 0.998,
+            "p_value": 0.002,
+            "belief": 0.712,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Dataset": "test_gen",
             "quantization_method": "ptq",
             "precision_configuration": "w-int8"
         },
         "accuracy": {
-            "improvement": -1.457,
-            "std": 11.984,
-            "iqr": 6.909,
+            "improvement": 3.185,
+            "std": 11.899,
+            "iqr": 8.155,
             "sample_size_discount": 0.998,
-            "variability_discount": 0.622,
-            "discount_factor": 0.621,
-            "p_value": 0.379,
-            "belief": 0.443,
-            "intensity": "indiferent"
+            "variability_discount": 0.774,
+            "discount_factor": 0.772,
+            "p_value": 0.228,
+            "belief": 0.551,
+            "intensity": "indiferent - weakly positive"
         },
         "inference_latency": {
-            "improvement": 27.217,
-            "std": 8.125,
-            "iqr": 9.284,
+            "improvement": 29.823,
+            "std": 9.12,
+            "iqr": 11.341,
             "sample_size_discount": 0.998,
-            "variability_discount": 0.966,
-            "discount_factor": 0.964,
-            "p_value": 0.036,
-            "belief": 0.687,
+            "variability_discount": 0.963,
+            "discount_factor": 0.961,
+            "p_value": 0.039,
+            "belief": 0.685,
             "intensity": "weakly positive - positive"
         },
         "gpu_energy_consumption": {
-            "improvement": 31.303,
-            "std": 4.302,
-            "iqr": 6.84,
+            "improvement": 32.229,
+            "std": 5.327,
+            "iqr": 7.19,
             "sample_size_discount": 0.998,
             "variability_discount": 0.978,
             "discount_factor": 0.976,
@@ -627,36 +627,36 @@
             "intensity": "positive"
         },
         "gpu_power_draw": {
-            "improvement": 4.116,
-            "std": 4.131,
-            "iqr": 3.131,
+            "improvement": 2.25,
+            "std": 4.464,
+            "iqr": 2.011,
             "sample_size_discount": 0.998,
-            "variability_discount": 0.927,
-            "discount_factor": 0.925,
-            "p_value": 0.075,
-            "belief": 0.66,
+            "variability_discount": 0.914,
+            "discount_factor": 0.912,
+            "p_value": 0.088,
+            "belief": 0.65,
             "intensity": "indiferent - weakly positive"
         },
         "gpu_utilization": {
-            "improvement": 6.822,
-            "std": 2.433,
-            "iqr": 4.274,
+            "improvement": 4.899,
+            "std": 2.264,
+            "iqr": 4.074,
             "sample_size_discount": 0.998,
-            "variability_discount": 0.939,
-            "discount_factor": 0.937,
-            "p_value": 0.063,
-            "belief": 0.668,
+            "variability_discount": 0.92,
+            "discount_factor": 0.918,
+            "p_value": 0.082,
+            "belief": 0.655,
             "intensity": "indiferent - weakly positive"
         },
         "gpu_memory_utilization": {
-            "improvement": 24.9,
-            "std": 7.423,
-            "iqr": 11.223,
+            "improvement": 21.501,
+            "std": 8.553,
+            "iqr": 12.915,
             "sample_size_discount": 0.998,
-            "variability_discount": 0.956,
-            "discount_factor": 0.954,
-            "p_value": 0.046,
-            "belief": 0.68,
+            "variability_discount": 0.942,
+            "discount_factor": 0.94,
+            "p_value": 0.06,
+            "belief": 0.67,
             "intensity": "weakly positive - positive"
         },
         "storage_size": {

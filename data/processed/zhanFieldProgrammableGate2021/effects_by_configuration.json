@@ -1,30 +1,30 @@
 [
     {
         "configuration": {
-            "Dataset": "ImageNet-Top1",
+            "Dataset": "Cifar-10",
             "quantization_method": "qat",
             "precision_configuration": "w-int2, a-int8, b-int8"
         },
         "accuracy": {
-            "improvement": -5.66,
-            "std": 0.431,
-            "iqr": 0.609,
-            "sample_size_discount": 0.487,
+            "improvement": -0.888,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
             "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.332,
-            "intensity": "weakly negative"
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.193,
+            "intensity": "indiferent"
         },
         "storage_size": {
-            "improvement": 93.666,
-            "std": 0.109,
-            "iqr": 0.153,
-            "sample_size_discount": 0.487,
+            "improvement": 93.883,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
             "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.332,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.193,
             "intensity": "strongly positive"
         }
     },
@@ -59,59 +59,30 @@
     },
     {
         "configuration": {
-            "Dataset": "MNIST",
+            "Dataset": "ImageNet-Top1",
             "quantization_method": "qat",
             "precision_configuration": "w-int2, a-int8, b-int8"
         },
         "accuracy": {
-            "improvement": 0.0,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
+            "improvement": -5.66,
+            "std": 0.431,
+            "iqr": 0.609,
+            "sample_size_discount": 0.487,
             "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.193,
-            "intensity": "indiferent"
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.332,
+            "intensity": "weakly negative"
         },
         "storage_size": {
-            "improvement": 40.0,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
+            "improvement": 93.666,
+            "std": 0.109,
+            "iqr": 0.153,
+            "sample_size_discount": 0.487,
             "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.193,
-            "intensity": "positive"
-        }
-    },
-    {
-        "configuration": {
-            "Dataset": "Cifar-10",
-            "quantization_method": "qat",
-            "precision_configuration": "w-int2, a-int8, b-int8"
-        },
-        "accuracy": {
-            "improvement": -0.888,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.193,
-            "intensity": "indiferent"
-        },
-        "storage_size": {
-            "improvement": 93.883,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.193,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.332,
             "intensity": "strongly positive"
         }
     },
@@ -142,6 +113,35 @@
             "p_value": 0.513,
             "belief": 0.332,
             "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Dataset": "MNIST",
+            "quantization_method": "qat",
+            "precision_configuration": "w-int2, a-int8, b-int8"
+        },
+        "accuracy": {
+            "improvement": 0.0,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.193,
+            "intensity": "indiferent"
+        },
+        "storage_size": {
+            "improvement": 40.0,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.193,
+            "intensity": "positive"
         }
     }
 ]

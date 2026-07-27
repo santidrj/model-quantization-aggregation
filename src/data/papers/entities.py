@@ -757,7 +757,7 @@ class XuPaper(Paper):
     QUANTIZATION_PRECISION_COL = "quantization_precision"
     BASELINE_PRECISION = "full-fp32"
     QUANTIZATION_METHOD_COL = "quantization_method"
-    BELIEF = 0.0
+    BELIEF = 0.6720820833333333
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         inference_latency="eval_time_ms_per_word",
         storage_size="model_size_mb",

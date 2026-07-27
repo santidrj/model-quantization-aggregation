@@ -1,108 +1,6 @@
 [
     {
         "configuration": {
-            "Device": "Nvidia Tesla T4",
-            "quantization_method": "ptq",
-            "precision_configuration": "w-fp16, a-fp16"
-        },
-        "mAP": {
-            "improvement": 0.0,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "indiferent"
-        },
-        "inference_latency": {
-            "improvement": 47.046,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "positive - strongly positive"
-        },
-        "gpu_energy_consumption": {
-            "improvement": 45.938,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "positive - strongly positive"
-        },
-        "gpu_power_draw": {
-            "improvement": -2.102,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "weakly negative - indiferent"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "Nvidia Titan RTX",
-            "quantization_method": "ptq",
-            "precision_configuration": "w-fp16, a-fp16"
-        },
-        "mAP": {
-            "improvement": 0.0,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "indiferent"
-        },
-        "inference_latency": {
-            "improvement": 42.627,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "positive - strongly positive"
-        },
-        "gpu_energy_consumption": {
-            "improvement": 37.125,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "positive"
-        },
-        "gpu_power_draw": {
-            "improvement": -9.586,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.189,
-            "intensity": "weakly negative - indiferent"
-        }
-    },
-    {
-        "configuration": {
             "Device": "Nvidia Jetson AGX Xavier",
             "quantization_method": "ptq",
             "precision_configuration": "w-fp16, a-fp16"
@@ -205,12 +103,12 @@
     },
     {
         "configuration": {
-            "Device": "Nvidia Titan RTX",
+            "Device": "Nvidia Tesla T4",
             "quantization_method": "ptq",
-            "precision_configuration": "w-int8, a-int8"
+            "precision_configuration": "w-fp16, a-fp16"
         },
         "mAP": {
-            "improvement": -0.2,
+            "improvement": 0.0,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -221,7 +119,7 @@
             "intensity": "indiferent"
         },
         "inference_latency": {
-            "improvement": 49.78,
+            "improvement": 47.046,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -232,7 +130,7 @@
             "intensity": "positive - strongly positive"
         },
         "gpu_energy_consumption": {
-            "improvement": 40.844,
+            "improvement": 45.938,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -243,7 +141,7 @@
             "intensity": "positive - strongly positive"
         },
         "gpu_power_draw": {
-            "improvement": -17.906,
+            "improvement": -2.102,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -251,7 +149,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "weakly negative"
+            "intensity": "weakly negative - indiferent"
         }
     },
     {
@@ -303,6 +201,108 @@
             "p_value": 0.717,
             "belief": 0.189,
             "intensity": "weakly negative - indiferent"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "Nvidia Titan RTX",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-fp16, a-fp16"
+        },
+        "mAP": {
+            "improvement": 0.0,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indiferent"
+        },
+        "inference_latency": {
+            "improvement": 42.627,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "positive - strongly positive"
+        },
+        "gpu_energy_consumption": {
+            "improvement": 37.125,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "positive"
+        },
+        "gpu_power_draw": {
+            "improvement": -9.586,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "weakly negative - indiferent"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "Nvidia Titan RTX",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8, a-int8"
+        },
+        "mAP": {
+            "improvement": -0.2,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indiferent"
+        },
+        "inference_latency": {
+            "improvement": 49.78,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "positive - strongly positive"
+        },
+        "gpu_energy_consumption": {
+            "improvement": 40.844,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "positive - strongly positive"
+        },
+        "gpu_power_draw": {
+            "improvement": -17.906,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "weakly negative"
         }
     }
 ]
