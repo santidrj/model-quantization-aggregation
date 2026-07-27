@@ -34,4 +34,10 @@ def test_xu_by_precision_statistics_split_qat_and_ptq():
     )
     assert "qat" in keys["quantization_method"].to_list()
     assert "ptq" in keys["quantization_method"].to_list()
-    assert "w-int8, a-int8" in keys["precision_configuration"].to_list()
+    precision_configs = keys["precision_configuration"].to_list()
+    assert "w-int8, a-int8" in precision_configs
+    assert "mixed-1.8" in precision_configs
+    assert "mixed-2" in precision_configs
+    assert "w-int2, a-int2" in precision_configs
+    assert "mixed" not in precision_configs
+    assert "w-int3, a-int3" not in precision_configs

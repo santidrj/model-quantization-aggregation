@@ -10,6 +10,7 @@ from src.data.ensure_external_paper_data import (
     RemoteArchiveSource,
     ensure_external_paper_data,
 )
+from src.data.papers.precision_nomenclature import format_average_bit_width_token
 
 FULL_PRECISION_BITS = 32
 
@@ -262,9 +263,7 @@ class SathishPaper(Paper):
     GROUPING_COLUMNS = ["Model", "Dataset"]
 
     def read_data(self) -> pl.LazyFrame:
-        return self.scan_csv().rename(
-            {"model": "Model", "dataset": "Dataset"}
-        )
+        return self.scan_csv().rename({"model": "Model", "dataset": "Dataset"})
 
 
 class TaoPaper(Paper):
@@ -502,9 +501,7 @@ class GonzalezPaper(Paper):
         quantization_data = raw_data.filter(
             pl.col("Optimization").is_in(["no_optimization", "dynamic_quantization"])
         ).with_columns(
-            pl.col("Optimization")
-            .str.replace("dynamic_quantization", "w-int8")
-            .str.replace("no_optimization", "fp32"),
+            pl.col("Optimization").str.replace("dynamic_quantization", "w-int8").str.replace("no_optimization", "fp32"),
         )
 
         # Check if there are any missing values
@@ -728,23 +725,27 @@ class FlichPaper(Paper):
     GROUPING_COLUMNS = ["Model", "task", "device"]
 
     def read_data(self) -> pl.LazyFrame:
-        return self.scan_csv(
-            schema_overrides={
-                "memory_kb": pl.Float32,
-                "error_value": pl.Float32,
-                "inference_time_ms": pl.Float32,
-                "fps": pl.Float32,
-            },
-        ).with_columns(
-            pl.col("precision_configuration")
-            .str.to_lowercase()
-            .str.replace(r"^int8$", "w-int8")
-            .alias("precision_configuration"),
-            (100 - pl.col("error_value")).alias("accuracy"),
-        ).rename(
-            {
-                "model": "Model",
-            }
+        return (
+            self.scan_csv(
+                schema_overrides={
+                    "memory_kb": pl.Float32,
+                    "error_value": pl.Float32,
+                    "inference_time_ms": pl.Float32,
+                    "fps": pl.Float32,
+                },
+            )
+            .with_columns(
+                pl.col("precision_configuration")
+                .str.to_lowercase()
+                .str.replace(r"^int8$", "w-int8")
+                .alias("precision_configuration"),
+                (100 - pl.col("error_value")).alias("accuracy"),
+            )
+            .rename(
+                {
+                    "model": "Model",
+                }
+            )
         )
 
 
@@ -766,43 +767,55 @@ class XuPaper(Paper):
     CONFIGURATION_COLUMNS = ["quantization_configuration"]
 
     def read_data(self) -> pl.LazyFrame:
-        return self.scan_csv(
-            null_values=[""],
-            schema_overrides={
-                "avg_bits_or_bitwidth": pl.Float32,
-                "ppl": pl.Float32,
-                "wer_avg_pct": pl.Float32,
-                "model_size_mb": pl.Float32,
-                "compression_ratio": pl.Float32,
-                "eval_time_ms_per_word": pl.Float32,
-            },
-        ).with_columns(
-            pl.when(pl.col("avg_bits_or_bitwidth") == FULL_PRECISION_BITS)
-            .then(pl.lit("fp32"))
-            .otherwise(pl.format("int{}", pl.col("avg_bits_or_bitwidth").cast(pl.Int32)))
-            .alias("quantization_precision"),
-            pl.when(pl.col("param_estimation").str.contains("(?i)post-training"))
-            .then(pl.lit("ptq"))
-            .otherwise(pl.lit("qat"))
-            .alias("quantization_method"),
-            pl.when(pl.col("avg_bits_or_bitwidth") == FULL_PRECISION_BITS)
-            .then(pl.lit("fp32"))
-            .otherwise(
-                pl.concat_str(
-                    [
-                        pl.col("quantization_group"),
-                        pl.col("param_estimation"),
-                        pl.col("quantization_method"),
-                        pl.format("{}", pl.col("avg_bits_or_bitwidth").cast(pl.Int32)),
-                    ],
-                    separator=" | ",
-                )
+        return (
+            self.scan_csv(
+                null_values=[""],
+                schema_overrides={
+                    "avg_bits_or_bitwidth": pl.Float32,
+                    "ppl": pl.Float32,
+                    "wer_avg_pct": pl.Float32,
+                    "model_size_mb": pl.Float32,
+                    "compression_ratio": pl.Float32,
+                    "eval_time_ms_per_word": pl.Float32,
+                },
             )
-            .alias("quantization_configuration"),
-        ).rename(
-            {
-                "model_family": "Model",
-            }
+            .with_columns(
+                pl.col("avg_bits_or_bitwidth")
+                .map_elements(format_average_bit_width_token, return_dtype=pl.String)
+                .alias("_avg_bit_width_token"),
+            )
+            .with_columns(
+                pl.when(pl.col("avg_bits_or_bitwidth") == FULL_PRECISION_BITS)
+                .then(pl.lit("fp32"))
+                .when(pl.col("quantization_group") == "mixed")
+                .then(pl.format("mixed-{}", pl.col("_avg_bit_width_token")))
+                .otherwise(pl.format("int{}", pl.col("avg_bits_or_bitwidth").cast(pl.Int32)))
+                .alias("quantization_precision"),
+                pl.when(pl.col("param_estimation").str.contains("(?i)post-training"))
+                .then(pl.lit("ptq"))
+                .otherwise(pl.lit("qat"))
+                .alias("quantization_method"),
+                pl.when(pl.col("avg_bits_or_bitwidth") == FULL_PRECISION_BITS)
+                .then(pl.lit("fp32"))
+                .otherwise(
+                    pl.concat_str(
+                        [
+                            pl.col("quantization_group"),
+                            pl.col("param_estimation"),
+                            pl.col("quantization_method"),
+                            pl.col("_avg_bit_width_token"),
+                        ],
+                        separator=" | ",
+                    )
+                )
+                .alias("quantization_configuration"),
+            )
+            .drop("_avg_bit_width_token")
+            .rename(
+                {
+                    "model_family": "Model",
+                }
+            )
         )
 
 
@@ -823,21 +836,25 @@ class DubhirPaper(Paper):
     GROUPING_COLUMNS = ["library", "Model"]
 
     def read_data(self) -> pl.LazyFrame:
-        return self.scan_csv(
-            schema_overrides={
-                "testing_accuracy": pl.Float32,
-                "testing_time_seconds": pl.Float32,
-                "memory_occupied": pl.Float32,
-            },
-        ).with_columns(
-            pl.when(pl.col("memory_unit") == "MB")
-            .then(pl.col("memory_occupied") * 1024)
-            .otherwise(pl.col("memory_occupied"))
-            .alias("storage_size_kb"),
-        ).rename(
-            {
-                "model": "Model",
-            }
+        return (
+            self.scan_csv(
+                schema_overrides={
+                    "testing_accuracy": pl.Float32,
+                    "testing_time_seconds": pl.Float32,
+                    "memory_occupied": pl.Float32,
+                },
+            )
+            .with_columns(
+                pl.when(pl.col("memory_unit") == "MB")
+                .then(pl.col("memory_occupied") * 1024)
+                .otherwise(pl.col("memory_occupied"))
+                .alias("storage_size_kb"),
+            )
+            .rename(
+                {
+                    "model": "Model",
+                }
+            )
         )
 
 
@@ -855,24 +872,28 @@ class AjiPaper(Paper):
     GROUPING_COLUMNS = ["Model"]
 
     def read_data(self) -> pl.LazyFrame:
-        return self.scan_csv(
-            null_values=[""],
-            schema_overrides={
-                "bit_width": pl.UInt8,
-                "model_size_mb": pl.Float32,
-                "compression_rate": pl.Float32,
-                "bleu": pl.Float32,
-                "bleu_delta": pl.Float32,
-            },
-        ).with_columns(
-            pl.when(pl.col("bit_width") == FULL_PRECISION_BITS)
-            .then(pl.lit("fp32"))
-            .otherwise(pl.format("w-log{}", pl.col("bit_width")))
-            .alias("quantization_precision"),
-        ).rename(
-            {
-                "model_family": "Model",
-            }
+        return (
+            self.scan_csv(
+                null_values=[""],
+                schema_overrides={
+                    "bit_width": pl.UInt8,
+                    "model_size_mb": pl.Float32,
+                    "compression_rate": pl.Float32,
+                    "bleu": pl.Float32,
+                    "bleu_delta": pl.Float32,
+                },
+            )
+            .with_columns(
+                pl.when(pl.col("bit_width") == FULL_PRECISION_BITS)
+                .then(pl.lit("fp32"))
+                .otherwise(pl.format("w-log{}", pl.col("bit_width")))
+                .alias("quantization_precision"),
+            )
+            .rename(
+                {
+                    "model_family": "Model",
+                }
+            )
         )
 
 
@@ -890,18 +911,28 @@ class ChenPaper(Paper):
     GROUPING_COLUMNS = ["Model"]
 
     def read_data(self) -> pl.LazyFrame:
-        data = self.scan_csv(
-            schema_overrides={
-                "Quantization precision (bits)": pl.UInt8,
-                "Original size (B)": pl.Float32,
-                "Compressed size (B)": pl.Float32,
-                "CR": pl.Float32,
-                "F1 loss": pl.Float32,
-            },
-        ).with_columns(
-            pl.col("Original F1-score").str.extract(r"([0-9]+(?:\.[0-9]+)?)", 1).cast(pl.Float32).alias("f1_original"),
-            pl.col("Rebuilt F1-score").str.extract(r"([0-9]+(?:\.[0-9]+)?)", 1).cast(pl.Float32).alias("f1_rebuilt"),
-        ).rename({"Model architecture": "Model"})
+        data = (
+            self.scan_csv(
+                schema_overrides={
+                    "Quantization precision (bits)": pl.UInt8,
+                    "Original size (B)": pl.Float32,
+                    "Compressed size (B)": pl.Float32,
+                    "CR": pl.Float32,
+                    "F1 loss": pl.Float32,
+                },
+            )
+            .with_columns(
+                pl.col("Original F1-score")
+                .str.extract(r"([0-9]+(?:\.[0-9]+)?)", 1)
+                .cast(pl.Float32)
+                .alias("f1_original"),
+                pl.col("Rebuilt F1-score")
+                .str.extract(r"([0-9]+(?:\.[0-9]+)?)", 1)
+                .cast(pl.Float32)
+                .alias("f1_rebuilt"),
+            )
+            .rename({"Model architecture": "Model"})
+        )
 
         baseline = data.select(
             pl.col("Model"),

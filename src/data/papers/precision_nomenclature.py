@@ -27,6 +27,82 @@ _BARE_FP = re.compile(r"^fp(?P<n>\d+)$", re.IGNORECASE)
 _BARE_Q0 = re.compile(r"^q0[.,](?P<n>\d+)$", re.IGNORECASE)
 _BARE_LOG = re.compile(r"^log(?P<n>\d+)$", re.IGNORECASE)
 _FULL = re.compile(r"^full-(?P<fmt>.+)$", re.IGNORECASE)
+_MIXED_AVG = re.compile(r"^mixed-(?P<avg>\d+(?:\.\d+)?)$", re.IGNORECASE)
+_UNIFORM_WIDTH = re.compile(r"^int(?P<n>\d+)$", re.IGNORECASE)
+
+
+def format_average_bit_width_token(avg: float | int | str) -> str:
+    """Normalize a study-reported average bit width for use in `mixed-<avg>`."""
+    if isinstance(avg, str):
+        token = avg.strip()
+        mixed = _MIXED_AVG.fullmatch(token)
+        if mixed:
+            token = mixed.group("avg")
+        if not re.fullmatch(r"\d+(?:\.\d+)?", token):
+            raise ValueError(f"Invalid average bit width token: {avg!r}")
+        if "." in token:
+            return token.rstrip("0").rstrip(".") or "0"
+        return token
+
+    quantized = round(float(avg), 6)
+    if quantized == int(quantized):
+        return str(int(quantized))
+    return f"{quantized:.6f}".rstrip("0").rstrip(".")
+
+
+def format_mixed_numeric_format(avg: float | int | str) -> str:
+    """Build the canonical `mixed-<avg>` numeric format from a study-reported average."""
+    return f"mixed-{format_average_bit_width_token(avg)}"
+
+
+def _normalize_mixed_format(fmt: str) -> str:
+    match = _MIXED_AVG.fullmatch(fmt.strip())
+    if not match:
+        if fmt.strip().lower() == "mixed":
+            return "mixed"
+        return fmt.lower()
+    return format_mixed_numeric_format(match.group("avg"))
+
+
+def precision_configuration_sort_key(label: str) -> tuple[float, int, str]:
+    """Sort key: numeric width ascending; uniform before mixed on a tie; then label."""
+    raw = label.strip()
+    mixed = _MIXED_AVG.fullmatch(raw)
+    if mixed:
+        return (float(mixed.group("avg")), 1, raw)
+    if raw.lower() == "mixed":
+        return (float("inf"), 1, raw)
+
+    widths: list[float] = []
+    has_mixed_atom = False
+    for raw_part in raw.split(", "):
+        part = raw_part.strip()
+        full = _FULL.match(part.replace(" ", ""))
+        if full:
+            fmt = full.group("fmt").lower()
+        else:
+            component = _COMPONENT.match(part)
+            fmt = (component.group("fmt") if component else part).lower()
+        mixed_fmt = _MIXED_AVG.fullmatch(fmt)
+        if mixed_fmt or fmt == "mixed":
+            has_mixed_atom = True
+            if mixed_fmt:
+                widths.append(float(mixed_fmt.group("avg")))
+            continue
+        int_fmt = _UNIFORM_WIDTH.fullmatch(fmt)
+        if int_fmt:
+            widths.append(float(int_fmt.group("n")))
+            continue
+        fp_fmt = _BARE_FP.fullmatch(fmt)
+        if fp_fmt:
+            widths.append(float(fp_fmt.group("n")))
+            continue
+        log_fmt = _BARE_LOG.fullmatch(fmt)
+        if log_fmt:
+            widths.append(float(log_fmt.group("n")))
+    if widths:
+        return (min(widths), 1 if has_mixed_atom else 0, raw)
+    return (float("inf"), 0, raw)
 
 
 def normalize_quantization_method(label: str) -> str:
@@ -57,8 +133,8 @@ def _fix_format_typos(fmt: str) -> str:  # noqa: PLR0911
     if re.fullmatch(r"q\d+\.\d+", fmt, flags=re.IGNORECASE):
         whole, frac = fmt[1:].split(".", 1)
         return f"q{int(whole)}.{frac}"
-    if fmt.lower() == "mixed":
-        return "mixed"
+    if _MIXED_AVG.fullmatch(fmt) or fmt.lower() == "mixed":
+        return _normalize_mixed_format(fmt)
     return fmt.lower()
 
 
@@ -110,6 +186,9 @@ def normalize_precision_configuration(label: str, *, prefer_full_float: bool = F
         return _format_components(components)
 
     bare = raw.strip()
+    if _MIXED_AVG.fullmatch(bare) or bare.lower() == "mixed":
+        return _normalize_mixed_format(bare)
+
     single = _COMPONENT.match(bare)
     if single:
         return _format_components({single.group("comp").lower(): _fix_format_typos(single.group("fmt"))})
@@ -135,9 +214,6 @@ def normalize_precision_configuration(label: str, *, prefer_full_float: bool = F
 
     if _BARE_LOG.fullmatch(bare):
         return bare.lower()
-
-    if bare.lower() == "mixed":
-        return "mixed"
 
     raise ValueError(f"Unknown precision configuration label: {label!r}")
 

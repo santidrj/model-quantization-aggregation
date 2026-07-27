@@ -1,9 +1,11 @@
 import pytest
 
 from src.data.papers.precision_nomenclature import (
+    format_mixed_numeric_format,
     normalize_precision_configuration,
     normalize_quantization_method,
     parse_precision_label,
+    precision_configuration_sort_key,
 )
 
 
@@ -26,6 +28,11 @@ from src.data.papers.precision_nomenclature import (
         ("log4", "log4"),
         ("w-log4", "w-log4"),
         ("mixed", "mixed"),
+        ("mixed-1.8", "mixed-1.8"),
+        ("mixed-2.0", "mixed-2"),
+        ("mixed-2", "mixed-2"),
+        ("w-mixed-1.8", "w-mixed-1.8"),
+        ("w-mixed-2.0, a-int8", "w-mixed-2, a-int8"),
         ("q0,32", "w-q0.32, a-q0.32"),
         ("w-q.016", "w-q0.16"),
         ("a-q8.0", "a-q8.0"),
@@ -81,3 +88,34 @@ def test_normalize_quantization_method_rejects_unknown():
 )
 def test_parse_precision_label(raw, expected):
     assert parse_precision_label(raw) == expected
+
+
+@pytest.mark.parametrize(
+    ("avg", "expected"),
+    [
+        (1.8, "mixed-1.8"),
+        (2.0, "mixed-2"),
+        (2, "mixed-2"),
+        ("2.0", "mixed-2"),
+        ("1.80", "mixed-1.8"),
+    ],
+)
+def test_format_mixed_numeric_format(avg, expected):
+    assert format_mixed_numeric_format(avg) == expected
+
+
+def test_precision_configuration_sort_key_orders_mixed_with_uniform():
+    labels = [
+        "mixed-2",
+        "w-int2, a-int2",
+        "mixed-1.8",
+        "w-int1, a-int1",
+        "w-int4, a-int4",
+    ]
+    assert sorted(labels, key=precision_configuration_sort_key) == [
+        "w-int1, a-int1",
+        "mixed-1.8",
+        "w-int2, a-int2",
+        "mixed-2",
+        "w-int4, a-int4",
+    ]
