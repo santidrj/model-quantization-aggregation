@@ -26,8 +26,8 @@ This replication package consists of the following components:
      - [1.0-llm-promt-refinement.ipynb](notebooks/1.0-llm-promt-refinement.ipynb): Refines the prompt for LLMs and the selection of LLM.
      - [2.0-model-quantization-paper-selection.ipynb](notebooks/2.0-model-quantization-paper-selection.ipynb): Filters the raw list of papers using the selected GEMINI 3.0.
      - [3.0-final-selection-analysis.ipynb](notebooks/3.0-final-selection-analysis.ipynb): Analyzes the final selection of papers.
-     - [4.0-paper-metadata-analysis.ipynb](notebooks/4.0-paper-metadata-analysis.ipynb): Analyzes metadata from selected papers.
-     - [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb): Analyzes evidence extracted from the papers and generates the forest plot.
+     - [4.0-paper-metadata-analysis.ipynb](notebooks/4.0-paper-metadata-analysis.ipynb): **Supplementary** — optional audit and characterization of manually extracted paper metadata.
+     - [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb): **Core** — reproduces the paper's evidence figures (Fig. 6, Fig. 7, and Fig. 10).
 
 4. **Documentation**:
    - [data/processed/evidence-diagrams-mapping.md](data/processed/evidence-diagrams-mapping.md): Links to evidence diagrams generated during the study.
@@ -137,11 +137,38 @@ The project is organized as follows:
    - We do not commit external paper data from the selected studies (copyright / size). Most papers expect a local `paper-data.csv` under [data/external](data/external); each paper folder's README explains how to obtain it.
    - Papers with a remote archive descriptor (currently Alizadeh and Gonzalez) **auto-download on first read** when their required files are missing. That needs network access; Gonzalez's first fetch pulls an ~853 MB Zenodo archive, extracts only the required CSV, and discards the rest. Files still are not shipped in git.
 
-3. **Extracting the evidence**:
-   - Use the [run_evidence_extraction.py](src/run_evidence_extraction.py) module to extract the evidence from the selected papers.
+3. **Extracting the evidence** (full pipeline validation only):
+   - Use [run_evidence_extraction.py](src/run_evidence_extraction.py) to regenerate processed parquets from external study data. This step is **not** required if you only want to reproduce the paper figures from the shipped `data/processed/` artifacts.
 
-4. **Explore the data with Jupyter Notebooks**:
-   - Open the Jupyter notebooks in the [notebooks](notebooks) directory to explore the data and analysis.
+## Reproducing the paper
+
+### Path 1 — Reproduce paper figures (default)
+
+1. Complete **Setup** above (`uv sync`).
+2. Start Jupyter Lab: `uv run jupyter lab`.
+3. Open [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb) and run all sections labeled **Core** in order.
+4. Verify outputs in [reports/figures/](reports/figures/):
+
+   | Output file | Paper figure |
+   |---|---|
+   | `metrics-usage-distribution.pdf` | Fig. 10 |
+   | `correctness-forestplot.pdf` | Fig. 6 |
+   | `resource-efficiency-forestplot.pdf` | Fig. 7 |
+
+Processed evidence under `data/processed/{paperkey}/` is included in the replication package, so you do not need external study data or evidence extraction for this path.
+
+### Path 2 — Reproduce the full extraction pipeline (validation)
+
+1. Complete **Setup** and **Getting the Data** (place external study data per `data/external/{paperkey}/README.md`).
+2. Run `uv run python src/run_evidence_extraction.py`.
+3. Run the **Core** sections of [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb) as in Path 1.
+
+### Supplementary notebooks
+
+- [4.0-paper-metadata-analysis.ipynb](notebooks/4.0-paper-metadata-analysis.ipynb) — optional metadata audit and characterization; not required to reproduce paper figures.
+- **Supplementary** sections inside [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb) — diagnostics (`distribution-of-sample-size.pdf`) and appendix forest plots (`complete-*-forestplot.pdf`).
+
+Domain terminology is defined in [CONTEXT.md](CONTEXT.md).
 
 ## Notes
 
