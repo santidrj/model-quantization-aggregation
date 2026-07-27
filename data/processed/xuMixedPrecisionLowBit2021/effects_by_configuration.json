@@ -7,7 +7,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit layer) | manual define | 1"
         },
         "perplexity": {
-            "improvement": 22.218,
+            "improvement": -22.218,
             "std": 0.24,
             "iqr": 0.339,
             "sample_size_discount": 0.487,
@@ -15,7 +15,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "positive - strongly positive"
+            "intensity": "strongly negative - negative"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 60.814,
@@ -48,7 +59,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit node) | manual define | 1"
         },
         "perplexity": {
-            "improvement": 18.157,
+            "improvement": -18.157,
             "std": 0.348,
             "iqr": 0.492,
             "sample_size_discount": 0.487,
@@ -56,7 +67,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "positive"
+            "intensity": "negative"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 54.651,
@@ -89,7 +111,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | Hes | 1.8"
         },
         "perplexity": {
-            "improvement": 2.559,
+            "improvement": -2.559,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -97,7 +119,18 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.0,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "weakly negative - indiferent"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 56.395,
@@ -130,7 +163,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | KL | 1.8"
         },
         "perplexity": {
-            "improvement": 2.135,
+            "improvement": -2.135,
             "std": 0.909,
             "iqr": 1.285,
             "sample_size_discount": 0.487,
@@ -138,7 +171,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "weakly negative - indiferent"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 49.695,
@@ -171,7 +215,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | Hes | 1.9"
         },
         "perplexity": {
-            "improvement": 5.382,
+            "improvement": -5.382,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -179,7 +223,18 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.0,
-            "intensity": "weakly positive"
+            "intensity": "weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 43.103,
@@ -212,7 +267,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | NAS | 1.9"
         },
         "perplexity": {
-            "improvement": 6.183,
+            "improvement": -6.183,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -220,7 +275,18 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.0,
-            "intensity": "weakly positive"
+            "intensity": "weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 55.233,
@@ -253,7 +319,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | NAS | 2"
         },
         "perplexity": {
-            "improvement": 10.417,
+            "improvement": -10.417,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -261,7 +327,18 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.0,
-            "intensity": "weakly positive - positive"
+            "intensity": "negative - weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 41.034,
@@ -294,7 +371,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit layer) | manual define | 2"
         },
         "perplexity": {
-            "improvement": 11.171,
+            "improvement": -11.171,
             "std": 2.294,
             "iqr": 3.245,
             "sample_size_discount": 0.487,
@@ -302,7 +379,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive - positive"
+            "intensity": "negative - weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 40.67,
@@ -335,7 +423,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit node) | manual define | 2"
         },
         "perplexity": {
-            "improvement": 5.758,
+            "improvement": -5.758,
             "std": 2.414,
             "iqr": 3.414,
             "sample_size_discount": 0.487,
@@ -343,7 +431,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive"
+            "intensity": "weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 36.167,
@@ -376,7 +475,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | KL | 3.8"
         },
         "perplexity": {
-            "improvement": 2.083,
+            "improvement": -2.083,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -384,7 +483,18 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.0,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "weakly negative - indiferent"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 36.897,
@@ -417,7 +527,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | NAS | 3.8"
         },
         "perplexity": {
-            "improvement": 7.118,
+            "improvement": -7.118,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -425,7 +535,18 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.0,
-            "intensity": "weakly positive"
+            "intensity": "weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 35.862,
@@ -458,7 +579,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | NAS | 3.9"
         },
         "perplexity": {
-            "improvement": 5.97,
+            "improvement": -5.97,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -466,7 +587,18 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.0,
-            "intensity": "weakly positive"
+            "intensity": "weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 49.419,
@@ -499,7 +631,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | Hes | 4"
         },
         "perplexity": {
-            "improvement": 3.774,
+            "improvement": -3.774,
             "std": 1.9,
             "iqr": 2.687,
             "sample_size_discount": 0.487,
@@ -507,7 +639,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "weakly negative - indiferent"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 43.103,
@@ -540,7 +683,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | KL | 4"
         },
         "perplexity": {
-            "improvement": 4.264,
+            "improvement": -4.264,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
@@ -548,7 +691,18 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.0,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "weakly negative - indiferent"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 50.581,
@@ -581,7 +735,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit layer) | manual define | 4"
         },
         "perplexity": {
-            "improvement": 4.054,
+            "improvement": -4.054,
             "std": 1.805,
             "iqr": 2.553,
             "sample_size_discount": 0.487,
@@ -589,7 +743,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "weakly negative - indiferent"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 40.206,
@@ -622,7 +787,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit node) | manual define | 4"
         },
         "perplexity": {
-            "improvement": 3.02,
+            "improvement": -3.02,
             "std": 2.061,
             "iqr": 2.915,
             "sample_size_discount": 0.487,
@@ -630,7 +795,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "weakly negative - indiferent"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 35.822,
@@ -663,7 +839,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit layer) | manual define | 8"
         },
         "perplexity": {
-            "improvement": 2.187,
+            "improvement": -2.187,
             "std": 1.129,
             "iqr": 1.596,
             "sample_size_discount": 0.487,
@@ -671,7 +847,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "weakly negative - indiferent"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 40.152,
@@ -704,7 +891,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit node) | manual define | 8"
         },
         "perplexity": {
-            "improvement": 1.753,
+            "improvement": -1.753,
             "std": 1.742,
             "iqr": 2.464,
             "sample_size_discount": 0.487,
@@ -713,6 +900,17 @@
             "p_value": 0.513,
             "belief": 0.0,
             "intensity": "indiferent"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 36.921,
@@ -745,7 +943,7 @@
             "quantization_configuration": "uniform | ADMM (global) | manual define | 1"
         },
         "perplexity": {
-            "improvement": 28.269,
+            "improvement": -28.269,
             "std": 0.778,
             "iqr": 1.101,
             "sample_size_discount": 0.487,
@@ -753,7 +951,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "strongly positive"
+            "intensity": "strongly negative"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 63.011,
@@ -786,7 +995,7 @@
             "quantization_configuration": "uniform | BP [31], [32] (modified) | manual define | 1"
         },
         "perplexity": {
-            "improvement": 36.779,
+            "improvement": -36.779,
             "std": 0.454,
             "iqr": 0.642,
             "sample_size_discount": 0.487,
@@ -794,7 +1003,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "strongly positive"
+            "intensity": "strongly negative"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 64.519,
@@ -827,7 +1047,7 @@
             "quantization_configuration": "uniform | BP [31], [32] (modified) | manual define | 2"
         },
         "perplexity": {
-            "improvement": 21.201,
+            "improvement": -21.201,
             "std": 4.694,
             "iqr": 6.638,
             "sample_size_discount": 0.487,
@@ -835,7 +1055,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "positive - strongly positive"
+            "intensity": "strongly negative - negative"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 45.646,
@@ -868,7 +1099,7 @@
             "quantization_configuration": "uniform | BP [31], [32] (modified) | manual define | 4"
         },
         "perplexity": {
-            "improvement": 12.016,
+            "improvement": -12.016,
             "std": 4.717,
             "iqr": 6.671,
             "sample_size_discount": 0.487,
@@ -876,7 +1107,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive - positive"
+            "intensity": "negative - weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 45.882,
@@ -909,7 +1151,7 @@
             "quantization_configuration": "uniform | ADMM (global) | manual define | 8"
         },
         "perplexity": {
-            "improvement": 4.461,
+            "improvement": -4.461,
             "std": 2.135,
             "iqr": 3.019,
             "sample_size_discount": 0.487,
@@ -917,7 +1159,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "weakly negative - indiferent"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 44.655,
@@ -950,7 +1203,7 @@
             "quantization_configuration": "uniform | BP [31], [32] (modified) | manual define | 8"
         },
         "perplexity": {
-            "improvement": 8.527,
+            "improvement": -8.527,
             "std": 5.43,
             "iqr": 7.679,
             "sample_size_discount": 0.487,
@@ -958,7 +1211,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive"
+            "intensity": "weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": null,
+            "std": null,
+            "iqr": null,
+            "sample_size_discount": 0.0,
+            "variability_discount": 1.0,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
+            "intensity": null
         },
         "inference_latency": {
             "improvement": 45.7,
@@ -991,7 +1255,7 @@
             "quantization_configuration": "uniform | Post-training [94] Offline Quant | manual define | 1"
         },
         "perplexity": {
-            "improvement": 24.079,
+            "improvement": -24.079,
             "std": 0.695,
             "iqr": 0.983,
             "sample_size_discount": 0.487,
@@ -999,7 +1263,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "positive - strongly positive"
+            "intensity": "strongly negative - negative"
+        },
+        "word_error_rate": {
+            "improvement": -8.333,
+            "std": 6.547,
+            "iqr": 9.259,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative"
         },
         "inference_latency": {
             "improvement": 63.872,
@@ -1032,7 +1307,7 @@
             "quantization_configuration": "uniform | Post-training [94] Offline Quant | manual define | 2"
         },
         "perplexity": {
-            "improvement": 18.919,
+            "improvement": -18.919,
             "std": 2.78,
             "iqr": 3.931,
             "sample_size_discount": 0.487,
@@ -1040,7 +1315,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "positive"
+            "intensity": "negative"
+        },
+        "word_error_rate": {
+            "improvement": -6.019,
+            "std": 4.583,
+            "iqr": 6.481,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative"
         },
         "inference_latency": {
             "improvement": 44.79,
@@ -1073,7 +1359,7 @@
             "quantization_configuration": "uniform | Post-training [94] Offline Quant | manual define | 4"
         },
         "perplexity": {
-            "improvement": 15.971,
+            "improvement": -15.971,
             "std": 0.347,
             "iqr": 0.491,
             "sample_size_discount": 0.487,
@@ -1081,7 +1367,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "positive"
+            "intensity": "negative"
+        },
+        "word_error_rate": {
+            "improvement": -3.704,
+            "std": 3.928,
+            "iqr": 5.556,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative - indiferent"
         },
         "inference_latency": {
             "improvement": 45.356,
@@ -1114,7 +1411,7 @@
             "quantization_configuration": "uniform | Post-training [94] Offline Quant | manual define | 8"
         },
         "perplexity": {
-            "improvement": 10.319,
+            "improvement": -10.319,
             "std": 0.347,
             "iqr": 0.491,
             "sample_size_discount": 0.487,
@@ -1122,7 +1419,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive - positive"
+            "intensity": "negative - weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": -2.315,
+            "std": 1.964,
+            "iqr": 2.778,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative - indiferent"
         },
         "inference_latency": {
             "improvement": 44.396,
@@ -1155,7 +1463,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit layer) | manual define | 1"
         },
         "perplexity": {
-            "improvement": 23.587,
+            "improvement": -23.587,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1163,7 +1471,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "positive - strongly positive"
+            "intensity": "strongly negative - negative"
+        },
+        "word_error_rate": {
+            "improvement": -7.87,
+            "std": 5.893,
+            "iqr": 8.333,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative"
         },
         "inference_latency": {
             "improvement": 61.633,
@@ -1196,7 +1515,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit node) | manual define | 1"
         },
         "perplexity": {
-            "improvement": 21.376,
+            "improvement": -21.376,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1204,7 +1523,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "positive - strongly positive"
+            "intensity": "strongly negative - negative"
+        },
+        "word_error_rate": {
+            "improvement": -5.556,
+            "std": 5.238,
+            "iqr": 7.407,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative"
         },
         "inference_latency": {
             "improvement": 54.205,
@@ -1237,7 +1567,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | Hes | 1.9"
         },
         "perplexity": {
-            "improvement": 13.514,
+            "improvement": -13.514,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1245,7 +1575,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive - positive"
+            "intensity": "negative - weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": -3.241,
+            "std": 3.274,
+            "iqr": 4.63,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative - indiferent"
         },
         "inference_latency": {
             "improvement": 46.829,
@@ -1278,7 +1619,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | KL | 1.9"
         },
         "perplexity": {
-            "improvement": 12.776,
+            "improvement": -12.776,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1286,7 +1627,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive - positive"
+            "intensity": "negative - weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": -2.315,
+            "std": 1.964,
+            "iqr": 2.778,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative - indiferent"
         },
         "inference_latency": {
             "improvement": 45.6,
@@ -1319,7 +1671,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit layer) | manual define | 2"
         },
         "perplexity": {
-            "improvement": 18.428,
+            "improvement": -18.428,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1327,7 +1679,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "positive"
+            "intensity": "negative"
+        },
+        "word_error_rate": {
+            "improvement": -5.093,
+            "std": 4.583,
+            "iqr": 6.481,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative"
         },
         "inference_latency": {
             "improvement": 39.698,
@@ -1360,7 +1723,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit node) | manual define | 2"
         },
         "perplexity": {
-            "improvement": 11.302,
+            "improvement": -11.302,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1368,7 +1731,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive - positive"
+            "intensity": "negative - weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": -4.167,
+            "std": 4.583,
+            "iqr": 6.481,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative - indiferent"
         },
         "inference_latency": {
             "improvement": 35.787,
@@ -1401,7 +1775,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | NAS | 2.3"
         },
         "perplexity": {
-            "improvement": 18.673,
+            "improvement": -18.673,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1409,7 +1783,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "positive"
+            "intensity": "negative"
+        },
+        "word_error_rate": {
+            "improvement": -5.093,
+            "std": 3.274,
+            "iqr": 4.63,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative"
         },
         "inference_latency": {
             "improvement": 44.321,
@@ -1442,7 +1827,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | Hes | 4"
         },
         "perplexity": {
-            "improvement": 7.248,
+            "improvement": -7.248,
             "std": 1.911,
             "iqr": 2.703,
             "sample_size_discount": 0.487,
@@ -1450,7 +1835,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive"
+            "intensity": "weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": -0.926,
+            "std": 1.309,
+            "iqr": 1.852,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent"
         },
         "inference_latency": {
             "improvement": 41.861,
@@ -1483,7 +1879,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | KL | 4"
         },
         "perplexity": {
-            "improvement": 5.528,
+            "improvement": -5.528,
             "std": 3.648,
             "iqr": 5.16,
             "sample_size_discount": 0.487,
@@ -1491,7 +1887,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive"
+            "intensity": "weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": -0.463,
+            "std": 0.655,
+            "iqr": 0.926,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent"
         },
         "inference_latency": {
             "improvement": 41.689,
@@ -1524,7 +1931,7 @@
             "quantization_configuration": "mixed | ADMM (layer level variable) | NAS | 4"
         },
         "perplexity": {
-            "improvement": 13.759,
+            "improvement": -13.759,
             "std": 1.737,
             "iqr": 2.457,
             "sample_size_discount": 0.487,
@@ -1532,7 +1939,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive - positive"
+            "intensity": "negative - weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": -2.778,
+            "std": 2.619,
+            "iqr": 3.704,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative - indiferent"
         },
         "inference_latency": {
             "improvement": 42.034,
@@ -1565,7 +1983,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit layer) | manual define | 4"
         },
         "perplexity": {
-            "improvement": 13.759,
+            "improvement": -13.759,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1573,7 +1991,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive - positive"
+            "intensity": "negative - weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": -3.241,
+            "std": 3.274,
+            "iqr": 4.63,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative - indiferent"
         },
         "inference_latency": {
             "improvement": 38.91,
@@ -1606,7 +2035,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit node) | manual define | 4"
         },
         "perplexity": {
-            "improvement": 9.828,
+            "improvement": -9.828,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1614,7 +2043,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive"
+            "intensity": "weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": -1.852,
+            "std": 2.619,
+            "iqr": 3.704,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent"
         },
         "inference_latency": {
             "improvement": 36.844,
@@ -1647,7 +2087,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit layer) | manual define | 8"
         },
         "perplexity": {
-            "improvement": 7.862,
+            "improvement": -7.862,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1655,7 +2095,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive"
+            "intensity": "weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": -1.852,
+            "std": 1.309,
+            "iqr": 1.852,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent"
         },
         "inference_latency": {
             "improvement": 39.131,
@@ -1688,7 +2139,7 @@
             "quantization_configuration": "mixed | ADMM (multiple eql. #bit node) | manual define | 8"
         },
         "perplexity": {
-            "improvement": 3.44,
+            "improvement": -3.44,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1696,7 +2147,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "weakly negative - indiferent"
+        },
+        "word_error_rate": {
+            "improvement": -0.926,
+            "std": 0.0,
+            "iqr": 0.0,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent"
         },
         "inference_latency": {
             "improvement": 35.123,
@@ -1729,7 +2191,7 @@
             "quantization_configuration": "uniform | ADMM (global) | manual define | 1"
         },
         "perplexity": {
-            "improvement": 24.201,
+            "improvement": -24.201,
             "std": 2.259,
             "iqr": 3.194,
             "sample_size_discount": 0.487,
@@ -1737,7 +2199,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "positive - strongly positive"
+            "intensity": "strongly negative - negative"
+        },
+        "word_error_rate": {
+            "improvement": -8.333,
+            "std": 5.238,
+            "iqr": 7.407,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative"
         },
         "inference_latency": {
             "improvement": 63.527,
@@ -1770,7 +2243,7 @@
             "quantization_configuration": "uniform | BP [31], [32] (modified) | manual define | 1"
         },
         "perplexity": {
-            "improvement": 28.747,
+            "improvement": -28.747,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1778,7 +2251,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "strongly positive"
+            "intensity": "strongly negative"
+        },
+        "word_error_rate": {
+            "improvement": -9.722,
+            "std": 5.893,
+            "iqr": 8.333,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative"
         },
         "inference_latency": {
             "improvement": 64.044,
@@ -1811,7 +2295,7 @@
             "quantization_configuration": "uniform | BP [31], [32] (modified) | manual define | 2"
         },
         "perplexity": {
-            "improvement": 23.096,
+            "improvement": -23.096,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1819,7 +2303,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "positive - strongly positive"
+            "intensity": "strongly negative - negative"
+        },
+        "word_error_rate": {
+            "improvement": -7.87,
+            "std": 4.583,
+            "iqr": 6.481,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative"
         },
         "inference_latency": {
             "improvement": 45.798,
@@ -1852,7 +2347,7 @@
             "quantization_configuration": "uniform | BP [31], [32] (modified) | manual define | 4"
         },
         "perplexity": {
-            "improvement": 22.113,
+            "improvement": -22.113,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1860,7 +2355,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "positive - strongly positive"
+            "intensity": "strongly negative - negative"
+        },
+        "word_error_rate": {
+            "improvement": -4.63,
+            "std": 3.928,
+            "iqr": 5.556,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative - indiferent"
         },
         "inference_latency": {
             "improvement": 43.781,
@@ -1893,7 +2399,7 @@
             "quantization_configuration": "uniform | ADMM (global) | manual define | 8"
         },
         "perplexity": {
-            "improvement": 6.88,
+            "improvement": -6.88,
             "std": 1.737,
             "iqr": 2.457,
             "sample_size_discount": 0.487,
@@ -1901,7 +2407,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive"
+            "intensity": "weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": -1.852,
+            "std": 1.309,
+            "iqr": 1.852,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "indiferent"
         },
         "inference_latency": {
             "improvement": 43.732,
@@ -1934,7 +2451,7 @@
             "quantization_configuration": "uniform | BP [31], [32] (modified) | manual define | 8"
         },
         "perplexity": {
-            "improvement": 8.6,
+            "improvement": -8.6,
             "std": 0.0,
             "iqr": 0.0,
             "sample_size_discount": 0.487,
@@ -1942,7 +2459,18 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.0,
-            "intensity": "weakly positive"
+            "intensity": "weakly negative"
+        },
+        "word_error_rate": {
+            "improvement": -2.778,
+            "std": 2.619,
+            "iqr": 3.704,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.0,
+            "intensity": "weakly negative - indiferent"
         },
         "inference_latency": {
             "improvement": 43.215,

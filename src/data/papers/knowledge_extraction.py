@@ -6,6 +6,7 @@ import polars as pl
 from statsmodels.stats import descriptivestats as sms
 
 from src.data.papers.entities import CorrectnessMetrics, Paper, Papers
+from src.data.papers.metric_polarity import is_minimized_correctness_metric
 from src.data.papers.precision_nomenclature import (
     normalize_quantization_method,
     parse_precision_label,
@@ -210,15 +211,26 @@ class KnowledgeExtractor:
                 pl.struct(pl.col(*self._by_precision_key())).alias("configuration")
             )
 
-        # Compute the relative improvement for each metric
-        # Note: We use the baseline value to compute the improvement, so we need to replace 0 with a small value
-        # to avoid division by zero resulting in NaN values or infinite values.
+        # Compute the relative improvement for each metric.
+        # Polarity (maximized vs minimized) is defined globally; see ADR 0004.
+        maximized_correctness_columns = [
+            (metric, col) for metric, col in self.correctness_columns if not is_minimized_correctness_metric(metric)
+        ]
+        minimized_correctness_columns = [
+            (metric, col) for metric, col in self.correctness_columns if is_minimized_correctness_metric(metric)
+        ]
         self.improvement_metrics = quantization_data.with_columns(
             *[
                 ((pl.col(col) - pl.col(f"{col}_baseline")) / pl.col(f"{col}_baseline") * 100)
                 .cast(pl.Float64)
                 .alias(f"{metric}_improvement")
-                for metric, col in self.correctness_columns
+                for metric, col in maximized_correctness_columns
+            ]
+            + [
+                ((pl.col(f"{col}_baseline") - pl.col(col)) / pl.col(f"{col}_baseline") * 100)
+                .cast(pl.Float64)
+                .alias(f"{metric}_improvement")
+                for metric, col in minimized_correctness_columns
             ]
             + [
                 ((pl.col(f"{col}_baseline") - pl.col(col)) / pl.col(f"{col}_baseline") * 100)

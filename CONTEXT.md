@@ -47,3 +47,21 @@ _Avoid_: Grouping key, join key
 **External paper data**:
 The study-provided experimental datasets consumed by evidence extraction for a given paper, kept under that paper's external data folder. Study-native precision labels may remain here; alias → canonical rewriting happens when loading into this project's metadata and processed outputs.
 _Avoid_: Raw data (when referring to these study inputs), replication package (when referring to the full upstream archive rather than the files this project keeps)
+
+## Metrics
+
+**Correctness metric**:
+A measure of model prediction quality reported by a study (e.g. accuracy, F1 score, perplexity). Correctness metrics are distinct from resource-efficiency metrics even when a correctness metric is minimized rather than maximized.
+_Avoid_: Accuracy metric (when the measure is not accuracy), quality metric (too vague)
+
+**Resource efficiency metric**:
+A measure of computational or hardware cost reported by a study (e.g. latency, energy, storage size). Lower raw values always represent better outcomes.
+_Avoid_: Performance metric (ambiguous with correctness), efficiency metric (too vague)
+
+**Metric polarity**:
+Whether better outcomes correspond to higher or lower raw values for a given metric. Accuracy, precision, recall, F1 score, Dice score, mAP, mIoU, and BLEU are maximized; perplexity and word error rate are minimized. Resource-efficiency metrics are always minimized.
+_Avoid_: Improvement direction, metric direction, higher-is-better / lower-is-better (as stored labels — use maximized / minimized)
+
+**Relative improvement**:
+The percentage change of a metric relative to the baseline precision configuration, signed so that positive always means a better outcome and negative always means a worse outcome. Polarity determines whether the formula uses `(quantized − baseline)` or `(baseline − quantized)` in the numerator.
+_Avoid_: Percent change, delta (unsigned), improvement rate

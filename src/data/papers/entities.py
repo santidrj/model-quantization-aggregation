@@ -762,7 +762,7 @@ class XuPaper(Paper):
         inference_latency="eval_time_ms_per_word",
         storage_size="model_size_mb",
     )
-    CORRECTNESS_COLUMNS = CorrectnessMetrics(perplexity="ppl")
+    CORRECTNESS_COLUMNS = CorrectnessMetrics(perplexity="ppl", word_error_rate="wer_avg_pct")
     GROUPING_COLUMNS = ["dataset", "Model"]
     CONFIGURATION_COLUMNS = ["quantization_configuration"]
 
