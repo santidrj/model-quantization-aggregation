@@ -44,10 +44,10 @@ def format_average_bit_width_token(avg: float | int | str) -> str:
             return token.rstrip("0").rstrip(".") or "0"
         return token
 
-    quantized = round(float(avg), 6)
-    if quantized == int(quantized):
-        return str(int(quantized))
-    return f"{quantized:.6f}".rstrip("0").rstrip(".")
+    rounded_avg = round(float(avg), 6)
+    if rounded_avg == int(rounded_avg):
+        return str(int(rounded_avg))
+    return f"{rounded_avg:.6f}".rstrip("0").rstrip(".")
 
 
 def format_mixed_numeric_format(avg: float | int | str) -> str:

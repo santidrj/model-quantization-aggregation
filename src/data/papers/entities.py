@@ -10,7 +10,7 @@ from src.data.ensure_external_paper_data import (
     RemoteArchiveSource,
     ensure_external_paper_data,
 )
-from src.data.papers.precision_nomenclature import format_average_bit_width_token
+from src.data.papers.precision_nomenclature import format_average_bit_width_token, format_mixed_numeric_format
 
 FULL_PRECISION_BITS = 32
 
@@ -783,12 +783,15 @@ class XuPaper(Paper):
                 pl.col("avg_bits_or_bitwidth")
                 .map_elements(format_average_bit_width_token, return_dtype=pl.String)
                 .alias("_avg_bit_width_token"),
+                pl.col("avg_bits_or_bitwidth")
+                .map_elements(format_mixed_numeric_format, return_dtype=pl.String)
+                .alias("_mixed_precision_configuration"),
             )
             .with_columns(
                 pl.when(pl.col("avg_bits_or_bitwidth") == FULL_PRECISION_BITS)
                 .then(pl.lit("fp32"))
                 .when(pl.col("quantization_group") == "mixed")
-                .then(pl.format("mixed-{}", pl.col("_avg_bit_width_token")))
+                .then(pl.col("_mixed_precision_configuration"))
                 .otherwise(pl.format("int{}", pl.col("avg_bits_or_bitwidth").cast(pl.Int32)))
                 .alias("quantization_precision"),
                 pl.when(pl.col("param_estimation").str.contains("(?i)post-training"))
@@ -810,7 +813,7 @@ class XuPaper(Paper):
                 )
                 .alias("quantization_configuration"),
             )
-            .drop("_avg_bit_width_token")
+            .drop("_avg_bit_width_token", "_mixed_precision_configuration")
             .rename(
                 {
                     "model_family": "Model",

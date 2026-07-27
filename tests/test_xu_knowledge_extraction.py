@@ -41,3 +41,13 @@ def test_xu_by_precision_statistics_split_qat_and_ptq():
     assert "w-int2, a-int2" in precision_configs
     assert "mixed" not in precision_configs
     assert "w-int3, a-int3" not in precision_configs
+
+    # ADR 0003: within a method, uniform precedes mixed on equal average bit width.
+    qat_rows = (
+        stats.filter(pl.col("configuration").struct.field("quantization_method") == "qat")
+        .select(pl.col("configuration").struct.field("precision_configuration"))
+        .to_series()
+        .to_list()
+    )
+    assert qat_rows.index("w-int2, a-int2") < qat_rows.index("mixed-2")
+    assert qat_rows.index("mixed-1.8") < qat_rows.index("w-int2, a-int2")

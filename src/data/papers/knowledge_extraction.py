@@ -9,6 +9,7 @@ from src.data.papers.entities import CorrectnessMetrics, Paper, Papers
 from src.data.papers.precision_nomenclature import (
     normalize_quantization_method,
     parse_precision_label,
+    precision_configuration_sort_key,
 )
 from src.effect_intensity import (
     CorrectnessIntensity,
@@ -134,6 +135,26 @@ class KnowledgeExtractor:
 
     def _by_precision_key(self) -> list[str]:
         return [self.METHOD_COLUMN, self.PRECISION_COLUMN]
+
+    def _sort_effects_by_precision(self, effects: pl.DataFrame) -> pl.DataFrame:
+        """Order by quantization method, then precision configuration sort key (ADR 0003)."""
+        methods = effects[self.METHOD_COLUMN].to_list()
+        precisions = effects[self.PRECISION_COLUMN].to_list()
+        order = sorted(
+            range(len(methods)),
+            key=lambda i: (methods[i], precision_configuration_sort_key(precisions[i])),
+        )
+        return effects[order]
+
+    def _sort_frame_by_precision_configuration(self, frame: pl.DataFrame) -> pl.DataFrame:
+        """Order rows whose `configuration` struct carries method + precision (ADR 0003)."""
+        methods = frame["configuration"].struct.field(self.METHOD_COLUMN).to_list()
+        precisions = frame["configuration"].struct.field(self.PRECISION_COLUMN).to_list()
+        order = sorted(
+            range(len(methods)),
+            key=lambda i: (methods[i], precision_configuration_sort_key(precisions[i]), i),
+        )
+        return frame[order]
 
     def _configuration_key(self) -> list[str]:
         if self.paper.GROUPING_COLUMNS is None:
@@ -266,9 +287,8 @@ class KnowledgeExtractor:
             sample_size_by_precision, on=self._by_precision_key()
         )
 
-        self.effects_by_precision = (
-            self._enrich_data(self.effects_by_precision).sort(self._by_precision_key()).drop(pl.col("^*_sample_size$"))
-        )
+        self.effects_by_precision = self._enrich_data(self.effects_by_precision).drop(pl.col("^*_sample_size$"))
+        self.effects_by_precision = self._sort_effects_by_precision(self.effects_by_precision)
 
         return self.effects_by_precision
 
@@ -318,10 +338,7 @@ class KnowledgeExtractor:
 
         self.effects_by_configuration = (
             self._enrich_data(self.effects_by_configuration)
-            .sort(
-                pl.col("configuration").struct.field(self.METHOD_COLUMN),
-                pl.col("configuration").struct.field(self.PRECISION_COLUMN),
-            )
+            .sort(*[pl.col("configuration").struct.field(column) for column in self._configuration_key()])
             .drop(pl.col("^*_sample_size$"))
         )
 
@@ -437,7 +454,7 @@ class KnowledgeExtractor:
 
             eff_df.append(stats)
 
-        return pl.concat(eff_df, how="vertical_relaxed")
+        return self._sort_frame_by_precision_configuration(pl.concat(eff_df, how="vertical_relaxed"))
 
     def _get_improvement_statistics_by_configuration(self) -> pl.DataFrame:
         """
