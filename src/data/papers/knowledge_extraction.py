@@ -607,7 +607,8 @@ class KnowledgeExtractor:
             .str.replace_all("Miou", "mIoU")
             .str.replace_all("Map 5 95", "mAP@0.5:0.95", literal=True)
             .str.replace_all("Map 5", "mAP@0.5", literal=True)
-            .str.replace_all("Map", "mAP", literal=True),
+            .str.replace_all("Map", "mAP", literal=True)
+            .str.replace_all("Bleu", "BLEU", literal=True),
             # pl.when(pl.col("nobs") == 1).then(pl.col("mean")).otherwise(pl.col("upper_ci")).alias("upper_ci"),
             # pl.when(pl.col("nobs") == 1).then(pl.col("mean")).otherwise(pl.col("lower_ci")).alias("lower_ci"),
         ).filter(pl.col("mean").is_not_null())

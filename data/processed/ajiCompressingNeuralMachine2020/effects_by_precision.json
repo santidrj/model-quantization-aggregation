@@ -63,7 +63,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.327,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 90.51,
@@ -89,7 +89,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.327,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 87.254,

@@ -118,7 +118,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.327,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "inference_latency": {
             "improvement": 45.356,
@@ -166,7 +166,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.327,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "inference_latency": {
             "improvement": 44.396,
@@ -299,7 +299,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.327,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "word_error_rate": {
             "improvement": null,
@@ -358,7 +358,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.327,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "inference_latency": {
             "improvement": 47.199,
@@ -454,7 +454,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.327,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "inference_latency": {
             "improvement": 38.408,
@@ -539,7 +539,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.19,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "word_error_rate": {
             "improvement": null,
@@ -646,7 +646,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.327,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "inference_latency": {
             "improvement": 44.832,
@@ -694,7 +694,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.327,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": 40.678,
@@ -742,7 +742,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.327,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "inference_latency": {
             "improvement": 44.325,
@@ -779,7 +779,7 @@
             "discount_factor": 0.736,
             "p_value": 0.264,
             "belief": 0.495,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "word_error_rate": {
             "improvement": -1.389,
@@ -790,7 +790,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.327,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": 37.832,

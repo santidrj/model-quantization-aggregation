@@ -47,7 +47,7 @@
             "discount_factor": 0.857,
             "p_value": 0.143,
             "belief": 0.611,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_utilization": {
             "improvement": 7.322,
@@ -58,7 +58,7 @@
             "discount_factor": 0.971,
             "p_value": 0.029,
             "belief": 0.692,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_memory_utilization": {
             "improvement": 45.614,
@@ -98,7 +98,7 @@
             "discount_factor": 0.672,
             "p_value": 0.328,
             "belief": 0.479,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "inference_latency": {
             "improvement": 28.242,
@@ -131,7 +131,7 @@
             "discount_factor": 0.837,
             "p_value": 0.163,
             "belief": 0.597,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_utilization": {
             "improvement": 4.804,
@@ -142,7 +142,7 @@
             "discount_factor": 0.935,
             "p_value": 0.065,
             "belief": 0.667,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_memory_utilization": {
             "improvement": 22.6,
@@ -182,7 +182,7 @@
             "discount_factor": 0.0,
             "p_value": 1.0,
             "belief": 0.0,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": 34.637,
@@ -215,7 +215,7 @@
             "discount_factor": 0.915,
             "p_value": 0.085,
             "belief": 0.652,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_utilization": {
             "improvement": 9.536,
@@ -226,7 +226,7 @@
             "discount_factor": 0.945,
             "p_value": 0.055,
             "belief": 0.674,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_memory_utilization": {
             "improvement": 47.645,
@@ -266,7 +266,7 @@
             "discount_factor": 0.621,
             "p_value": 0.379,
             "belief": 0.443,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": 27.217,
@@ -299,7 +299,7 @@
             "discount_factor": 0.925,
             "p_value": 0.075,
             "belief": 0.66,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_utilization": {
             "improvement": 6.822,
@@ -310,7 +310,7 @@
             "discount_factor": 0.937,
             "p_value": 0.063,
             "belief": 0.668,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_memory_utilization": {
             "improvement": 24.9,
@@ -350,7 +350,7 @@
             "discount_factor": 0.095,
             "p_value": 0.905,
             "belief": 0.068,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": 40.275,
@@ -383,7 +383,7 @@
             "discount_factor": 0.947,
             "p_value": 0.053,
             "belief": 0.675,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_utilization": {
             "improvement": 9.833,
@@ -394,7 +394,7 @@
             "discount_factor": 0.949,
             "p_value": 0.051,
             "belief": 0.677,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_memory_utilization": {
             "improvement": 46.888,
@@ -434,7 +434,7 @@
             "discount_factor": 0.724,
             "p_value": 0.276,
             "belief": 0.516,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": 29.71,
@@ -467,7 +467,7 @@
             "discount_factor": 0.882,
             "p_value": 0.118,
             "belief": 0.629,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_utilization": {
             "improvement": 6.338,
@@ -478,7 +478,7 @@
             "discount_factor": 0.942,
             "p_value": 0.058,
             "belief": 0.672,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_memory_utilization": {
             "improvement": 22.836,
@@ -551,7 +551,7 @@
             "discount_factor": 0.912,
             "p_value": 0.088,
             "belief": 0.65,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_utilization": {
             "improvement": 7.284,
@@ -562,7 +562,7 @@
             "discount_factor": 0.951,
             "p_value": 0.049,
             "belief": 0.678,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_memory_utilization": {
             "improvement": 44.933,
@@ -602,7 +602,7 @@
             "discount_factor": 0.772,
             "p_value": 0.228,
             "belief": 0.551,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "inference_latency": {
             "improvement": 29.823,
@@ -635,7 +635,7 @@
             "discount_factor": 0.912,
             "p_value": 0.088,
             "belief": 0.65,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_utilization": {
             "improvement": 4.899,
@@ -646,7 +646,7 @@
             "discount_factor": 0.918,
             "p_value": 0.082,
             "belief": 0.655,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_memory_utilization": {
             "improvement": 21.501,

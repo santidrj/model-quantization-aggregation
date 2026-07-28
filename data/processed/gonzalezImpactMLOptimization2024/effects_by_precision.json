@@ -33,7 +33,7 @@
             "discount_factor": 0.622,
             "p_value": 0.378,
             "belief": 0.458,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "inference_latency": {
             "improvement": 49.955,
@@ -77,7 +77,7 @@
             "discount_factor": 1.0,
             "p_value": 0.0,
             "belief": 0.736,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 94.352,

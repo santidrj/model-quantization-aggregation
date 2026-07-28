@@ -14,7 +14,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.193,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 93.883,
@@ -43,7 +43,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.193,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 93.883,
@@ -101,7 +101,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.332,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "storage_size": {
             "improvement": 93.666,
@@ -130,7 +130,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.193,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 40.0,

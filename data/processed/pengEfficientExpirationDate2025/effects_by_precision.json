@@ -11,7 +11,7 @@
             "discount_factor": 0.736,
             "p_value": 0.264,
             "belief": 0.504,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "storage_size": {
             "improvement": 72.149,
@@ -37,7 +37,7 @@
             "discount_factor": 0.736,
             "p_value": 0.264,
             "belief": 0.504,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 49.615,

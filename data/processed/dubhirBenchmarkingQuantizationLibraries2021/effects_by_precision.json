@@ -22,7 +22,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 0.0,
@@ -33,7 +33,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         }
     },
     {
@@ -48,7 +48,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.325,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": -482.813,
@@ -96,7 +96,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 2.387,
@@ -107,7 +107,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         }
     },
     {
@@ -122,7 +122,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "inference_latency": {
             "improvement": -25.099,
@@ -144,7 +144,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         }
     },
     {
@@ -170,7 +170,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 2.255,
@@ -181,7 +181,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         }
     },
     {
@@ -207,7 +207,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 2.122,
@@ -218,7 +218,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         }
     },
     {
@@ -233,7 +233,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": -25.074,
@@ -255,7 +255,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         }
     },
     {
@@ -270,7 +270,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "inference_latency": {
             "improvement": -25.099,
@@ -292,7 +292,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         }
     },
     {
@@ -318,7 +318,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 1.857,
@@ -329,7 +329,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         }
     },
     {
@@ -344,7 +344,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": -25.124,
@@ -366,7 +366,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         }
     },
     {
@@ -381,7 +381,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": -0.198,
@@ -392,7 +392,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 1.194,
@@ -403,7 +403,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.189,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         }
     }
 ]

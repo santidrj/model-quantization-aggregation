@@ -87,7 +87,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.187,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "inference_latency": {
             "improvement": 72.881,
@@ -149,7 +149,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.187,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "inference_latency": {
             "improvement": 72.947,
@@ -211,7 +211,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.187,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": 72.961,
@@ -273,7 +273,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.187,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": 72.967,

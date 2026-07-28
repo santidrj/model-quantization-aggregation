@@ -14,7 +14,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.19,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "inference_latency": {
             "improvement": 66.387,
@@ -94,7 +94,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.19,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": 66.667,
@@ -134,7 +134,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.19,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": 80.0,

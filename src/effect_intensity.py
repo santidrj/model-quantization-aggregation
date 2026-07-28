@@ -4,7 +4,20 @@ import numpy as np
 class CorrectnessMetrics:
     @staticmethod
     def metrics() -> list[str]:
-        return ["Accuracy", "Precision", "Recall", "F1 Score", "DSC", "mAP", "mAP@0.5", "mAP@0.5:0.95", "mIoU"]
+        return [
+            "Accuracy",
+            "Precision",
+            "Recall",
+            "F1 Score",
+            "DSC",
+            "mAP",
+            "mAP@0.5",
+            "mAP@0.5:0.95",
+            "mIoU",
+            "Perplexity",
+            "Word Error Rate",
+            "BLEU",
+        ]
 
 
 class ResourceEfficiencyMetrics:
@@ -48,7 +61,7 @@ class EffectIntensity:
         return 10
 
     @property
-    def WEAK_INDIFERENT_EFFECT(self) -> int:
+    def WEAK_INDIFFERENT_EFFECT(self) -> int:
         return 2
 
     def __new__(cls, *args, **kwargs):
@@ -58,8 +71,8 @@ class EffectIntensity:
 
     def _threshold_labels(self, sign: str) -> list[tuple[int, str]]:
         return [
-            (self.WEAK_INDIFERENT_EFFECT, "indiferent"),
-            (self.WEAK_EFFECT, f"indiferent - weakly {sign}" if sign == "positive" else f"weakly {sign} - indiferent"),
+            (self.WEAK_INDIFFERENT_EFFECT, "indifferent"),
+            (self.WEAK_EFFECT, f"indifferent - weakly {sign}" if sign == "positive" else f"weakly {sign} - indifferent"),
             (self.WEAK_MODERATE_EFFECT, f"weakly {sign}"),
             (self.MODERATE_EFFECT, f"weakly {sign} - {sign}" if sign == "positive" else f"{sign} - weakly {sign}"),
             (self.STRONG_MODERATE_EFFECT, sign),
@@ -68,7 +81,7 @@ class EffectIntensity:
 
     def get_intensity(self, improvement_metric) -> str:
         """
-        Get the intensity of the effect based on the improvement metric. The improvement should be exressed in
+        Get the intensity of the effect based on the improvement metric. The improvement should be expressed in
         percentage.
 
         Params
@@ -106,9 +119,9 @@ class EffectIntensity:
             "NE": (-self.STRONG_MODERATE_EFFECT, -self.MODERATE_EFFECT),
             "NE-WN": (-self.MODERATE_EFFECT, -self.WEAK_MODERATE_EFFECT),
             "WN": (-self.WEAK_MODERATE_EFFECT, -self.WEAK_EFFECT),
-            "WN-IF": (-self.WEAK_EFFECT, -self.WEAK_INDIFERENT_EFFECT),
-            "IF": (-self.WEAK_INDIFERENT_EFFECT, self.WEAK_INDIFERENT_EFFECT),
-            "IF-WP": (self.WEAK_INDIFERENT_EFFECT, self.WEAK_EFFECT),
+            "WN-IF": (-self.WEAK_EFFECT, -self.WEAK_INDIFFERENT_EFFECT),
+            "IF": (-self.WEAK_INDIFFERENT_EFFECT, self.WEAK_INDIFFERENT_EFFECT),
+            "IF-WP": (self.WEAK_INDIFFERENT_EFFECT, self.WEAK_EFFECT),
             "WP": (self.WEAK_EFFECT, self.WEAK_MODERATE_EFFECT),
             "WP-PO": (self.WEAK_MODERATE_EFFECT, self.MODERATE_EFFECT),
             "PO": (self.MODERATE_EFFECT, self.STRONG_MODERATE_EFFECT),

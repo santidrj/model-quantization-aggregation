@@ -11,7 +11,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.106,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_energy_consumption": {
             "improvement": 57.181,
@@ -85,7 +85,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.106,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_energy_consumption": {
             "improvement": 15.769,
@@ -159,7 +159,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.106,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "inference_energy_consumption": {
             "improvement": 77.81,

@@ -36,7 +36,7 @@
             "discount_factor": 0.566,
             "p_value": 0.434,
             "belief": 0.417,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "inference_latency": {
             "improvement": 51.72,
@@ -80,7 +80,7 @@
             "discount_factor": 0.999,
             "p_value": 0.001,
             "belief": 0.735,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 99.216,
@@ -164,7 +164,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.208,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_utilization": {
             "improvement": 4.9,
@@ -175,7 +175,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.208,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "storage_size": {
             "improvement": 99.514,
@@ -204,7 +204,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.358,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "inference_energy_consumption": {
             "improvement": 16.432,
@@ -226,7 +226,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.358,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": 17.525,
@@ -259,7 +259,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.358,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "gpu_utilization": {
             "improvement": 0.15,
@@ -270,7 +270,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.358,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 49.176,
@@ -299,7 +299,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.358,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "inference_energy_consumption": {
             "improvement": 65.939,
@@ -354,7 +354,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.358,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_utilization": {
             "improvement": 0.1,
@@ -365,7 +365,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.358,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 94.608,
@@ -416,7 +416,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.208,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "inference_latency": {
             "improvement": 70.765,
@@ -449,7 +449,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.208,
-            "intensity": "indiferent - weakly positive"
+            "intensity": "indifferent - weakly positive"
         },
         "gpu_utilization": {
             "improvement": 0.0,
@@ -460,7 +460,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.208,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 72.038,
