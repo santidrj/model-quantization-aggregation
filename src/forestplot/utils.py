@@ -302,6 +302,10 @@ def _clip_value(value: float, x_min: float, x_max: float) -> float:
     return min(max(value, x_min), x_max)
 
 
+def _is_finite(value: float) -> bool:
+    return value is not None and np.isfinite(value)
+
+
 def _draw_overflow_arrow(  # noqa: PLR0913
     ax: Axes, x: float, y: float, direction: str, color: str, linewidth: float
 ) -> None:
@@ -319,58 +323,52 @@ def _draw_overflow_arrow(  # noqa: PLR0913
     )
 
 
+def _draw_ci_cap(ax: Axes, x: float, y: float, color: str, linewidth: float) -> None:
+    cap_half_height = 0.14
+    ax.vlines(
+        x=x,
+        ymin=y - cap_half_height,
+        ymax=y + cap_half_height,
+        color=color,
+        linewidth=linewidth,
+        zorder=0,
+    )
+
+
 def _draw_clipped_ci(  # noqa: PLR0913
     ax: Axes, lower: float, upper: float, y: float, color: str, linewidth: float
 ) -> None:
+    if not (_is_finite(lower) and _is_finite(upper)):
+        return
+
     x_min, x_max = ax.get_xlim()
     clipped_lower = _clip_value(lower, x_min, x_max)
     clipped_upper = _clip_value(upper, x_min, x_max)
-    cap_half_height = 0.14
 
     ax.hlines(y=y, xmin=clipped_lower, xmax=clipped_upper, color=color, linewidth=linewidth, zorder=0)
 
-    if lower >= x_min:
-        ax.vlines(
-            x=clipped_lower,
-            ymin=y - cap_half_height,
-            ymax=y + cap_half_height,
-            color=color,
-            linewidth=linewidth,
-            zorder=0,
-        )
-    else:
+    if lower < x_min:
         _draw_overflow_arrow(ax, x_min, y, "left", color, linewidth)
-
-    if upper <= x_max:
-        ax.vlines(
-            x=clipped_upper,
-            ymin=y - cap_half_height,
-            ymax=y + cap_half_height,
-            color=color,
-            linewidth=linewidth,
-            zorder=0,
-        )
     else:
+        _draw_ci_cap(ax, clipped_lower, y, color, linewidth)
+
+    if upper > x_max:
         _draw_overflow_arrow(ax, x_max, y, "right", color, linewidth)
+    else:
+        _draw_ci_cap(ax, clipped_upper, y, color, linewidth)
 
 
 def _format_overflow_label(value: float) -> str:
     return f"{value:.1f}".rstrip("0").rstrip(".")
 
 
-def _plot_marker_row(ax: Axes, row: pd.Series, marker: str, color: str, size: float) -> None:
+def _annotate_overflow_estimate(ax: Axes, value: float, y: float, direction: str, color: str) -> None:
     x_min, x_max = ax.get_xlim()
-    mean_value = row["mean"]
-    y_value = row["index"]
-    clipped_mean = _clip_value(mean_value, x_min, x_max)
-
-    ax.scatter([clipped_mean], [y_value], marker=marker, color=color, s=size, zorder=2)
-
-    if mean_value < x_min:
-        _draw_overflow_arrow(ax, x_min, y_value, "left", color, linewidth=1.4)
+    if direction == "left":
+        _draw_overflow_arrow(ax, x_min, y, "left", color, linewidth=1.4)
         ax.annotate(
-            _format_overflow_label(mean_value),
-            xy=(x_min, y_value),
+            _format_overflow_label(value),
+            xy=(x_min, y),
             xytext=(5, 0),
             textcoords="offset points",
             ha="left",
@@ -379,19 +377,37 @@ def _plot_marker_row(ax: Axes, row: pd.Series, marker: str, color: str, size: fl
             color=color,
             annotation_clip=False,
         )
+        return
+
+    _draw_overflow_arrow(ax, x_max, y, "right", color, linewidth=1.4)
+    ax.annotate(
+        _format_overflow_label(value),
+        xy=(x_max, y),
+        xytext=(-5, 0),
+        textcoords="offset points",
+        ha="right",
+        va="center",
+        fontsize=8,
+        color=color,
+        annotation_clip=False,
+    )
+
+
+def _plot_marker_row(ax: Axes, row: pd.Series, marker: str, color: str, size: float) -> None:
+    mean_value = row["mean"]
+    if not _is_finite(mean_value):
+        return
+
+    x_min, x_max = ax.get_xlim()
+    y_value = row["index"]
+    clipped_mean = _clip_value(mean_value, x_min, x_max)
+
+    ax.scatter([clipped_mean], [y_value], marker=marker, color=color, s=size, zorder=2)
+
+    if mean_value < x_min:
+        _annotate_overflow_estimate(ax, mean_value, y_value, "left", color)
     elif mean_value > x_max:
-        _draw_overflow_arrow(ax, x_max, y_value, "right", color, linewidth=1.4)
-        ax.annotate(
-            _format_overflow_label(mean_value),
-            xy=(x_max, y_value),
-            xytext=(-5, 0),
-            textcoords="offset points",
-            ha="right",
-            va="center",
-            fontsize=8,
-            color=color,
-            annotation_clip=False,
-        )
+        _annotate_overflow_estimate(ax, mean_value, y_value, "right", color)
 
 
 intensity_labels = {
@@ -537,18 +553,19 @@ def _append_main_header(df: pd.DataFrame, ordered_df: pd.DataFrame) -> pd.DataFr
 
 
 def _plot_effect_markers(ax: Axes, ordered_df: pd.DataFrame) -> tuple[str, float]:
-    effects_data = ordered_df.loc[~ordered_df["yticklabel"].str.contains("Aggregated")]
+    plot_rows = ordered_df[ordered_df["mean"].notnull()]
+    effects_data = plot_rows.loc[~plot_rows["yticklabel"].str.contains("Aggregated")]
     for _, row in effects_data.iterrows():
         _plot_marker_row(ax, row, marker="s", color="black", size=36)
     draw_ci(pl.from_pandas(effects_data), "mean", "index", "lower_ci", "upper_ci", ax)
 
-    summary_data = ordered_df.loc[ordered_df["yticklabel"].str.contains("Aggregated")]
+    summary_data = plot_rows.loc[plot_rows["yticklabel"].str.contains("Aggregated")]
     for _, row in summary_data.iterrows():
         _plot_marker_row(ax, row, marker="D", color="blue", size=50)
     ax.scatter([], [], marker="D", color="blue", s=50, label="Aggregated")
     draw_ci(pl.from_pandas(summary_data), "mean", "index", "lower_ci", "upper_ci", ax, ecolor="blue")
 
-    last_effect_row = ordered_df[ordered_df["mean"].notnull()].iloc[-1]
+    last_effect_row = plot_rows.iloc[-1]
     return last_effect_row["effect"], last_effect_row["index"].max() + 0.5
 
 
