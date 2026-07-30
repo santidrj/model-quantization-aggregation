@@ -205,3 +205,156 @@ def test_forest_plot_skips_arrows_for_headers_and_missing_cis():
     assert _overflow_arrow_count(axis) == 0
 
     plt.close(figure)
+
+
+def test_forest_plot_keeps_map_variants_in_separate_blocks():
+    frame = pd.DataFrame(
+        [
+            {
+                "index": 0,
+                "id": "S1",
+                "evidence_id": 2,
+                "effect": "mAP",
+                "yticklabel": "Quantized mAP",
+                "mean": 1.0,
+                "lower_ci": 0.0,
+                "upper_ci": 2.0,
+            },
+            {
+                "index": 1,
+                "id": "S1",
+                "evidence_id": 1,
+                "effect": "mAP",
+                "yticklabel": "Aggregated mAP",
+                "mean": 1.0,
+                "lower_ci": 0.0,
+                "upper_ci": 2.0,
+            },
+            {
+                "index": 2,
+                "id": "S1",
+                "evidence_id": 0,
+                "effect": "mAP",
+                "yticklabel": "mAP",
+                "mean": None,
+                "lower_ci": None,
+                "upper_ci": None,
+            },
+            {
+                "index": 3,
+                "id": "S2",
+                "evidence_id": 2,
+                "effect": "mAP@0.5",
+                "yticklabel": "Quantized mAP@0.5",
+                "mean": 3.0,
+                "lower_ci": 2.0,
+                "upper_ci": 4.0,
+            },
+            {
+                "index": 4,
+                "id": "S2",
+                "evidence_id": 1,
+                "effect": "mAP@0.5",
+                "yticklabel": "Aggregated mAP@0.5",
+                "mean": 3.0,
+                "lower_ci": 2.0,
+                "upper_ci": 4.0,
+            },
+            {
+                "index": 5,
+                "id": "S2",
+                "evidence_id": 0,
+                "effect": "mAP@0.5",
+                "yticklabel": "mAP@0.5",
+                "mean": None,
+                "lower_ci": None,
+                "upper_ci": None,
+            },
+            {
+                "index": 6,
+                "id": "S3",
+                "evidence_id": 2,
+                "effect": "mAP@0.5:0.95",
+                "yticklabel": "Quantized mAP@0.5:0.95",
+                "mean": 5.0,
+                "lower_ci": 4.0,
+                "upper_ci": 6.0,
+            },
+            {
+                "index": 7,
+                "id": "S3",
+                "evidence_id": 1,
+                "effect": "mAP@0.5:0.95",
+                "yticklabel": "Aggregated mAP@0.5:0.95",
+                "mean": 5.0,
+                "lower_ci": 4.0,
+                "upper_ci": 6.0,
+            },
+            {
+                "index": 8,
+                "id": "S3",
+                "evidence_id": 0,
+                "effect": "mAP@0.5:0.95",
+                "yticklabel": "mAP@0.5:0.95",
+                "mean": None,
+                "lower_ci": None,
+                "upper_ci": None,
+            },
+        ]
+    )
+
+    figure, axis = plt.subplots(figsize=(8, 6))
+    draw_forestplot(
+        frame,
+        axis,
+        main_effects=["mAP", "mAP@0.5", "mAP@0.5:0.95"],
+        xlim=100,
+    )
+
+    yticklabels = [tick.get_text() for tick in axis.get_yticklabels()]
+    expected_aggregated_rows = 3
+    assert yticklabels.count("mAP") == 1
+    assert yticklabels.count("mAP@0.5") == 1
+    assert yticklabels.count("mAP@0.5:0.95") == 1
+    assert sum("Aggregated" in label for label in yticklabels) == expected_aggregated_rows
+
+    plt.close(figure)
+
+
+def test_forest_plot_places_overflow_label_away_from_arrow():
+    display_limit = 100
+    frame = pd.DataFrame(
+        [
+            {
+                "index": 0,
+                "id": "S1",
+                "evidence_id": 2,
+                "effect": "Accuracy",
+                "yticklabel": "Quantized A",
+                "mean": -130.0,
+                "lower_ci": -160.0,
+                "upper_ci": -110.0,
+            },
+            {
+                "index": 1,
+                "id": "S1",
+                "evidence_id": 1,
+                "effect": "Accuracy",
+                "yticklabel": "Aggregated Accuracy",
+                "mean": 7.0,
+                "lower_ci": 6.0,
+                "upper_ci": 8.0,
+            },
+        ]
+    )
+
+    figure, axis = plt.subplots(figsize=(8, 4))
+    draw_forestplot(frame, axis, main_effects=["Accuracy"], xlim=display_limit)
+
+    overflow_labels = [text for text in axis.texts if text.get_text() == "-130"]
+    assert len(overflow_labels) == 1
+    label = overflow_labels[0]
+    assert label.get_position()[0] > -display_limit
+    assert label.get_position()[1] > 0.0
+
+    plt.close(figure)

@@ -364,32 +364,36 @@ def _format_overflow_label(value: float) -> str:
 
 def _annotate_overflow_estimate(ax: Axes, value: float, y: float, direction: str, color: str) -> None:
     x_min, x_max = ax.get_xlim()
+    arrow_length = max((x_max - x_min) * 0.04, 2)
+    label = _format_overflow_label(value)
+    label_offset = 0.35
+
     if direction == "left":
         _draw_overflow_arrow(ax, x_min, y, "left", color, linewidth=1.4)
-        ax.annotate(
-            _format_overflow_label(value),
-            xy=(x_min, y),
-            xytext=(5, 0),
-            textcoords="offset points",
-            ha="left",
-            va="center",
+        ax.text(
+            x_min + arrow_length + 2,
+            y + label_offset,
+            label,
             fontsize=8,
             color=color,
-            annotation_clip=False,
+            ha="left",
+            va="bottom",
+            clip_on=False,
+            zorder=3,
         )
         return
 
     _draw_overflow_arrow(ax, x_max, y, "right", color, linewidth=1.4)
-    ax.annotate(
-        _format_overflow_label(value),
-        xy=(x_max, y),
-        xytext=(-5, 0),
-        textcoords="offset points",
-        ha="right",
-        va="center",
+    ax.text(
+        x_max - arrow_length - 2,
+        y + label_offset,
+        label,
         fontsize=8,
         color=color,
-        annotation_clip=False,
+        ha="right",
+        va="bottom",
+        clip_on=False,
+        zorder=3,
     )
 
 
@@ -510,12 +514,17 @@ def _extend_xticks(current_xticks: np.ndarray, candidate_ticks: list[float], x_m
     return merged_ticks[(merged_ticks >= x_min) & (merged_ticks <= x_max)]
 
 
+def _rows_for_metric(df: pd.DataFrame, metric: str, *, with_mean: bool) -> pd.DataFrame:
+    mean_mask = df["mean"].notnull() if with_mean else df["mean"].isnull()
+    return df[mean_mask & (df["effect"] == metric)].copy()
+
+
 def _build_metric_block(df: pd.DataFrame, metric: str, y_start: int) -> tuple[pd.DataFrame | None, int]:
-    metric_rows = df[df["mean"].notnull() & df["effect"].str.contains(metric)].copy()
+    metric_rows = _rows_for_metric(df, metric, with_mean=True)
     if metric_rows.empty:
         return None, y_start - 1
 
-    metric_header = df[df["mean"].isnull() & df["effect"].str.contains(metric)]
+    metric_header = _rows_for_metric(df, metric, with_mean=False)
     metric_rows = metric_rows.sort_values(by=["id", "evidence_id"], ascending=False).reset_index(drop=True)
     metric_rows = pd.concat([metric_rows, metric_header], ignore_index=True).reset_index()
     metric_rows["index"] += y_start
