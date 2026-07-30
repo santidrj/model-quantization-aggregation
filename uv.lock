@@ -1775,9 +1775,10 @@ wheels = [
 [[package]]
 name = "model-quantization-aggregation"
 version = "2.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "altair", extra = ["all"] },
+    { name = "click" },
     { name = "forestplot" },
     { name = "google-genai" },
     { name = "itables" },
@@ -1814,6 +1815,7 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "altair", extras = ["all"], specifier = ">=6.0.0" },
+    { name = "click", specifier = ">=8.1.8" },
     { name = "forestplot", specifier = ">=0.4.1" },
     { name = "google-genai", specifier = ">=1.56.0" },
     { name = "itables", specifier = ">=2.6.1" },

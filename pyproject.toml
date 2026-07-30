@@ -2,7 +2,7 @@
 name = "model-quantization-aggregation"
 version = "2.0"
 description = ""
-authors = ["Santiago del Rey <santiago.del.rey@upc.edu>"]
+authors = [{name = "Santiago del Rey", email = "santiago.del.rey@upc.edu"}]
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
