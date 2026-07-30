@@ -6,6 +6,10 @@ from src.data.papers.knowledge_extraction import KnowledgeExtractor
 
 # Switchboard LSTM-RNN lm_id=1 under w-int1, a-int1 (from Xu paper-data.csv).
 SWITCHBOARD_LSTM_RNN_ONE_BIT_PPL = 52.4
+SWITCHBOARD_BASELINE_WER = 10.785714285714286
+SWITCHBOARD_ONE_BIT_WER = 12.342857142857143
+AMI_BASELINE_WER = 25.95
+AMI_ONE_BIT_WER = 29.116666666666664
 
 
 def test_xu_configuration_struct_uses_method_and_precision_configuration():
@@ -85,12 +89,38 @@ def test_xu_word_error_rate_appears_in_processed_effects():
     assert "word_error_rate_improvement" in extractor.improvement_metrics.columns
 
 
+def test_xu_read_data_derives_switchboard_word_error_rate_from_component_columns():
+    paper = Papers.XU.value
+    data = paper.read_data().collect()
+
+    row = data.filter(
+        (pl.col("dataset") == "Switchboard")
+        & (pl.col("Model") == "LSTM-RNN")
+        & (pl.col("lm_id") == 1)
+    )
+    assert row.height == 1
+    assert row["wer_avg_pct"].item() == pytest.approx(SWITCHBOARD_BASELINE_WER, rel=0, abs=1e-12)
+
+
+def test_xu_read_data_derives_ami_word_error_rate_from_component_columns():
+    paper = Papers.XU.value
+    data = paper.read_data().collect()
+
+    row = data.filter(
+        (pl.col("dataset") == "AMI")
+        & (pl.col("Model") == "LSTM-RNN")
+        & (pl.col("lm_id") == 1)
+    )
+    assert row.height == 1
+    assert row["wer_avg_pct"].item() == pytest.approx(AMI_BASELINE_WER, rel=0, abs=1e-12)
+
+
 def test_xu_word_error_rate_improvement_is_negative_when_wer_increases():
     paper = Papers.XU.value
     extractor = KnowledgeExtractor(paper.read_data(), paper=paper)
     extractor.compute_improvement()
 
-    # Switchboard LSTM-RNN lm_id=1 baseline: wer=10.8; 1-bit uniform: wer=12.3 (worse).
+    # Switchboard LSTM-RNN lm_id=1 baseline and 1-bit WER are derived from the component columns.
     row = extractor.improvement_metrics.filter(
         (pl.col("dataset") == "Switchboard")
         & (pl.col("Model") == "LSTM-RNN")
@@ -98,6 +128,8 @@ def test_xu_word_error_rate_improvement_is_negative_when_wer_increases():
         & (pl.col("ppl") == SWITCHBOARD_LSTM_RNN_ONE_BIT_PPL)
     )
     assert row.height == 1
+    assert row["wer_avg_pct"].item() == pytest.approx(SWITCHBOARD_ONE_BIT_WER)
+    assert row["wer_avg_pct_baseline"].item() == pytest.approx(SWITCHBOARD_BASELINE_WER)
     improvement = row["word_error_rate_improvement"].item()
     assert improvement < 0
-    assert improvement == pytest.approx(-13.889, rel=1e-3)
+    assert improvement == pytest.approx(-14.437086092715228)

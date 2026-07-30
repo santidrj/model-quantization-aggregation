@@ -765,20 +765,43 @@ class XuPaper(Paper):
     CORRECTNESS_COLUMNS = CorrectnessMetrics(perplexity="ppl", word_error_rate="wer_avg_pct")
     GROUPING_COLUMNS = ["dataset", "Model"]
     CONFIGURATION_COLUMNS = ["quantization_configuration"]
+    WORD_ERROR_RATE_COLUMNS = {
+        "Switchboard": [
+            "eval2000_swbd",
+            "eval2000_callhm",
+            "rt02_swbd1",
+            "rt02_swbd2",
+            "rt02_swbd3",
+            "rt03_fsh",
+            "rt03_swbd",
+        ],
+        "AMI": [
+            "ihm_dev",
+            "ihm_eval",
+            "mdm8_dev",
+            "mdm8_eval",
+            "sdm1_dev",
+            "sdm1_eval",
+        ],
+    }
 
     def read_data(self) -> pl.LazyFrame:
+        wer_component_columns = sorted(
+            {column for columns in self.WORD_ERROR_RATE_COLUMNS.values() for column in columns}
+        )
         return (
             self.scan_csv(
                 null_values=[""],
                 schema_overrides={
                     "avg_bits_or_bitwidth": pl.Float32,
                     "ppl": pl.Float32,
-                    "wer_avg_pct": pl.Float32,
                     "model_size_mb": pl.Float32,
                     "compression_ratio": pl.Float32,
                     "eval_time_ms_per_word": pl.Float32,
+                    **{column: pl.Float64 for column in wer_component_columns},
                 },
             )
+            .drop("wer_avg_pct")
             .with_columns(
                 pl.col("avg_bits_or_bitwidth")
                 .map_elements(format_average_bit_width_token, return_dtype=pl.String)
@@ -794,6 +817,12 @@ class XuPaper(Paper):
                 .then(pl.col("_mixed_precision_configuration"))
                 .otherwise(pl.format("int{}", pl.col("avg_bits_or_bitwidth").cast(pl.Int32)))
                 .alias("quantization_precision"),
+                pl.when(pl.col("dataset") == "Switchboard")
+                .then(pl.mean_horizontal(self.WORD_ERROR_RATE_COLUMNS["Switchboard"]))
+                .when(pl.col("dataset") == "AMI")
+                .then(pl.mean_horizontal(self.WORD_ERROR_RATE_COLUMNS["AMI"]))
+                .otherwise(None)
+                .alias("wer_avg_pct"),
                 pl.when(pl.col("param_estimation").str.contains("(?i)post-training"))
                 .then(pl.lit("ptq"))
                 .otherwise(pl.lit("qat"))
