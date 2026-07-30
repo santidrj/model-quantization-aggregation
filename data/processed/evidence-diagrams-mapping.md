@@ -94,6 +94,26 @@
 
 - Evidence 1: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319319>
 
+## S20
+
+- Evidence 1: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319914>
+- Evidence 2: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319954>
+- Evidence 3: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319991>
+- Evidence 4: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/320028>
+- Evidence 5: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/320065>
+- Evidence 6: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/320306>
+- Evidence 7: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/279082>
+- Evidence 8: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/279083>
+- Evidence 9: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/279084>
+- Evidence 10: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/279085>
+- Evidence 11: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/279086>
+- Evidence 12: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/279087>
+- Evidence 13: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/279088>
+- Evidence 14: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/279089>
+- Evidence 15: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/279090>
+- Evidence 16: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/279091>
+- Evidence 17: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/279092>
+
 ## S21
 
 - Evidence 1: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/319499>
