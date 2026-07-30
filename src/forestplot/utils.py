@@ -44,20 +44,12 @@ def draw_ci(  # noqa: PLR0913
     """
     ecolor = kwargs.get("ecolor", "black")
 
-    estimate_values = data.select(estimate).to_numpy().flatten()
     lower_ci = data.select(lower_ci_col).to_numpy().flatten()
     upper_ci = data.select(higher_ci_col).to_numpy().flatten()
     y_tick_label_values = data.select(y_tick_label).to_numpy().flatten()
 
-    ax.errorbar(
-        estimate_values,
-        y=y_tick_label_values,
-        xerr=[estimate_values - lower_ci, upper_ci - estimate_values],
-        ecolor=ecolor,
-        elinewidth=1.4,
-        ls="none",
-        zorder=0,
-    )
+    for lower, upper, y_value in zip(lower_ci, upper_ci, y_tick_label_values, strict=False):
+        _draw_clipped_ci(ax, lower, upper, y_value, ecolor, linewidth=1.4)
 
     return ax
 
@@ -306,6 +298,102 @@ def draw_text(x: float, y: float, text: str, ax: Axes, rotation=0) -> Axes:
     return ax
 
 
+def _clip_value(value: float, x_min: float, x_max: float) -> float:
+    return min(max(value, x_min), x_max)
+
+
+def _draw_overflow_arrow(  # noqa: PLR0913
+    ax: Axes, x: float, y: float, direction: str, color: str, linewidth: float
+) -> None:
+    x_min, x_max = ax.get_xlim()
+    arrow_length = max((x_max - x_min) * 0.04, 2)
+    start_x = min(x + arrow_length, x_max) if direction == "left" else max(x - arrow_length, x_min)
+
+    ax.annotate(
+        "",
+        xy=(x, y),
+        xytext=(start_x, y),
+        arrowprops={"arrowstyle": "-|>", "color": color, "lw": linewidth},
+        annotation_clip=False,
+        zorder=1,
+    )
+
+
+def _draw_clipped_ci(  # noqa: PLR0913
+    ax: Axes, lower: float, upper: float, y: float, color: str, linewidth: float
+) -> None:
+    x_min, x_max = ax.get_xlim()
+    clipped_lower = _clip_value(lower, x_min, x_max)
+    clipped_upper = _clip_value(upper, x_min, x_max)
+    cap_half_height = 0.14
+
+    ax.hlines(y=y, xmin=clipped_lower, xmax=clipped_upper, color=color, linewidth=linewidth, zorder=0)
+
+    if lower >= x_min:
+        ax.vlines(
+            x=clipped_lower,
+            ymin=y - cap_half_height,
+            ymax=y + cap_half_height,
+            color=color,
+            linewidth=linewidth,
+            zorder=0,
+        )
+    else:
+        _draw_overflow_arrow(ax, x_min, y, "left", color, linewidth)
+
+    if upper <= x_max:
+        ax.vlines(
+            x=clipped_upper,
+            ymin=y - cap_half_height,
+            ymax=y + cap_half_height,
+            color=color,
+            linewidth=linewidth,
+            zorder=0,
+        )
+    else:
+        _draw_overflow_arrow(ax, x_max, y, "right", color, linewidth)
+
+
+def _format_overflow_label(value: float) -> str:
+    return f"{value:.1f}".rstrip("0").rstrip(".")
+
+
+def _plot_marker_row(ax: Axes, row: pd.Series, marker: str, color: str, size: float) -> None:
+    x_min, x_max = ax.get_xlim()
+    mean_value = row["mean"]
+    y_value = row["index"]
+    clipped_mean = _clip_value(mean_value, x_min, x_max)
+
+    ax.scatter([clipped_mean], [y_value], marker=marker, color=color, s=size, zorder=2)
+
+    if mean_value < x_min:
+        _draw_overflow_arrow(ax, x_min, y_value, "left", color, linewidth=1.4)
+        ax.annotate(
+            _format_overflow_label(mean_value),
+            xy=(x_min, y_value),
+            xytext=(5, 0),
+            textcoords="offset points",
+            ha="left",
+            va="center",
+            fontsize=8,
+            color=color,
+            annotation_clip=False,
+        )
+    elif mean_value > x_max:
+        _draw_overflow_arrow(ax, x_max, y_value, "right", color, linewidth=1.4)
+        ax.annotate(
+            _format_overflow_label(mean_value),
+            xy=(x_max, y_value),
+            xytext=(-5, 0),
+            textcoords="offset points",
+            ha="right",
+            va="center",
+            fontsize=8,
+            color=color,
+            annotation_clip=False,
+        )
+
+
 intensity_labels = {
     "SN": "{SN}",
     "SN-NE": "{SN,NE}",
@@ -450,11 +538,14 @@ def _append_main_header(df: pd.DataFrame, ordered_df: pd.DataFrame) -> pd.DataFr
 
 def _plot_effect_markers(ax: Axes, ordered_df: pd.DataFrame) -> tuple[str, float]:
     effects_data = ordered_df.loc[~ordered_df["yticklabel"].str.contains("Aggregated")]
-    ax.scatter(effects_data["mean"], effects_data["index"], marker="s", color="black")
+    for _, row in effects_data.iterrows():
+        _plot_marker_row(ax, row, marker="s", color="black", size=36)
     draw_ci(pl.from_pandas(effects_data), "mean", "index", "lower_ci", "upper_ci", ax)
 
     summary_data = ordered_df.loc[ordered_df["yticklabel"].str.contains("Aggregated")]
-    ax.scatter(summary_data["mean"], summary_data["index"], marker="D", color="blue", s=50, label="Aggregated")
+    for _, row in summary_data.iterrows():
+        _plot_marker_row(ax, row, marker="D", color="blue", size=50)
+    ax.scatter([], [], marker="D", color="blue", s=50, label="Aggregated")
     draw_ci(pl.from_pandas(summary_data), "mean", "index", "lower_ci", "upper_ci", ax, ecolor="blue")
 
     last_effect_row = ordered_df[ordered_df["mean"].notnull()].iloc[-1]
@@ -540,7 +631,7 @@ def draw_forestplot(
         The axis with the forest plot drawn.
     """
     if xlim is not None:
-        x_lim = xlim + 5
+        x_lim = xlim
     else:
         x_min = df["lower_ci"].min()
         x_max = df["upper_ci"].max()

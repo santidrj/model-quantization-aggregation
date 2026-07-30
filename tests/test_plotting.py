@@ -89,3 +89,58 @@ def test_forest_plot_matches_snapshot():
 
     assert actual == snapshot
     plt.close(figure)
+
+
+def test_forest_plot_clips_offscale_values_to_fixed_display_range():
+    point_dimensions = 2
+    frame = pd.DataFrame(
+        [
+            {
+                "index": 0,
+                "id": "S1",
+                "evidence_id": 2,
+                "effect": "Accuracy",
+                "yticklabel": "Quantized A",
+                "mean": -130.0,
+                "lower_ci": -160.0,
+                "upper_ci": -110.0,
+            },
+            {
+                "index": 1,
+                "id": "S1",
+                "evidence_id": 1,
+                "effect": "Accuracy",
+                "yticklabel": "Aggregated Accuracy",
+                "mean": 92.0,
+                "lower_ci": 80.0,
+                "upper_ci": 120.0,
+            },
+            {
+                "index": 2,
+                "id": "S1",
+                "evidence_id": 0,
+                "effect": "Accuracy",
+                "yticklabel": "Accuracy Belief",
+                "mean": None,
+                "lower_ci": None,
+                "upper_ci": None,
+            },
+        ]
+    )
+
+    figure, axis = plt.subplots(figsize=(8, 4))
+    draw_forestplot(frame, axis, main_effects=["Accuracy"], xlim=100)
+
+    marker_offsets = [
+        tuple(offset)
+        for collection in axis.collections
+        if hasattr(collection, "get_offsets")
+        for offset in collection.get_offsets()
+        if len(offset) == point_dimensions
+    ]
+
+    assert tuple(round(value, 3) for value in axis.get_xlim()) == (-100.0, 100.0)
+    assert (-100.0, 0.0) in [(round(x, 3), round(y, 3)) for x, y in marker_offsets]
+    assert any(text.get_text() == "-130" for text in axis.texts)
+
+    plt.close(figure)
