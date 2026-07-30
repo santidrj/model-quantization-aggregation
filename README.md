@@ -127,27 +127,50 @@ The project is organized as follows:
        santidr/model-quantization-aggregation
      ```
 
-2. **Getting the Data**:
-   - Run the download script to fetch the list of papers from arXiv and merge it with the Scopus list:
+2. **CLI overview**:
+   - The project installs an `mq` command via `uv sync`.
+   - Use `mq reproduce ...` for deterministic replication workflows.
+   - Use `mq papers ...` for paper-maintenance workflows, including live LLM selection.
+   - Use `mq extraction ...` for lower-level evidence extraction commands.
+
+3. **Paper data and maintenance**:
+   - Refresh the candidate paper catalog from Scopus and arXiv:
 
      ```bash
-     python src/data/downlad.py
+     uv run mq papers download
      ```
 
    - We do not commit external paper data from the selected studies (copyright / size). Most papers expect a local `paper-data.csv` under [data/external](data/external); each paper folder's README explains how to obtain it.
-   - Papers with a remote archive descriptor (currently Alizadeh and Gonzalez) **auto-download on first read** when their required files are missing. That needs network access; Gonzalez's first fetch pulls an ~853 MB Zenodo archive, extracts only the required CSV, and discards the rest. Files still are not shipped in git.
+   - Preflight all external study inputs without downloading anything implicitly:
 
-3. **Extracting the evidence** (full pipeline validation only):
-   - Use [run_evidence_extraction.py](src/run_evidence_extraction.py) to regenerate processed parquets from external study data. This step is **not** required if you only want to reproduce the paper figures from the shipped `data/processed/` artifacts.
+     ```bash
+     uv run mq papers ensure-external-data
+     ```
+
+   - For papers with a remote archive descriptor (currently Alizadeh and Gonzalez), opt in to fetching missing files:
+
+     ```bash
+     uv run mq papers ensure-external-data --download-missing
+     ```
+
+   - Run the non-deterministic LLM scoring workflow only with explicit acknowledgement:
+
+     ```bash
+     uv run mq papers select --run-llm
+     ```
 
 ## Reproducing the paper
 
 ### Path 1 — Reproduce paper figures (default)
 
 1. Complete **Setup** above (`uv sync`).
-2. Start Jupyter Lab: `uv run jupyter lab`.
-3. Open [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb) and run all sections labeled **Core** in order.
-4. Verify outputs in [reports/figures/](reports/figures/):
+2. Run:
+
+   ```bash
+   uv run mq reproduce figures
+   ```
+
+3. Verify outputs in [reports/figures/](reports/figures/):
 
    | Output file | Paper figure |
    |---|---|
@@ -159,9 +182,24 @@ Processed evidence under `data/processed/{paperkey}/` is included in the replica
 
 ### Path 2 — Reproduce the full extraction pipeline (validation)
 
-1. Complete **Setup** and **Getting the Data** (place external study data per `data/external/{paperkey}/README.md`).
-2. Run `uv run python src/run_evidence_extraction.py`.
-3. Run the **Core** sections of [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb) as in Path 1.
+1. Complete **Setup** and **Paper data and maintenance** (place external study data per `data/external/{paperkey}/README.md`).
+2. Run:
+
+   ```bash
+   uv run mq reproduce full-pipeline
+   ```
+
+3. To stop after regenerating processed outputs and skip notebook execution, run:
+
+   ```bash
+   uv run mq reproduce full-pipeline --no-notebooks
+   ```
+
+### Lower-level workflows
+
+- Run extraction for all papers: `uv run mq extraction run`
+- Run extraction for a subset of papers: `uv run mq extraction run --paper <paper-key> --paper <paper-key>`
+- List supported paper keys: `uv run mq papers list`
 
 ### Supplementary notebooks
 
