@@ -4,10 +4,10 @@ from src.effect_intensity import CorrectnessIntensity, EffectIntensity
 def test_effect_intensity_boundaries():
     intensity = EffectIntensity()
 
-    assert intensity.get_intensity(0) == "indiferent"
-    assert intensity.get_intensity(2) == "indiferent"
-    assert intensity.get_intensity(5) == "indiferent - weakly positive"
-    assert intensity.get_intensity(-5) == "weakly negative - indiferent"
+    assert intensity.get_intensity(0) == "indifferent"
+    assert intensity.get_intensity(2) == "indifferent"
+    assert intensity.get_intensity(5) == "indifferent - weakly positive"
+    assert intensity.get_intensity(-5) == "weakly negative - indifferent"
     assert intensity.get_intensity(55) == "strongly positive"
     assert intensity.get_intensity(-55) == "strongly negative"
 
