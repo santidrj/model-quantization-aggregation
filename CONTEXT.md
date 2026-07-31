@@ -4,6 +4,14 @@ Evidence extraction and meta-analysis of quantization experiments reported in pr
 
 ## Language
 
+**Study ID**:
+The systematic-review label of an included primary study, written `S1`…`Sn`. Assignment is by publication year ascending, then lead-author citation name ascending within a year (the name as cited, including particles and compound surnames — e.g. De Putter, Gonzalez Alvarez), yielding consecutive integers with no gaps. Ordering by study ID is numeric on the integer after `S`, not lexicographic on the string. Distinct from the paper key.
+_Avoid_: Paper ID (ambiguous with paper key), study key, citation key (when the `S#` is meant)
+
+**Paper key**:
+The durable slug identity of a paper in this project (citation-style folder and config name). Stable across study ID renumbering; used for external and processed data paths.
+_Avoid_: Study ID, paper ID (when the `S#` is meant), folder name (as a separate concept)
+
 **Precision configuration**:
 The numeric-format assignment of a quantized run. The usual canonical form uses tokens `<component>-<format>` joined by `", "`, with components in fixed order `w`, then `a`, then `b`, then any others alphabetically, and omits unmentioned ones — so `w-int8` means weights-only, not an implied `a-fp32`. Distinct assignments must not be collapsed: `w-int8, a-int4` is not the same as `w-int8, a-int8`. A bare label such as `int8` is an input alias for `w-int8, a-int8` only when equal weight and activation formats are actually known; it must not invent components for weight-only (or otherwise partial) studies. Bare `mixed` / `mixed-<avg>` are canonical whole-run forms when the study does not give per-component formats. Compact forms (`wa-int8`, `w8a8`) and method-prefixed forms (`qat-w8a8`) are input aliases only, not canonical.
 _Avoid_: Quantization precision (ambiguous), bit width (when the component assignment is meant), quantization configuration (when only formats are meant)

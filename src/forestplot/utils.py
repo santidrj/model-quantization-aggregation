@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import polars as pl
 
+from src.data.papers.study_id import study_id_numeric_rank
 from src.effect_intensity import CorrectnessIntensity, CorrectnessMetrics, EffectIntensity
 
 
@@ -525,7 +526,14 @@ def _build_metric_block(df: pd.DataFrame, metric: str, y_start: int) -> tuple[pd
         return None, y_start - 1
 
     metric_header = _rows_for_metric(df, metric, with_mean=False)
-    metric_rows = metric_rows.sort_values(by=["id", "evidence_id"], ascending=False).reset_index(drop=True)
+    metric_rows = metric_rows.assign(
+        _study_id_sort=metric_rows["id"].astype(str).map(study_id_numeric_rank)
+    )
+    metric_rows = (
+        metric_rows.sort_values(by=["_study_id_sort", "evidence_id"], ascending=False)
+        .drop(columns="_study_id_sort")
+        .reset_index(drop=True)
+    )
     metric_rows = pd.concat([metric_rows, metric_header], ignore_index=True).reset_index()
     metric_rows["index"] += y_start
 

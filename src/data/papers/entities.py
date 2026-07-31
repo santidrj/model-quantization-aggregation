@@ -184,7 +184,7 @@ class BarnellPaper(Paper):
 
 class VasquezPaper(Paper):
     KEY = "vasquezActivationDensityBased2021"
-    ID = "S4"
+    ID = "S5"
     AUTHOR = "Vasquez et al."
     YEAR = 2021
     QUANTIZATION_PRECISION_COL = "Precision Format"
@@ -207,7 +207,7 @@ class VasquezPaper(Paper):
 
 class ZhanPaper(Paper):
     KEY = "zhanFieldProgrammableGate2021"
-    ID = "S5"
+    ID = "S7"
     AUTHOR = "Zhan et al."
     YEAR = 2021
     QUANTIZATION_PRECISION_COL = "Precision Format"
@@ -229,7 +229,7 @@ class ZhanPaper(Paper):
 
 class PaulPaper(Paper):
     KEY = "paulEnergyEfficientRespiratoryAnomaly2022"
-    ID = "S6"
+    ID = "S9"
     AUTHOR = "Paul et al."
     YEAR = 2022
     QUANTIZATION_PRECISION_COL = "quantization_precision"
@@ -248,7 +248,7 @@ class PaulPaper(Paper):
 
 class SathishPaper(Paper):
     KEY = "sathishVerifiableEnergyEfficient2022"
-    ID = "S7"
+    ID = "S10"
     AUTHOR = "Sathish et al."
     YEAR = 2022
     QUANTIZATION_PRECISION_COL = "quantization_precision"
@@ -268,7 +268,7 @@ class SathishPaper(Paper):
 
 class TaoPaper(Paper):
     KEY = "taoExperimentalEnergyConsumption2022"
-    ID = "S8"
+    ID = "S11"
     AUTHOR = "Tao et al."
     YEAR = 2022
     QUANTIZATION_PRECISION_COL = "quantization_precision"
@@ -308,7 +308,7 @@ class TaoPaper(Paper):
 
 class AlizadehPaper(Paper):
     KEY = "alizadehLanguageModelsSoftware2025"
-    ID = "S10"
+    ID = "S14"
     AUTHOR = "Alizadeh et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "quantization_level"
@@ -397,7 +397,7 @@ class AlizadehPaper(Paper):
 
 class AlshammryPaper(Paper):
     KEY = "alshammryQYOLOv5mQuantizationbasedApproach2025"
-    ID = "S11"
+    ID = "S15"
     AUTHOR = "Alshammry et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "Precision Format"
@@ -426,7 +426,7 @@ class AlshammryPaper(Paper):
 
 class DeputterPaper(Paper):
     KEY = "deputterPOQThereParetoOptimal2025"
-    ID = "S12"
+    ID = "S16"
     AUTHOR = "De Putter et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "quantization_precision"
@@ -573,7 +573,7 @@ class GonzalezPaper(Paper):
 
 class GuerroujPaper(Paper):
     KEY = "guerroujQuantizedObjectDetection2025"
-    ID = "S14"
+    ID = "S17"
     AUTHOR = "Guerrouj et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "Precision Format"
@@ -599,7 +599,7 @@ class GuerroujPaper(Paper):
 
 class KhalilPaper(Paper):
     KEY = "khalilEnergyEfficientDeepLearning2025"
-    ID = "S15"
+    ID = "S18"
     AUTHOR = "Khalil et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "Precision Format"
@@ -630,7 +630,7 @@ class KhalilPaper(Paper):
 
 class KoliPaper(Paper):
     KEY = "koliEdgeAIPoweredSystem2025"
-    ID = "S16"
+    ID = "S19"
     AUTHOR = "Koli et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "Precision Format"
@@ -654,7 +654,7 @@ class KoliPaper(Paper):
 
 class KrastevaPaper(Paper):
     KEY = "krastevaImplementingDeepNeural2025"
-    ID = "S17"
+    ID = "S20"
     AUTHOR = "Krasteva et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "Precision Format"
@@ -687,7 +687,7 @@ class KrastevaPaper(Paper):
 
 class PengPaper(Paper):
     KEY = "pengEfficientExpirationDate2025"
-    ID = "S18"
+    ID = "S21"
     AUTHOR = "Peng et al."
     YEAR = 2025
     QUANTIZATION_PRECISION_COL = "precision_format"
@@ -710,7 +710,7 @@ class PengPaper(Paper):
 
 class FlichPaper(Paper):
     KEY = "flichEfficientInferenceImageBased2022"
-    ID = "S19"
+    ID = "S8"
     AUTHOR = "Flich et al."
     YEAR = 2022
     QUANTIZATION_PRECISION_COL = "precision_configuration"
@@ -751,7 +751,7 @@ class FlichPaper(Paper):
 
 class XuPaper(Paper):
     KEY = "xuMixedPrecisionLowBit2021"
-    ID = "S20"
+    ID = "S6"
     AUTHOR = "Xu et al."
     YEAR = 2021
     QUANTIZATION_PRECISION_COL = "quantization_precision"
@@ -853,7 +853,7 @@ class XuPaper(Paper):
 
 class DubhirPaper(Paper):
     KEY = "dubhirBenchmarkingQuantizationLibraries2021"
-    ID = "S21"
+    ID = "S4"
     AUTHOR = "Dubhir et al."
     YEAR = 2021
     QUANTIZATION_PRECISION_COL = "precision_config"
@@ -892,7 +892,7 @@ class DubhirPaper(Paper):
 
 class AjiPaper(Paper):
     KEY = "ajiCompressingNeuralMachine2020"
-    ID = "S22"
+    ID = "S1"
     AUTHOR = "Aji and Heafield"
     YEAR = 2020
     QUANTIZATION_PRECISION_COL = "quantization_precision"
@@ -931,7 +931,7 @@ class AjiPaper(Paper):
 
 class ChenPaper(Paper):
     KEY = "chenImplementingUltralightweightCoinference2023"
-    ID = "S23"
+    ID = "S12"
     AUTHOR = "Chen et al."
     YEAR = 2023
     QUANTIZATION_PRECISION_COL = "quantization_precision"
@@ -986,24 +986,24 @@ class ChenPaper(Paper):
 
 
 class Papers(Enum):
+    AJI = AjiPaper()
     DENKINGER = DenkingerPaper()
     BARNELL = BarnellPaper()
+    DUBHIR = DubhirPaper()
     VASQUEZ = VasquezPaper()
+    XU = XuPaper()
     ZHAN = ZhanPaper()
+    FLICH = FlichPaper()
     PAUL = PaulPaper()
     SATHISH = SathishPaper()
     TAO = TaoPaper()
+    CHEN = ChenPaper()
+    GONZALEZ = GonzalezPaper()
     ALIZADEH = AlizadehPaper()
     ALSHAMMRY = AlshammryPaper()
     DEPUTTER = DeputterPaper()
-    GONZALEZ = GonzalezPaper()
     GUERROUJ = GuerroujPaper()
     KHALIL = KhalilPaper()
     KOLI = KoliPaper()
     KRASTEVA = KrastevaPaper()
     PENG = PengPaper()
-    FLICH = FlichPaper()
-    XU = XuPaper()
-    DUBHIR = DubhirPaper()
-    AJI = AjiPaper()
-    CHEN = ChenPaper()
