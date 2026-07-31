@@ -37,6 +37,7 @@ def read_paper_metadata(paper: Paper) -> pl.DataFrame:
                         "baseline_precision_configuration": pl.String,
                         "precision_configurations": pl.List(pl.String),
                         "quantization_method": pl.List(pl.String),
+                        "quantization_techniques": pl.List(pl.String),
                         "frameworks": pl.List(pl.String),
                         "formats": pl.List(pl.String),
                     }

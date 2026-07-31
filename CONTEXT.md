@@ -48,6 +48,42 @@ _Avoid_: Grouping key, join key
 The study-provided experimental datasets consumed by evidence extraction for a given paper, kept under that paper's external data folder. Study-native precision labels may remain here; alias → canonical rewriting happens when loading into this project's metadata and processed outputs.
 _Avoid_: Raw data (when referring to these study inputs), replication package (when referring to the full upstream archive rather than the files this project keeps)
 
+**Evidence granularity**:
+How recoverable a primary study's reported experimental results are for evidence extraction and meta-analysis. The levels are tabular summary (numeric results in tables or text), chart-only summary (results mainly in figures), and replication package (run-level or package-backed numbers).
+_Avoid_: Data quality, comparative, precise (as public language for these levels)
+
+**Tabular summary**:
+Evidence granularity in which the study reports numeric results in tables or prose that can be extracted as summary statistics without digitizing figures.
+_Avoid_: Comparative, summary statistics (when the granularity level is meant)
+
+**Chart-only summary**:
+Evidence granularity in which the study's usable results are mainly in figures, so extraction depends on chart reading or digitization.
+_Avoid_: Comparative (charts), summary statistics (charts)
+
+**Replication package**:
+Evidence granularity in which run-level or otherwise package-backed experimental numbers are available beyond paper tables and figures. Distinct from external paper data, which is the subset of study inputs this project keeps for extraction.
+_Avoid_: Precise, raw data (when this granularity level is meant)
+
+**Energy measurement method**:
+How a primary study obtains energy (or power) figures for its runs, when it measures energy at all. Canonical tokens are analytical, hardware-based, software-based, and model-based; a study may use more than one. A null / absent method means the study did not measure energy consumption — not that the method is unknown or unreported.
+_Avoid_: Measurement method (when energy is meant), not reported / missing metadata (for a null method)
+
+**Analytical**:
+An energy measurement method where energy figures are computed from formulas or design-space estimation tools, without measuring a running system.
+_Avoid_: Model-based (when a whole-design analytical estimator is meant), estimated energy (too vague)
+
+**Hardware-based**:
+An energy measurement method where energy or power is obtained from physical instrumentation on the device or supply path (e.g. wattmeter, oscilloscope with current sense).
+_Avoid_: On-device (when software counters are meant), measured energy (too vague)
+
+**Software-based**:
+An energy measurement method where energy or power is read from software interfaces or OS/vendor counters on a running system (e.g. `nvidia-smi`, `tegrastats`, `pyRAPL`).
+_Avoid_: Hardware-based (when counters rather than physical meters are meant), profiling (too vague)
+
+**Model-based**:
+An energy measurement method where energy is derived bottom-up from a component energy model (e.g. energy-per-operation × operation counts), not from end-to-end board measurement or a high-level analytical estimation tool alone.
+_Avoid_: Analytical (when component energy tables are meant), simulated energy (too vague)
+
 ## Metrics
 
 **Correctness metric**:
