@@ -111,8 +111,8 @@
 - Evidence 13: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/320599>
 - Evidence 14: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/320636>
 - Evidence 15: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/320673>
-- Evidence 16: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/279091>
-- Evidence 17: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/279092>
+- Evidence 16: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/320740>
+- Evidence 17: <https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/320777>
 
 ## S21
 
