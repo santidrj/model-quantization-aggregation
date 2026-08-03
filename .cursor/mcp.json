@@ -1,0 +1,37 @@
+{
+  "mcpServers": {
+    "git": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-git"
+      ]
+    },
+    "fetch": {
+      "command": "uvx",
+      "args": [
+        "--with",
+        "mcp<2",
+        "mcp-server-fetch"
+      ]
+    },
+    "context7": {
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {}
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest"
+      ]
+    },
+    "browsermcp": {
+      "command": "npx",
+      "args": ["-y", "@browsermcp/mcp@latest"]
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest"]
+    }
+  }
+}
