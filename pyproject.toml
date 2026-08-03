@@ -2,7 +2,7 @@
 name = "model-quantization-aggregation"
 version = "2.0"
 description = ""
-authors = ["Santiago del Rey <santiago.del.rey@upc.edu>"]
+authors = [{name = "Santiago del Rey", email = "santiago.del.rey@upc.edu"}]
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -25,8 +25,18 @@ dependencies = [
     "tiktoken>=0.12.0",
     "tqdm>=4.67.1",
     "xmltodict>=1.0.2",
+    "click>=8.1.8",
 ]
 
+[project.scripts]
+mq = "src.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["src*"]
 
 [tool.ruff]
 line-length = 120
@@ -58,10 +68,17 @@ select = [
 known-first-party = ["src"]
 force-sort-within-sections = true
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
 [dependency-groups]
 dev = [
     "deptry>=0.24.0",
     "openpyxl>=3.1.5",
     "pre-commit>=4.5.1",
     "ruff>=0.14.10",
+]
+test = [
+    "pytest>=9.1.1",
 ]

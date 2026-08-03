@@ -1,78 +1,7 @@
 [
     {
-        "quantization_precision": "full-int4",
-        "accuracy": {
-            "improvement": -7.489,
-            "std": 4.383,
-            "iqr": 8.161,
-            "sample_size_discount": 0.865,
-            "variability_discount": 0.897,
-            "discount_factor": 0.776,
-            "p_value": 0.224,
-            "belief": 0.352,
-            "intensity": "weakly negative"
-        },
-        "mIoU": {
-            "improvement": -22.253,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.129,
-            "intensity": "strongly negative - negative"
-        },
-        "inference_energy_consumption": {
-            "improvement": 81.716,
-            "std": 3.724,
-            "iqr": 1.2,
-            "sample_size_discount": 0.903,
-            "variability_discount": 0.999,
-            "discount_factor": 0.902,
-            "p_value": 0.098,
-            "belief": 0.41,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "quantization_precision": "full-int8",
-        "accuracy": {
-            "improvement": 0.104,
-            "std": 0.662,
-            "iqr": 0.77,
-            "sample_size_discount": 0.931,
-            "variability_discount": 0.475,
-            "discount_factor": 0.442,
-            "p_value": 0.558,
-            "belief": 0.201,
-            "intensity": "indiferent"
-        },
-        "mIoU": {
-            "improvement": 3.798,
-            "std": 0.033,
-            "iqr": 0.047,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.221,
-            "intensity": "indiferent - weakly positive"
-        },
-        "inference_energy_consumption": {
-            "improvement": 62.77,
-            "std": 4.713,
-            "iqr": 5.562,
-            "sample_size_discount": 0.964,
-            "variability_discount": 0.991,
-            "discount_factor": 0.955,
-            "p_value": 0.045,
-            "belief": 0.434,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "quantization_precision": "int2",
+        "quantization_method": "qat",
+        "precision_configuration": "w-int2, a-int2",
         "accuracy": {
             "improvement": -16.662,
             "std": 6.366,
@@ -108,79 +37,8 @@
         }
     },
     {
-        "quantization_precision": "int4",
-        "accuracy": {
-            "improvement": -2.564,
-            "std": 1.485,
-            "iqr": 1.554,
-            "sample_size_discount": 0.931,
-            "variability_discount": 0.941,
-            "discount_factor": 0.876,
-            "p_value": 0.124,
-            "belief": 0.398,
-            "intensity": "weakly negative - indiferent"
-        },
-        "mIoU": {
-            "improvement": -5.432,
-            "std": 0.454,
-            "iqr": 0.642,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.221,
-            "intensity": "weakly negative"
-        },
-        "inference_energy_consumption": {
-            "improvement": 79.579,
-            "std": 4.646,
-            "iqr": 5.077,
-            "sample_size_discount": 0.964,
-            "variability_discount": 0.994,
-            "discount_factor": 0.958,
-            "p_value": 0.042,
-            "belief": 0.435,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "quantization_precision": "int8",
-        "accuracy": {
-            "improvement": 0.06,
-            "std": 0.887,
-            "iqr": 1.159,
-            "sample_size_discount": 0.931,
-            "variability_discount": 0.145,
-            "discount_factor": 0.135,
-            "p_value": 0.865,
-            "belief": 0.061,
-            "intensity": "indiferent"
-        },
-        "mIoU": {
-            "improvement": 5.376,
-            "std": 0.652,
-            "iqr": 0.922,
-            "sample_size_discount": 0.487,
-            "variability_discount": 1.0,
-            "discount_factor": 0.487,
-            "p_value": 0.513,
-            "belief": 0.221,
-            "intensity": "weakly positive"
-        },
-        "inference_energy_consumption": {
-            "improvement": 61.327,
-            "std": 5.179,
-            "iqr": 4.194,
-            "sample_size_discount": 0.964,
-            "variability_discount": 0.993,
-            "discount_factor": 0.957,
-            "p_value": 0.043,
-            "belief": 0.435,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "quantization_precision": "w-int2, a-int4",
+        "quantization_method": "qat",
+        "precision_configuration": "w-int2, a-int4",
         "accuracy": {
             "improvement": -11.215,
             "std": 0.866,
@@ -216,7 +74,8 @@
         }
     },
     {
-        "quantization_precision": "w-int2, a-int8",
+        "quantization_method": "qat",
+        "precision_configuration": "w-int2, a-int8",
         "accuracy": {
             "improvement": -9.347,
             "std": 0.507,
@@ -252,7 +111,82 @@
         }
     },
     {
-        "quantization_precision": "w-int4, a-int8",
+        "quantization_method": "qat",
+        "precision_configuration": "full-int4",
+        "accuracy": {
+            "improvement": -7.489,
+            "std": 4.383,
+            "iqr": 8.161,
+            "sample_size_discount": 0.865,
+            "variability_discount": 0.897,
+            "discount_factor": 0.776,
+            "p_value": 0.224,
+            "belief": 0.352,
+            "intensity": "weakly negative"
+        },
+        "mIoU": {
+            "improvement": -22.253,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.129,
+            "intensity": "strongly negative - negative"
+        },
+        "inference_energy_consumption": {
+            "improvement": 81.716,
+            "std": 3.724,
+            "iqr": 1.2,
+            "sample_size_discount": 0.903,
+            "variability_discount": 0.999,
+            "discount_factor": 0.902,
+            "p_value": 0.098,
+            "belief": 0.41,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_method": "qat",
+        "precision_configuration": "w-int4, a-int4",
+        "accuracy": {
+            "improvement": -2.564,
+            "std": 1.485,
+            "iqr": 1.554,
+            "sample_size_discount": 0.931,
+            "variability_discount": 0.941,
+            "discount_factor": 0.876,
+            "p_value": 0.124,
+            "belief": 0.398,
+            "intensity": "weakly negative - indifferent"
+        },
+        "mIoU": {
+            "improvement": -5.432,
+            "std": 0.454,
+            "iqr": 0.642,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.221,
+            "intensity": "weakly negative"
+        },
+        "inference_energy_consumption": {
+            "improvement": 79.579,
+            "std": 4.646,
+            "iqr": 5.077,
+            "sample_size_discount": 0.964,
+            "variability_discount": 0.994,
+            "discount_factor": 0.958,
+            "p_value": 0.042,
+            "belief": 0.435,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_method": "qat",
+        "precision_configuration": "w-int4, a-int8",
         "accuracy": {
             "improvement": -0.49,
             "std": 0.742,
@@ -262,7 +196,7 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.221,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "mIoU": {
             "improvement": null,
@@ -284,6 +218,80 @@
             "discount_factor": 0.487,
             "p_value": 0.513,
             "belief": 0.221,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_method": "qat",
+        "precision_configuration": "full-int8",
+        "accuracy": {
+            "improvement": 0.104,
+            "std": 0.662,
+            "iqr": 0.77,
+            "sample_size_discount": 0.931,
+            "variability_discount": 0.475,
+            "discount_factor": 0.442,
+            "p_value": 0.558,
+            "belief": 0.201,
+            "intensity": "indifferent"
+        },
+        "mIoU": {
+            "improvement": 3.798,
+            "std": 0.033,
+            "iqr": 0.047,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.221,
+            "intensity": "indifferent - weakly positive"
+        },
+        "inference_energy_consumption": {
+            "improvement": 62.77,
+            "std": 4.713,
+            "iqr": 5.562,
+            "sample_size_discount": 0.964,
+            "variability_discount": 0.991,
+            "discount_factor": 0.955,
+            "p_value": 0.045,
+            "belief": 0.434,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_method": "qat",
+        "precision_configuration": "w-int8, a-int8",
+        "accuracy": {
+            "improvement": 0.06,
+            "std": 0.887,
+            "iqr": 1.159,
+            "sample_size_discount": 0.931,
+            "variability_discount": 0.145,
+            "discount_factor": 0.135,
+            "p_value": 0.865,
+            "belief": 0.061,
+            "intensity": "indifferent"
+        },
+        "mIoU": {
+            "improvement": 5.376,
+            "std": 0.652,
+            "iqr": 0.922,
+            "sample_size_discount": 0.487,
+            "variability_discount": 1.0,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.221,
+            "intensity": "weakly positive"
+        },
+        "inference_energy_consumption": {
+            "improvement": 61.327,
+            "std": 5.179,
+            "iqr": 4.194,
+            "sample_size_discount": 0.964,
+            "variability_discount": 0.993,
+            "discount_factor": 0.957,
+            "p_value": 0.043,
+            "belief": 0.435,
             "intensity": "strongly positive"
         }
     }

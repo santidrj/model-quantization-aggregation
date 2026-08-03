@@ -26,8 +26,8 @@ This replication package consists of the following components:
      - [1.0-llm-promt-refinement.ipynb](notebooks/1.0-llm-promt-refinement.ipynb): Refines the prompt for LLMs and the selection of LLM.
      - [2.0-model-quantization-paper-selection.ipynb](notebooks/2.0-model-quantization-paper-selection.ipynb): Filters the raw list of papers using the selected GEMINI 3.0.
      - [3.0-final-selection-analysis.ipynb](notebooks/3.0-final-selection-analysis.ipynb): Analyzes the final selection of papers.
-     - [4.0-paper-metadata-analysis.ipynb](notebooks/4.0-paper-metadata-analysis.ipynb): Analyzes metadata from selected papers.
-     - [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb): Analyzes evidence extracted from the papers and generates the forest plot.
+     - [4.0-paper-metadata-analysis.ipynb](notebooks/4.0-paper-metadata-analysis.ipynb): **Supplementary** — optional audit and characterization of manually extracted paper metadata.
+     - [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb): **Core** — reproduces the paper's evidence figures (Fig. 6, Fig. 7, and Fig. 10).
 
 4. **Documentation**:
    - [data/processed/evidence-diagrams-mapping.md](data/processed/evidence-diagrams-mapping.md): Links to evidence diagrams generated during the study.
@@ -127,20 +127,86 @@ The project is organized as follows:
        santidr/model-quantization-aggregation
      ```
 
-2. **Getting the Data**:
-   - Run the download script to fetch the list of papers from arXiv and merge it with the Scopus list:
+2. **CLI overview**:
+   - The project installs an `mq` command via `uv sync`.
+   - Use `mq reproduce ...` for deterministic replication workflows.
+   - Use `mq papers ...` for paper-maintenance workflows, including live LLM selection.
+   - Use `mq extraction ...` for lower-level evidence extraction commands.
+
+3. **Paper data and maintenance**:
+   - Refresh the candidate paper catalog from Scopus and arXiv:
 
      ```bash
-     python src/data/downlad.py
+     uv run mq papers download
      ```
 
-   - We do not provide the raw data from the selected papers to prevent potential copyright issues. However, we provide instructions on how to obtain the data in each paper's README file. Located in the [data/external](data/external) directory.
+   - We do not commit external paper data from the selected studies (copyright / size). Most papers expect a local `paper-data.csv` under [data/external](data/external); each paper folder's README explains how to obtain it.
+   - Preflight all external study inputs without downloading anything implicitly:
 
-3. **Extracting the evidence**:
-   - Use the [run_evidence_extraction.py](src/run_evidence_extraction.py) module to extract the evidence from the selected papers.
+     ```bash
+     uv run mq papers ensure-external-data
+     ```
 
-4. **Explore the data with Jupyter Notebooks**:
-   - Open the Jupyter notebooks in the [notebooks](notebooks) directory to explore the data and analysis.
+   - For papers with a remote archive descriptor (currently Alizadeh and Gonzalez), opt in to fetching missing files:
+
+     ```bash
+     uv run mq papers ensure-external-data --download-missing
+     ```
+
+   - Run the non-deterministic LLM scoring workflow only with explicit acknowledgement:
+
+     ```bash
+     uv run mq papers select --run-llm
+     ```
+
+## Reproducing the paper
+
+### Path 1 — Reproduce paper figures (default)
+
+1. Complete **Setup** above (`uv sync`).
+2. Run:
+
+   ```bash
+   uv run mq reproduce figures
+   ```
+
+3. Verify outputs in [reports/figures/](reports/figures/):
+
+   | Output file | Paper figure |
+   |---|---|
+   | `metrics-usage-distribution.pdf` | Fig. 10 |
+   | `correctness-forestplot.pdf` | Fig. 6 |
+   | `resource-efficiency-forestplot.pdf` | Fig. 7 |
+
+Processed evidence under `data/processed/{paperkey}/` is included in the replication package, so you do not need external study data or evidence extraction for this path.
+
+### Path 2 — Reproduce the full extraction pipeline (validation)
+
+1. Complete **Setup** and **Paper data and maintenance** (place external study data per `data/external/{paperkey}/README.md`).
+2. Run:
+
+   ```bash
+   uv run mq reproduce full-pipeline
+   ```
+
+3. To stop after regenerating processed outputs and skip notebook execution, run:
+
+   ```bash
+   uv run mq reproduce full-pipeline --no-notebooks
+   ```
+
+### Lower-level workflows
+
+- Run extraction for all papers: `uv run mq extraction run`
+- Run extraction for a subset of papers: `uv run mq extraction run --paper <paper-key> --paper <paper-key>`
+- List supported paper keys: `uv run mq papers list`
+
+### Supplementary notebooks
+
+- [4.0-paper-metadata-analysis.ipynb](notebooks/4.0-paper-metadata-analysis.ipynb) — optional metadata audit and characterization; not required to reproduce paper figures.
+- **Supplementary** sections inside [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb) — diagnostics (`distribution-of-sample-size.pdf`) and appendix forest plots (`complete-*-forestplot.pdf`).
+
+Domain terminology is defined in [CONTEXT.md](CONTEXT.md).
 
 ## Notes
 

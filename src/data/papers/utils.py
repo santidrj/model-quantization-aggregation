@@ -1,6 +1,6 @@
 import polars as pl
 
-from src.config import PROCESSED_DATA_DIR
+from src.config import processed_paper_path
 from src.data.papers.entities import Paper
 
 
@@ -19,11 +19,12 @@ def read_paper_metadata(paper: Paper) -> pl.DataFrame:
         The metadata for the paper.
     """
     return pl.read_json(
-        PROCESSED_DATA_DIR / paper.KEY / "metadata.json",
+        processed_paper_path(paper.KEY, "metadata.json"),
         schema=pl.Schema(
             {
                 "title": pl.String,
                 "study_type": pl.String,
+                "domain": pl.String,
                 "data_quality": pl.String,
                 "energy_measurement": pl.Struct(
                     {
@@ -34,10 +35,10 @@ def read_paper_metadata(paper: Paper) -> pl.DataFrame:
                 ),
                 "quantization_schema": pl.Struct(
                     {
-                        "baseline_precision": pl.String,
-                        "target_precision": pl.List(pl.String),
-                        "quantization_targets": pl.List(pl.String),
+                        "baseline_precision_configuration": pl.String,
+                        "precision_configurations": pl.List(pl.String),
                         "quantization_method": pl.List(pl.String),
+                        "quantization_techniques": pl.List(pl.String),
                         "frameworks": pl.List(pl.String),
                         "formats": pl.List(pl.String),
                     }

@@ -4,7 +4,20 @@ import numpy as np
 class CorrectnessMetrics:
     @staticmethod
     def metrics() -> list[str]:
-        return ["Accuracy", "Precision", "Recall", "F1 Score", "DSC", "mAP", "mAP@0.5", "mAP@0.5:0.95", "mIoU"]
+        return [
+            "Accuracy",
+            "Precision",
+            "Recall",
+            "F1 Score",
+            "DSC",
+            "mAP",
+            "mAP@0.5",
+            "mAP@0.5:0.95",
+            "mIoU",
+            "Perplexity",
+            "Word Error Rate",
+            "BLEU",
+        ]
 
 
 class ResourceEfficiencyMetrics:
@@ -25,6 +38,8 @@ class ResourceEfficiencyMetrics:
 
 
 class EffectIntensity:
+    _instance = None
+
     @property
     def STRONG_EFFECT(self) -> int:
         return 50
@@ -46,19 +61,27 @@ class EffectIntensity:
         return 10
 
     @property
-    def WEAK_INDIFERENT_EFFECT(self) -> int:
+    def WEAK_INDIFFERENT_EFFECT(self) -> int:
         return 2
 
-    _instance = None
-
     def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = super(EffectIntensity, cls).__new__(cls)
+        if cls.__dict__.get("_instance") is None:
+            cls._instance = super().__new__(cls)
         return cls._instance
+
+    def _threshold_labels(self, sign: str) -> list[tuple[int, str]]:
+        return [
+            (self.WEAK_INDIFFERENT_EFFECT, "indifferent"),
+            (self.WEAK_EFFECT, f"indifferent - weakly {sign}" if sign == "positive" else f"weakly {sign} - indifferent"),
+            (self.WEAK_MODERATE_EFFECT, f"weakly {sign}"),
+            (self.MODERATE_EFFECT, f"weakly {sign} - {sign}" if sign == "positive" else f"{sign} - weakly {sign}"),
+            (self.STRONG_MODERATE_EFFECT, sign),
+            (self.STRONG_EFFECT, f"{sign} - strongly {sign}" if sign == "positive" else f"strongly {sign} - {sign}"),
+        ]
 
     def get_intensity(self, improvement_metric) -> str:
         """
-        Get the intensity of the effect based on the improvement metric. The improvement should be exressed in
+        Get the intensity of the effect based on the improvement metric. The improvement should be expressed in
         percentage.
 
         Params
@@ -75,20 +98,11 @@ class EffectIntensity:
         sign = "negative" if improvement_metric < 0 else "positive"
         improvement = abs(improvement_metric)
 
-        if improvement <= self.WEAK_INDIFERENT_EFFECT:
-            return "indiferent"
-        elif improvement > self.WEAK_INDIFERENT_EFFECT and improvement <= self.WEAK_EFFECT:
-            return f"indiferent - weakly {sign}" if sign == "positive" else f"weakly {sign} - indiferent"
-        elif improvement > self.WEAK_EFFECT and improvement <= self.WEAK_MODERATE_EFFECT:
-            return f"weakly {sign}"
-        elif improvement > self.WEAK_MODERATE_EFFECT and improvement <= self.MODERATE_EFFECT:
-            return f"weakly {sign} - {sign}" if sign == "positive" else f"{sign} - weakly {sign}"
-        elif improvement > self.MODERATE_EFFECT and improvement <= self.STRONG_MODERATE_EFFECT:
-            return sign
-        elif improvement > self.STRONG_MODERATE_EFFECT and improvement <= self.STRONG_EFFECT:
-            return f"{sign} - strongly {sign}" if sign == "positive" else f"strongly {sign} - {sign}"
-        else:
-            return f"strongly {sign}"
+        for threshold, label in self._threshold_labels(sign):
+            if improvement <= threshold:
+                return label
+
+        return f"strongly {sign}"
 
     def get_ranges(self) -> dict[str, tuple]:
         """
@@ -105,9 +119,9 @@ class EffectIntensity:
             "NE": (-self.STRONG_MODERATE_EFFECT, -self.MODERATE_EFFECT),
             "NE-WN": (-self.MODERATE_EFFECT, -self.WEAK_MODERATE_EFFECT),
             "WN": (-self.WEAK_MODERATE_EFFECT, -self.WEAK_EFFECT),
-            "WN-IF": (-self.WEAK_EFFECT, -self.WEAK_INDIFERENT_EFFECT),
-            "IF": (-self.WEAK_INDIFERENT_EFFECT, self.WEAK_INDIFERENT_EFFECT),
-            "IF-WP": (self.WEAK_INDIFERENT_EFFECT, self.WEAK_EFFECT),
+            "WN-IF": (-self.WEAK_EFFECT, -self.WEAK_INDIFFERENT_EFFECT),
+            "IF": (-self.WEAK_INDIFFERENT_EFFECT, self.WEAK_INDIFFERENT_EFFECT),
+            "IF-WP": (self.WEAK_INDIFFERENT_EFFECT, self.WEAK_EFFECT),
             "WP": (self.WEAK_EFFECT, self.WEAK_MODERATE_EFFECT),
             "WP-PO": (self.WEAK_MODERATE_EFFECT, self.MODERATE_EFFECT),
             "PO": (self.MODERATE_EFFECT, self.STRONG_MODERATE_EFFECT),
@@ -117,81 +131,15 @@ class EffectIntensity:
 
 
 class EnergyIntensity(EffectIntensity):
-    @property
-    def STRONG_EFFECT(self):
-        return 50
-
-    @property
-    def STRONG_MODERATE_EFFECT(self):
-        return 40
-
-    @property
-    def MODERATE_EFFECT(self):
-        return 30
-
-    @property
-    def WEAK_MODERATE_EFFECT(self):
-        return 20
-
-    @property
-    def WEAK_EFFECT(self):
-        return 10
-
-    @property
-    def WEAK_INDIFERENT_EFFECT(self):
-        return 2
+    pass
 
 
 class ResourceUsageIntensity(EffectIntensity):
-    @property
-    def STRONG_EFFECT(self):
-        return 50
-
-    @property
-    def STRONG_MODERATE_EFFECT(self):
-        return 40
-
-    @property
-    def MODERATE_EFFECT(self):
-        return 30
-
-    @property
-    def WEAK_MODERATE_EFFECT(self):
-        return 20
-
-    @property
-    def WEAK_EFFECT(self):
-        return 10
-
-    @property
-    def WEAK_INDIFERENT_EFFECT(self):
-        return 2
+    pass
 
 
 class LatencyIntensity(EffectIntensity):
-    @property
-    def STRONG_EFFECT(self):
-        return 50
-
-    @property
-    def STRONG_MODERATE_EFFECT(self):
-        return 40
-
-    @property
-    def MODERATE_EFFECT(self):
-        return 30
-
-    @property
-    def WEAK_MODERATE_EFFECT(self):
-        return 20
-
-    @property
-    def WEAK_EFFECT(self):
-        return 10
-
-    @property
-    def WEAK_INDIFERENT_EFFECT(self):
-        return 2
+    pass
 
 
 class CorrectnessIntensity(EffectIntensity):

@@ -1,0 +1,482 @@
+[
+    {
+        "configuration": {
+            "library": "PyTorch_dynamic_quantization",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8"
+        },
+        "accuracy": {
+            "improvement": -91.168,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly negative"
+        },
+        "inference_latency": {
+            "improvement": -0.006,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        },
+        "storage_size": {
+            "improvement": 0.0,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        }
+    },
+    {
+        "configuration": {
+            "library": "PyTorch_quantization_static_convert",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8, a-int8"
+        },
+        "accuracy": {
+            "improvement": -0.122,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        },
+        "inference_latency": {
+            "improvement": -483.557,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly negative"
+        },
+        "storage_size": {
+            "improvement": 69.818,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "library": "PyTorch_quantization_static_quantize",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8, a-int8"
+        },
+        "accuracy": {
+            "improvement": -0.153,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        },
+        "inference_latency": {
+            "improvement": -482.068,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly negative"
+        },
+        "storage_size": {
+            "improvement": 69.818,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "library": "TensorQuant",
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q12.0"
+        },
+        "accuracy": {
+            "improvement": -89.272,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly negative"
+        },
+        "inference_latency": {
+            "improvement": -0.247,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        },
+        "storage_size": {
+            "improvement": 2.387,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent - weakly positive"
+        }
+    },
+    {
+        "configuration": {
+            "library": "TensorQuant",
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q12.4"
+        },
+        "accuracy": {
+            "improvement": -2.616,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "weakly negative - indifferent"
+        },
+        "inference_latency": {
+            "improvement": -25.099,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "negative - weakly negative"
+        },
+        "storage_size": {
+            "improvement": 1.724,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        }
+    },
+    {
+        "configuration": {
+            "library": "TensorQuant",
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q16.0"
+        },
+        "accuracy": {
+            "improvement": -89.272,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly negative"
+        },
+        "inference_latency": {
+            "improvement": -0.223,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        },
+        "storage_size": {
+            "improvement": 2.255,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent - weakly positive"
+        }
+    },
+    {
+        "configuration": {
+            "library": "TensorQuant",
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q4.0"
+        },
+        "accuracy": {
+            "improvement": -89.272,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly negative"
+        },
+        "inference_latency": {
+            "improvement": -0.049,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        },
+        "storage_size": {
+            "improvement": 2.122,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent - weakly positive"
+        }
+    },
+    {
+        "configuration": {
+            "library": "TensorQuant",
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q4.4"
+        },
+        "accuracy": {
+            "improvement": -0.701,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        },
+        "inference_latency": {
+            "improvement": -25.074,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "negative - weakly negative"
+        },
+        "storage_size": {
+            "improvement": 0.663,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        }
+    },
+    {
+        "configuration": {
+            "library": "TensorQuant",
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q4.8"
+        },
+        "accuracy": {
+            "improvement": -3.361,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "weakly negative - indifferent"
+        },
+        "inference_latency": {
+            "improvement": -25.099,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "negative - weakly negative"
+        },
+        "storage_size": {
+            "improvement": -0.398,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        }
+    },
+    {
+        "configuration": {
+            "library": "TensorQuant",
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q8.0"
+        },
+        "accuracy": {
+            "improvement": -89.272,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "strongly negative"
+        },
+        "inference_latency": {
+            "improvement": -0.247,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        },
+        "storage_size": {
+            "improvement": 1.857,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        }
+    },
+    {
+        "configuration": {
+            "library": "TensorQuant",
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q8.4"
+        },
+        "accuracy": {
+            "improvement": 0.022,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        },
+        "inference_latency": {
+            "improvement": -25.124,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "negative - weakly negative"
+        },
+        "storage_size": {
+            "improvement": 0.928,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        }
+    },
+    {
+        "configuration": {
+            "library": "TensorQuant",
+            "quantization_method": "ptq",
+            "precision_configuration": "a-q8.8"
+        },
+        "accuracy": {
+            "improvement": -0.361,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        },
+        "inference_latency": {
+            "improvement": -0.198,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        },
+        "storage_size": {
+            "improvement": 1.194,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.189,
+            "intensity": "indifferent"
+        }
+    }
+]

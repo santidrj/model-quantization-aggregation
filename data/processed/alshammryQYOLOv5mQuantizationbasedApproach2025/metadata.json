@@ -1,14 +1,25 @@
 {
   "title": "Q_YOLOv5m: A Quantization-based Approach for Accelerating Object Detection on Embedded Platforms",
   "study_type": "controlled experiment",
+  "domain": "Obj. detect.",
   "data_quality": "comparative",
   "quantization_schema": {
-    "baseline_precision": "fp32",
-    "target_precision": ["int8"],
-    "quantization_targets": ["w-int8, a-int8"],
-    "quantization_method": ["quantization-aware training", "post-training quantization"],
-    "quantization_techniques": ["dynamic range quantization"]
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
+      "w-int8, a-int8"
+    ],
+    "quantization_method": [
+      "qat",
+      "ptq"
+    ],
+    "quantization_techniques": [
+      "dynamic range quantization"
+    ]
   },
-  "models": ["YOLOv5m"],
-  "datasets": ["COCO128"]
+  "models": [
+    "YOLOv5m"
+  ],
+  "datasets": [
+    "COCO128"
+  ]
 }

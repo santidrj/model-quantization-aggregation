@@ -1,0 +1,49 @@
+{
+  "title": "Mixed Precision Low-Bit Quantization of Neural Network Language Models for Speech Recognition",
+  "study_type": "controlled experiment",
+  "domain": "Speech recog.",
+  "data_quality": "comparative",
+  "quantization_schema": {
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
+      "w-int1, a-int1",
+      "mixed-1",
+      "mixed-1.8",
+      "mixed-1.9",
+      "w-int2, a-int2",
+      "mixed-2",
+      "mixed-2.3",
+      "mixed-3.8",
+      "mixed-3.9",
+      "w-int4, a-int4",
+      "mixed-4",
+      "w-int8, a-int8",
+      "mixed-8"
+    ],
+    "quantization_method": [
+      "qat",
+      "ptq"
+    ],
+    "quantization_techniques": [
+      "uniform precision quantization",
+      "KL-divergence-based mixed precision quantization",
+      "Hessian-trace-based mixed precision quantization",
+      "mixed precision neural architecture search"
+    ]
+  },
+  "hardware": [
+    {
+      "device": {
+        "GPU": "NVIDIA Tesla V100 Volta"
+      }
+    }
+  ],
+  "models": [
+    "2-layer LSTM-RNN LM",
+    "6-layer Transformer LM"
+  ],
+  "datasets": [
+    "Switchboard I",
+    "AMI meeting corpus"
+  ]
+}

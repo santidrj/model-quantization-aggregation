@@ -1,0 +1,30 @@
+[
+    {
+        "configuration": {
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8"
+        },
+        "f1_score": {
+            "improvement": -0.249,
+            "std": 0.527,
+            "iqr": 0.0,
+            "sample_size_discount": 0.964,
+            "variability_discount": 1.0,
+            "discount_factor": 0.964,
+            "p_value": 0.036,
+            "belief": 0.652,
+            "intensity": "indifferent"
+        },
+        "storage_size": {
+            "improvement": 71.779,
+            "std": 3.186,
+            "iqr": 2.044,
+            "sample_size_discount": 0.964,
+            "variability_discount": 0.997,
+            "discount_factor": 0.961,
+            "p_value": 0.039,
+            "belief": 0.65,
+            "intensity": "strongly positive"
+        }
+    }
+]

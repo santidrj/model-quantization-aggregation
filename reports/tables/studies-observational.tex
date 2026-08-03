@@ -1,0 +1,15 @@
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}Xl>{\raggedright\arraybackslash}lclllcc}
+\toprule
+\rowcolor{gray!30}
+ & \multicolumn{2}{c}{\textbf{Contextual Factors}} & \multicolumn{1}{c}{\textbf{Exp. Units}} & \multicolumn{3}{c}{\textbf{Quantization Design}} & \multicolumn{2}{c}{\textbf{SSM Metrics}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-4} \cmidrule(lr){5-7} \cmidrule(lr){8-9}
+\rowcolor{gray!30}
+ID & Domain & Instrumentation & Models/Data & Source & Target\footnotemark[1] & Timing & Belief & TS\footnotemark[2] \\
+\midrule
+\denkinger \cite{denkingerImpactMemoryVoltage2020} & Coffee rec. & Analytical & 1 / 1 & FP32 & Q0.4--Q0.32 (WA) & QAT & 45\% & 3 \\
+\deputter \cite{deputterPOQThereParetoOptimal2025} & Image class. & Analytical & 2 / 1 & FP16 & INT2--INT8 (WA, F) & QAT & 45\% & 8 \\
+\sathish \cite{sathishVerifiableEnergyEfficient2022} & Medical class. & Analytical & 4 / 2 & FP32 & INT8 (WA) & PTQ & 39\% & 1 \\
+\vasquez \cite{vasquezActivationDensityBased2021} & Image class. & Model-based & 2 / 2 & FP16 & Mixed (WA) & QAT & 38\% & 1 \\
+\paul \cite{paulEnergyEfficientRespiratoryAnomaly2022} & Respiratory det. & Analytical & 1 / 1 & FP64 & Q0.2--Q0.32 (WA) & QAT & 37\% & 5 \\
+\bottomrule
+\end{tabularx}

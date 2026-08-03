@@ -1,0 +1,40 @@
+{
+  "title": "Benchmarking of Quantization Libraries in Popular Frameworks",
+  "study_type": "controlled experiment",
+  "domain": "Image class.",
+  "data_quality": "comparative",
+  "quantization_schema": {
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
+      "a-q8.8",
+      "a-q16.0",
+      "a-q12.4",
+      "a-q4.8",
+      "a-q8.4",
+      "a-q8.0",
+      "a-q12.0",
+      "a-q4.4",
+      "a-q4.0",
+      "w-int8",
+      "w-int8, a-int8"
+    ],
+    "quantization_method": [
+      "ptq"
+    ],
+    "quantization_techniques": [
+      "extrinsic quantization",
+      "dynamic quantization",
+      "static quantization"
+    ],
+    "frameworks": [
+      "PyTorch 1.9.0",
+      "TensorQuant"
+    ]
+  },
+  "models": [
+    "LeNet"
+  ],
+  "datasets": [
+    "MNIST"
+  ]
+}

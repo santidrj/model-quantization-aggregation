@@ -1,6 +1,7 @@
 {
   "title": "Your experiment title",
   "study_type": "your_study_type",
+  "domain": "your short domain label",
   "data_quality": "your_data_quality",
   "energy_measurement": {
     "measurement_method": ["your_energy_measurement_type"],
@@ -8,10 +9,9 @@
     "repetitions": 1
   },
   "quantization_schema": {
-    "baseline_precision": "your_baseline_precision",
-    "target_precision": ["your_target_precision_1", "your_target_precision_2"],
-    "quantization_targets": ["your_target_value_1", "your_target_value_2"],
-    "quantization_method": "your_quantization_type",
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": ["w-int8, a-int8"],
+    "quantization_method": ["ptq"],
     "quantization_techniques": ["your_quantization_technique_1", "your_quantization_technique_2"],
     "frameworks": ["your_frameworks"],
     "formats": ["your_format_1", "your_format_2"]

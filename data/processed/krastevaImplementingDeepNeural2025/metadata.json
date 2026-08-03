@@ -1,18 +1,31 @@
 {
   "title": "Implementing Deep Neural Networks on ARM-Based Microcontrollers: Application for Ventricular Fibrillation Detection",
   "study_type": "controlled experiment",
+  "domain": "Ventricular fib.",
   "data_quality": "comparative",
   "energy_measurement": {
-    "measurement_method": ["hardware-based"]
+    "measurement_method": [
+      "hardware-based"
+    ]
   },
   "quantization_schema": {
-    "baseline_precision": "fp32",
-    "target_precision": ["int8"],
-    "quantization_targets": ["w-int8, a-int8", "full-int8"],
-    "quantization_method": "post-training quantization",
-    "quantization_techniques": ["static quantization"],
-    "frameworks": ["TensorFlow"],
-    "formats": ["LiteRT"]
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
+      "w-int8, a-int8",
+      "full-int8"
+    ],
+    "quantization_method": [
+      "ptq"
+    ],
+    "quantization_techniques": [
+      "static quantization"
+    ],
+    "frameworks": [
+      "TensorFlow"
+    ],
+    "formats": [
+      "LiteRT"
+    ]
   },
   "hardware": [
     {
@@ -26,6 +39,10 @@
       }
     }
   ],
-  "models": ["Custom CNN"],
-  "datasets": ["Private ECG dataset"]
+  "models": [
+    "Custom CNN"
+  ],
+  "datasets": [
+    "Private ECG dataset"
+  ]
 }

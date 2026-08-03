@@ -1,6 +1,7 @@
 [
     {
-        "quantization_precision": "w-int8, a-fp32",
+        "quantization_method": "ptq",
+        "precision_configuration": "w-int8, a-fp32",
         "storage_size": {
             "improvement": 77.148,
             "std": null,

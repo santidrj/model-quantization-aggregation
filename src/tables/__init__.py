@@ -1,0 +1,1 @@
+"""Manuscript table generation helpers."""

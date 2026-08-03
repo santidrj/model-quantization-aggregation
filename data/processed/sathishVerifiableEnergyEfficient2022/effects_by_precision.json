@@ -1,6 +1,7 @@
 [
     {
-        "quantization_precision": "int8",
+        "quantization_method": "ptq",
+        "precision_configuration": "w-int8, a-int8",
         "accuracy": {
             "improvement": -1.142,
             "std": 0.043,
@@ -10,7 +11,7 @@
             "discount_factor": 0.632,
             "p_value": 0.368,
             "belief": 0.249,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "dsc": {
             "improvement": -1.136,
@@ -21,7 +22,7 @@
             "discount_factor": 0.632,
             "p_value": 0.368,
             "belief": 0.249,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_energy_consumption": {
             "improvement": 95.026,

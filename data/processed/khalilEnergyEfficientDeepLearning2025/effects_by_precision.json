@@ -1,6 +1,7 @@
 [
     {
-        "quantization_precision": "int8",
+        "quantization_method": "ptq",
+        "precision_configuration": "w-int8, a-int8",
         "inference_energy_consumption": {
             "improvement": 74.124,
             "std": 1.476,

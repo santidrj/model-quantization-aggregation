@@ -1,6 +1,6 @@
 import os
 
-from src.config import PROCESSED_DATA_DIR
+from src.config import processed_paper_dir, processed_paper_path
 from src.data.papers.entities import Paper, Papers
 from src.data.papers.knowledge_extraction import KnowledgeExtractor
 
@@ -15,26 +15,28 @@ def extract_knowledge_from(paper: Paper):
 
     knowledge_extractor.extract_knowledge()
 
-    os.makedirs(PROCESSED_DATA_DIR / paper.KEY, exist_ok=True)
+    os.makedirs(processed_paper_dir(paper.KEY), exist_ok=True)
 
     knowledge_extractor.improvement_metrics.write_parquet(
-        PROCESSED_DATA_DIR / paper.KEY / "improvement_metrics.parquet"
+        processed_paper_path(paper.KEY, "improvement_metrics.parquet")
     )
 
     statistics = knowledge_extractor.get_improvement_statistics()
-    statistics.write_parquet(PROCESSED_DATA_DIR / paper.KEY / "improvement_statistics_by_configuration.parquet")
+    statistics.write_parquet(processed_paper_path(paper.KEY, "improvement_statistics_by_configuration.parquet"))
 
     statistics_by_precision = knowledge_extractor.get_improvement_statistics(by_precision=True)
     statistics_by_precision.write_parquet(
-        PROCESSED_DATA_DIR / paper.KEY / "improvement_statistics_by_precision.parquet"
+        processed_paper_path(paper.KEY, "improvement_statistics_by_precision.parquet")
     )
 
-    knowledge_extractor.save_effects_by_configuration(PROCESSED_DATA_DIR / paper.KEY / "effects_by_configuration.json")
-    knowledge_extractor.save_effects_by_precision(PROCESSED_DATA_DIR / paper.KEY / "effects_by_precision.json")
+    knowledge_extractor.save_effects_by_configuration(processed_paper_path(paper.KEY, "effects_by_configuration.json"))
+    knowledge_extractor.save_effects_by_precision(processed_paper_path(paper.KEY, "effects_by_precision.json"))
 
 
-# for paper in Papers:
-#     print(f"Extracting knowledge from {paper.value.AUTHOR}")
-#     extract_knowledge_from(paper.value)
+def main():
+    for paper in Papers:
+        extract_knowledge_from(paper.value)
 
-extract_knowledge_from(Papers.DEPUTTER.value)
+
+if __name__ == "__main__":
+    main()

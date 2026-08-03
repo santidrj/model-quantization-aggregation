@@ -1,31 +1,7 @@
 [
     {
-        "quantization_precision": "fp16",
-        "inference_latency": {
-            "improvement": 1.697,
-            "std": 5.77,
-            "iqr": 2.243,
-            "sample_size_discount": 0.736,
-            "variability_discount": 1.0,
-            "discount_factor": 0.736,
-            "p_value": 0.264,
-            "belief": 0.504,
-            "intensity": "indiferent"
-        },
-        "storage_size": {
-            "improvement": 49.615,
-            "std": 0.402,
-            "iqr": 0.769,
-            "sample_size_discount": 0.736,
-            "variability_discount": 1.0,
-            "discount_factor": 0.736,
-            "p_value": 0.264,
-            "belief": 0.504,
-            "intensity": "positive - strongly positive"
-        }
-    },
-    {
-        "quantization_precision": "int8",
+        "quantization_method": "ptq",
+        "precision_configuration": "w-int8, a-int8",
         "inference_latency": {
             "improvement": -2.272,
             "std": 35.524,
@@ -35,7 +11,7 @@
             "discount_factor": 0.736,
             "p_value": 0.264,
             "belief": 0.504,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "storage_size": {
             "improvement": 72.149,
@@ -47,6 +23,32 @@
             "p_value": 0.264,
             "belief": 0.504,
             "intensity": "strongly positive"
+        }
+    },
+    {
+        "quantization_method": "ptq",
+        "precision_configuration": "w-fp16, a-fp16",
+        "inference_latency": {
+            "improvement": 1.697,
+            "std": 5.77,
+            "iqr": 2.243,
+            "sample_size_discount": 0.736,
+            "variability_discount": 1.0,
+            "discount_factor": 0.736,
+            "p_value": 0.264,
+            "belief": 0.504,
+            "intensity": "indifferent"
+        },
+        "storage_size": {
+            "improvement": 49.615,
+            "std": 0.402,
+            "iqr": 0.769,
+            "sample_size_discount": 0.736,
+            "variability_discount": 1.0,
+            "discount_factor": 0.736,
+            "p_value": 0.264,
+            "belief": 0.504,
+            "intensity": "positive - strongly positive"
         }
     }
 ]
