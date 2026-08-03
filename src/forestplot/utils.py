@@ -529,11 +529,17 @@ def _build_metric_block(df: pd.DataFrame, metric: str, y_start: int) -> tuple[pd
     metric_rows = metric_rows.assign(
         _study_id_sort=metric_rows["id"].astype(str).map(study_id_numeric_rank)
     )
-    metric_rows = (
-        metric_rows.sort_values(by=["_study_id_sort", "evidence_id"], ascending=False)
-        .drop(columns="_study_id_sort")
-        .reset_index(drop=True)
+    # Lowest y is the bottom of the group: Aggregated first, then studies (high Study ID → low).
+    is_aggregated = metric_rows["yticklabel"].astype(str).str.contains("Aggregated") | (
+        metric_rows["id"].astype(str) == "Aggregated"
     )
+    aggregated_rows = metric_rows.loc[is_aggregated].drop(columns="_study_id_sort")
+    study_rows = (
+        metric_rows.loc[~is_aggregated]
+        .sort_values(by=["_study_id_sort", "evidence_id"], ascending=False)
+        .drop(columns="_study_id_sort")
+    )
+    metric_rows = pd.concat([aggregated_rows, study_rows], ignore_index=True)
     metric_rows = pd.concat([metric_rows, metric_header], ignore_index=True).reset_index()
     metric_rows["index"] += y_start
 

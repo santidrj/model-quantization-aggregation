@@ -163,3 +163,4 @@ cython_debug/
 .cursor/mcp.json
 .vscode/launch.json
 .vscode/settings.json
+.tmp/
