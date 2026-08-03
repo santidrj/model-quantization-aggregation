@@ -9,7 +9,7 @@ import sys
 from google import genai
 import polars as pl
 
-from src.config import FIGURES_DIR, INTERIM_DATA_DIR, ROOT_DIR, processed_paper_path
+from src.config import FIGURES_DIR, INTERIM_DATA_DIR, ROOT_DIR, TABLES_DIR, processed_paper_path
 from src.data.download import clean_titles, download_arxiv_papers, papers_dict_to_polars_df
 from src.data.papers.entities import Paper, Papers
 from src.data.selection.select_papers import (
@@ -23,6 +23,7 @@ from src.data.selection.select_papers import (
 )
 from src.data.utils import read_scopus_quantization_papers
 from src.run_evidence_extraction import extract_knowledge_from
+from src.tables.studies_summary import generate_studies_summary_tables
 
 NOTEBOOKS_DIR = ROOT_DIR / "notebooks"
 EVIDENCE_ANALYSIS_NOTEBOOK = NOTEBOOKS_DIR / "5.0-evidence-analysis.ipynb"
@@ -41,6 +42,10 @@ CORE_FIGURES = (
     FIGURES_DIR / "metrics-usage-distribution.pdf",
     FIGURES_DIR / "correctness-forestplot.pdf",
     FIGURES_DIR / "resource-efficiency-forestplot.pdf",
+)
+CORE_TABLES = (
+    TABLES_DIR / "studies-quasi-experiments.tex",
+    TABLES_DIR / "studies-observational.tex",
 )
 PROCESSED_OUTPUT_FILENAMES = (
     "improvement_metrics.parquet",
@@ -242,6 +247,12 @@ def reproduce_figures(*, run_notebook: bool = True) -> list[Path]:
         run_notebook_headless()
     validate_paths_exist(CORE_FIGURES, label="core figure outputs")
     return list(CORE_FIGURES)
+
+
+def reproduce_tables() -> list[Path]:
+    paths = generate_studies_summary_tables(output_dir=TABLES_DIR)
+    validate_paths_exist(CORE_TABLES, label="core table outputs")
+    return paths
 
 
 def reproduce_full_pipeline(*, download_missing: bool = False, run_notebook: bool = True) -> list[Path]:

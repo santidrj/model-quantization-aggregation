@@ -1,6 +1,7 @@
 {
   "title": "Energy-Efficient Respiratory Anomaly Detection in Premature Newborn Infants",
   "study_type": "controlled experiment",
+  "domain": "Respiratory det.",
   "data_quality": "comparative",
   "energy_measurement": {
     "measurement_method": [

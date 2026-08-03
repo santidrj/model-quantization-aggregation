@@ -466,9 +466,10 @@ class DeputterPaper(Paper):
 
 
 class GonzalezPaper(Paper):
-    KEY = "gonzalezImpactMLOptimization2024"
+    KEY = "gonzalezImpactMLOptimization2025"
     ID = "S13"
     AUTHOR = "Gonzalez Alvarez et al."
+    # Study ID S13 was assigned for 2024 publication ordering; paper key/bib year is 2025.
     YEAR = 2024
     QUANTIZATION_PRECISION_COL = "Optimization"
     BASELINE_PRECISION = "full-fp32"

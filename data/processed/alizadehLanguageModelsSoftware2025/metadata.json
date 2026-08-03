@@ -1,6 +1,7 @@
 {
   "title": "Language Models in Software Development Tasks: An Experimental Analysis of Energy and Accuracy",
   "study_type": "controlled experiment",
+  "domain": "Code gen.",
   "data_quality": "precise",
   "energy_measurement": {
     "measurement_method": "software-based",

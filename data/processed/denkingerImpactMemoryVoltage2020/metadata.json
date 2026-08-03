@@ -1,6 +1,7 @@
 {
   "title": "Impact of Memory Voltage Scaling on Accuracy and Resilience of Deep Learning Based Edge Devices",
   "study_type": "controlled experiment",
+  "domain": "Coffee rec.",
   "data_quality": "comparative",
   "energy_measurement": {
     "measurement_method": [

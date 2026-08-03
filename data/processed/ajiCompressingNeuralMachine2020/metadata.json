@@ -1,6 +1,7 @@
 {
   "title": "Compressing Neural Machine Translation Models with 4-bit Precision",
   "study_type": "controlled experiment",
+  "domain": "Mach. transl.",
   "data_quality": "comparative",
   "quantization_schema": {
     "baseline_precision_configuration": "full-fp32",

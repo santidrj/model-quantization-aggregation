@@ -1,6 +1,7 @@
 {
   "title": "Mixed Precision Low-Bit Quantization of Neural Network Language Models for Speech Recognition",
   "study_type": "controlled experiment",
+  "domain": "Speech recog.",
   "data_quality": "comparative",
   "quantization_schema": {
     "baseline_precision_configuration": "full-fp32",

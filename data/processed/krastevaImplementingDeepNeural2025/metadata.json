@@ -1,6 +1,7 @@
 {
   "title": "Implementing Deep Neural Networks on ARM-Based Microcontrollers: Application for Ventricular Fibrillation Detection",
   "study_type": "controlled experiment",
+  "domain": "Ventricular fib.",
   "data_quality": "comparative",
   "energy_measurement": {
     "measurement_method": [

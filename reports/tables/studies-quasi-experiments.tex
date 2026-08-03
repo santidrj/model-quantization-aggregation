@@ -1,0 +1,26 @@
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}Xl>{\raggedright\arraybackslash}lclllcc}
+\toprule
+\rowcolor{gray!30}
+ & \multicolumn{2}{c}{\textbf{Contextual Factors}} & \multicolumn{1}{c}{\textbf{Exp. Units}} & \multicolumn{3}{c}{\textbf{Quantization Design}} & \multicolumn{2}{c}{\textbf{SSM Metrics}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-4} \cmidrule(lr){5-7} \cmidrule(lr){8-9}
+\rowcolor{gray!30}
+ID & Domain & Instrumentation & Models/Data & Source & Target\footnotemark[1] & Timing & Belief & TS\footnotemark[2] \\
+\midrule
+\gonzalez \cite{gonzalezImpactMLOptimization2025} & Image class. & Hardware + nvidia-smi, EnergyBridge & 28 / 5 & FP32 & INT8 (W) & QAT & 74\% & 1 \\
+\alizadeh \cite{alizadehLanguageModelsSoftware2025} & Code gen. & pyNVML, pyRAPL & 18 / 1 & FP16 & INT4, INT8 (W) & PTQ & 71\% & 2 \\
+\zhan \cite{zhanFieldProgrammableGate2021} & Image class. & N/A & 4 / 4 & FP32 & INT2, INT8 (WAB) & QAT & 68\% & 1 \\
+\chen \cite{chenImplementingUltralightweightCoinference2023} & Atrial fib. & N/A & 1 / 1 & FP32 & INT8 (W) & PTQ & 68\% & 1 \\
+\alshammry \cite{alshammryQYOLOv5mQuantizationbasedApproach2025} & Obj. detect. & N/A & 1 / 1 & FP32 & INT8 (WA) & QAT, PTQ & 68\% & 2 \\
+\krasteva \cite{krastevaImplementingDeepNeural2025} & Ventricular fib. & Hardware-based & 1 / 1 & FP32 & INT8 (WA, F) & PTQ & 68\% & 2 \\
+\peng \cite{pengEfficientExpirationDate2025} & Food rec. & N/A & 2 / 2 & FP32 & INT8, FP16 (WA) & PTQ & 68\% & 2 \\
+\aji \cite{ajiCompressingNeuralMachine2020} & Mach. transl. & N/A & 2 / 1 & FP32 & LOG1--LOG4 (W) & PTQ-R & 67\% & 4 \\
+\barnell \cite{barnellModelQuantizationSynthetic2021} & Obj. detect. & nvidia-smi, tegrastats & 1 / 1 & FP32 & INT8, FP16 (WA) & PTQ & 67\% & 2 \\
+\dubhir \cite{dubhirBenchmarkingQuantizationLibraries2021} & Image class. & N/A & 1 / 1 & FP32 & INT8, Q12.0, Q12.4, Q16.0, Q4.0, Q4.4, Q4.8, Q8.0, Q8.4, Q8.8 (W, A, WA) & PTQ & 67\% & 11 \\
+\xu \cite{xuMixedPrecisionLowBit2021} & Speech recog. & N/A & 2 / 2 & FP32 & INT1, Mixed-1, Mixed-1.8, Mixed-1.9, INT2, Mixed-2, Mixed-2.3, Mixed-3.8, Mixed-3.9, INT4, Mixed-4, INT8, Mixed-8 (WA) & QAT, PTQ & 67\% & 17 \\
+\guerrouj \cite{guerroujQuantizedObjectDetection2025} & Auton. Drive & N/A & 1 / 1 & FP32 & INT8, FP16 (WA) & PTQ & 67\% & 2 \\
+\flich \cite{flichEfficientInferenceImageBased2022} & Skin lesion & N/A & 1 / 1 & FP32 & INT8 (W) & PTQ & 66\% & 1 \\
+\khalil \cite{khalilEnergyEfficientDeepLearning2025} & Cloud detect. & Hardware-based & 1 / 1 & FP32 & INT8 (WA) & PTQ & 66\% & 1 \\
+\koli \cite{koliEdgeAIPoweredSystem2025} & Plant disease & N/A & 2 / 1 & FP32 & INT8 (W) & PTQ & 65\% & 1 \\
+\tao \cite{taoExperimentalEnergyConsumption2022} & Bird call & Hardware-based & 1 / 1 & FP32 & Q0.8, Q0.16 (W, A, WA) & QAT & 64\% & 8 \\
+\bottomrule
+\end{tabularx}

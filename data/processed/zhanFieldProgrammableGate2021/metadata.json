@@ -1,6 +1,7 @@
 {
   "title": "Field programmable gate array-based all-layer accelerator with quantization neural networks for sustainable cyber-physical systems",
   "study_type": "controlled experiment",
+  "domain": "Image class.",
   "data_quality": "comparative",
   "quantization_schema": {
     "baseline_precision_configuration": "full-fp32",

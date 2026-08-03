@@ -1,6 +1,7 @@
 {
   "title": "Model Quantization and Synthetic Aperture Data Analyses Increasing Throughput and Energy Efficiency",
   "study_type": "controlled experiment",
+  "domain": "Obj. detect.",
   "data_quality": "comparative",
   "energy_measurement": {
     "measurement_method": [

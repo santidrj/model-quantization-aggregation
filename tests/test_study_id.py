@@ -21,7 +21,7 @@ EXPECTED_STUDY_IDS_BY_KEY = {
     "sathishVerifiableEnergyEfficient2022": "S10",
     "taoExperimentalEnergyConsumption2022": "S11",
     "chenImplementingUltralightweightCoinference2023": "S12",
-    "gonzalezImpactMLOptimization2024": "S13",
+    "gonzalezImpactMLOptimization2025": "S13",
     "alizadehLanguageModelsSoftware2025": "S14",
     "alshammryQYOLOv5mQuantizationbasedApproach2025": "S15",
     "deputterPOQThereParetoOptimal2025": "S16",

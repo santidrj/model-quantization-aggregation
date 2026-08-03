@@ -15,6 +15,7 @@ PROCESSED_DATA_DIR = DATA_DIR / "processed"
 EXTERNAL_DATA_DIR = DATA_DIR / "external"
 
 FIGURES_DIR = ROOT_DIR / "reports" / "figures"
+TABLES_DIR = ROOT_DIR / "reports" / "tables"
 
 
 def external_paper_dir(paper_key: str) -> Path:

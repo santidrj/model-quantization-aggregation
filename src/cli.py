@@ -34,6 +34,12 @@ def reproduce_figures(no_notebooks: bool) -> None:
     _print_paths(paths, "Validated figure outputs")
 
 
+@reproduce.command("tables", help="Regenerate manuscript studies-summary LaTeX tabular fragments.")
+def reproduce_tables() -> None:
+    paths = workflows.reproduce_tables()
+    _print_paths(paths, "Validated table outputs")
+
+
 @reproduce.command("full-pipeline", help="Regenerate processed evidence and optionally the core figures.")
 @click.option(
     "--download-missing",

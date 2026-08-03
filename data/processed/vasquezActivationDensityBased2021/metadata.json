@@ -1,6 +1,7 @@
 {
   "title": "Activation Density based Mixed-Precision Quantization for Energy Efficient Neural Networks",
   "study_type": "simulation-based experiment",
+  "domain": "Image class.",
   "data_quality": "comparative",
   "energy_measurement": {
     "measurement_method": [

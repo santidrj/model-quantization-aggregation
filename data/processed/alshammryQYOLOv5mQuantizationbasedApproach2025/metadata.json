@@ -1,6 +1,7 @@
 {
   "title": "Q_YOLOv5m: A Quantization-based Approach for Accelerating Object Detection on Embedded Platforms",
   "study_type": "controlled experiment",
+  "domain": "Obj. detect.",
   "data_quality": "comparative",
   "quantization_schema": {
     "baseline_precision_configuration": "full-fp32",

@@ -40,6 +40,10 @@ _Avoid_: Optimization, precision configuration (when the training-time vs post-t
 Grouping of comparable quantized runs that share the same quantization method and the same precision configuration. When a paper declares exactly one quantization method, every run inherits it; when it declares more than one, each run must carry its own method. Ordering for analysis (e.g. notebook precision order) is an ordered list of `(quantization method, precision configuration)` pairs.
 _Avoid_: By-configuration aggregation (when only method and formats are the identity), precision-only grouping (when method is ignored)
 
+**Theoretical structure**:
+Manuscript label for one by-precision aggregation that appears in a study's by-precision results. A study's TS count is how many such aggregations that study contributes — not a separate analytical construct.
+_Avoid_: Theoretical structure as something other than by-precision aggregation; using metadata `precision_configurations` length when by-precision results are meant
+
 **Subgroup**:
 One moderator level used when interpreting the main by-precision aggregation: the triple `(baseline precision configuration, quantization method, precision configuration)`. Distinct from by-precision aggregation itself, which does not include the baseline in its grouping key.
 _Avoid_: Method+precision alone (when the baseline is part of the claim), within-cell splits by architecture, device, or other study covariates
@@ -80,9 +84,17 @@ _Avoid_: Comparative (charts), summary statistics (charts)
 Evidence granularity in which run-level or otherwise package-backed experimental numbers are available beyond paper tables and figures. Distinct from external paper data, which is the subset of study inputs this project keeps for extraction.
 _Avoid_: Precise, raw data (when this granularity level is meant)
 
+**Domain**:
+The primary application area a study addresses (e.g. image classification, code generation), one label per included study. Stored as the short manuscript display string used in summary tables. Distinct from the study's dataset list: datasets may motivate or illustrate the domain, but Domain is not a compression of `datasets`.
+_Avoid_: Dataset, task (when the study-level application area is meant), topic
+
 **Energy measurement method**:
 How a primary study obtains energy (or power) figures for its runs, when it measures energy at all. Canonical tokens are analytical, hardware-based, software-based, and model-based; a study may use more than one. A null / absent method means the study did not measure energy consumption — not that the method is unknown or unreported.
 _Avoid_: Measurement method (when energy is meant), not reported / missing metadata (for a null method)
+
+**Energy evidence group**:
+Manuscript grouping of included studies by energy measurement method for summary tables. Hardware-based, software-based, or null method map to the manuscript label Quasi-experiments; analytical or model-based map to Observational Studies. Distinct from experimental-design “quasi-experiment” in the quality-evaluation guide.
+_Avoid_: Study type (when this energy-derived table grouping is meant); treating the manuscript labels as a stored taxonomy
 
 **Analytical**:
 An energy measurement method where energy figures are computed from formulas or design-space estimation tools, without measuring a running system.
@@ -101,6 +113,10 @@ An energy measurement method where energy is derived bottom-up from a component 
 _Avoid_: Analytical (when component energy tables are meant), simulated energy (too vague)
 
 ## Metrics
+
+**Study belief**:
+The study-level prior weight assigned to an included primary study for evidence synthesis (stored on the study as a probability in \([0,1]\)). Effect-level beliefs combine this prior with sample-size and variability discounts. In manuscript tables it may appear as an integer percent.
+_Avoid_: Belief as an effect-level posterior; quality-rubric score (when the stored study prior is meant); SSM belief (vague)
 
 **Correctness metric**:
 A measure of model prediction quality reported by a study (e.g. accuracy, F1 score, perplexity). Correctness metrics are distinct from resource-efficiency metrics even when a correctness metric is minimized rather than maximized.

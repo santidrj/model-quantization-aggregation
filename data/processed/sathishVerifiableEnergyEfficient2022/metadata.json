@@ -1,6 +1,7 @@
 {
   "title": "Verifiable and Energy Efficient Medical Image Analysis with Quantised Self-attentive Deep Neural Networks",
   "study_type": "controlled experiment",
+  "domain": "Medical class.",
   "data_quality": "comparative",
   "energy_measurement": {
     "measurement_method": "analytical"

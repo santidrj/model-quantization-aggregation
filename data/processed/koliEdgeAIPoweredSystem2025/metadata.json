@@ -1,6 +1,7 @@
 {
   "title": "Edge AI-Powered System Architecture for Aloe Vera Plant Disease Detection",
   "study_type": "controlled experiment",
+  "domain": "Plant disease",
   "data_quality": "comparative",
   "quantization_schema": {
     "baseline_precision_configuration": "full-fp32",

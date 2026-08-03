@@ -24,6 +24,7 @@ def read_paper_metadata(paper: Paper) -> pl.DataFrame:
             {
                 "title": pl.String,
                 "study_type": pl.String,
+                "domain": pl.String,
                 "data_quality": pl.String,
                 "energy_measurement": pl.Struct(
                     {

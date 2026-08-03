@@ -1,6 +1,7 @@
 {
   "title": "Efficient Expiration Date Recognition in Food Packages for Mobile Applications",
   "study_type": "controlled experiment",
+  "domain": "Food rec.",
   "data_quality": "comparative (charts)",
   "quantization_schema": {
     "baseline_precision_configuration": "full-fp32",

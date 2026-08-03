@@ -1,6 +1,7 @@
 {
   "title": "Your experiment title",
   "study_type": "your_study_type",
+  "domain": "your short domain label",
   "data_quality": "your_data_quality",
   "energy_measurement": {
     "measurement_method": ["your_energy_measurement_type"],

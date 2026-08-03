@@ -1,6 +1,7 @@
 {
   "title": "POQ: Is There a Pareto-Optimal Quantization Strategy for Deep Neural Networks?",
   "study_type": "experimental simulation study",
+  "domain": "Image class.",
   "data_quality": "comparative (charts)",
   "energy_measurement": {
     "measurement_method": [

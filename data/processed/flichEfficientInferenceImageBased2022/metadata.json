@@ -1,6 +1,7 @@
 {
   "title": "Efficient Inference Of Image-Based Neural Network Models In Reconfigurable Systems With Pruning And Quantization",
   "study_type": "controlled experiment",
+  "domain": "Skin lesion",
   "data_quality": "comparative",
   "quantization_schema": {
     "baseline_precision_configuration": "full-fp32",

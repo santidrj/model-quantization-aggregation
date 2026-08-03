@@ -1,6 +1,7 @@
 {
   "title": "Impact of ML Optimization Tactics on Greener Pre-Trained ML Models",
   "study_type": "controlled experiment",
+  "domain": "Image class.",
   "data_quality": "precise",
   "energy_measurement": {
     "measurement_method": [

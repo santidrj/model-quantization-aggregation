@@ -1,6 +1,7 @@
 {
   "title": "Quantized Object Detection for Real-Time Inference on Embedded GPU Architectures",
   "study_type": "controlled experiment",
+  "domain": "Auton. Drive",
   "data_quality": "comparative",
   "quantization_schema": {
     "baseline_precision_configuration": "full-fp32",
