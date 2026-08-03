@@ -40,6 +40,14 @@ _Avoid_: Optimization, precision configuration (when the training-time vs post-t
 Grouping of comparable quantized runs that share the same quantization method and the same precision configuration. When a paper declares exactly one quantization method, every run inherits it; when it declares more than one, each run must carry its own method. Ordering for analysis (e.g. notebook precision order) is an ordered list of `(quantization method, precision configuration)` pairs.
 _Avoid_: By-configuration aggregation (when only method and formats are the identity), precision-only grouping (when method is ignored)
 
+**Subgroup**:
+One moderator level used when interpreting the main by-precision aggregation: the triple `(baseline precision configuration, quantization method, precision configuration)`. Distinct from by-precision aggregation itself, which does not include the baseline in its grouping key.
+_Avoid_: Method+precision alone (when the baseline is part of the claim), within-cell splits by architecture, device, or other study covariates
+
+**Subgroup analysis**:
+Analysis of relative-improvement evidence restricted to a single subgroup, answering what effects look like at that moderator level of the main aggregation (study-level results, optionally with hand-authored Aggregated synthesis for that subgroup only).
+_Avoid_: Subgroup analysis as a split by architecture/hardware inside a cell; reusing corpus-wide Aggregated rows as if they were subgroup-specific
+
 **Quantization configuration**:
 The full experimental setup for a quantized run, including quantization method, grouping strategy, parameter estimation, and precision configuration. Used to distinguish otherwise identical precision-configuration runs in by-configuration analysis.
 _Avoid_: Precision, precision configuration (when the full setup is meant)
