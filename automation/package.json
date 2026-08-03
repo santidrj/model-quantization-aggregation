@@ -1,0 +1,25 @@
+{
+  "name": "evidencefactory-aggregation-automation",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "auth": "tsx src/index.ts --login-only",
+    "start": "tsx src/index.ts",
+    "start:anon": "tsx src/index.ts --allow-anonymous --human-default add",
+    "typecheck": "tsc --noEmit",
+    "probe": "tsx src/probeLive.ts",
+    "probe:remove": "tsx src/probeLive.ts --remove"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "playwright": "^1.51.0"
+  }
+}

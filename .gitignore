@@ -164,3 +164,10 @@ cython_debug/
 .vscode/launch.json
 .vscode/settings.json
 .tmp/
+
+# EvidenceFactory Playwright automation
+automation/node_modules/
+automation/dist/
+automation/.auth/
+automation/test-results/
+automation/playwright-report/
