@@ -358,3 +358,88 @@ def test_forest_plot_places_overflow_label_away_from_arrow():
     assert label.get_position()[1] > 0.0
 
     plt.close(figure)
+
+
+def test_forest_plot_orders_studies_and_string_evidence_ids_top_to_bottom():
+    frame = pd.DataFrame(
+        [
+            {
+                "index": 0,
+                "id": "S2",
+                "evidence_id": "e10",
+                "effect": "Accuracy",
+                "yticklabel": "S2 e10",
+                "mean": 4.0,
+                "lower_ci": 3.0,
+                "upper_ci": 5.0,
+            },
+            {
+                "index": 1,
+                "id": "S1",
+                "evidence_id": "e2",
+                "effect": "Accuracy",
+                "yticklabel": "S1 e2",
+                "mean": 3.0,
+                "lower_ci": 2.0,
+                "upper_ci": 4.0,
+            },
+            {
+                "index": 2,
+                "id": "S1",
+                "evidence_id": "e10",
+                "effect": "Accuracy",
+                "yticklabel": "S1 e10",
+                "mean": 2.0,
+                "lower_ci": 1.0,
+                "upper_ci": 3.0,
+            },
+            {
+                "index": 3,
+                "id": "S2",
+                "evidence_id": "e1",
+                "effect": "Accuracy",
+                "yticklabel": "S2 e1",
+                "mean": 5.0,
+                "lower_ci": 4.0,
+                "upper_ci": 6.0,
+            },
+            {
+                "index": 4,
+                "id": "S1",
+                "evidence_id": "e1",
+                "effect": "Accuracy",
+                "yticklabel": "S1 e1",
+                "mean": 1.0,
+                "lower_ci": 0.0,
+                "upper_ci": 2.0,
+            },
+            {
+                "index": 5,
+                "id": "Aggregated",
+                "evidence_id": "e0",
+                "effect": "Accuracy",
+                "yticklabel": "Aggregated Accuracy",
+                "mean": 3.5,
+                "lower_ci": 3.0,
+                "upper_ci": 4.0,
+            },
+            {
+                "index": 6,
+                "id": "S2",
+                "evidence_id": "e0",
+                "effect": "Accuracy",
+                "yticklabel": "Accuracy Belief",
+                "mean": None,
+                "lower_ci": None,
+                "upper_ci": None,
+            },
+        ]
+    )
+
+    figure, axis = plt.subplots(figsize=(8, 6))
+    draw_forestplot(frame, axis, main_effects=["Accuracy"], xlim=100)
+
+    top_to_bottom = [tick.get_text() for tick in reversed(axis.get_yticklabels())]
+    assert top_to_bottom == ["Accuracy Belief", "S1 e1", "S1 e2", "S1 e10", "S2 e1", "S2 e10", "Aggregated Accuracy"]
+
+    plt.close(figure)

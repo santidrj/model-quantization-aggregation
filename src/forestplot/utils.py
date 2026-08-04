@@ -520,6 +520,11 @@ def _rows_for_metric(df: pd.DataFrame, metric: str, *, with_mean: bool) -> pd.Da
     return df[mean_mask & (df["effect"] == metric)].copy()
 
 
+def _evidence_id_numeric_rank(values: pd.Series) -> pd.Series:
+    evidence_numbers = values.astype(str).str.extract(r"(-?\d+)")[0]
+    return pd.to_numeric(evidence_numbers, errors="coerce")
+
+
 def _build_metric_block(df: pd.DataFrame, metric: str, y_start: int) -> tuple[pd.DataFrame | None, int]:
     metric_rows = _rows_for_metric(df, metric, with_mean=True)
     if metric_rows.empty:
@@ -527,17 +532,19 @@ def _build_metric_block(df: pd.DataFrame, metric: str, y_start: int) -> tuple[pd
 
     metric_header = _rows_for_metric(df, metric, with_mean=False)
     metric_rows = metric_rows.assign(
-        _study_id_sort=metric_rows["id"].astype(str).map(study_id_numeric_rank)
+        _study_id_sort=metric_rows["id"].astype(str).map(study_id_numeric_rank),
+        _evidence_id_sort=_evidence_id_numeric_rank(metric_rows["evidence_id"]),
     )
-    # Lowest y is the bottom of the group: Aggregated first, then studies (high Study ID → low).
+    # Lowest y is the bottom of the group, so use the reverse of the desired top-to-bottom order:
+    # Aggregated last overall, with study rows descending here so they render S1..Sn and e1..eN visually.
     is_aggregated = metric_rows["yticklabel"].astype(str).str.contains("Aggregated") | (
         metric_rows["id"].astype(str) == "Aggregated"
     )
-    aggregated_rows = metric_rows.loc[is_aggregated].drop(columns="_study_id_sort")
+    aggregated_rows = metric_rows.loc[is_aggregated].drop(columns=["_study_id_sort", "_evidence_id_sort"])
     study_rows = (
         metric_rows.loc[~is_aggregated]
-        .sort_values(by=["_study_id_sort", "evidence_id"], ascending=False)
-        .drop(columns="_study_id_sort")
+        .sort_values(by=["_study_id_sort", "_evidence_id_sort"], ascending=False, na_position="first")
+        .drop(columns=["_study_id_sort", "_evidence_id_sort"])
     )
     metric_rows = pd.concat([aggregated_rows, study_rows], ignore_index=True)
     metric_rows = pd.concat([metric_rows, metric_header], ignore_index=True).reset_index()
