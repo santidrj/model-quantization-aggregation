@@ -1,16 +1,23 @@
 /**
  * Runtime configuration for the EvidenceFactory aggregation automation.
  * Keep secrets out of this file — auth lives in .auth/storage-state.json (gitignored).
+ *
+ * Override the aggregation target without editing this file:
+ *   EF_AGGREGATION_GROUP_ID=282042 EF_SYNTHESIS_ID=244422 npm start
  */
+const synthesisId = Number(process.env.EF_SYNTHESIS_ID ?? 244422);
+const aggregationGroupId = Number(process.env.EF_AGGREGATION_GROUP_ID ?? 282042);
+const baseUrl = "https://evidencefactory.lens-ese.cos.ufrj.br";
+
 export const config = {
-  baseUrl: "https://evidencefactory.lens-ese.cos.ufrj.br",
-  /** Aggregation-group overview (Test group). */
-  overviewUrl:
-    "https://evidencefactory.lens-ese.cos.ufrj.br/evidenceAggregation/synthesisAggregation/244422?selectedAggregationId=304080",
+  baseUrl,
+  /** Aggregation-group overview. */
+  overviewUrl: `${baseUrl}/evidenceAggregation/synthesisAggregation/${synthesisId}?selectedAggregationId=${aggregationGroupId}`,
   /** Matching editor reached after Update. */
-  aggregatorUrl: "https://evidencefactory.lens-ese.cos.ufrj.br/evidenceAggregator/304080",
-  aggregationGroupId: 304080,
-  loginUrl: "https://evidencefactory.lens-ese.cos.ufrj.br/user/login",
+  aggregatorUrl: `${baseUrl}/evidenceAggregator/${aggregationGroupId}`,
+  aggregationGroupId,
+  synthesisId,
+  loginUrl: `${baseUrl}/user/login`,
   storageStatePath: new URL("../.auth/storage-state.json", import.meta.url),
   /** Alias → canonical (more generic) term kept on Join. */
   semanticEquivalence: {
@@ -20,7 +27,7 @@ export const config = {
     "Clock cycle": "Inference latency",
     "Clock cycles": "Inference latency",
     "Clock Cycle": "Inference latency",
-    "Accuracy": "Classification accuracy",
+    Accuracy: "Classification accuracy",
     accuracy: "Classification accuracy",
   } as Record<string, string>,
   requestTimeoutMs: 120_000,

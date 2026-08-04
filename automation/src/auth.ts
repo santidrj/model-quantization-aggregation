@@ -52,20 +52,31 @@ export async function isAuthenticationRequired(page: Page): Promise<boolean> {
 
 /**
  * Headed manual login. Does not automate credentials.
+ * Waits until the page shows a logged-in session (logout link), up to 10 minutes.
+ * Optionally press Enter in the terminal to proceed early once logged in.
  */
 export async function interactiveLogin(page: Page, context: BrowserContext): Promise<void> {
   console.log("Authentication required. Opening login page…");
-  console.log("Log in manually in the browser window, then return here.");
+  console.log("Log in manually in the browser window.");
+  console.log("Waiting until logout is visible (or press Enter after login)…");
   await page.goto(config.loginUrl, { waitUntil: "domcontentloaded" });
-  await promptLine("Press Enter after login has succeeded… ");
 
-  const deadline = Date.now() + 30_000;
+  const deadline = Date.now() + 10 * 60_000;
+  let enterPressed = false;
+  const enterWait = promptLine("").then(() => {
+    enterPressed = true;
+  });
+
   while (Date.now() < deadline) {
     if (!(await isAuthenticationRequired(page))) break;
-    await sleep(250);
+    if (enterPressed) break;
+    await sleep(500);
   }
+  // Don't leave the dangling readline hanging forever if we already detected login.
+  void enterWait;
+
   if (await isAuthenticationRequired(page)) {
-    throw new Error("Still appears logged out after Enter. Aborting without saving storage state.");
+    throw new Error("Still appears logged out. Aborting without saving storage state.");
   }
 
   await saveStorageState(context);

@@ -41,7 +41,7 @@ function snapshotKey(snapshot: AggregatorSnapshot): string {
 }
 
 /**
- * Main aggregation workflow for the Test group.
+ * Main aggregation workflow for the configured aggregation group.
  */
 export async function runAggregation(
   page: Page,
@@ -53,14 +53,15 @@ export async function runAggregation(
   const monitor = new NetworkMonitor(page);
   const ctx: SyncContext = { page, monitor };
   const matcher = defaultSemanticMatcher;
+  const selectedParam = `selectedAggregationId=${config.aggregationGroupId}`;
 
   try {
-    console.log("Opening aggregation overview…");
+    console.log(`Opening aggregation overview (group ${config.aggregationGroupId})…`);
     await page.goto(config.overviewUrl, { waitUntil: "domcontentloaded" });
     if (!allowAnonymous) {
       await ensureAuthenticated(page, context);
     }
-    if (!page.url().includes("selectedAggregationId=304080")) {
+    if (!page.url().includes(selectedParam)) {
       await page.goto(config.overviewUrl, { waitUntil: "domcontentloaded" });
     }
 
