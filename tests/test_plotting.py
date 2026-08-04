@@ -355,7 +355,7 @@ def test_forest_plot_places_overflow_label_away_from_arrow():
     assert len(overflow_labels) == 1
     label = overflow_labels[0]
     assert label.get_position()[0] > -display_limit
-    assert label.get_position()[1] > 0.0
+    assert label.get_position()[1] < 0.0
 
     plt.close(figure)
 
