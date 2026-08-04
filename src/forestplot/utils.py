@@ -367,15 +367,15 @@ def _annotate_overflow_estimate(ax: Axes, value: float, y: float, direction: str
     x_min, x_max = ax.get_xlim()
     arrow_length = max((x_max - x_min) * 0.04, 2)
     label = _format_overflow_label(value)
-    label_offset = 0.35
+    label_offset = -0.3
 
     if direction == "left":
         _draw_overflow_arrow(ax, x_min, y, "left", color, linewidth=1.4)
         ax.text(
-            x_min + arrow_length + 2,
+            x_min + arrow_length + 0.5,
             y + label_offset,
             label,
-            fontsize=8,
+            fontsize=12,
             color=color,
             ha="left",
             va="bottom",
@@ -389,7 +389,7 @@ def _annotate_overflow_estimate(ax: Axes, value: float, y: float, direction: str
         x_max - arrow_length - 2,
         y + label_offset,
         label,
-        fontsize=8,
+        fontsize=12,
         color=color,
         ha="right",
         va="bottom",
