@@ -2,7 +2,7 @@
 
 Playwright + TypeScript automation for EvidenceFactory evidence aggregation (Add / Remove / Join).
 
-Default target is the **final** aggregation group (`selectedAggregationId=282042`). Override with env vars for the disposable Test group or other IDs.
+Default target is **Full aggregation v2** (`full-v2` / `selectedAggregationId=282042`). Select another named aggregation group with `--target` or `EF_TARGET`.
 
 ## Setup
 
@@ -26,25 +26,40 @@ Log in in the headed browser (session is detected automatically, or press Enter)
 npm start
 ```
 
-Flow: overview → **Update evidence aggregation** → Remove → Join → Add (with human prompts for residuals) → **view aggregated model**.
+Flow: overview → **Update evidence aggregation** (or **Aggregate evidence** on first run) → Remove → Join → Add (with human prompts for residuals) → **view aggregated model**.
 
 ### Target selection
 
+Named aggregation groups (slug → group):
+
+| Slug | Group | ID |
+| --- | --- | --- |
+| `full-v2` (default) | Full aggregation v2 | 282042 |
+| `sensitivity-n6` | Sensitivity analysis (n&lt;6) | 327146 |
+| `ptq-fp32-w8a8` | PTQ from FP32 to w-int8, a-int8 | 281366 |
+| `test` | Test aggregation (sandbox) | 304080 |
+
 ```bash
-# Final aggregation (default)
+# Full aggregation v2 (default)
 npm start
 
-# Disposable Test group
-EF_AGGREGATION_GROUP_ID=304080 npm start
+# Sensitivity analysis
+npm start -- --target sensitivity-n6
 
-# Anonymous Test-only shortcut (not for the final aggregation)
-EF_AGGREGATION_GROUP_ID=304080 npm run start:anon
+# PTQ subgroup (keeps Model-quantization contextual aspects via Add)
+EF_TARGET=ptq-fp32-w8a8 npm start
+
+# Disposable Test group
+npm start -- --target test
+
+# Anonymous Test-only shortcut
+npm run start:anon
 ```
 
 `--human-default add|remove|abort` answers residual human decision points without a terminal prompt. Set `EF_CAPTURE_RESULT=1` to dump the result-page tree text and a screenshot to `/tmp/ef-golden-result.png` after submit.
 
 ## Config
 
-- URLs and semantic map: `src/config.ts` (`EF_AGGREGATION_GROUP_ID`, `EF_SYNTHESIS_ID`)
+- Named targets and semantic map: `src/config.ts` (`EF_TARGET`, `EF_SYNTHESIS_ID`)
 - Domain language: `CONTEXT.md`
 - Phase 1 network notes: `docs/phase1-network-analysis.md`
