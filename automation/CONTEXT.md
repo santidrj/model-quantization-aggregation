@@ -24,8 +24,28 @@ _Avoid_: Red element (as the domain term — highlight color is a UI cue), gray 
 The work of resolving every eligible element for the currently highlighted incoming evidence on the left sidebar. The automation processes them in fixed phase order: Remove, then Join, then Add. When automatic policy cannot act, or after autos leave residuals, the automation pauses at a human decision point, applies the reviewer's choice, and resumes until no eligible elements remain for that highlighted evidence. The left-sidebar highlight then advances automatically to the next unresolved evidence; the editor URL does not change.
 _Avoid_: Session, run, pass (when a single incoming-evidence incorporation is meant)
 
+**Named aggregation group**:
+One EvidenceFactory aggregation group addressed by a stable human name and its `selectedAggregationId` under synthesis `244422`. The named set is Full aggregation v2, Sensitivity analysis (n<6), PTQ from FP32 to w-int8, a-int8, and Test aggregation.
+_Avoid_: Final aggregation (ambiguous), anonymous numeric ID as the only identity when a name exists
+
+**Full aggregation v2**:
+The named aggregation group for the full evidence synthesis (`selectedAggregationId=282042`).
+_Avoid_: Final aggregation, production aggregation (when this specific group is meant)
+
+**Sensitivity analysis (n<6)**:
+The named aggregation group for the sensitivity analysis restricted to n<6 (`selectedAggregationId=327146`).
+_Avoid_: Sensitivity analysis (unqualified), n<6 run (when this EvidenceFactory group is meant)
+
+**PTQ from FP32 to w-int8, a-int8**:
+The named aggregation group for the PTQ subgroup from FP32 baseline to `w-int8, a-int8` (`selectedAggregationId=281366`).
+_Avoid_: PTQ aggregation (unqualified), int8 subgroup (when this EvidenceFactory group is meant)
+
+**Test aggregation**:
+The disposable named aggregation group used as a safe sandbox (`selectedAggregationId=304080`). Prefer it when validating automation behavior; do not treat it as one of the analysis targets.
+_Avoid_: Real aggregation, Full aggregation v2 (when the sandbox group is meant)
+
 **Automation run**:
-One execution of the automation against the Test aggregation. Opens `https://evidencefactory.lens-ese.cos.ufrj.br/evidenceAggregation/synthesisAggregation/244422?selectedAggregationId=304080`, clicks **Update evidence aggregation** once (navigates to `/evidenceAggregator/304080`), waits for idle, then resolves eligible red elements as pairs auto-advance in the left list. When `#redirectButton` (**view aggregated model**) appears, clicks it, waits for `/evidenceAggregator/submitResult` and the result navigation, and ends. Never target the real production aggregation while testing.
+One execution of the automation against exactly one named aggregation group (selected at start). Opens that group's aggregation-group overview URL, clicks **Update evidence aggregation** once (navigates to `/evidenceAggregator/{aggregationGroupId}`), waits for idle, then resolves eligible red elements as pairs auto-advance in the left list. When `#redirectButton` (**view aggregated model**) appears, clicks it, waits for `/evidenceAggregator/submitResult` and the result navigation, and ends.
 _Avoid_: Batch of URLs, manual sidebar clicking (when auto-advance is the rule)
 
 **Aggregation-group overview**:
@@ -98,8 +118,8 @@ The contextual aspect label DL model under the System archetype. It is never Rem
 _Avoid_: Canonical term (when protection from Remove is meant rather than Join generality)
 
 **Update evidence aggregation**:
-The overview control (`#btnAggregateEvidence`, label misspelled in the UI as "Update evidence aggreagation") that starts matching by navigating to `/evidenceAggregator/{aggregationGroupId}`. The automation clicks it once at run start on the aggregation-group overview, then waits for the aggregator page to load and become idle. Distinct from **view aggregated model**.
-_Avoid_: Refresh, reload, sync, view aggregated model (when this specific button/action is meant)
+The overview control (`#btnAggregateEvidence`) that starts matching by navigating to `/evidenceAggregator/{aggregationGroupId}`. The UI label is **Aggregate evidence** the first time aggregation runs for that group, and **Update evidence aggreagation** (misspelled) thereafter. The automation clicks it once at run start on the aggregation-group overview, then waits for the aggregator page to load and become idle. Distinct from **view aggregated model**.
+_Avoid_: Refresh, reload, sync, view aggregated model, Aggregate evidence (as a separate control — it is the same button)
 
 **View aggregated model**:
 The aggregator control (`#redirectButton`) that appears when `numberOfDifferentNodes === 0`. Clicking it POSTs `/evidenceAggregator/submitResult` and generates the aggregated evidence model (then navigates to the aggregation result page). Distinct from Update evidence aggregation.
