@@ -8,8 +8,8 @@ import {
   executeRemove,
   readAggregatorSnapshot,
 } from "./actions.js";
-import { pickNextDecision } from "./aggregationRules.js";
-import { config } from "./config.js";
+import { pickNextDecision, type AggregationPolicy } from "./aggregationRules.js";
+import { config as defaultConfig, type AppConfig } from "./config.js";
 import { ensureAuthenticated, isAuthenticationRequired } from "./auth.js";
 import type { BrowserContext } from "playwright";
 import { NetworkMonitor } from "./network.js";
@@ -17,15 +17,15 @@ import { defaultSemanticMatcher } from "./semanticMatching.js";
 import { waitForServerIdle, type SyncContext } from "./synchronization.js";
 import type { AggregatorSnapshot } from "./types.js";
 
-async function withRetries(label: string, fn: () => Promise<void>): Promise<void> {
+async function withRetries(maxActionRetries: number, label: string, fn: () => Promise<void>): Promise<void> {
   let lastError: unknown;
-  for (let attempt = 1; attempt <= config.maxActionRetries; attempt++) {
+  for (let attempt = 1; attempt <= maxActionRetries; attempt++) {
     try {
       await fn();
       return;
     } catch (error) {
       lastError = error;
-      console.warn(`Retry ${attempt}/${config.maxActionRetries} for ${label}:`, error);
+      console.warn(`Retry ${attempt}/${maxActionRetries} for ${label}:`, error);
     }
   }
   throw lastError;
@@ -41,22 +41,35 @@ function snapshotKey(snapshot: AggregatorSnapshot): string {
 }
 
 /**
- * Main aggregation workflow for the configured aggregation group.
+ * Main aggregation workflow for one named aggregation group.
  */
 export async function runAggregation(
   page: Page,
   context: BrowserContext,
-  options: { allowAnonymous?: boolean; humanDefault?: "add" | "remove" | "abort" } = {},
+  options: {
+    allowAnonymous?: boolean;
+    humanDefault?: "add" | "remove" | "abort";
+    config?: AppConfig;
+  } = {},
 ): Promise<void> {
   const allowAnonymous = options.allowAnonymous ?? false;
   const humanDefault = options.humanDefault;
+  const config = options.config ?? defaultConfig;
+  const policy: AggregationPolicy = {
+    keepModelQuantizationAspects: config.keepModelQuantizationAspects,
+  };
   const monitor = new NetworkMonitor(page);
   const ctx: SyncContext = { page, monitor };
   const matcher = defaultSemanticMatcher;
   const selectedParam = `selectedAggregationId=${config.aggregationGroupId}`;
 
   try {
-    console.log(`Opening aggregation overview (group ${config.aggregationGroupId})…`);
+    console.log(
+      `Opening aggregation overview (${config.targetDisplayName} / ${config.targetSlug}, group ${config.aggregationGroupId})…`,
+    );
+    if (config.keepModelQuantizationAspects) {
+      console.log("Policy: keep Model-quantization contextual aspects via Add.");
+    }
     await page.goto(config.overviewUrl, { waitUntil: "domcontentloaded" });
     if (!allowAnonymous) {
       await ensureAuthenticated(page, context);
@@ -97,7 +110,7 @@ export async function runAggregation(
 
       if (snapshot.redirectVisible && snapshot.eligible.length === 0) {
         console.log("All differences resolved. Clicking view aggregated model…");
-        await withRetries("view aggregated model", async () => {
+        await withRetries(config.maxActionRetries, "view aggregated model", async () => {
           if (/\/evidenceEditor\/displayAggregationResult/.test(page.url())) {
             return;
           }
@@ -131,14 +144,14 @@ export async function runAggregation(
       let acted = false;
 
       for (const phase of phases) {
-        const next = pickNextDecision(snapshot, matcher, phase);
+        const next = pickNextDecision(snapshot, matcher, phase, policy);
         if (!next) continue;
 
         const { element, decision } = next;
         const label = `${phase}:${decision.type}:${element.label}(${element.origin})`;
         console.log(`Action → ${label} @ ${element.pathNames.join(" > ")}`);
 
-        await withRetries(label, async () => {
+        await withRetries(config.maxActionRetries, label, async () => {
           if (decision.type === "remove") {
             await executeRemove(ctx, element);
           } else if (decision.type === "join") {
