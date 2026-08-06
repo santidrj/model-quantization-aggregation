@@ -34,6 +34,10 @@ Single-context layout: `CONTEXT.md` and `docs/adr/` at the repo root. See `docs/
 
 ## Cursor Cloud specific instructions
 
+### Matt Pocock agent skills
+
+Engineering and productivity skills from [mattpocock/skills](https://github.com/mattpocock/skills) are vendored under `.agents/skills/` (35 skills). Cursor Cloud agents load them from that path; per-repo tracker/domain config remains in `docs/agents/` (see **Agent skills** above). To refresh after upstream changes: `npx skills@latest update -p -y` or reinstall from `skills-lock.json` with `npx skills@latest experimental_install -y`.
+
 This repo is the single-product replication package for an academic paper on model quantization
 (a Python data/analysis pipeline, not a web app). The primary interface is **Jupyter Lab** running
 the notebooks in `notebooks/`. See `README.md` for the canonical usage/workflow overview.
