@@ -52,6 +52,10 @@ _Avoid_: Method+precision alone (when the baseline is part of the claim), within
 Analysis of relative-improvement evidence restricted to a single subgroup, answering what effects look like at that moderator level of the main aggregation (study-level results, optionally with hand-authored Aggregated synthesis for that subgroup only).
 _Avoid_: Subgroup analysis as a split by architecture/hardware inside a cell; reusing corpus-wide Aggregated rows as if they were subgroup-specific
 
+**Sensitivity analysis**:
+Analysis of the main by-precision aggregation on a restricted set of included studies, selected by a study-level criterion (not by subgroup). Answers whether primary synthesis conclusions are robust under that sample change. Distinct from subgroup analysis, which holds the study set and restricts the moderator triple.
+_Avoid_: Subgroup analysis (when the cut is which studies are in, not which cell); reusing corpus-wide Aggregated rows as if they were sensitivity-sample-specific
+
 **Quantization configuration**:
 The full experimental setup for a quantized run, including quantization method, grouping strategy, parameter estimation, and precision configuration. Used to distinguish otherwise identical precision-configuration runs in by-configuration analysis.
 _Avoid_: Precision, precision configuration (when the full setup is meant)

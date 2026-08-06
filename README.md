@@ -28,6 +28,7 @@ This replication package consists of the following components:
      - [3.0-final-selection-analysis.ipynb](notebooks/3.0-final-selection-analysis.ipynb): Analyzes the final selection of papers.
      - [4.0-paper-metadata-analysis.ipynb](notebooks/4.0-paper-metadata-analysis.ipynb): **Supplementary** — optional audit and characterization of manually extracted paper metadata.
      - [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb): **Core** — reproduces the paper's evidence figures (Fig. 6, Fig. 7, and Fig. 10).
+     - [5.2-sensitivity-ts-le-5.ipynb](notebooks/5.2-sensitivity-ts-le-5.ipynb): **Core** — sensitivity analysis of the main by-precision aggregation restricted to studies with ≤ 5 theoretical structures.
 
 4. **Documentation**:
    - [data/processed/evidence-diagrams-mapping.md](data/processed/evidence-diagrams-mapping.md): Links to evidence diagrams generated during the study.
@@ -50,7 +51,8 @@ The project is organized as follows:
 │   ├── 2.0-model-quantization-paper-selection.ipynb
 │   ├── 3.0-second-selection-analysis.ipynb
 │   ├── 4.0-paper-metadata-analysis.ipynb
-│   └── 5.0-evidence-analysis.ipynb
+│   ├── 5.0-evidence-analysis.ipynb
+│   └── 5.2-sensitivity-ts-le-5.ipynb
 ├── reports/
 │   └── figures/
 ├── src/
@@ -205,6 +207,10 @@ Processed evidence under `data/processed/{paperkey}/` is included in the replica
 
 - [4.0-paper-metadata-analysis.ipynb](notebooks/4.0-paper-metadata-analysis.ipynb) — optional metadata audit and characterization; not required to reproduce paper figures.
 - **Supplementary** sections inside [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb) — diagnostics (`distribution-of-sample-size.pdf`) and appendix forest plots (`complete-*-forestplot.pdf`).
+
+### Sensitivity notebooks
+
+- [5.2-sensitivity-ts-le-5.ipynb](notebooks/5.2-sensitivity-ts-le-5.ipynb) — main by-precision aggregation restricted to studies with ≤ 5 theoretical structures; figures `sensitivity-ts-le-5-*-forestplot.pdf`.
 
 Domain terminology is defined in [CONTEXT.md](CONTEXT.md).
 
