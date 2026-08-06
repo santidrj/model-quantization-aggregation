@@ -8,7 +8,7 @@ const DL_MODEL = normalizeLabel("DL model");
 
 /** Per-named-aggregation-group policy toggles. */
 export type AggregationPolicy = {
-  /** When true (PTQ only), keep Model-quantization contextual aspects via Add. */
+  /** When true (PTQ from FP32 to w-int8, a-int8), keep Model quantization cause aspects via Add. */
   keepModelQuantizationAspects: boolean;
 };
 
@@ -117,7 +117,7 @@ export function decideForElement(
   if (phase === "add") {
     if (findJoinPartner(el, snapshot.eligible, matcher)) return null;
 
-    // PTQ: keep Model-quantization contextual aspects via Add (both origins).
+    // PTQ from FP32 to w-int8, a-int8: keep Model quantization cause contextual aspects via Add.
     if (policy.keepModelQuantizationAspects && isModelQuantizationAspect(el)) {
       return { type: "add" };
     }

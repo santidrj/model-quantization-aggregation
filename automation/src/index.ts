@@ -1,8 +1,8 @@
 import { ensureAuthenticated, interactiveLogin, launchAuthenticatedContext, saveStorageState } from "./auth.js";
 import { runAggregation } from "./aggregation.js";
 import {
-  AGGREGATION_GROUP_SLUGS,
   createConfig,
+  parseTargetFlag,
   parseTargetSlug,
   type AggregationGroupSlug,
 } from "./config.js";
@@ -20,22 +20,6 @@ function parseHumanDefault(): "add" | "remove" | "abort" | undefined {
     const value = eq.split("=", 2)[1]?.toLowerCase();
     if (value === "add" || value === "remove" || value === "abort") return value;
     throw new Error(`Invalid --human-default value: ${value ?? "(missing)"}`);
-  }
-  return undefined;
-}
-
-function parseTargetFlag(): string | undefined {
-  const idx = process.argv.indexOf("--target");
-  if (idx >= 0) {
-    const value = process.argv[idx + 1];
-    if (!value || value.startsWith("-")) {
-      throw new Error(`Missing value for --target. Expected one of: ${AGGREGATION_GROUP_SLUGS.join(", ")}`);
-    }
-    return value;
-  }
-  const eq = process.argv.find((a) => a.startsWith("--target="));
-  if (eq) {
-    return eq.split("=", 2)[1];
   }
   return undefined;
 }

@@ -53,6 +53,23 @@ export function parseTargetSlug(raw: string | undefined | null): AggregationGrou
   return slug;
 }
 
+/** Read `--target <slug>` or `--target=<slug>` from argv. */
+export function parseTargetFlag(argv: string[] = process.argv): string | undefined {
+  const idx = argv.indexOf("--target");
+  if (idx >= 0) {
+    const value = argv[idx + 1];
+    if (!value || value.startsWith("-")) {
+      throw new Error(`Missing value for --target. Expected one of: ${AGGREGATION_GROUP_SLUGS.join(", ")}`);
+    }
+    return value;
+  }
+  const eq = argv.find((a) => a.startsWith("--target="));
+  if (eq) {
+    return eq.split("=", 2)[1];
+  }
+  return undefined;
+}
+
 const shared = {
   baseUrl,
   loginUrl: `${baseUrl}/user/login`,
@@ -78,11 +95,20 @@ export type AppConfig = typeof shared & {
   targetSlug: AggregationGroupSlug;
   targetDisplayName: string;
   aggregationGroupId: number;
-  /** PTQ-only: auto-Add contextual aspects under Model quantization instead of Remove. */
+  /**
+   * On PTQ from FP32 to w-int8, a-int8: auto-Add contextual aspects under the
+   * Model quantization cause instead of Remove.
+   */
   keepModelQuantizationAspects: boolean;
   overviewUrl: string;
   aggregatorUrl: string;
 };
+
+export function policyFromConfig(config: Pick<AppConfig, "keepModelQuantizationAspects">): {
+  keepModelQuantizationAspects: boolean;
+} {
+  return { keepModelQuantizationAspects: config.keepModelQuantizationAspects };
+}
 
 export function createConfig(slug: AggregationGroupSlug = DEFAULT_AGGREGATION_GROUP_SLUG): AppConfig {
   const synthesisId = Number(process.env.EF_SYNTHESIS_ID ?? 244422);
