@@ -25,7 +25,7 @@ The work of resolving every eligible element for the currently highlighted incom
 _Avoid_: Session, run, pass (when a single incoming-evidence incorporation is meant)
 
 **Named aggregation group**:
-One EvidenceFactory aggregation group addressed by a stable human name and its `selectedAggregationId` under synthesis `244422`. The named set is Full aggregation v2, Sensitivity analysis (n<6), PTQ from FP32 to w-int8, a-int8, and Test aggregation.
+One EvidenceFactory aggregation group addressed by a stable human name and its `selectedAggregationId` under synthesis `244422`. The named set is Full aggregation v2, Sensitivity analysis (n<6), PTQ from FP32 to w-int8, a-int8, and Test aggregation. An automation run selects exactly one of these by name; when none is specified, the run targets Full aggregation v2.
 _Avoid_: Final aggregation (ambiguous), anonymous numeric ID as the only identity when a name exists
 
 **Full aggregation v2**:
