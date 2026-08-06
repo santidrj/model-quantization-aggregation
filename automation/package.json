@@ -6,7 +6,7 @@
   "scripts": {
     "auth": "tsx src/index.ts --login-only",
     "start": "tsx src/index.ts",
-    "start:anon": "tsx src/index.ts --allow-anonymous --human-default add",
+    "start:anon": "tsx src/index.ts --allow-anonymous --target test --human-default add",
     "typecheck": "tsc --noEmit",
     "probe": "tsx src/probeLive.ts",
     "probe:remove": "tsx src/probeLive.ts --remove"

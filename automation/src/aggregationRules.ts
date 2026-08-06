@@ -6,6 +6,16 @@ const MODEL_QUANTIZATION = normalizeLabel("Model quantization");
 const SYSTEM = normalizeLabel("System");
 const DL_MODEL = normalizeLabel("DL model");
 
+/** Per-named-aggregation-group policy toggles. */
+export type AggregationPolicy = {
+  /** When true (PTQ from FP32 to w-int8, a-int8), keep Model quantization cause aspects via Add. */
+  keepModelQuantizationAspects: boolean;
+};
+
+export const DEFAULT_AGGREGATION_POLICY: AggregationPolicy = {
+  keepModelQuantizationAspects: false,
+};
+
 function pathHasModelQuantization(el: EligibleElement): boolean {
   return el.pathNames.some((n) => normalizeLabel(n) === MODEL_QUANTIZATION);
 }
@@ -22,11 +32,22 @@ function isProtectedDlModel(el: EligibleElement): boolean {
   return isSystemFirstLevelAspect(el) && normalizeLabel(el.label) === DL_MODEL;
 }
 
+/** Contextual aspects under Model quantization that PTQ keeps via Add. */
+export function isModelQuantizationAspect(el: EligibleElement): boolean {
+  return el.kind === "contextual aspect" && pathHasModelQuantization(el);
+}
+
 /** Mandatory cleanup Removes. */
-export function shouldAutoRemove(el: EligibleElement): boolean {
+export function shouldAutoRemove(
+  el: EligibleElement,
+  policy: AggregationPolicy = DEFAULT_AGGREGATION_POLICY,
+): boolean {
   if (el.kind !== "contextual aspect") return false;
   if (isProtectedDlModel(el)) return false;
-  if (pathHasModelQuantization(el)) return true;
+  if (pathHasModelQuantization(el)) {
+    if (policy.keepModelQuantizationAspects) return false;
+    return true;
+  }
   if (isSystemFirstLevelAspect(el)) return true;
   return false;
 }
@@ -72,9 +93,10 @@ export function decideForElement(
   snapshot: AggregatorSnapshot,
   matcher: SemanticMatcher,
   phase: "remove" | "join" | "add" | "residual",
+  policy: AggregationPolicy = DEFAULT_AGGREGATION_POLICY,
 ): PolicyDecision | null {
   if (phase === "remove") {
-    if (!shouldAutoRemove(el)) return null;
+    if (!shouldAutoRemove(el, policy)) return null;
     // Prefer Join when a legal map partner is also eligible (e.g. LLM ↔ DL model).
     if (findJoinPartner(el, snapshot.eligible, matcher)) return null;
     return { type: "remove" };
@@ -93,9 +115,15 @@ export function decideForElement(
   }
 
   if (phase === "add") {
-    if (el.kind !== "effect") return null;
-    if (shouldAutoRemove(el)) return null;
     if (findJoinPartner(el, snapshot.eligible, matcher)) return null;
+
+    // PTQ from FP32 to w-int8, a-int8: keep Model quantization cause contextual aspects via Add.
+    if (policy.keepModelQuantizationAspects && isModelQuantizationAspect(el)) {
+      return { type: "add" };
+    }
+
+    if (el.kind !== "effect") return null;
+    if (shouldAutoRemove(el, policy)) return null;
 
     const orphanAlias =
       matcher.isAlias(el.label) &&
@@ -134,10 +162,11 @@ export function pickNextDecision(
   snapshot: AggregatorSnapshot,
   matcher: SemanticMatcher,
   phase: "remove" | "join" | "add" | "residual",
+  policy: AggregationPolicy = DEFAULT_AGGREGATION_POLICY,
 ): { element: EligibleElement; decision: PolicyDecision } | null {
   const ordered = [...snapshot.eligible].sort((a, b) => a.treeIndex - b.treeIndex);
   for (const el of ordered) {
-    const decision = decideForElement(el, snapshot, matcher, phase);
+    const decision = decideForElement(el, snapshot, matcher, phase, policy);
     if (decision) return { element: el, decision };
   }
   return null;

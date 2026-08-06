@@ -2,21 +2,76 @@
  * Runtime configuration for the EvidenceFactory aggregation automation.
  * Keep secrets out of this file — auth lives in .auth/storage-state.json (gitignored).
  *
- * Override the aggregation target without editing this file:
- *   EF_AGGREGATION_GROUP_ID=282042 EF_SYNTHESIS_ID=244422 npm start
+ * Select a named aggregation group:
+ *   EF_TARGET=full-v2 npm start
+ *   npm start -- --target sensitivity-n6
  */
-const synthesisId = Number(process.env.EF_SYNTHESIS_ID ?? 244422);
-const aggregationGroupId = Number(process.env.EF_AGGREGATION_GROUP_ID ?? 282042);
 const baseUrl = "https://evidencefactory.lens-ese.cos.ufrj.br";
 
-export const config = {
+/** Named aggregation groups selectable by slug. */
+export const NAMED_AGGREGATION_GROUPS = {
+  "full-v2": {
+    displayName: "Full aggregation v2",
+    aggregationGroupId: 282042,
+    keepModelQuantizationAspects: false,
+  },
+  "sensitivity-n6": {
+    displayName: "Sensitivity analysis (n<6)",
+    aggregationGroupId: 327146,
+    keepModelQuantizationAspects: false,
+  },
+  "ptq-fp32-w8a8": {
+    displayName: "PTQ from FP32 to w-int8, a-int8",
+    aggregationGroupId: 281366,
+    keepModelQuantizationAspects: true,
+  },
+  test: {
+    displayName: "Test aggregation",
+    aggregationGroupId: 304080,
+    keepModelQuantizationAspects: false,
+  },
+} as const;
+
+export type AggregationGroupSlug = keyof typeof NAMED_AGGREGATION_GROUPS;
+
+export const DEFAULT_AGGREGATION_GROUP_SLUG: AggregationGroupSlug = "full-v2";
+
+export const AGGREGATION_GROUP_SLUGS = Object.keys(NAMED_AGGREGATION_GROUPS) as AggregationGroupSlug[];
+
+export function isAggregationGroupSlug(value: string): value is AggregationGroupSlug {
+  return Object.prototype.hasOwnProperty.call(NAMED_AGGREGATION_GROUPS, value);
+}
+
+export function parseTargetSlug(raw: string | undefined | null): AggregationGroupSlug {
+  if (raw == null || raw.trim() === "") return DEFAULT_AGGREGATION_GROUP_SLUG;
+  const slug = raw.trim();
+  if (!isAggregationGroupSlug(slug)) {
+    throw new Error(
+      `Unknown aggregation target "${slug}". Expected one of: ${AGGREGATION_GROUP_SLUGS.join(", ")}`,
+    );
+  }
+  return slug;
+}
+
+/** Read `--target <slug>` or `--target=<slug>` from argv. */
+export function parseTargetFlag(argv: string[] = process.argv): string | undefined {
+  const idx = argv.indexOf("--target");
+  if (idx >= 0) {
+    const value = argv[idx + 1];
+    if (!value || value.startsWith("-")) {
+      throw new Error(`Missing value for --target. Expected one of: ${AGGREGATION_GROUP_SLUGS.join(", ")}`);
+    }
+    return value;
+  }
+  const eq = argv.find((a) => a.startsWith("--target="));
+  if (eq) {
+    return eq.split("=", 2)[1];
+  }
+  return undefined;
+}
+
+const shared = {
   baseUrl,
-  /** Aggregation-group overview. */
-  overviewUrl: `${baseUrl}/evidenceAggregation/synthesisAggregation/${synthesisId}?selectedAggregationId=${aggregationGroupId}`,
-  /** Matching editor reached after Update. */
-  aggregatorUrl: `${baseUrl}/evidenceAggregator/${aggregationGroupId}`,
-  aggregationGroupId,
-  synthesisId,
   loginUrl: `${baseUrl}/user/login`,
   storageStatePath: new URL("../.auth/storage-state.json", import.meta.url),
   /** Alias → canonical (more generic) term kept on Join. */
@@ -35,4 +90,40 @@ export const config = {
   maxActionRetries: 3,
 } as const;
 
-export type AppConfig = typeof config;
+export type AppConfig = typeof shared & {
+  synthesisId: number;
+  targetSlug: AggregationGroupSlug;
+  targetDisplayName: string;
+  aggregationGroupId: number;
+  /**
+   * On PTQ from FP32 to w-int8, a-int8: auto-Add contextual aspects under the
+   * Model quantization cause instead of Remove.
+   */
+  keepModelQuantizationAspects: boolean;
+  overviewUrl: string;
+  aggregatorUrl: string;
+};
+
+export function policyFromConfig(config: Pick<AppConfig, "keepModelQuantizationAspects">): {
+  keepModelQuantizationAspects: boolean;
+} {
+  return { keepModelQuantizationAspects: config.keepModelQuantizationAspects };
+}
+
+export function createConfig(slug: AggregationGroupSlug = DEFAULT_AGGREGATION_GROUP_SLUG): AppConfig {
+  const synthesisId = Number(process.env.EF_SYNTHESIS_ID ?? 244422);
+  const group = NAMED_AGGREGATION_GROUPS[slug];
+  return {
+    ...shared,
+    synthesisId,
+    targetSlug: slug,
+    targetDisplayName: group.displayName,
+    aggregationGroupId: group.aggregationGroupId,
+    keepModelQuantizationAspects: group.keepModelQuantizationAspects,
+    overviewUrl: `${baseUrl}/evidenceAggregation/synthesisAggregation/${synthesisId}?selectedAggregationId=${group.aggregationGroupId}`,
+    aggregatorUrl: `${baseUrl}/evidenceAggregator/${group.aggregationGroupId}`,
+  };
+}
+
+/** Default config (Full aggregation v2, or `EF_TARGET` when set at process start). */
+export const config = createConfig(parseTargetSlug(process.env.EF_TARGET));
