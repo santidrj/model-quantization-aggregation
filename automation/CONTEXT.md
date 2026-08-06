@@ -37,7 +37,7 @@ The named aggregation group for the sensitivity analysis restricted to n<6 (`sel
 _Avoid_: Sensitivity analysis (unqualified), n<6 run (when this EvidenceFactory group is meant)
 
 **PTQ from FP32 to w-int8, a-int8**:
-The named aggregation group for the PTQ subgroup from FP32 baseline to `w-int8, a-int8` (`selectedAggregationId=281366`).
+The named aggregation group for the PTQ subgroup from FP32 baseline to `w-int8, a-int8` (`selectedAggregationId=281366`). Sole policy difference from the other named groups: contextual aspects under the Model quantization cause are auto-Added rather than auto-Removed.
 _Avoid_: PTQ aggregation (unqualified), int8 subgroup (when this EvidenceFactory group is meant)
 
 **Test aggregation**:
@@ -70,7 +70,7 @@ A model element whose EvidenceFactory type/metadata identifies it as an Effect. 
 _Avoid_: Contextual aspect, outcome (when the typed Effect element is meant)
 
 **Contextual aspect**:
-A model element whose EvidenceFactory type/metadata identifies it as a contextual aspect. Subject to Remove-phase cleanup rules; never eligible for Add.
+A model element whose EvidenceFactory type/metadata identifies it as a contextual aspect. Subject to Remove-phase cleanup rules. Never eligible for Add, except on PTQ from FP32 to w-int8, a-int8 for contextual aspects under the Model quantization cause (those are auto-Added instead of auto-Removed).
 _Avoid_: Effect, context factor (when the typed contextual-aspect element is meant)
 
 **Remove**:
@@ -86,8 +86,8 @@ Two eligible model elements of the same kind whose labels are linked by the sema
 _Avoid_: Match, candidate pair (when this Join gate is meant)
 
 **Add**:
-The aggregation operation that affirms an eligible Effect should appear in the final aggregated model. It applies to not-in-common Effects on either model origin: Add on `(2)` brings the incoming Effect into the aggregated model; Add on `(1)` confirms an aggregated-only Effect remains in the final aggregated model. Runs last in the automation's phase order. EvidenceFactory may offer Add, Remove, or Join on Effects at any time, including Effects touched in a previous turn; the automation still decides from the current eligible set only. Auto-Adds an eligible Effect from either origin when no semantically equivalent Effect already exists in the aggregated model. An orphan alias Effect (mapped alias eligible, but no Join pair because the canonical term is not eligible) is a human decision point — never auto-Added or auto-skipped.
-_Avoid_: Insert, import (when the EvidenceFactory Add action is meant)
+The aggregation operation that affirms an eligible element should appear in the final aggregated model. For Effects, it applies to not-in-common Effects on either model origin: Add on `(2)` brings the incoming Effect into the aggregated model; Add on `(1)` confirms an aggregated-only Effect remains. Runs last in the automation's phase order. Auto-Adds an eligible Effect from either origin when no semantically equivalent Effect already exists in the aggregated model. An orphan alias Effect (mapped alias eligible, but no Join pair because the canonical term is not eligible) is a human decision point — never auto-Added or auto-skipped. On PTQ from FP32 to w-int8, a-int8 only, also auto-Adds eligible contextual aspects under the Model quantization cause (both origins) — that is the keep mapping for those aspects.
+_Avoid_: Insert, import, Keep (as a separate EvidenceFactory action — keep is Add for this PTQ case)
 
 **Final aggregated model**:
 The aggregated model as it should stand after differences are fully resolved and **view aggregated model** has been invoked to generate the aggregated evidence model. Add affirms membership in this result; Remove and Join reshape what remains in it.
@@ -106,7 +106,7 @@ The more generic label stored as the value in the semantic-equivalence map. On J
 _Avoid_: Preferred term, target label, generic term (when the mapped canonical value is meant)
 
 **Model quantization cause**:
-The cause element labeled Model quantization under the Technology archetype. Every eligible contextual aspect under it is unnecessary and must be Removed, on either model origin.
+The cause element labeled Model quantization under the Technology archetype. On Full aggregation v2, Sensitivity analysis (n<6), and Test aggregation, every eligible contextual aspect under it is unnecessary and must be Removed, on either model origin. On PTQ from FP32 to w-int8, a-int8, those contextual aspects are instead auto-Added (kept); they are not auto-Removed.
 _Avoid_: Model Quantization (when the research meta-analysis topic is meant rather than this cause subtree); Model Quantization section
 
 **System archetype**:
