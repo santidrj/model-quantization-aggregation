@@ -8,8 +8,8 @@ import {
   executeRemove,
   readAggregatorSnapshot,
 } from "./actions.js";
-import { pickNextDecision, type AggregationPolicy } from "./aggregationRules.js";
-import { config as defaultConfig, type AppConfig } from "./config.js";
+import { pickNextDecision } from "./aggregationRules.js";
+import { config as defaultConfig, policyFromConfig, type AppConfig } from "./config.js";
 import { ensureAuthenticated, isAuthenticationRequired } from "./auth.js";
 import type { BrowserContext } from "playwright";
 import { NetworkMonitor } from "./network.js";
@@ -55,9 +55,7 @@ export async function runAggregation(
   const allowAnonymous = options.allowAnonymous ?? false;
   const humanDefault = options.humanDefault;
   const config = options.config ?? defaultConfig;
-  const policy: AggregationPolicy = {
-    keepModelQuantizationAspects: config.keepModelQuantizationAspects,
-  };
+  const policy = policyFromConfig(config);
   const monitor = new NetworkMonitor(page);
   const ctx: SyncContext = { page, monitor };
   const matcher = defaultSemanticMatcher;
@@ -68,7 +66,7 @@ export async function runAggregation(
       `Opening aggregation overview (${config.targetDisplayName} / ${config.targetSlug}, group ${config.aggregationGroupId})…`,
     );
     if (config.keepModelQuantizationAspects) {
-      console.log("Policy: keep Model-quantization contextual aspects via Add.");
+      console.log("Policy: auto-Add contextual aspects under the Model quantization cause.");
     }
     await page.goto(config.overviewUrl, { waitUntil: "domcontentloaded" });
     if (!allowAnonymous) {
