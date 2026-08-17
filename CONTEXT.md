@@ -171,5 +171,5 @@ The Likert-style label of a relative improvement: a simple atom (SN, NE, WN, IF,
 _Avoid_: Effect magnitude; belief (when direction and strength are meant); confidence interval (when the intensity band is meant)
 
 **Conflict**:
-The Dempster–Shafer combination conflict \(K = m(\emptyset)\) for one effect after pooling the evidence models that report it. Distinct from Evidence Factory's red eligible-element mismatches in the aggregator UI.
-_Avoid_: Eligible element; difference (when \(K\) is meant); disagreement of mean relative improvements (when combination conflict is meant)
+The Dempster–Shafer \(K = m(\emptyset)\) of the last pairwise combination step when pooling the evidence models that report an effect (two at a time, renormalized after each step, in Evidence Factory aggregation-turn order). Ground truth is the combination result on Evidence Factory aggregated evidence 329074. Distinct from the n-fold empty-set mass of combining all sources in one product, and from Evidence Factory's red eligible-element mismatches in the aggregator UI.
+_Avoid_: Eligible element; difference (when \(K\) is meant); disagreement of mean relative improvements (when combination conflict is meant); n-fold \(m(\emptyset)\) (when last-step \(K\) is meant)

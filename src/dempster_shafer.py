@@ -55,18 +55,25 @@ def _conjunctive_combine(left: MassFunction, right: MassFunction) -> MassFunctio
 
 
 def combine_bpas(bpas: list[MassFunction]) -> tuple[MassFunction, float]:
-    """Combine mass functions with Dempster's n-fold rule. Returns (normalized m, conflict K)."""
+    """Combine mass functions pairwise with Dempster's rule.
+
+    Evidence Factory and Santos (2016, §5.3.2) combine two bpas at a time and
+    renormalize after each step. The returned conflict is that last step's
+    K = m(empty set), not the n-fold empty-set mass of combining all sources
+    in one product.
+    """
     if not bpas:
         raise ValueError("At least one mass function is required")
     accumulator = dict(bpas[0])
+    conflict = 0.0
     for other in bpas[1:]:
-        accumulator = _conjunctive_combine(accumulator, other)
-    conflict = accumulator.pop(frozenset(), 0.0)
-    if conflict >= 1.0:
-        raise ValueError("Total conflict: Dempster combination is undefined")
-    scale = 1.0 - conflict
-    normalized = {hypothesis: mass / scale for hypothesis, mass in accumulator.items() if mass}
-    return normalized, conflict
+        raw = _conjunctive_combine(accumulator, other)
+        conflict = raw.pop(frozenset(), 0.0)
+        if conflict >= 1.0:
+            raise ValueError("Total conflict: Dempster combination is undefined")
+        scale = 1.0 - conflict
+        accumulator = {hypothesis: mass / scale for hypothesis, mass in raw.items() if mass}
+    return accumulator, conflict
 
 
 def belief(masses: MassFunction, hypothesis: frozenset[str]) -> float:
@@ -77,8 +84,10 @@ def belief(masses: MassFunction, hypothesis: frozenset[str]) -> float:
 def select_hypothesis(masses: MassFunction) -> tuple[frozenset[str], float]:
     """Pick the SSM intensity: max-belief among simples and focal adjacent compounds.
 
-    A compound is discarded when its dominant constituent already holds at least 75% of
-    the compound's belief, or when the compound received no mass of its own.
+    Santos (2016, §5.3.2): a compound is chosen only when none of its contained
+    singletons contribute ≥ 75% of Bel(compound). Compounds that received no mass
+    of their own are not candidates — that matches Table `tab:general-results`,
+    where non-focal ranges such as RAM {PO, SP} are not selected.
     """
     simple_beliefs = {frozenset({atom}): belief(masses, frozenset({atom})) for atom in ATOMS}
     candidates: dict[frozenset[str], float] = {hyp: bel for hyp, bel in simple_beliefs.items() if bel > 0}

@@ -78,15 +78,30 @@ def test_load_evidence_models_assigns_study_level_n():
     assert len(aji) == AJI_EVIDENCE_MODEL_COUNT
     assert {model.evidence_model_count for model in aji} == {AJI_EVIDENCE_MODEL_COUNT}
     assert len(models) == CORPUS_EVIDENCE_MODEL_COUNT
+    assert [model.evidence_factory_id for model in aji] == [319366, 319396, 319424, 319452]
+
+
+def test_aggregation_order_follows_evidence_factory_turn_list():
+    models = load_evidence_models()
+    ordered = sorted(models, key=lambda model: model.aggregation_index)
+    identities = [(model.study_id, model.quantization_method, model.precision_configuration) for model in ordered]
+    assert identities[0] == ("S1", "ptq-retrain", "w-log1")
+    assert identities[1] == ("S6", "qat", "mixed-3.9")
+    assert identities[-1] == ("S19", "ptq", "w-int8, a-fp32")
+    assert len(set(identities)) == CORPUS_EVIDENCE_MODEL_COUNT
+    assert [model.aggregation_index for model in ordered] == list(range(CORPUS_EVIDENCE_MODEL_COUNT))
 
 
 def test_published_analogue_matches_intensity_and_model_counts():
     assert reproduction_mismatches(checks=("intensity", "n_evidence_models")) == []
 
 
-def test_published_analogue_belief_matches_except_inference_power_draw():
-    mismatches = reproduction_mismatches(checks=("belief",))
-    assert mismatches == ["Inference Power Draw: belief 71% != 72%"]
+def test_published_analogue_matches_belief():
+    assert reproduction_mismatches(checks=("belief",)) == []
+
+
+def test_published_analogue_matches_conflict():
+    assert reproduction_mismatches(checks=("conflict",)) == []
 
 
 def test_comparison_records_cover_published_table_effects():

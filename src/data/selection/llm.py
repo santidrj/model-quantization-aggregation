@@ -35,7 +35,7 @@ GEMINI_CONFIG = GenerateContentConfig(
 )
 
 REQUIRED_QUERY_COLUMNS = ("Title", "Abstract", "Author Keywords")
-INCLUSION_CRITERIA_COLUMNS = ("IC1", "IC2", "IC3", "IC4", "IC5")
+INCLUSION_CRITERIA_COLUMNS = ("IC1", "IC2", "IC3", "IC4", "IC5", "IC6")
 
 QUERY_CONTEXT = """**Role:** You are an expert Software Engineering Researcher conducting a Systematic Literature Review (SLR) on "Resource-Efficient Deep Learning via Quantization."
 
@@ -309,9 +309,7 @@ def get_excluded_papers(paper_scores: pl.DataFrame) -> pl.DataFrame:
         The excluded papers.
     """
 
-    return paper_scores.filter(
-        _criteria_filter("__lt__")
-    )
+    return paper_scores.filter(_criteria_filter("__lt__"))
 
 
 def get_included_papers(paper_scores: pl.DataFrame) -> pl.DataFrame:
@@ -331,9 +329,7 @@ def get_included_papers(paper_scores: pl.DataFrame) -> pl.DataFrame:
         The included papers.
     """
 
-    return paper_scores.filter(
-        _criteria_filter("__gt__")
-    )
+    return paper_scores.filter(_criteria_filter("__gt__"))
 
 
 def get_manual_review_papers(

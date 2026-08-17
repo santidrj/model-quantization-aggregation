@@ -97,3 +97,53 @@ def test_combine_effect_uses_intensity_labels_and_returns_conflict():
     assert result.intensity == frozenset({"SP"})
     assert result.belief == pytest.approx(0.51)
     assert result.conflict == pytest.approx(0.0)
+
+
+def test_three_source_conflict_is_the_last_pairwise_step():
+    """Thesis §5.3.2: a third evidence is combined with the prior bpa; reported κ is that step's K."""
+    first = simple_support(frozenset({"SP"}), 0.9)
+    second = simple_support(frozenset({"WN"}), 0.8)
+    third = simple_support(frozenset({"SP"}), 0.7)
+    prior, _ignored_conflict = combine_bpas([first, second])
+    _, last_step_conflict = combine_bpas([prior, third])
+    _, conflict = combine_bpas([first, second, third])
+    assert conflict == pytest.approx(last_step_conflict)
+
+
+def test_combine_bpas_matches_santos_thesis_structure_table_5():
+    """Independent literals from Santos 2016 thesis Table 5 (structure effect, K = 0)."""
+    po_sp = frozenset({"PO", "SP"})
+    wp_po = frozenset({"WP", "PO"})
+    po = frozenset({"PO"})
+    combined, conflict = combine_bpas(
+        [
+            {po_sp: 0.65, THETA: 0.35},
+            {wp_po: 0.4, THETA: 0.6},
+        ]
+    )
+    assert conflict == pytest.approx(0.0)
+    assert combined[po] == pytest.approx(0.26)
+    assert combined[po_sp] == pytest.approx(0.39)
+    assert combined[wp_po] == pytest.approx(0.14)
+    assert combined[THETA] == pytest.approx(0.21)
+    hypothesis, selected_belief = select_hypothesis(combined)
+    assert hypothesis == po_sp
+    assert selected_belief == pytest.approx(0.65)
+
+
+def test_combine_bpas_reports_last_pairwise_conflict_from_thesis_table_6():
+    """Santos 2016 thesis Table 6: third evidence m({SP})=0.9 yields κ = 0.36 and Bel({SP})=0.84."""
+    po_sp = frozenset({"PO", "SP"})
+    wp_po = frozenset({"WP", "PO"})
+    sp = frozenset({"SP"})
+    combined, conflict = combine_bpas(
+        [
+            {po_sp: 0.65, THETA: 0.35},
+            {wp_po: 0.4, THETA: 0.6},
+            {sp: 0.9, THETA: 0.1},
+        ]
+    )
+    assert conflict == pytest.approx(0.36)
+    hypothesis, selected_belief = select_hypothesis(combined)
+    assert hypothesis == sp
+    assert selected_belief == pytest.approx(0.84, abs=0.005)

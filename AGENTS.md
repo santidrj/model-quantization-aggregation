@@ -30,7 +30,7 @@ Five canonical triage roles mapped to `Status:` lines in issue files. See `docs/
 
 ### Domain docs
 
-Single-context layout: `CONTEXT.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+Multi-context layout: root `CONTEXT-MAP.md` points at per-context `CONTEXT.md` files; ADRs in `docs/adr/`. See `docs/agents/domain.md`.
 
 ## Cursor Cloud specific instructions
 

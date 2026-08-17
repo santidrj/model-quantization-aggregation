@@ -6,8 +6,9 @@ from dataclasses import dataclass
 from enum import Enum
 import json
 from pathlib import Path
+import re
 
-from src.config import processed_paper_path
+from src.config import PROCESSED_DATA_DIR
 from src.data.papers.entities import Papers
 from src.data.papers.study_id import study_id_sort_key
 from src.dempster_shafer import combine_effect, format_intensity
@@ -27,6 +28,8 @@ class EvidenceModel:
     study_belief: float
     evidence_model_count: int
     effects: dict[str, tuple[str, float]]
+    evidence_factory_id: int | None = None
+    aggregation_index: int | None = None
 
 
 def assigned_mass(model: EvidenceModel, assignment: MassAssignment, effect: str | None = None) -> float:
@@ -42,7 +45,9 @@ def assigned_mass(model: EvidenceModel, assignment: MassAssignment, effect: str 
 
 
 def _model_sort_key(model: EvidenceModel) -> tuple:
-    return (*study_id_sort_key(model.study_id), model.quantization_method, model.precision_configuration)
+    """Evidence Factory combines in aggregation-turn order (Santos 2016, Table 21)."""
+    index = model.aggregation_index if model.aggregation_index is not None else 10**18
+    return (index, *study_id_sort_key(model.study_id), model.quantization_method, model.precision_configuration)
 
 
 def pieces_for_effect(
@@ -89,18 +94,251 @@ def _effects_from_record(record: dict) -> dict[str, tuple[str, float]]:
     return effects
 
 
+_EVIDENCE_FACTORY_ID_RE = re.compile(r"evidenceEditor/(\d+)")
+_STUDY_HEADING_RE = re.compile(r"^## (S\d+)\s*$")
+_ORDER_LINE_RE = re.compile(r'^Evidence based on the paper "(?P<title>[^"]+)"(?: \((?P<outer>.+)\))?$')
+_TITLE_QUALIFIER_RE = re.compile(r"^(?P<title>.*) \((?P<inner>.+ evidence)\)$")
+_AGGREGATION_ORDER_FILENAME = "evidence-factory-aggregation-order.txt"
+
+_TITLE_PREFIX_TO_STUDY = (
+    ("Compressing Neural Machine Translation", "S1"),
+    ("Impact of Memory Voltage Scaling", "S2"),
+    ("Model Quantization and Synthetic Aperture", "S3"),
+    ("Benchmarking of Quantization Libraries", "S4"),
+    ("Activation Density Based Mixed-Precision", "S5"),
+    ("Mixed Precision Low-Bit Quantization", "S6"),
+    ("Field Programmable Gate Array-Based All-Layer", "S7"),
+    ("Efficient Inference Of Image-Based", "S8"),
+    ("Energy-Efficient Respiratory Anomaly", "S9"),
+    ("Verifiable and Energy Efficient Medical Image", "S10"),
+    ("Experimental Energy Consumption Analysis", "S11"),
+    ("Implementing Ultra-Lightweight Co-Inference", "S12"),
+    ("Impact of ML Optimization Tactics", "S13"),
+    ("Language Models in Software Development", "S14"),
+    ("Q_YOLOv5m", "S15"),
+    ("POQ: Is There a Pareto-Optimal", "S16"),
+    ("Quantized Object Detection", "S17"),
+    ("Energy-Efficient Deep Learning for Cloud Detection", "S18"),
+    ("Edge AI-Powered System Architecture", "S19"),
+    ("Implementing Deep Neural Networks on ARM", "S20"),
+    ("Efficient Expiration Date Recognition", "S21"),
+)
+
+_FIXED_POINT_WIDTH = {2: "q0.2", 4: "q0.4", 8: "q0.8", 16: "q0.16", 32: "q0.32"}
+_TAO_COMPONENT = {"int8": "q0.8", "fp16": "q0.16", "fp32": "fp32", "q0.16": "q0.16", "q0.8": "q0.8"}
+
+
+def _evidence_factory_ids_by_study(mapping_path: Path) -> dict[str, list[int]]:
+    ids_by_study: dict[str, list[int]] = {}
+    current_study: str | None = None
+    for line in mapping_path.read_text(encoding="utf-8").splitlines():
+        heading = _STUDY_HEADING_RE.match(line)
+        if heading:
+            current_study = heading.group(1)
+            ids_by_study.setdefault(current_study, [])
+            continue
+        match = _EVIDENCE_FACTORY_ID_RE.search(line)
+        if match and current_study is not None:
+            ids_by_study[current_study].append(int(match.group(1)))
+    return ids_by_study
+
+
+def _parse_aggregation_label(line: str) -> tuple[str, str]:
+    match = _ORDER_LINE_RE.match(line.strip())
+    if not match:
+        raise ValueError(f"Unrecognized aggregation-order line: {line!r}")
+    title = match.group("title")
+    qualifier = match.group("outer") or ""
+    inner = _TITLE_QUALIFIER_RE.match(title)
+    if inner:
+        title = inner.group("title")
+        qualifier = inner.group("inner")
+    qualifier = re.sub(r"\s+evidence$", "", qualifier.strip())
+    return title, qualifier
+
+
+def _study_id_for_title(title: str) -> str:
+    for prefix, study_id in _TITLE_PREFIX_TO_STUDY:
+        if title.startswith(prefix):
+            return study_id
+    raise ValueError(f"No study mapping for title: {title!r}")
+
+
+def _compact_wa(qualifier: str) -> str | None:
+    compact = re.fullmatch(r"w(\d+)a(\d+)", qualifier.replace(" ", ""), flags=re.IGNORECASE)
+    if not compact:
+        return None
+    weight, activation = compact.group(1), compact.group(2)
+    if weight == "16" and activation == "16":
+        return "w-fp16, a-fp16"
+    return f"w-int{weight}, a-int{activation}"
+
+
+def _log_bit(qualifier: str) -> list[tuple[str | None, str]]:
+    bit = re.fullmatch(r"(\d+)-bit", qualifier.lower())
+    return [(None, f"w-log{bit.group(1)}")] if bit else []
+
+
+def _denkinger_fxp(qualifier: str) -> list[tuple[str | None, str]]:
+    fxp = re.fullmatch(r"fxp_(\d+)_(\d+)", qualifier.lower())
+    if not fxp:
+        return []
+    weight, activation = int(fxp.group(1)), int(fxp.group(2))
+    return [(None, f"w-{_FIXED_POINT_WIDTH[weight]}, a-{_FIXED_POINT_WIDTH[activation]}")]
+
+
+def _barnell_format(qualifier: str) -> list[tuple[str | None, str]]:
+    lowered = qualifier.lower()
+    if lowered == "fp16":
+        return [(None, "w-fp16, a-fp16")]
+    if lowered == "int8":
+        return [(None, "w-int8, a-int8")]
+    return []
+
+
+def _dubhir_format(qualifier: str) -> list[tuple[str | None, str]]:
+    lowered = qualifier.lower()
+    if lowered.startswith("q"):
+        return [(None, f"a-{lowered}")]
+    if lowered == "wa-int8":
+        return [(None, "w-int8, a-int8")]
+    return [(None, qualifier)]
+
+
+def _xu_method_precision(qualifier: str) -> list[tuple[str | None, str]]:
+    method, _, rest = qualifier.partition(" ")
+    return [(method, rest)] if method in {"ptq", "qat"} and rest else []
+
+
+def _paul_bit(qualifier: str) -> list[tuple[str | None, str]]:
+    bit = re.fullmatch(r"(\d+)-bit", qualifier.lower())
+    if not bit:
+        return []
+    token = _FIXED_POINT_WIDTH[int(bit.group(1))]
+    return [(None, f"w-{token}, a-{token}")]
+
+
+def _tao_weights_activations(qualifier: str) -> list[tuple[str | None, str]]:
+    parts = re.fullmatch(r"weights (.+) - activations (.+)", qualifier.lower())
+    if not parts:
+        return []
+    return [(None, f"w-{_TAO_COMPONENT[parts.group(1)]}, a-{_TAO_COMPONENT[parts.group(2)]}")]
+
+
+def _alizadeh_bit(qualifier: str) -> list[tuple[str | None, str]]:
+    bit = re.fullmatch(r"(\d+)bit", qualifier.lower())
+    return [(None, f"w-int{bit.group(1)}")] if bit else []
+
+
+def _alshammry_wa(qualifier: str) -> list[tuple[str | None, str]]:
+    compact = _compact_wa(qualifier.split()[0])
+    lowered = qualifier.lower()
+    method = "ptq" if "ptq" in lowered else "qat" if "qat" in lowered else None
+    return [(method, compact)] if compact and method else []
+
+
+def _deputter_format(qualifier: str) -> list[tuple[str | None, str]]:
+    guesses: list[tuple[str | None, str]] = [(None, qualifier)]
+    compact = _compact_wa(qualifier)
+    if compact:
+        guesses.append((None, compact))
+    return guesses
+
+
+def _guerrouj_format(qualifier: str) -> list[tuple[str | None, str]]:
+    lowered = qualifier.lower()
+    if lowered == "int8":
+        return [(None, "w-int8, a-int8")]
+    if lowered == "fp16":
+        return [(None, "w-fp16, a-fp16")]
+    return []
+
+
+def _krasteva_format(qualifier: str) -> list[tuple[str | None, str]]:
+    compact = _compact_wa(qualifier)
+    if compact:
+        return [(None, compact)]
+    if "full" in qualifier.lower() and "int8" in qualifier.lower():
+        return [(None, "full-int8")]
+    return []
+
+
+def _peng_format(qualifier: str) -> list[tuple[str | None, str]]:
+    compact = _compact_wa(qualifier)
+    return [(None, compact)] if compact else []
+
+
+_QUALIFIER_RESOLVERS = {
+    "S1": _log_bit,
+    "S2": _denkinger_fxp,
+    "S3": _barnell_format,
+    "S4": _dubhir_format,
+    "S6": _xu_method_precision,
+    "S9": _paul_bit,
+    "S11": _tao_weights_activations,
+    "S14": _alizadeh_bit,
+    "S15": _alshammry_wa,
+    "S16": _deputter_format,
+    "S17": _guerrouj_format,
+    "S20": _krasteva_format,
+    "S21": _peng_format,
+}
+
+
+def _candidate_precisions(study_id: str, qualifier: str) -> list[tuple[str | None, str]]:
+    """Return (method or None, precision) guesses for a study-specific qualifier."""
+    if not qualifier:
+        return []
+    resolver = _QUALIFIER_RESOLVERS.get(study_id)
+    return resolver(qualifier) if resolver else [(None, qualifier)]
+
+
+def _match_order_label(study_id: str, qualifier: str, study_models: list[EvidenceModel]) -> EvidenceModel:
+    if len(study_models) == 1:
+        return study_models[0]
+    for method, precision in _candidate_precisions(study_id, qualifier):
+        matches = [
+            model
+            for model in study_models
+            if model.precision_configuration == precision and (method is None or model.quantization_method == method)
+        ]
+        if len(matches) == 1:
+            return matches[0]
+        if len(matches) > 1:
+            raise ValueError(f"Ambiguous {study_id} qualifier {qualifier!r}: {matches}")
+    raise ValueError(f"No model for {study_id} qualifier {qualifier!r} among {study_models}")
+
+
+def _aggregation_indices(models: list[EvidenceModel], order_path: Path) -> dict[tuple[str, str, str], int]:
+    by_study: dict[str, list[EvidenceModel]] = {}
+    for model in models:
+        by_study.setdefault(model.study_id, []).append(model)
+    indices: dict[tuple[str, str, str], int] = {}
+    lines = [line for line in order_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    for index, line in enumerate(lines):
+        title, qualifier = _parse_aggregation_label(line)
+        study_id = _study_id_for_title(title)
+        matched = _match_order_label(study_id, qualifier, by_study[study_id])
+        key = (matched.study_id, matched.quantization_method, matched.precision_configuration)
+        if key in indices:
+            raise ValueError(f"Duplicate aggregation-order identity {key}")
+        indices[key] = index
+    if len(indices) != len(models):
+        raise ValueError(f"Aggregation order mapped {len(indices)} models, expected {len(models)}")
+    return indices
+
+
 def load_evidence_models(processed_root: Path | None = None) -> list[EvidenceModel]:
     """Load one evidence model per by-precision record in processed JSON."""
+    root = processed_root if processed_root is not None else PROCESSED_DATA_DIR
+    factory_ids = _evidence_factory_ids_by_study(root / "evidence-diagrams-mapping.md")
     models: list[EvidenceModel] = []
     for paper in Papers:
-        path = (
-            processed_root / paper.value.KEY / "effects_by_precision.json"
-            if processed_root is not None
-            else processed_paper_path(paper.value.KEY, "effects_by_precision.json")
-        )
+        path = root / paper.value.KEY / "effects_by_precision.json"
         records = json.loads(Path(path).read_text(encoding="utf-8"))
         evidence_model_count = len(records)
-        for record in records:
+        study_ids = factory_ids.get(paper.value.ID, [])
+        for index, record in enumerate(records):
             models.append(
                 EvidenceModel(
                     study_id=paper.value.ID,
@@ -109,9 +347,24 @@ def load_evidence_models(processed_root: Path | None = None) -> list[EvidenceMod
                     study_belief=paper.value.BELIEF,
                     evidence_model_count=evidence_model_count,
                     effects=_effects_from_record(record),
+                    evidence_factory_id=study_ids[index] if index < len(study_ids) else None,
                 )
             )
-    return models
+    order_path = root / _AGGREGATION_ORDER_FILENAME
+    indices = _aggregation_indices(models, order_path)
+    return [
+        EvidenceModel(
+            study_id=model.study_id,
+            quantization_method=model.quantization_method,
+            precision_configuration=model.precision_configuration,
+            study_belief=model.study_belief,
+            evidence_model_count=model.evidence_model_count,
+            effects=model.effects,
+            evidence_factory_id=model.evidence_factory_id,
+            aggregation_index=indices[(model.study_id, model.quantization_method, model.precision_configuration)],
+        )
+        for model in models
+    ]
 
 
 @dataclass(frozen=True)
@@ -124,18 +377,19 @@ class PublishedRow:
     conflict_abs: float
 
 
+# Last-step K from Evidence Factory aggregated evidence 329074 (not the outdated manuscript transcription).
 PUBLISHED_TABLE: tuple[PublishedRow, ...] = (
-    PublishedRow("Accuracy", frozenset({"WN", "IF"}), 99, 0.14, 41, 0.005),
-    PublishedRow("F1 Score", frozenset({"IF"}), 75, 0.15, 9, 0.005),
-    PublishedRow("mAP", frozenset({"IF"}), 45, 0.31, 4, 0.005),
-    PublishedRow("Storage Size", frozenset({"SP"}), 100, 1.09e-8, 62, 5e-10),
+    PublishedRow("Accuracy", frozenset({"WN", "IF"}), 99, 0.1894921993508596, 41, 0.005),
+    PublishedRow("F1 Score", frozenset({"IF"}), 75, 0.14748577564526316, 9, 0.005),
+    PublishedRow("mAP", frozenset({"IF"}), 45, 0.31096851862301145, 4, 0.005),
+    PublishedRow("Storage Size", frozenset({"SP"}), 100, 6.13678329170885e-10, 62, 5e-10),
     PublishedRow("GPU Utilization", frozenset({"IF"}), 74, 0.0, 3, 1e-12),
-    PublishedRow("GPU Power Draw", frozenset({"IF", "WP"}), 98, 0.30, 5, 0.005),
-    PublishedRow("GPU Energy Consumption", frozenset({"SP"}), 74, 0.12, 5, 0.005),
-    PublishedRow("RAM Usage", frozenset({"SP"}), 47, 0.20, 3, 0.005),
-    PublishedRow("Inference Power Draw", frozenset({"WP"}), 72, 0.06, 10, 0.005),
-    PublishedRow("Inference Energy Consumption", frozenset({"SP"}), 100, 4e-3, 27, 5e-4),
-    PublishedRow("Inference Latency", frozenset({"PO", "SP"}), 100, 0.44, 51, 0.005),
+    PublishedRow("GPU Power Draw", frozenset({"IF", "WP"}), 98, 0.2958124279750671, 5, 0.005),
+    PublishedRow("GPU Energy Consumption", frozenset({"SP"}), 74, 0.11585834464969645, 5, 0.005),
+    PublishedRow("RAM Usage", frozenset({"SP"}), 47, 0.19785537468429146, 3, 0.005),
+    PublishedRow("Inference Power Draw", frozenset({"WP"}), 72, 0.05798641768183195, 10, 0.005),
+    PublishedRow("Inference Energy Consumption", frozenset({"SP"}), 100, 0.003987635134405157, 27, 5e-4),
+    PublishedRow("Inference Latency", frozenset({"PO", "SP"}), 100, 0.2692137356332454, 51, 0.005),
 )
 
 
@@ -173,7 +427,7 @@ def reproduction_mismatches(
     *,
     checks: tuple[str, ...] = ("intensity", "belief", "conflict", "n_evidence_models"),
 ) -> list[str]:
-    """Return human-readable gate failures for the published analogue vs Table general-results."""
+    """Return gate failures for the published analogue vs Evidence Factory 329074."""
     loaded = models if models is not None else load_evidence_models()
     mismatches: list[str] = []
     for expected in PUBLISHED_TABLE:

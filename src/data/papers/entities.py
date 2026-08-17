@@ -274,7 +274,7 @@ class TaoPaper(Paper):
     QUANTIZATION_PRECISION_COL = "quantization_precision"
     BASELINE_PRECISION = "full-fp32"
     QUANTIZATION_METHOD = "qat"
-    BELIEF = 0.6429166666666667
+    BELIEF = 0.6587962962962963
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         inference_energy_consumption="system_energy",
         inference_power_draw="system_power",
