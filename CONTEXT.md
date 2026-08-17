@@ -42,7 +42,11 @@ _Avoid_: By-configuration aggregation (when only method and formats are the iden
 
 **Theoretical structure**:
 Manuscript label for one by-precision aggregation that appears in a study's by-precision results. A study's TS count is how many such aggregations that study contributes — not a separate analytical construct.
-_Avoid_: Theoretical structure as something other than by-precision aggregation; using metadata `precision_configurations` length when by-precision results are meant
+_Avoid_: Theoretical structure as something other than by-precision aggregation; using metadata `precision_configurations` length when by-precision results are meant; evidence model (when the SSM diagram is meant)
+
+**Evidence model**:
+The SSM diagrammatic representation of one theoretical structure, carrying that by-precision aggregation's effects, intensities, and beliefs. One-to-one with theoretical structure; not an experimental unit and not a DL model.
+_Avoid_: Experimental unit; DL model; incoming evidence model (when the Evidence Factory merge side is meant)
 
 **Operational system**:
 The System-archetype contextual aspect that names the software system in which the quantized model is expected to operate (e.g. an LLM-based code assistant or a machine translation system). Distinct from the System-archetype node that names the quantized artifact (typically a DL model). Also distinct from the statistical experimental unit used for relative-improvement aggregation. Operational-system labels are removed at synthesis to reduce noise.
@@ -66,7 +70,15 @@ _Avoid_: Subgroup analysis as a split by architecture/hardware inside a cell; re
 
 **Sensitivity analysis**:
 Analysis of the main by-precision aggregation on a restricted set of included studies, selected by a study-level criterion (not by subgroup). Answers whether primary synthesis conclusions are robust under that sample change. Distinct from subgroup analysis, which holds the study set and restricts the moderator triple.
-_Avoid_: Subgroup analysis (when the cut is which studies are in, not which cell); reusing corpus-wide Aggregated rows as if they were sensitivity-sample-specific
+_Avoid_: Subgroup analysis (when the cut is which studies are in, not which cell); reusing corpus-wide Aggregated rows as if they were sensitivity-sample-specific; equitable belief split (when the study set is held and belief assignment changes)
+
+**Equitable belief split**:
+Analysis of the full by-precision aggregation in which each study's study belief is partitioned equally across its evidence models before Dempster–Shafer combination, without sample-size or variability discounts. Each model receives \(B/N\) once (\(N\) is that study's evidence-model count) for every effect it carries; the analysis answers whether synthesis conclusions depend on treating those models as independent carriers of the full study belief.
+_Avoid_: Sensitivity analysis (when this belief-assignment variant is meant)
+
+**Undiscounted unsplit combination**:
+Dempster–Shafer pooling of the full by-precision aggregation in which each evidence model carries the full study belief and sample-size and variability discounts are not applied. The primary baseline for equitable belief split.
+_Avoid_: Published aggregation (when discounts are applied); equitable belief split
 
 **Quantization configuration**:
 The full experimental setup for a quantized run, including quantization method, grouping strategy, parameter estimation, and precision configuration. Used to distinguish otherwise identical precision-configuration runs in by-configuration analysis.
@@ -153,3 +165,11 @@ _Avoid_: Improvement direction, metric direction, higher-is-better / lower-is-be
 **Relative improvement**:
 The percentage change of a metric relative to the baseline precision configuration, signed so that positive always means a better outcome and negative always means a worse outcome. Polarity determines whether the formula uses `(quantized − baseline)` or `(baseline − quantized)` in the numerator.
 _Avoid_: Percent change, delta (unsigned), improvement rate
+
+**Effect intensity**:
+The Likert-style label of a relative improvement: a simple atom (SN, NE, WN, IF, WP, PO, SP) or an adjacent compound of two atoms. Distinct from the numeric relative improvement and from belief.
+_Avoid_: Effect magnitude; belief (when direction and strength are meant); confidence interval (when the intensity band is meant)
+
+**Conflict**:
+The Dempster–Shafer combination conflict \(K = m(\emptyset)\) for one effect after pooling the evidence models that report it. Distinct from Evidence Factory's red eligible-element mismatches in the aggregator UI.
+_Avoid_: Eligible element; difference (when \(K\) is meant); disagreement of mean relative improvements (when combination conflict is meant)

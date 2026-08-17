@@ -22,6 +22,8 @@ def test_import_smoke_for_core_modules():
         "src.data.selection.llm",
         "src.forestplot.utils",
         "src.run_evidence_extraction",
+        "src.dempster_shafer",
+        "src.equitable_belief_split",
     ]
 
     for module_name in module_names:
