@@ -201,7 +201,7 @@ def render_tabularx_body(rows: list[StudySummaryRow]) -> str:
         r"\cmidrule(lr){2-3} \cmidrule(lr){4-4} \cmidrule(lr){5-7} \cmidrule(lr){8-9}",
         r"\rowcolor{gray!30}",
         (
-            r"ID & Domain & Instrumentation & Models/Data & Source & Target\footnotemark[1]"
+            r"ID & Domain & Instrumentation & Models/Data\footnotemark[3] & Source & Target\footnotemark[1]"
             r" & Timing & Belief & TS\footnotemark[2] \\"
         ),
         r"\midrule",

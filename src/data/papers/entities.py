@@ -473,7 +473,7 @@ class GonzalezPaper(Paper):
     YEAR = 2024
     QUANTIZATION_PRECISION_COL = "Optimization"
     BASELINE_PRECISION = "full-fp32"
-    QUANTIZATION_METHOD = "qat"
+    QUANTIZATION_METHOD = "ptq"
     BELIEF = 0.7361083333333334
     RESOURCE_EFFICIENCY_COLUMNS = ResourceEfficiencyMetrics(
         inference_energy_consumption="sys_energy",

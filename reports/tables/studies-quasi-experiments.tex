@@ -4,9 +4,9 @@
  & \multicolumn{2}{c}{\textbf{Contextual Factors}} & \multicolumn{1}{c}{\textbf{Exp. Units}} & \multicolumn{3}{c}{\textbf{Quantization Design}} & \multicolumn{2}{c}{\textbf{SSM Metrics}} \\
 \cmidrule(lr){2-3} \cmidrule(lr){4-4} \cmidrule(lr){5-7} \cmidrule(lr){8-9}
 \rowcolor{gray!30}
-ID & Domain & Instrumentation & Models/Data & Source & Target\footnotemark[1] & Timing & Belief & TS\footnotemark[2] \\
+ID & Domain & Instrumentation & Models/Data\footnotemark[3] & Source & Target\footnotemark[1] & Timing & Belief & TS\footnotemark[2] \\
 \midrule
-\gonzalez \cite{gonzalezImpactMLOptimization2025} & Image class. & Hardware + nvidia-smi, EnergyBridge & 28 / 5 & FP32 & INT8 (W) & QAT & 74\% & 1 \\
+\gonzalez \cite{gonzalezImpactMLOptimization2025} & Image class. & Hardware + nvidia-smi, EnergyBridge & 28 / 5 & FP32 & INT8 (W) & PTQ & 74\% & 1 \\
 \alizadeh \cite{alizadehLanguageModelsSoftware2025} & Code gen. & pyNVML, pyRAPL & 18 / 1 & FP16 & INT4, INT8 (W) & PTQ & 71\% & 2 \\
 \zhan \cite{zhanFieldProgrammableGate2021} & Image class. & N/A & 4 / 4 & FP32 & INT2, INT8 (WAB) & QAT & 68\% & 1 \\
 \chen \cite{chenImplementingUltralightweightCoinference2023} & Atrial fib. & N/A & 1 / 1 & FP32 & INT8 (W) & PTQ & 68\% & 1 \\

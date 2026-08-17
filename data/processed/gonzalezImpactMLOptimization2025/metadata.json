@@ -22,7 +22,7 @@
       "w-int8"
     ],
     "quantization_method": [
-      "qat"
+      "ptq"
     ],
     "quantization_techniques": [
       "dynamic quantization"

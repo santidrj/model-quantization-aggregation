@@ -2,7 +2,7 @@
     {
         "configuration": {
             "Dataset": "['food101']",
-            "quantization_method": "qat",
+            "quantization_method": "ptq",
             "precision_configuration": "w-int8"
         },
         "accuracy": {
@@ -97,7 +97,7 @@
     {
         "configuration": {
             "Dataset": "['imagenet', 'imagenet-21k']",
-            "quantization_method": "qat",
+            "quantization_method": "ptq",
             "precision_configuration": "w-int8"
         },
         "accuracy": {
@@ -192,7 +192,7 @@
     {
         "configuration": {
             "Dataset": "['imagenet']",
-            "quantization_method": "qat",
+            "quantization_method": "ptq",
             "precision_configuration": "w-int8"
         },
         "accuracy": {
@@ -287,7 +287,7 @@
     {
         "configuration": {
             "Dataset": "['imagenet-22k']",
-            "quantization_method": "qat",
+            "quantization_method": "ptq",
             "precision_configuration": "w-int8"
         },
         "accuracy": {
@@ -382,7 +382,7 @@
     {
         "configuration": {
             "Dataset": "['imagenet_1k']",
-            "quantization_method": "qat",
+            "quantization_method": "ptq",
             "precision_configuration": "w-int8"
         },
         "accuracy": {

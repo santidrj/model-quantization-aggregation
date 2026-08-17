@@ -11,6 +11,14 @@ REPRESENTATIVE_PAPERS = (
 )
 
 
+def test_gonzalez_dynamic_quantization_is_post_training():
+    assert Papers.GONZALEZ.value.QUANTIZATION_METHOD == "ptq"
+
+
+def test_chen_tabular_extraction_deduplicates_overlapping_tables():
+    assert Papers.CHEN.value.read_data().collect().height == 18
+
+
 @pytest.mark.parametrize("paper", REPRESENTATIVE_PAPERS, ids=lambda paper: paper.KEY)
 def test_representative_papers_load_non_empty_data(paper):
     loaded = paper.read_data()

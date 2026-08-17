@@ -37,12 +37,24 @@ How quantization is applied relative to training for a run. Canonical tokens are
 _Avoid_: Optimization, precision configuration (when the training-time vs post-training distinction is meant), long prose labels as stored identity
 
 **By-precision aggregation**:
-Grouping of comparable quantized runs that share the same quantization method and the same precision configuration. When a paper declares exactly one quantization method, every run inherits it; when it declares more than one, each run must carry its own method. Ordering for analysis (e.g. notebook precision order) is an ordered list of `(quantization method, precision configuration)` pairs.
-_Avoid_: By-configuration aggregation (when only method and formats are the identity), precision-only grouping (when method is ignored)
+Grouping of comparable quantized runs that share the same quantization method and the same precision configuration. Distinct precision configurations are never pooled into a study-level mean. When a paper declares exactly one quantization method, every run inherits it; when it declares more than one, each run must carry its own method. Ordering for analysis (e.g. notebook precision order) is an ordered list of `(quantization method, precision configuration)` pairs.
+_Avoid_: By-configuration aggregation (when only method and formats are the identity), precision-only grouping (when method is ignored), study-level overall (when distinct precision configurations are mixed)
 
 **Theoretical structure**:
 Manuscript label for one by-precision aggregation that appears in a study's by-precision results. A study's TS count is how many such aggregations that study contributes — not a separate analytical construct.
 _Avoid_: Theoretical structure as something other than by-precision aggregation; using metadata `precision_configurations` length when by-precision results are meant
+
+**Operational system**:
+The System-archetype contextual aspect that names the software system in which the quantized model is expected to operate (e.g. an LLM-based code assistant or a machine translation system). Distinct from the System-archetype node that names the quantized artifact (typically a DL model). Also distinct from the statistical experimental unit used for relative-improvement aggregation. Operational-system labels are removed at synthesis to reduce noise.
+_Avoid_: Application domain (when this System node is meant), DL model / experimental unit (when the host system is meant)
+
+**Experimental unit**:
+The unique combination of a study's grouping columns that identifies one independent observation inside a by-precision aggregation (for example a model, or a model–dataset pair). Not necessarily a DL model alone.
+_Avoid_: Treating every experimental unit as a single model when grouping columns include dataset or device; conflating with the System-archetype DL-model label in an evidence model
+
+**Effective sample size**:
+The count of experimental units in a by-precision aggregation (\(n_{\mathrm{eff}}\)). Repeated measurement runs on the same experimental unit do not increase it.
+_Avoid_: Number of models (when grouping columns are wider); number of measurement runs
 
 **Subgroup**:
 One moderator level used when interpreting the main by-precision aggregation: the triple `(baseline precision configuration, quantization method, precision configuration)`. Distinct from by-precision aggregation itself, which does not include the baseline in its grouping key.
@@ -65,8 +77,8 @@ Optional paper-specific columns included in the configuration struct for by-conf
 _Avoid_: Grouping columns (when referring to configuration identity only)
 
 **Grouping columns**:
-The columns that identify which experimental runs share a baseline for improvement calculation, typically dataset and model architecture.
-_Avoid_: Grouping key, join key
+The study-specific factors that define experimental units and the baseline join for relative improvement (typically model, and often dataset, device, or other covariates).
+_Avoid_: Grouping key, join key (as separate concepts); configuration columns
 
 **External paper data**:
 The study-provided experimental datasets consumed by evidence extraction for a given paper, kept under that paper's external data folder. Study-native precision labels may remain here; alias → canonical rewriting happens when loading into this project's metadata and processed outputs.
@@ -121,6 +133,10 @@ _Avoid_: Analytical (when component energy tables are meant), simulated energy (
 **Study belief**:
 The study-level prior weight assigned to an included primary study for evidence synthesis (stored on the study as a probability in \([0,1]\)). Effect-level beliefs combine this prior with sample-size and variability discounts. In manuscript tables it may appear as an integer percent.
 _Avoid_: Belief as an effect-level posterior; quality-rubric score (when the stored study prior is meant); SSM belief (vague)
+
+**Variability discount**:
+The reliability factor applied to study belief when relative improvements inside one by-precision aggregation are heterogeneous. The IQR is taken over the experimental-unit relative improvements in that aggregation. Distinct from by-precision aggregation itself, which is the grouping, not the discount.
+_Avoid_: treating this discount as a second meaning of aggregation; IQR of model-level means when experimental units are model–dataset pairs
 
 **Correctness metric**:
 A measure of model prediction quality reported by a study (e.g. accuracy, F1 score, perplexity). Correctness metrics are distinct from resource-efficiency metrics even when a correctness metric is minimized rather than maximized.
