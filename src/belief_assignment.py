@@ -1,4 +1,4 @@
-"""Equitable belief split: study-belief masses on evidence models and Dempster–Shafer synthesis."""
+"""Belief assignment: study-belief masses on evidence models and Dempster–Shafer synthesis."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 import re
 
-from src.config import PROCESSED_DATA_DIR
+from src.config import PROCESSED_DATA_DIR, TABLES_DIR
 from src.data.papers.entities import Papers
 from src.data.papers.study_id import study_id_sort_key
 from src.dempster_shafer import combine_effect, format_intensity
@@ -17,6 +17,7 @@ from src.dempster_shafer import combine_effect, format_intensity
 class MassAssignment(Enum):
     PUBLISHED_ANALOGUE = "published_analogue"
     UNDISCOUNTED_UNSPLIT = "undiscounted_unsplit"
+    MASS_PRESERVING_BELIEF_SPLIT = "mass_preserving_belief_split"
     EQUITABLE_BELIEF_SPLIT = "equitable_belief_split"
 
 
@@ -35,6 +36,8 @@ class EvidenceModel:
 def assigned_mass(model: EvidenceModel, assignment: MassAssignment, effect: str | None = None) -> float:
     if assignment is MassAssignment.EQUITABLE_BELIEF_SPLIT:
         return model.study_belief / model.evidence_model_count
+    if assignment is MassAssignment.MASS_PRESERVING_BELIEF_SPLIT:
+        return 1.0 - (1.0 - model.study_belief) ** (1.0 / model.evidence_model_count)
     if assignment is MassAssignment.UNDISCOUNTED_UNSPLIT:
         return model.study_belief
     if assignment is MassAssignment.PUBLISHED_ANALOGUE:
@@ -451,13 +454,14 @@ def reproduction_mismatches(
 
 
 def comparison_records(models: list[EvidenceModel] | None = None) -> list[dict[str, object]]:
-    """One row per published-table effect with analogue, unsplit, and split synthesis."""
+    """One row per published-table effect with analogue, unsplit, mass-preserving, and equitable synthesis."""
     loaded = models if models is not None else load_evidence_models()
     records: list[dict[str, object]] = []
     for expected in PUBLISHED_TABLE:
         analogue = synthesis_row(loaded, expected.effect, MassAssignment.PUBLISHED_ANALOGUE)
         unsplit = synthesis_row(loaded, expected.effect, MassAssignment.UNDISCOUNTED_UNSPLIT)
-        split = synthesis_row(loaded, expected.effect, MassAssignment.EQUITABLE_BELIEF_SPLIT)
+        mass_preserving = synthesis_row(loaded, expected.effect, MassAssignment.MASS_PRESERVING_BELIEF_SPLIT)
+        equitable = synthesis_row(loaded, expected.effect, MassAssignment.EQUITABLE_BELIEF_SPLIT)
         records.append(
             {
                 "effect": expected.effect,
@@ -468,12 +472,95 @@ def comparison_records(models: list[EvidenceModel] | None = None) -> list[dict[s
                 "unsplit_intensity": format_intensity(unsplit.intensity),
                 "unsplit_belief_percent": unsplit.belief_percent,
                 "unsplit_conflict": unsplit.conflict,
-                "split_intensity": format_intensity(split.intensity),
-                "split_belief_percent": split.belief_percent,
-                "split_conflict": split.conflict,
+                "mass_preserving_intensity": format_intensity(mass_preserving.intensity),
+                "mass_preserving_belief_percent": mass_preserving.belief_percent,
+                "mass_preserving_conflict": mass_preserving.conflict,
+                "equitable_intensity": format_intensity(equitable.intensity),
+                "equitable_belief_percent": equitable.belief_percent,
+                "equitable_conflict": equitable.conflict,
                 "published_intensity": format_intensity(expected.intensity),
                 "published_belief_percent": expected.belief_percent,
                 "published_conflict": expected.conflict,
             }
         )
     return records
+
+
+_EFFECT_LATEX_NAME = {
+    "Accuracy": "Accuracy",
+    "F1 Score": r"F$_1$-score",
+    "mAP": "mAP",
+    "Storage Size": "Storage size",
+    "GPU Utilization": "GPU utilization",
+    "GPU Power Draw": "GPU power draw",
+    "GPU Energy Consumption": "GPU energy",
+    "RAM Usage": "RAM usage",
+    "Inference Power Draw": "Inf. power draw",
+    "Inference Energy Consumption": "Inf. energy",
+    "Inference Latency": "Inf. latency",
+}
+
+BELIEF_ASSIGNMENT_TABLE_FILENAME = "belief-assignment.tex"
+
+
+def _latex_intensity(label: str) -> str:
+    if label.startswith("{") and label.endswith("}"):
+        return r"\{" + label[1:-1] + r"\}"
+    return label
+
+
+def _two_decimals(value: float) -> str:
+    return f"{value:.2f}"
+
+
+def _variant_cells(intensity: str, belief_percent: int, conflict: float) -> list[str]:
+    return [
+        _latex_intensity(intensity),
+        _two_decimals(belief_percent / 100),
+        _two_decimals(float(conflict)),
+    ]
+
+
+def render_belief_assignment_table(records: list[dict[str, object]] | None = None) -> str:
+    """Render a tabularx fragment comparing published, unsplit, mass-preserving, and equitable pooling."""
+    rows = records if records is not None else comparison_records()
+    lines = [
+        r"\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X*{12}{c}}",
+        r"\toprule",
+        (
+            r" & \multicolumn{3}{c}{Published} & \multicolumn{3}{c}{Unsplit}"
+            r" & \multicolumn{3}{c}{Mass-preserving} & \multicolumn{3}{c}{Equitable} \\"
+        ),
+        r"\cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13}",
+        (
+            r"Effect & Intensity & Belief & Conflict & Intensity & Belief & Conflict"
+            r" & Intensity & Belief & Conflict & Intensity & Belief & Conflict \\"
+        ),
+        r"\midrule",
+    ]
+    for record in rows:
+        cells = [_EFFECT_LATEX_NAME.get(str(record["effect"]), str(record["effect"]))]
+        for prefix in ("published", "unsplit", "mass_preserving", "equitable"):
+            cells.extend(
+                _variant_cells(
+                    str(record[f"{prefix}_intensity"]),
+                    int(record[f"{prefix}_belief_percent"]),
+                    float(record[f"{prefix}_conflict"]),
+                )
+            )
+        lines.append(" & ".join(cells) + r" \\")
+    lines.extend([r"\bottomrule", r"\end{tabularx}", ""])
+    return "\n".join(lines)
+
+
+def write_belief_assignment_table(
+    records: list[dict[str, object]] | None = None,
+    *,
+    output_dir: Path | None = None,
+) -> Path:
+    """Write the belief-assignment appendix tabular fragment."""
+    directory = output_dir if output_dir is not None else TABLES_DIR
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / BELIEF_ASSIGNMENT_TABLE_FILENAME
+    path.write_text(render_belief_assignment_table(records), encoding="utf-8")
+    return path

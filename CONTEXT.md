@@ -70,15 +70,23 @@ _Avoid_: Subgroup analysis as a split by architecture/hardware inside a cell; re
 
 **Sensitivity analysis**:
 Analysis of the main by-precision aggregation on a restricted set of included studies, selected by a study-level criterion (not by subgroup). Answers whether primary synthesis conclusions are robust under that sample change. Distinct from subgroup analysis, which holds the study set and restricts the moderator triple.
-_Avoid_: Subgroup analysis (when the cut is which studies are in, not which cell); reusing corpus-wide Aggregated rows as if they were sensitivity-sample-specific; equitable belief split (when the study set is held and belief assignment changes)
+_Avoid_: Subgroup analysis (when the cut is which studies are in, not which cell); reusing corpus-wide Aggregated rows as if they were sensitivity-sample-specific; belief assignment (when the study set is held and only masses change)
+
+**Belief assignment**:
+The rule that maps study belief onto simple-support masses on evidence models for Dempster–Shafer synthesis of the full by-precision aggregation, holding the included study set fixed. The variants are published analogue, undiscounted unsplit combination, mass-preserving belief split, and equitable belief split.
+_Avoid_: Sensitivity analysis; subgroup analysis; naming the whole experiment after one split
 
 **Equitable belief split**:
-Analysis of the full by-precision aggregation in which each study's study belief is partitioned equally across its evidence models before Dempster–Shafer combination, without sample-size or variability discounts. Each model receives \(B/N\) once (\(N\) is that study's evidence-model count) for every effect it carries; the analysis answers whether synthesis conclusions depend on treating those models as independent carriers of the full study belief.
-_Avoid_: Sensitivity analysis (when this belief-assignment variant is meant)
+A belief-assignment variant of the full by-precision aggregation in which each study's study belief is partitioned equally across its evidence models before Dempster–Shafer combination, without sample-size or variability discounts. Each model receives \(B/N\) once (\(N\) is that study's evidence-model count) for every effect it carries; the analysis answers whether synthesis conclusions depend on treating those models as independent carriers of the full study belief.
+_Avoid_: Sensitivity analysis (when this belief-assignment variant is meant); mass-preserving belief split (when the simple-support root is meant)
+
+**Mass-preserving belief split**:
+A belief-assignment variant of the full by-precision aggregation in which each evidence model receives the simple-support Dempster–Shafer root of its study's undiscounted study belief, \(1-(1-B)^{1/N}\), with \(N\) that study's evidence-model count and no sample-size or variability discounts. Distinct from equitable belief split, which assigns \(B/N\).
+_Avoid_: Equitable belief split; sensitivity analysis; D-S root allocation (when the analysis is meant)
 
 **Undiscounted unsplit combination**:
-Dempster–Shafer pooling of the full by-precision aggregation in which each evidence model carries the full study belief and sample-size and variability discounts are not applied. The primary baseline for equitable belief split.
-_Avoid_: Published aggregation (when discounts are applied); equitable belief split
+Dempster–Shafer pooling of the full by-precision aggregation in which each evidence model carries the full study belief and sample-size and variability discounts are not applied. The primary undiscounted baseline for equitable belief split and mass-preserving belief split.
+_Avoid_: Published aggregation (when discounts are applied); equitable belief split; mass-preserving belief split
 
 **Quantization configuration**:
 The full experimental setup for a quantized run, including quantization method, grouping strategy, parameter estimation, and precision configuration. Used to distinguish otherwise identical precision-configuration runs in by-configuration analysis.
