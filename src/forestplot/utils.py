@@ -691,5 +691,5 @@ def draw_forestplot(
 
     top_effect, y_max = _plot_effect_markers(ax, ordered_df)
     draw_intensity_labels(ax, top_effect, y_max, -x_lim, x_lim, rotation=90)
-    draw_ref_xline(ax, y_max, ["precision", "nobs"], [])
+    draw_ref_xline(ax, y_max, ["precision", "n_eff"], [])
     return _format_forestplot_axes(ax, ordered_df)

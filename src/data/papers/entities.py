@@ -86,6 +86,7 @@ class Paper(ABC):
     RESOURCE_EFFICIENCY_COLUMNS: ResourceEfficiencyMetrics
     CORRECTNESS_COLUMNS: CorrectnessMetrics
     GROUPING_COLUMNS: list[str] | None = None
+    METRIC_GROUPING_OVERRIDES: dict[str, list[str]] | None = None
     CONFIGURATION_COLUMNS: list[str] | None = None
     EXPERIMENT_RUN_KEY: list[str] | None = None
     REMOTE_ARCHIVE_SOURCE: RemoteArchiveSource | None = None

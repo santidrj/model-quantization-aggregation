@@ -8,8 +8,8 @@
         },
         "inference_latency": {
             "improvement": 2.093,
-            "std": 3.572,
-            "iqr": 6.033,
+            "std": null,
+            "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
             "discount_factor": 0.283,
@@ -19,7 +19,7 @@
         },
         "storage_size": {
             "improvement": 50.0,
-            "std": 0.0,
+            "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
@@ -38,8 +38,8 @@
         },
         "inference_latency": {
             "improvement": 16.902,
-            "std": 5.09,
-            "iqr": 7.002,
+            "std": null,
+            "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
             "discount_factor": 0.283,
@@ -49,7 +49,7 @@
         },
         "storage_size": {
             "improvement": 73.145,
-            "std": 0.0,
+            "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
@@ -68,8 +68,8 @@
         },
         "inference_latency": {
             "improvement": 3.679,
-            "std": 12.269,
-            "iqr": 17.486,
+            "std": null,
+            "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
             "discount_factor": 0.283,
@@ -79,7 +79,7 @@
         },
         "storage_size": {
             "improvement": 49.231,
-            "std": 0.0,
+            "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
@@ -98,8 +98,8 @@
         },
         "inference_latency": {
             "improvement": -29.391,
-            "std": 25.541,
-            "iqr": 18.176,
+            "std": null,
+            "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
             "discount_factor": 0.283,
@@ -109,7 +109,7 @@
         },
         "storage_size": {
             "improvement": 71.154,
-            "std": 0.0,
+            "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
@@ -128,8 +128,8 @@
         },
         "inference_latency": {
             "improvement": 1.781,
-            "std": 1.635,
-            "iqr": 1.086,
+            "std": null,
+            "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
             "discount_factor": 0.283,
@@ -139,7 +139,7 @@
         },
         "storage_size": {
             "improvement": 50.0,
-            "std": 0.0,
+            "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
@@ -158,8 +158,8 @@
         },
         "inference_latency": {
             "improvement": 21.361,
-            "std": 27.565,
-            "iqr": 44.427,
+            "std": null,
+            "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
             "discount_factor": 0.283,
@@ -169,7 +169,7 @@
         },
         "storage_size": {
             "improvement": 73.145,
-            "std": 0.0,
+            "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
@@ -188,8 +188,8 @@
         },
         "inference_latency": {
             "improvement": -0.763,
-            "std": 1.384,
-            "iqr": 1.539,
+            "std": null,
+            "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
             "discount_factor": 0.283,
@@ -199,7 +199,7 @@
         },
         "storage_size": {
             "improvement": 49.231,
-            "std": 0.0,
+            "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
@@ -218,8 +218,8 @@
         },
         "inference_latency": {
             "improvement": -17.96,
-            "std": 51.391,
-            "iqr": 62.985,
+            "std": null,
+            "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,
             "discount_factor": 0.283,
@@ -229,7 +229,7 @@
         },
         "storage_size": {
             "improvement": 71.154,
-            "std": 0.0,
+            "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,
             "variability_discount": 1.0,

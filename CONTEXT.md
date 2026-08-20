@@ -56,9 +56,13 @@ _Avoid_: Application domain (when this System node is meant), DL model / experim
 The unique combination of a study's grouping columns that identifies one independent observation inside a by-precision aggregation (for example a model, or a model–dataset pair). Not necessarily a DL model alone.
 _Avoid_: Treating every experimental unit as a single model when grouping columns include dataset or device; conflating with the System-archetype DL-model label in an evidence model
 
+**Artifact-invariant metric**:
+A resource-efficiency metric whose value depends only on the quantized artifact (for example `storage_size`), not on the evaluation task or dataset. Such metrics use a reduced grouping key that omits evaluation-context columns from `GROUPING_COLUMNS`.
+_Avoid_: Treating task-invariant metrics as if they varied per dataset; conflating with experimental unit for task-dependent outcomes
+
 **Effective sample size**:
-The count of experimental units in a by-precision aggregation (\(n_{\mathrm{eff}}\)). Repeated measurement runs on the same experimental unit do not increase it.
-_Avoid_: Number of models (when grouping columns are wider); number of measurement runs
+The count of experimental units for a specific effect inside a by-precision aggregation (\(n_{\mathrm{eff}}\)). It is effect-specific: task-dependent metrics use the study's full grouping columns; artifact-invariant metrics (for example storage) omit evaluation-context columns such as `Dataset` or `task`. Repeated measurement runs on the same experimental unit do not increase \(n_{\mathrm{eff}}\).
+_Avoid_: Number of models (when grouping columns are wider); number of measurement runs; forest-plot raw row counts (`nobs`)
 
 **Subgroup**:
 One moderator level used when interpreting the main by-precision aggregation: the triple `(baseline precision configuration, quantization method, precision configuration)`. Distinct from by-precision aggregation itself, which does not include the baseline in its grouping key.

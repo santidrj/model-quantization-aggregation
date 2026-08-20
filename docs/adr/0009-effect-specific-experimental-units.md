@@ -1,0 +1,5 @@
+# Effect-specific experimental units and forest-plot \(n_{\mathrm{eff}}\)
+
+Effective sample size, belief discounts, forest-plot annotations, and unit-level confidence intervals must use the same inferential unit per effect. A single study-wide `GROUPING_COLUMNS` tuple is insufficient when a metric is invariant to evaluation context (for example storage size across HumanEvalPack tasks) or when repeated measurement runs inflate raw row counts without increasing generalizability.
+
+**Policy.** Global defaults assign full `GROUPING_COLUMNS` to task- and execution-dependent metrics. `storage_size` drops evaluation-context columns (`Dataset`, `dataset`, `task`) from grouping; optional `METRIC_GROUPING_OVERRIDES` on a paper class override defaults when documented. Replicate rows (`EXPERIMENT_RUN_KEY`) are averaged within a unit before mean, IQR, \(\alpha_n\), \(\alpha_v\), CIs, and forest-plot \(n_{\mathrm{eff}}\). Aggregated forest-plot rows show an em dash for \(n_{\mathrm{eff}}\) because pooled units across studies are not defined. Model nesting within a study (several tasks per model family) remains a documented limitation rather than a hierarchical adjustment.
