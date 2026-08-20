@@ -88,6 +88,14 @@ _Avoid_: Equitable belief split; sensitivity analysis; D-S root allocation (when
 Dempster–Shafer pooling of the full by-precision aggregation in which each evidence model carries the full study belief and sample-size and variability discounts are not applied. The primary undiscounted baseline for equitable belief split and mass-preserving belief split.
 _Avoid_: Published aggregation (when discounts are applied); equitable belief split; mass-preserving belief split
 
+**Santos hypothesis selection**:
+The literature-based SSM rule that recursively narrows a direction-compatible effect-intensity interval while a contained interval contributes at least 75% of its belief measure. It may select a range that received no direct mass.
+_Avoid_: Evidence Factory-compatible selection; focal-compound selection; calling the 75% rule a Dempster–Shafer axiom
+
+**Evidence Factory-compatible selection**:
+The replication policy that selects among singleton intensities and adjacent compound intensities carrying direct mass, preserving the published Evidence Factory output. It is a compatibility rule, not the hypothesis-selection rule defined by Santos.
+_Avoid_: Santos hypothesis selection; literature selection
+
 **Quantization configuration**:
 The full experimental setup for a quantized run, including quantization method, grouping strategy, parameter estimation, and precision configuration. Used to distinguish otherwise identical precision-configuration runs in by-configuration analysis.
 _Avoid_: Precision, precision configuration (when the full setup is meant)
@@ -154,6 +162,18 @@ _Avoid_: Analytical (when component energy tables are meant), simulated energy (
 The study-level prior weight assigned to an included primary study for evidence synthesis (stored on the study as a probability in \([0,1]\)). Effect-level beliefs combine this prior with sample-size and variability discounts. In manuscript tables it may appear as an integer percent.
 _Avoid_: Belief as an effect-level posterior; quality-rubric score (when the stored study prior is meant); SSM belief (vague)
 
+**Discounted support mass**:
+The study belief after sample-size and variability discounts, assigned as simple-support mass to one evidence-model effect. The processed Evidence Factory-compatible field is named `belief`; this value is not the combined belief measure.
+_Avoid_: Study belief; belief measure; posterior belief
+
+**Mass function**:
+The Dempster–Shafer basic probability assignment \(m\) over subsets of the effect-intensity frame, including residual mass on \(\Theta\). It is the state combined between successive evidence pieces.
+_Avoid_: Belief measure; probability distribution over singleton intensities
+
+**Belief measure**:
+The Dempster–Shafer quantity \(\mathrm{Bel}(A)=\sum_{B\subseteq A}m(B)\) for a hypothesis \(A\), computed from a mass function. It is distinct from study belief and discounted support mass.
+_Avoid_: Study belief; discounted support mass; posterior probability
+
 **Variability discount**:
 The reliability factor applied to study belief when relative improvements inside one by-precision aggregation are heterogeneous. The IQR is taken over the experimental-unit relative improvements in that aggregation. Distinct from by-precision aggregation itself, which is the grouping, not the discount.
 _Avoid_: treating this discount as a second meaning of aggregation; IQR of model-level means when experimental units are model–dataset pairs
@@ -175,7 +195,7 @@ The percentage change of a metric relative to the baseline precision configurati
 _Avoid_: Percent change, delta (unsigned), improvement rate
 
 **Effect intensity**:
-The Likert-style label of a relative improvement: a simple atom (SN, NE, WN, IF, WP, PO, SP) or an adjacent compound of two atoms. Distinct from the numeric relative improvement and from belief.
+The Likert-style hypothesis for a relative improvement. Evidence-model inputs are a simple atom (SN, NE, WN, IF, WP, PO, SP) or an adjacent two-atom compound; a synthesized result may be a wider direction-compatible interval under Santos hypothesis selection.
 _Avoid_: Effect magnitude; belief (when direction and strength are meant); confidence interval (when the intensity band is meant)
 
 **Conflict**:

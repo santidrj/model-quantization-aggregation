@@ -4,11 +4,13 @@ import pytest
 
 from src.dempster_shafer import (
     THETA,
+    HypothesisSelectionPolicy,
     combine_bpas,
     combine_effect,
     intensity_to_hypothesis,
     select_hypothesis,
     simple_support,
+    trace_effect,
 )
 
 
@@ -87,6 +89,20 @@ def test_select_hypothesis_ignores_non_focal_compounds():
     assert selected_belief == pytest.approx(0.47)
 
 
+def test_santos_2015_selection_uses_belief_of_non_focal_interval():
+    sp = frozenset({"SP"})
+    po = frozenset({"PO"})
+    masses = {sp: 0.47, po: 0.18, THETA: 0.35}
+
+    hypothesis, selected_belief = select_hypothesis(
+        masses,
+        policy=HypothesisSelectionPolicy.SANTOS_2015,
+    )
+
+    assert hypothesis == frozenset({"PO", "SP"})
+    assert selected_belief == pytest.approx(0.65)
+
+
 def test_combine_effect_uses_intensity_labels_and_returns_conflict():
     result = combine_effect(
         [
@@ -110,8 +126,102 @@ def test_three_source_conflict_is_the_last_pairwise_step():
     assert conflict == pytest.approx(last_step_conflict)
 
 
+def test_trace_preserves_every_pairwise_conflict_and_normalization():
+    trace = trace_effect(
+        [
+            ("positive - strongly positive", 0.65),
+            ("weakly positive - positive", 0.4),
+            ("strongly positive", 0.9),
+        ],
+        selection_policy=HypothesisSelectionPolicy.SANTOS_2015,
+    )
+
+    assert [step.conflict for step in trace.steps] == pytest.approx([0.0, 0.36])
+    assert [step.normalization_factor for step in trace.steps] == pytest.approx([1.0, 0.64])
+    assert trace.mean_conflict == pytest.approx(0.18)
+    assert trace.result.intensity == frozenset({"SP"})
+    assert trace.result.belief == pytest.approx(0.84, abs=0.005)
+    assert trace.to_dict() == trace.to_dict()
+
+
+def test_combination_rejects_total_conflict():
+    with pytest.raises(ValueError, match="Total conflict"):
+        combine_bpas(
+            [
+                simple_support(frozenset({"SN"}), 1.0),
+                simple_support(frozenset({"SP"}), 1.0),
+            ]
+        )
+
+
+def test_combination_preserves_total_mass():
+    combined, _conflict = combine_bpas(
+        [
+            simple_support(frozenset({"SN"}), 0.7),
+            simple_support(frozenset({"IF"}), 0.4),
+            simple_support(frozenset({"SP"}), 0.2),
+        ]
+    )
+    assert sum(combined.values()) == pytest.approx(1.0)
+
+
+def test_unknown_intensity_label_is_rejected():
+    with pytest.raises(ValueError, match="Unknown effect intensity"):
+        combine_effect([("very positive", 0.5)])
+
+
+def test_santos_tie_break_prefers_earlier_ssm_interval():
+    masses = {
+        frozenset({"SN"}): 0.4,
+        frozenset({"SP"}): 0.4,
+        THETA: 0.2,
+    }
+    hypothesis, selected_belief = select_hypothesis(
+        masses,
+        policy=HypothesisSelectionPolicy.SANTOS_2015,
+    )
+    assert hypothesis == frozenset({"SN"})
+    assert selected_belief == pytest.approx(0.4)
+
+
+def test_santos_selects_highest_belief_root_before_recursive_descent():
+    positive_root = frozenset({"IF", "WP", "PO", "SP"})
+    negative_root = frozenset({"SN", "NE", "WN", "IF"})
+    masses = {
+        frozenset({"SP"}): 0.4,
+        positive_root: 0.06,
+        negative_root: 0.44,
+        THETA: 0.1,
+    }
+
+    hypothesis, selected_belief = select_hypothesis(
+        masses,
+        policy=HypothesisSelectionPolicy.SANTOS_2015,
+    )
+
+    assert hypothesis == frozenset({"SP"})
+    assert selected_belief == pytest.approx(0.4)
+
+
+def test_santos_trace_records_each_recursive_threshold_decision():
+    trace = trace_effect(
+        [
+            ("positive", 0.191),
+            ("positive", 0.191),
+            ("strongly positive", 0.572),
+        ],
+        selection_policy=HypothesisSelectionPolicy.SANTOS_2015,
+    )
+
+    assert trace.selection_steps[0].parent == ("IF", "WP", "PO", "SP")
+    assert trace.selection_steps[-1].parent == ("PO", "SP")
+    assert trace.selection_steps[-1].chosen_child == ("SP",)
+    assert trace.selection_steps[-1].descended is False
+    assert trace.result.intensity == frozenset({"PO", "SP"})
+
+
 def test_combine_bpas_matches_santos_thesis_structure_table_5():
-    """Independent literals from Santos 2016 thesis Table 5 (structure effect, K = 0)."""
+    """Independent literals from Santos 2015 thesis Table 5 (structure effect, K = 0)."""
     po_sp = frozenset({"PO", "SP"})
     wp_po = frozenset({"WP", "PO"})
     po = frozenset({"PO"})
@@ -132,7 +242,7 @@ def test_combine_bpas_matches_santos_thesis_structure_table_5():
 
 
 def test_combine_bpas_reports_last_pairwise_conflict_from_thesis_table_6():
-    """Santos 2016 thesis Table 6: third evidence m({SP})=0.9 yields κ = 0.36 and Bel({SP})=0.84."""
+    """Santos 2015 thesis Table 6: third evidence m({SP})=0.9 yields κ = 0.36 and Bel({SP})=0.84."""
     po_sp = frozenset({"PO", "SP"})
     wp_po = frozenset({"WP", "PO"})
     sp = frozenset({"SP"})

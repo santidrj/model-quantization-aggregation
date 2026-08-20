@@ -1,23 +1,30 @@
 """Belief assignment: study-belief masses on evidence models."""
 
+import json
+from pathlib import Path
+
 from src.belief_assignment import (
     EvidenceModel,
     MassAssignment,
     assigned_mass,
+    belief_assignment_trace,
     comparison_records,
     load_evidence_models,
     pieces_for_effect,
     render_belief_assignment_table,
     reproduction_mismatches,
+    synthesis_row,
     write_belief_assignment_table,
 )
-from src.dempster_shafer import combine_effect
+from src.dempster_shafer import HypothesisSelectionPolicy, combine_effect
 
 AJI_STUDY_BELIEF = 0.6720808333333333
 AJI_EVIDENCE_MODEL_COUNT = 4
 AJI_PROCESSED_BELIEF = 0.327
 CORPUS_EVIDENCE_MODEL_COUNT = 76
 ACCURACY_EVIDENCE_MODEL_COUNT = 41
+RAM_USAGE_EVIDENCE_MODEL_COUNT = 3
+RAM_USAGE_SANTOS_BELIEF_PERCENT = 65
 ROOT_EXAMPLE_STUDY_BELIEF = 0.75
 ROOT_EXAMPLE_EVIDENCE_MODEL_COUNT = 2
 ROOT_EXAMPLE_MASS = 0.5
@@ -176,6 +183,82 @@ def test_published_analogue_matches_conflict():
     assert reproduction_mismatches(checks=("conflict",)) == []
 
 
+def test_synthesis_can_select_santos_2015_policy_explicitly():
+    models = load_evidence_models()
+    result = synthesis_row(
+        models,
+        "RAM Usage",
+        MassAssignment.PUBLISHED_ANALOGUE,
+        selection_policy=HypothesisSelectionPolicy.SANTOS_2015,
+    )
+    assert result.intensity == frozenset({"PO", "SP"})
+    assert result.belief_percent == RAM_USAGE_SANTOS_BELIEF_PERCENT
+
+
+def test_undiscounted_synthesis_uses_explicit_santos_policy():
+    models = [
+        EvidenceModel(
+            study_id=f"S{index}",
+            quantization_method="ptq",
+            precision_configuration="w-int8",
+            study_belief=mass,
+            evidence_model_count=1,
+            effects={"RAM Usage": (intensity, 0.1)},
+            aggregation_index=index,
+        )
+        for index, (intensity, mass) in enumerate(
+            [
+                ("positive", 0.191),
+                ("positive", 0.191),
+                ("strongly positive", 0.572),
+            ],
+            start=1,
+        )
+    ]
+    result = synthesis_row(
+        models,
+        "RAM Usage",
+        MassAssignment.UNDISCOUNTED_UNSPLIT,
+        selection_policy=HypothesisSelectionPolicy.SANTOS_2015,
+    )
+    assert result.intensity == frozenset({"PO", "SP"})
+
+
+def test_comparison_records_use_santos_2015_for_every_local_assignment():
+    records = {record["effect"]: record for record in comparison_records()}
+    assert records["mAP"]["analogue_intensity"] == "{NE, WN, IF}"
+    assert records["mAP"]["mass_preserving_intensity"] == "{NE, WN, IF}"
+    assert records["mAP"]["equitable_intensity"] == "{NE, WN, IF}"
+    assert records["RAM Usage"]["analogue_intensity"] == "{PO, SP}"
+    assert records["RAM Usage"]["mass_preserving_intensity"] == "{PO, SP}"
+    assert records["RAM Usage"]["equitable_intensity"] == "{PO, SP}"
+    assert {record["selection_policy"] for record in records.values()} == {"santos_2015"}
+
+
+def test_ram_usage_trace_exposes_both_selection_policies():
+    trace = belief_assignment_trace(
+        load_evidence_models(),
+        "RAM Usage",
+        MassAssignment.PUBLISHED_ANALOGUE,
+    )
+    assert trace["effect"] == "RAM Usage"
+    assert trace["assignment"] == "published_analogue"
+    assert len(trace["ordered_inputs"]) == RAM_USAGE_EVIDENCE_MODEL_COUNT
+    assert trace["policies"]["evidence_factory_compat"]["result"]["intensity"] == ["SP"]
+    assert trace["policies"]["santos_2015"]["result"]["intensity"] == ["PO", "SP"]
+
+
+def test_ram_usage_trace_matches_committed_fixture():
+    fixture_path = Path(__file__).parent / "fixtures" / "ram_usage_published_analogue_trace.json"
+    expected = json.loads(fixture_path.read_text(encoding="utf-8"))
+    actual = belief_assignment_trace(
+        load_evidence_models(),
+        "RAM Usage",
+        MassAssignment.PUBLISHED_ANALOGUE,
+    )
+    assert actual == expected
+
+
 def test_comparison_records_cover_published_table_effects():
     records = comparison_records()
     assert [record["effect"] for record in records] == [
@@ -211,6 +294,9 @@ def test_render_belief_assignment_table_orders_mass_preserving_before_equitable(
                 "published_intensity": "{WN, IF}",
                 "published_belief_percent": 99,
                 "published_conflict": 0.1894921993508596,
+                "analogue_intensity": "{WN, IF}",
+                "analogue_belief_percent": 99,
+                "analogue_conflict": 0.1894921993508596,
                 "unsplit_intensity": "IF",
                 "unsplit_belief_percent": 99,
                 "unsplit_conflict": 0.6670807973447248,
@@ -226,6 +312,9 @@ def test_render_belief_assignment_table_orders_mass_preserving_before_equitable(
                 "published_intensity": "SP",
                 "published_belief_percent": 100,
                 "published_conflict": 6.13678329170885e-10,
+                "analogue_intensity": "SP",
+                "analogue_belief_percent": 100,
+                "analogue_conflict": 6.13678329170885e-10,
                 "unsplit_intensity": "SP",
                 "unsplit_belief_percent": 100,
                 "unsplit_conflict": 2.0653385096586093e-17,
@@ -251,11 +340,11 @@ def test_render_belief_assignment_table_orders_mass_preserving_before_equitable(
     assert "0.06" in latex
     assert "1.00" in latex
     assert " & 1.00 & 0.00 & SP & 1.00 & 0.00 & SP & 1.00 & 0.00 & SP & 1.00 & 0.00" in latex
-    assert r"\multicolumn{3}{c}{Published}" in latex
+    assert r"\multicolumn{3}{c}{Published analogue}" in latex
     assert r"\multicolumn{3}{c}{Unsplit}" in latex
     assert r"\multicolumn{3}{c}{Mass-preserving}" in latex
     assert r"\multicolumn{3}{c}{Equitable}" in latex
-    published_at = latex.index("Published")
+    published_at = latex.index("Published analogue")
     unsplit_at = latex.index("Unsplit")
     mass_preserving_at = latex.index("Mass-preserving")
     equitable_at = latex.index("Equitable")
@@ -270,6 +359,9 @@ def test_write_belief_assignment_table_writes_fragment(tmp_path):
                 "published_intensity": "IF",
                 "published_belief_percent": 45,
                 "published_conflict": 0.31,
+                "analogue_intensity": "IF",
+                "analogue_belief_percent": 45,
+                "analogue_conflict": 0.31,
                 "unsplit_intensity": "IF",
                 "unsplit_belief_percent": 61,
                 "unsplit_conflict": 0.61,

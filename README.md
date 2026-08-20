@@ -19,6 +19,7 @@ This replication package consists of the following components:
      - [data/papers/entities.py](data/papers/entities.py) & [data/papers/knowledge_extraction.py](data/papers/knowledge_extraction.py): Define the structure and data extraction logic for the papers analyzed.
      - [data/download.py](data/download.py): Downloads the list of papers from arXiv and merges them with the Scopus list.
      - [data/selection/llm.py](data/selection/llm.py): Implements logic for selecting studies using Gemini 3.0 Flash.
+     - [dempster_shafer.py](src/dempster_shafer.py) & [belief_assignment.py](src/belief_assignment.py): Combine belief assignments, reproduce Evidence Factory outputs, and emit full audit traces.
 
 3. **Jupyter Notebooks**:
    - Located in the [notebooks](notebooks) directory, these notebooks contain the analysis and visualization of the data.
@@ -29,11 +30,13 @@ This replication package consists of the following components:
      - [4.0-paper-metadata-analysis.ipynb](notebooks/4.0-paper-metadata-analysis.ipynb): **Supplementary** — optional audit and characterization of manually extracted paper metadata.
      - [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb): **Core** — reproduces the paper's evidence figures (Fig. 6, Fig. 7, and Fig. 10).
      - [5.2-sensitivity-ts-le-5.ipynb](notebooks/5.2-sensitivity-ts-le-5.ipynb): **Core** — sensitivity analysis of the main by-precision aggregation restricted to studies with ≤ 5 theoretical structures.
+     - [5.3-belief-assignment.ipynb](notebooks/5.3-belief-assignment.ipynb): **Core** — reproduces the Evidence Factory gate and compares all four belief assignments using the literature selector.
 
 4. **Documentation**:
    - [data/processed/evidence-diagrams-mapping.md](data/processed/evidence-diagrams-mapping.md): Links to evidence diagrams generated during the study.
    - `data/processed/{paperkey}/metadata.json`: Contains metadata for the specific paper.
    - `data/processed/{paperkey}/systematic-studies-quality-evaluation.md`: Contains the filled quality evaluation form for the specific paper.
+   - [docs/dempster-shafer-audit.md](docs/dempster-shafer-audit.md): Maps D-S equations and policies to code, tests, traces, and known verification limits.
 
 ### Project Structure
 
@@ -211,6 +214,11 @@ Processed evidence under `data/processed/{paperkey}/` is included in the replica
 ### Sensitivity notebooks
 
 - [5.2-sensitivity-ts-le-5.ipynb](notebooks/5.2-sensitivity-ts-le-5.ipynb) — main by-precision aggregation restricted to studies with ≤ 5 theoretical structures; figures `sensitivity-ts-le-5-*-forestplot.pdf`.
+
+### Belief-assignment audit
+
+- [5.3-belief-assignment.ipynb](notebooks/5.3-belief-assignment.ipynb) — Evidence Factory compatibility gate, Santos (2015) four-assignment comparison, and RAM Usage worked trace.
+- [Dempster–Shafer computation audit](docs/dempster-shafer-audit.md) — equations, source authority, code traceability, executable checks, and reviewer checklist.
 
 Domain terminology is defined in [CONTEXT.md](CONTEXT.md).
 

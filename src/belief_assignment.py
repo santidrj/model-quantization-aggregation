@@ -11,7 +11,12 @@ import re
 from src.config import PROCESSED_DATA_DIR, TABLES_DIR
 from src.data.papers.entities import Papers
 from src.data.papers.study_id import study_id_sort_key
-from src.dempster_shafer import combine_effect, format_intensity
+from src.dempster_shafer import (
+    HypothesisSelectionPolicy,
+    combine_effect,
+    format_intensity,
+    trace_effect,
+)
 
 
 class MassAssignment(Enum):
@@ -48,7 +53,7 @@ def assigned_mass(model: EvidenceModel, assignment: MassAssignment, effect: str 
 
 
 def _model_sort_key(model: EvidenceModel) -> tuple:
-    """Evidence Factory combines in aggregation-turn order (Santos 2016, Table 21)."""
+    """Evidence Factory combines in aggregation-turn order (Santos 2015, Table 21)."""
     index = model.aggregation_index if model.aggregation_index is not None else 10**18
     return (index, *study_id_sort_key(model.study_id), model.quantization_method, model.precision_configuration)
 
@@ -410,11 +415,14 @@ def synthesis_row(
     models: list[EvidenceModel],
     effect: str,
     assignment: MassAssignment,
+    *,
+    selection_policy: HypothesisSelectionPolicy = HypothesisSelectionPolicy.EVIDENCE_FACTORY_COMPAT,
 ) -> SynthesisRow:
+    """Synthesize one effect; the default preserves Evidence Factory compatibility."""
     pieces = pieces_for_effect(models, effect, assignment)
     if not pieces:
         raise ValueError(f"No evidence models report {effect}")
-    combined = combine_effect(pieces)
+    combined = combine_effect(pieces, selection_policy=selection_policy)
     return SynthesisRow(
         effect=effect,
         intensity=combined.intensity,
@@ -434,7 +442,12 @@ def reproduction_mismatches(
     loaded = models if models is not None else load_evidence_models()
     mismatches: list[str] = []
     for expected in PUBLISHED_TABLE:
-        actual = synthesis_row(loaded, expected.effect, MassAssignment.PUBLISHED_ANALOGUE)
+        actual = synthesis_row(
+            loaded,
+            expected.effect,
+            MassAssignment.PUBLISHED_ANALOGUE,
+            selection_policy=HypothesisSelectionPolicy.EVIDENCE_FACTORY_COMPAT,
+        )
         if "n_evidence_models" in checks and actual.n_evidence_models != expected.n_evidence_models:
             mismatches.append(
                 f"{expected.effect}: n_evidence_models {actual.n_evidence_models} != {expected.n_evidence_models}"
@@ -454,17 +467,31 @@ def reproduction_mismatches(
 
 
 def comparison_records(models: list[EvidenceModel] | None = None) -> list[dict[str, object]]:
-    """One row per published-table effect with analogue, unsplit, mass-preserving, and equitable synthesis."""
+    """Return the four belief assignments under the Santos (2015) selector.
+
+    Evidence Factory literals remain in ``published_*`` fields for impact
+    comparison; ``reproduction_mismatches`` is the separate compatibility gate.
+    """
     loaded = models if models is not None else load_evidence_models()
     records: list[dict[str, object]] = []
     for expected in PUBLISHED_TABLE:
-        analogue = synthesis_row(loaded, expected.effect, MassAssignment.PUBLISHED_ANALOGUE)
-        unsplit = synthesis_row(loaded, expected.effect, MassAssignment.UNDISCOUNTED_UNSPLIT)
-        mass_preserving = synthesis_row(loaded, expected.effect, MassAssignment.MASS_PRESERVING_BELIEF_SPLIT)
-        equitable = synthesis_row(loaded, expected.effect, MassAssignment.EQUITABLE_BELIEF_SPLIT)
+        local_rows = {
+            assignment: synthesis_row(
+                loaded,
+                expected.effect,
+                assignment,
+                selection_policy=HypothesisSelectionPolicy.SANTOS_2015,
+            )
+            for assignment in MassAssignment
+        }
+        analogue = local_rows[MassAssignment.PUBLISHED_ANALOGUE]
+        unsplit = local_rows[MassAssignment.UNDISCOUNTED_UNSPLIT]
+        mass_preserving = local_rows[MassAssignment.MASS_PRESERVING_BELIEF_SPLIT]
+        equitable = local_rows[MassAssignment.EQUITABLE_BELIEF_SPLIT]
         records.append(
             {
                 "effect": expected.effect,
+                "selection_policy": HypothesisSelectionPolicy.SANTOS_2015.value,
                 "n_evidence_models": analogue.n_evidence_models,
                 "analogue_intensity": format_intensity(analogue.intensity),
                 "analogue_belief_percent": analogue.belief_percent,
@@ -484,6 +511,50 @@ def comparison_records(models: list[EvidenceModel] | None = None) -> list[dict[s
             }
         )
     return records
+
+
+def belief_assignment_trace(
+    models: list[EvidenceModel],
+    effect: str,
+    assignment: MassAssignment,
+) -> dict[str, object]:
+    """Return ordered provenance and both selector traces for one synthesis."""
+    ordered_models = [model for model in sorted(models, key=_model_sort_key) if effect in model.effects]
+    if not ordered_models:
+        raise ValueError(f"No evidence models report {effect}")
+    pieces = [(model.effects[effect][0], assigned_mass(model, assignment, effect=effect)) for model in ordered_models]
+    ordered_inputs = [
+        {
+            "index": index,
+            "aggregation_index": model.aggregation_index,
+            "study_id": model.study_id,
+            "quantization_method": model.quantization_method,
+            "precision_configuration": model.precision_configuration,
+            "evidence_factory_id": model.evidence_factory_id,
+            "intensity_label": label,
+            "mass": mass,
+        }
+        for index, (model, (label, mass)) in enumerate(zip(ordered_models, pieces, strict=True), start=1)
+    ]
+    traces = {
+        policy.value: trace_effect(pieces, selection_policy=policy).to_dict() for policy in HypothesisSelectionPolicy
+    }
+    compatibility_trace = traces[HypothesisSelectionPolicy.EVIDENCE_FACTORY_COMPAT.value]
+    combination = {key: compatibility_trace[key] for key in ("pieces", "steps", "mean_conflict", "final_masses")}
+    policies = {
+        name: {
+            key: trace[key]
+            for key in ("selection_policy", "selection_beliefs", "selection_steps", "tie_break", "result")
+        }
+        for name, trace in traces.items()
+    }
+    return {
+        "effect": effect,
+        "assignment": assignment.value,
+        "ordered_inputs": ordered_inputs,
+        "combination": combination,
+        "policies": policies,
+    }
 
 
 _EFFECT_LATEX_NAME = {
@@ -522,13 +593,13 @@ def _variant_cells(intensity: str, belief_percent: int, conflict: float) -> list
 
 
 def render_belief_assignment_table(records: list[dict[str, object]] | None = None) -> str:
-    """Render a tabularx fragment comparing published, unsplit, mass-preserving, and equitable pooling."""
+    """Render four assignments selected consistently with Santos (2015)."""
     rows = records if records is not None else comparison_records()
     lines = [
         r"\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X*{12}{c}}",
         r"\toprule",
         (
-            r" & \multicolumn{3}{c}{Published} & \multicolumn{3}{c}{Unsplit}"
+            r" & \multicolumn{3}{c}{Published analogue} & \multicolumn{3}{c}{Unsplit}"
             r" & \multicolumn{3}{c}{Mass-preserving} & \multicolumn{3}{c}{Equitable} \\"
         ),
         r"\cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13}",
@@ -540,7 +611,7 @@ def render_belief_assignment_table(records: list[dict[str, object]] | None = Non
     ]
     for record in rows:
         cells = [_EFFECT_LATEX_NAME.get(str(record["effect"]), str(record["effect"]))]
-        for prefix in ("published", "unsplit", "mass_preserving", "equitable"):
+        for prefix in ("analogue", "unsplit", "mass_preserving", "equitable"):
             cells.extend(
                 _variant_cells(
                     str(record[f"{prefix}_intensity"]),
