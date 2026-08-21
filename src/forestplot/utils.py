@@ -1,4 +1,4 @@
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from typing import Any
 
 from matplotlib import pyplot as plt
@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import polars as pl
 
+import forestplot as fp
 from src.data.papers.study_id import study_id_numeric_rank
 from src.effect_intensity import CorrectnessIntensity, CorrectnessMetrics, EffectIntensity
 
@@ -577,9 +578,15 @@ def _order_forestplot_rows(df: pd.DataFrame, ax: Axes, main_effects: list[str], 
 
 def _append_main_header(df: pd.DataFrame, ordered_df: pd.DataFrame) -> pd.DataFrame:
     header_offset = 3 if ordered_df["yticklabel"].str.contains("\n").any() else 1.5
-    main_header = df[df["yticklabel"].str.contains("Belief")].copy()
+    already_shown = set(ordered_df["yticklabel"].astype(str))
+    is_main_header = df["yticklabel"].str.contains("Belief").fillna(False) & ~df["yticklabel"].astype(str).isin(
+        already_shown
+    )
+    main_header = df.loc[is_main_header].copy()
+    if main_header.empty:
+        return ordered_df
     main_header["index"] = ordered_df["index"].max() + header_offset
-    return pd.concat([ordered_df, main_header])
+    return pd.concat([ordered_df, main_header], ignore_index=True)
 
 
 def _plot_effect_markers(ax: Axes, ordered_df: pd.DataFrame) -> tuple[str, float]:
@@ -647,6 +654,116 @@ def draw_intensity_areas(ax: Axes, metric: str, y: np.ndarray, x_min: float, x_m
     ax.set_xticks(_extend_xticks(np.array(ax.get_xticks()), x_ticks, x_min, x_max))
 
     return ax
+
+
+_MISSING_ANNOTE_TOKENS = frozenset({"", "nan", "none", "null", "<na>"})
+
+
+def format_forestplot_annote_value(value: Any) -> str:
+    """Format a left-table annotation for forestplot.
+
+    Missing values become an empty string so aggregated rows do not render as ``nan``.
+    Whole numbers become integer strings; other strings pass through unchanged.
+    """
+    if isinstance(value, str):
+        stripped = value.strip()
+        return "" if stripped.lower() in _MISSING_ANNOTE_TOKENS else stripped
+
+    missing = value is None
+    if not missing:
+        try:
+            missing = bool(pd.isna(value))
+        except (TypeError, ValueError):
+            missing = isinstance(value, (float, np.floating)) and not np.isfinite(value)
+    if missing:
+        return ""
+    if isinstance(value, (int, np.integer)) or (isinstance(value, (float, np.floating)) and value.is_integer()):
+        return str(int(value))
+    return str(value)
+
+
+def format_forestplot_annote_column(frame: pl.DataFrame, column: str) -> pl.DataFrame:
+    """Replace ``column`` with display strings that forestplot can annotate as-is."""
+    if column not in frame.columns:
+        return frame
+    formatted = [format_forestplot_annote_value(value) for value in frame.get_column(column).to_list()]
+    return frame.with_columns(pl.Series(column, formatted, dtype=pl.Utf8))
+
+
+def polish_forestplot_yticklabels(frame: pd.DataFrame) -> pd.DataFrame:
+    """Normalize forestplot y-tick labels after the third-party table formatter runs."""
+    polished = frame.copy()
+    polished["yticklabel"] = (
+        polished["yticklabel"]
+        .str.replace(r"(\b[1-9]\d*)\.0{1}", r"\1", regex=True)
+        .str.replace(r"Variable(.*)", r"Effect\1", regex=True)
+    )
+    polished["yticklabel"] = polished["yticklabel"].str.replace(
+        r"Inference Energy Consumption(.*)", r"Inference\nEnergy Consumption\1", regex=True
+    )
+    return polished
+
+
+def split_forestplot_frames(frame: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Split prepared forest-plot rows into correctness and resource-efficiency frames.
+
+    The table header row has a null effect, so it is kept on the correctness frame as well
+    as the resource-efficiency frame (the latter already receives it via ``~is_correctness``).
+    """
+    correctness_effects = set(CorrectnessMetrics.metrics())
+    is_correctness = frame["effect"].isin(correctness_effects).fillna(False)
+    is_header = frame["yticklabel"].str.contains("Belief").fillna(False)
+    correctness_df = frame.loc[is_correctness | is_header]
+    efficiency_df = frame.loc[~is_correctness]
+    return correctness_df.reset_index(drop=True), efficiency_df.reset_index(drop=True)
+
+
+def generate_forestplot_data(  # noqa: PLR0913
+    data: pl.DataFrame,
+    group_order: Sequence[str],
+    plot_sorting: Mapping[str, int],
+    *,
+    annote: Sequence[str] = ("n_eff", "belief"),
+    annoteheaders: Sequence[str] = ("$n_{\\mathrm{eff}}$", "Belief"),
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Build correctness and resource-efficiency frames for ``draw_forestplot``.
+
+    Count-like annotation columns are stringified first so missing aggregated values stay
+    blank instead of ``nan`` when forestplot formats the left-hand table.
+    """
+    formatted = data
+    for column in annote:
+        if column == "belief":
+            continue
+        formatted = format_forestplot_annote_column(formatted, column)
+
+    frame, _axis = fp.forestplot(
+        formatted.fill_nan(0).with_columns(pl.col("id").replace(dict(plot_sorting)).alias("order")).to_pandas(),
+        estimate="mean",
+        ll="lower_ci",
+        hl="upper_ci",
+        form_ci_report=False,
+        ci_report=False,
+        annote=list(annote),
+        annoteheaders=list(annoteheaders),
+        rightannote=[],
+        varlabel="evidence_label",
+        groupvar="effect",
+        group_order=list(group_order),
+        xlabel="Relative improvement",
+        color_alt_rows=True,
+        table=True,
+        figsize=(15, 30),
+        return_df=True,
+    )
+    plt.close()
+
+    frame["id"] = pd.Categorical(
+        frame["id"],
+        categories=list(plot_sorting.keys()),
+        ordered=True,
+    )
+    return split_forestplot_frames(polish_forestplot_yticklabels(frame))
 
 
 def draw_forestplot(

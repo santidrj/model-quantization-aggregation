@@ -6,8 +6,14 @@ import matplotlib
 matplotlib.use("Agg")
 from matplotlib import pyplot as plt
 import pandas as pd
+import polars as pl
 
-from src.forestplot.utils import draw_forestplot
+from src.forestplot.utils import (
+    draw_forestplot,
+    format_forestplot_annote_value,
+    generate_forestplot_data,
+    split_forestplot_frames,
+)
 from tests.helpers import FIXTURES_DIR
 
 
@@ -443,3 +449,115 @@ def test_forest_plot_orders_studies_and_string_evidence_ids_top_to_bottom():
     assert top_to_bottom == ["Accuracy Belief", "S1 e1", "S1 e2", "S1 e10", "S2 e1", "S2 e10", "Aggregated Accuracy"]
 
     plt.close(figure)
+
+
+def test_format_forestplot_annote_value_accepts_numbers_and_strings():
+    assert format_forestplot_annote_value(3) == "3"
+    assert format_forestplot_annote_value(3.0) == "3"
+    assert format_forestplot_annote_value("12") == "12"
+    assert format_forestplot_annote_value("") == ""
+    assert format_forestplot_annote_value(None) == ""
+    assert format_forestplot_annote_value(float("nan")) == ""
+    assert format_forestplot_annote_value("nan") == ""
+
+
+def test_split_forestplot_frames_keeps_header_on_correctness():
+    frame = pd.DataFrame(
+        [
+            {"effect": "Accuracy", "yticklabel": "S1 e1  3  0.20", "mean": 8.0},
+            {"effect": "Accuracy", "yticklabel": "Accuracy", "mean": None},
+            {"effect": "Storage Size", "yticklabel": "S2 e1  4  0.50", "mean": 40.0},
+            {"effect": None, "yticklabel": "Effect  n_eff  Belief", "mean": None},
+        ]
+    )
+
+    correctness_df, efficiency_df = split_forestplot_frames(frame)
+
+    assert "Effect  n_eff  Belief" in correctness_df["yticklabel"].to_list()
+    assert "Effect  n_eff  Belief" in efficiency_df["yticklabel"].to_list()
+    assert "S1 e1  3  0.20" in correctness_df["yticklabel"].to_list()
+    assert "S2 e1  4  0.50" in efficiency_df["yticklabel"].to_list()
+
+
+def test_forest_plot_shows_main_header_at_top():
+    frame = pd.DataFrame(
+        [
+            {
+                "index": 0,
+                "id": "S1",
+                "evidence_id": "e1",
+                "effect": "Accuracy",
+                "yticklabel": "S1 e1  3  0.20",
+                "mean": 8.0,
+                "lower_ci": 5.0,
+                "upper_ci": 11.0,
+            },
+            {
+                "index": 1,
+                "id": "Aggregated",
+                "evidence_id": "e0",
+                "effect": "Accuracy",
+                "yticklabel": "Aggregated  0.50",
+                "mean": 7.0,
+                "lower_ci": 6.0,
+                "upper_ci": 8.0,
+            },
+            {
+                "index": 2,
+                "id": "S1",
+                "evidence_id": "e0",
+                "effect": "Accuracy",
+                "yticklabel": "Accuracy",
+                "mean": None,
+                "lower_ci": None,
+                "upper_ci": None,
+            },
+            {
+                "index": 3,
+                "id": None,
+                "evidence_id": None,
+                "effect": None,
+                "yticklabel": "Effect  n_eff  Belief",
+                "mean": None,
+                "lower_ci": None,
+                "upper_ci": None,
+            },
+        ]
+    )
+
+    figure, axis = plt.subplots(figsize=(8, 4))
+    draw_forestplot(frame, axis, main_effects=["Accuracy"], contains_header=True, xlim=100)
+
+    top_to_bottom = [tick.get_text() for tick in reversed(axis.get_yticklabels())]
+    assert top_to_bottom[0] == "Effect  n_eff  Belief"
+    assert "Accuracy" in top_to_bottom
+
+    plt.close(figure)
+
+
+def test_generate_forestplot_data_keeps_header_and_blanks_aggregated_n_eff():
+    data = pl.DataFrame(
+        {
+            "id": ["S1", "Aggregated"],
+            "evidence_label": ["S1 e1", "Aggregated"],
+            "evidence_id": ["e1", "e0"],
+            "effect": ["Accuracy", "Accuracy"],
+            "mean": [8.0, 7.0],
+            "lower_ci": [5.0, 6.0],
+            "upper_ci": [11.0, 8.0],
+            "n_eff": [3, None],
+            "belief": [0.2, 0.5],
+        }
+    )
+    plot_sorting = {"S1": 1, "Aggregated": 0}
+
+    correctness_df, _efficiency_df = generate_forestplot_data(data, ["Accuracy"], plot_sorting)
+
+    header_labels = correctness_df.loc[correctness_df["mean"].isna(), "yticklabel"].astype(str)
+    assert any("Belief" in label for label in header_labels)
+    assert any(label.strip().startswith("Effect") for label in header_labels)
+
+    aggregated_labels = correctness_df.loc[
+        correctness_df["yticklabel"].astype(str).str.contains("Aggregated"), "yticklabel"
+    ].astype(str)
+    assert not aggregated_labels.str.contains("nan", case=False).any()
