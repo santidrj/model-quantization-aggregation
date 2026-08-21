@@ -35,6 +35,7 @@ from src.effect_intensity import (
     CorrectnessIntensity,
     CorrectnessMetrics,
     EffectIntensity,
+    PerformanceMetrics,
     ResourceEfficiencyMetrics,
     render_intensity_thresholds_table,
 )
@@ -287,7 +288,7 @@ def _effect_payload(
 
 def _all_effect_names(models: Sequence[EvidenceModel]) -> list[str]:
     names = {effect for model in models for effect in model.effects}
-    metric_order = CorrectnessMetrics.metrics() + ResourceEfficiencyMetrics.metrics()
+    metric_order = CorrectnessMetrics.metrics() + ResourceEfficiencyMetrics.metrics() + PerformanceMetrics.metrics()
     ordered = [name for name in metric_order if name in names]
     ordered.extend(sorted(names - set(ordered)))
     return ordered
@@ -561,7 +562,7 @@ def forestplot_overlay_frame(
                 "effect": effect,
                 "lower_ci": int(bounds["lower_ci"]),
                 "upper_ci": int(bounds["upper_ci"]),
-                "belief": record["belief"],
+                "belief": round(record["belief"], 3),
                 "mean": bounds["mean"],
                 "n_eff": None,
                 "id": "Aggregated",

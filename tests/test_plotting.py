@@ -13,6 +13,7 @@ from src.forestplot.utils import (
     SSM_INTENSITY_RANGE_LINEWIDTH,
     draw_forestplot,
     format_forestplot_annote_value,
+    format_forestplot_belief_value,
     generate_forestplot_data,
     split_forestplot_frames,
 )
@@ -463,22 +464,58 @@ def test_format_forestplot_annote_value_accepts_numbers_and_strings():
     assert format_forestplot_annote_value("nan") == ""
 
 
-def test_split_forestplot_frames_keeps_header_on_correctness():
+def test_format_forestplot_belief_value_rounds_to_three_decimals():
+    assert format_forestplot_belief_value(0.9876314432442928) == "0.988"
+    assert format_forestplot_belief_value(0.687) == "0.687"
+    assert format_forestplot_belief_value(1.0) == "1.0"
+    assert format_forestplot_belief_value(None) == ""
+
+
+def test_generate_forestplot_data_rounds_aggregated_belief_labels():
+    data = pl.DataFrame(
+        {
+            "id": ["S1", "Aggregated"],
+            "evidence_label": ["S1 e1", "Aggregated"],
+            "evidence_id": ["e1", "e0"],
+            "effect": ["Accuracy", "Accuracy"],
+            "mean": [8.0, 7.0],
+            "lower_ci": [5.0, 6.0],
+            "upper_ci": [11.0, 8.0],
+            "n_eff": [3, None],
+            "belief": [0.687, 0.9876314432442928],
+        }
+    )
+    plot_sorting = {"S1": 1, "Aggregated": 0}
+
+    correctness_df, efficiency_df, performance_df = generate_forestplot_data(data, ["Accuracy"], plot_sorting)
+
+    aggregated_labels = correctness_df.loc[
+        correctness_df["yticklabel"].astype(str).str.contains("Aggregated"), "yticklabel"
+    ].astype(str)
+    assert aggregated_labels.str.contains("0.988").any()
+    assert not aggregated_labels.str.contains("0.987631").any()
+
+
+def test_split_forestplot_frames_keeps_header_on_each_panel():
     frame = pd.DataFrame(
         [
             {"effect": "Accuracy", "yticklabel": "S1 e1  3  0.20", "mean": 8.0},
             {"effect": "Accuracy", "yticklabel": "Accuracy", "mean": None},
             {"effect": "Storage Size", "yticklabel": "S2 e1  4  0.50", "mean": 40.0},
+            {"effect": "Inference Latency", "yticklabel": "S3 e1  5  0.77", "mean": 20.0},
             {"effect": None, "yticklabel": "Effect  n_eff  Belief", "mean": None},
         ]
     )
 
-    correctness_df, efficiency_df = split_forestplot_frames(frame)
+    correctness_df, efficiency_df, performance_df = split_forestplot_frames(frame)
 
     assert "Effect  n_eff  Belief" in correctness_df["yticklabel"].to_list()
     assert "Effect  n_eff  Belief" in efficiency_df["yticklabel"].to_list()
+    assert "Effect  n_eff  Belief" in performance_df["yticklabel"].to_list()
     assert "S1 e1  3  0.20" in correctness_df["yticklabel"].to_list()
     assert "S2 e1  4  0.50" in efficiency_df["yticklabel"].to_list()
+    assert "S3 e1  5  0.77" in performance_df["yticklabel"].to_list()
+    assert "S3 e1  5  0.77" not in efficiency_df["yticklabel"].to_list()
 
 
 def test_forest_plot_shows_main_header_at_top():
@@ -553,7 +590,7 @@ def test_generate_forestplot_data_keeps_header_and_blanks_aggregated_n_eff():
     )
     plot_sorting = {"S1": 1, "Aggregated": 0}
 
-    correctness_df, _efficiency_df = generate_forestplot_data(data, ["Accuracy"], plot_sorting)
+    correctness_df, efficiency_df, performance_df = generate_forestplot_data(data, ["Accuracy"], plot_sorting)
 
     header_labels = correctness_df.loc[correctness_df["mean"].isna(), "yticklabel"].astype(str)
     assert any("Belief" in label for label in header_labels)

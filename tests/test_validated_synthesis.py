@@ -58,7 +58,7 @@ def test_forestplot_overlay_uses_main_gpu_utilization():
     assert overlay["intensity"] == main["intensity"]
     frame = forestplot_overlay_frame(payload)
     gpu = frame.filter(pl.col("effect") == "GPU Utilization").to_dicts()[0]
-    assert gpu["belief"] == pytest.approx(main["belief"])
+    assert gpu["belief"] == round(main["belief"], 3)
     assert gpu["lower_ci"] == int(overlay["forestplot"]["lower_ci"])
     assert gpu["upper_ci"] == int(overlay["forestplot"]["upper_ci"])
 

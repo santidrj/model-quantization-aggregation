@@ -9,11 +9,45 @@ import polars as pl
 
 import forestplot as fp
 from src.data.papers.study_id import study_id_numeric_rank
-from src.effect_intensity import CorrectnessIntensity, CorrectnessMetrics, EffectIntensity
+from src.effect_intensity import (
+    CorrectnessIntensity,
+    CorrectnessMetrics,
+    EffectIntensity,
+    PerformanceMetrics,
+    ResourceEfficiencyMetrics,
+)
 
 EVIDENCE_MODEL_CI_LINEWIDTH = 1.4
 SSM_INTENSITY_RANGE_LINEWIDTH = 8.0
 SSM_INTENSITY_RANGE_COLOR = "steelblue"
+FORESTPLOT_EXCLUDED_EFFECTS = frozenset(
+    {
+        "GPU Memory Utilization",
+        "RAM Energy Consumption",
+        "Precision",
+        "Recall",
+        "DSC",
+        "mAP@0.5:0.95",
+        "mAP@0.5",
+        "mIoU",
+        "Perplexity",
+        "Word Error Rate",
+        "BLEU",
+    }
+)
+
+
+def published_forestplot_effect_groups() -> tuple[list[str], list[str], list[str]]:
+    """Correctness, resource-efficiency, and performance effects shown in the paper forest plots."""
+
+    def _included(metrics: list[str]) -> list[str]:
+        return [metric for metric in metrics if metric not in FORESTPLOT_EXCLUDED_EFFECTS]
+
+    return (
+        _included(CorrectnessMetrics.metrics()),
+        _included(ResourceEfficiencyMetrics.metrics()),
+        _included(PerformanceMetrics.metrics()),
+    )
 
 
 def draw_ci(  # noqa: PLR0913
@@ -673,6 +707,26 @@ def draw_intensity_areas(ax: Axes, metric: str, y: np.ndarray, x_min: float, x_m
 
 
 _MISSING_ANNOTE_TOKENS = frozenset({"", "nan", "none", "null", "<na>"})
+FORESTPLOT_BELIEF_DECIMALS = 3
+
+
+def format_forestplot_belief_value(value: Any) -> str:
+    """Format a belief annotation to three decimal places, matching extraction output."""
+    if isinstance(value, str):
+        stripped = value.strip()
+        if stripped.lower() in _MISSING_ANNOTE_TOKENS:
+            return ""
+        return str(round(float(stripped), FORESTPLOT_BELIEF_DECIMALS))
+
+    missing = value is None
+    if not missing:
+        try:
+            missing = bool(pd.isna(value))
+        except (TypeError, ValueError):
+            missing = isinstance(value, (float, np.floating)) and not np.isfinite(value)
+    if missing:
+        return ""
+    return str(round(float(value), FORESTPLOT_BELIEF_DECIMALS))
 
 
 def format_forestplot_annote_value(value: Any) -> str:
@@ -720,18 +774,23 @@ def polish_forestplot_yticklabels(frame: pd.DataFrame) -> pd.DataFrame:
     return polished
 
 
-def split_forestplot_frames(frame: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Split prepared forest-plot rows into correctness and resource-efficiency frames.
-
-    The table header row has a null effect, so it is kept on the correctness frame as well
-    as the resource-efficiency frame (the latter already receives it via ``~is_correctness``).
-    """
+def split_forestplot_frames(frame: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Split prepared forest-plot rows into correctness, resource-efficiency, and performance frames."""
     correctness_effects = set(CorrectnessMetrics.metrics())
-    is_correctness = frame["effect"].isin(correctness_effects).fillna(False)
+    resource_effects = set(ResourceEfficiencyMetrics.metrics())
+    performance_effects = set(PerformanceMetrics.metrics())
     is_header = frame["yticklabel"].str.contains("Belief").fillna(False)
+    is_correctness = frame["effect"].isin(correctness_effects).fillna(False)
+    is_resource = frame["effect"].isin(resource_effects).fillna(False)
+    is_performance = frame["effect"].isin(performance_effects).fillna(False)
     correctness_df = frame.loc[is_correctness | is_header]
-    efficiency_df = frame.loc[~is_correctness]
-    return correctness_df.reset_index(drop=True), efficiency_df.reset_index(drop=True)
+    efficiency_df = frame.loc[is_resource | is_header]
+    performance_df = frame.loc[is_performance | is_header]
+    return (
+        correctness_df.reset_index(drop=True),
+        efficiency_df.reset_index(drop=True),
+        performance_df.reset_index(drop=True),
+    )
 
 
 def generate_forestplot_data(  # noqa: PLR0913
@@ -741,8 +800,8 @@ def generate_forestplot_data(  # noqa: PLR0913
     *,
     annote: Sequence[str] = ("n_eff", "belief"),
     annoteheaders: Sequence[str] = ("$n_{\\mathrm{eff}}$", "Belief"),
-) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Build correctness and resource-efficiency frames for ``draw_forestplot``.
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Build correctness, resource-efficiency, and performance frames for ``draw_forestplot``.
 
     Count-like annotation columns are stringified first so missing aggregated values stay
     blank instead of ``nan`` when forestplot formats the left-hand table.
@@ -750,6 +809,13 @@ def generate_forestplot_data(  # noqa: PLR0913
     formatted = data
     for column in annote:
         if column == "belief":
+            formatted = formatted.with_columns(
+                pl.Series(
+                    column,
+                    [format_forestplot_belief_value(value) for value in formatted.get_column(column).to_list()],
+                    dtype=pl.Utf8,
+                )
+            )
             continue
         formatted = format_forestplot_annote_column(formatted, column)
 

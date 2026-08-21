@@ -43,6 +43,7 @@ CORE_FIGURES = (
     FIGURES_DIR / "metrics-usage-distribution.pdf",
     FIGURES_DIR / "correctness-forestplot.pdf",
     FIGURES_DIR / "resource-efficiency-forestplot.pdf",
+    FIGURES_DIR / "performance-forestplot.pdf",
 )
 CORE_TABLES = (
     TABLES_DIR / "studies-quasi-experiments.tex",

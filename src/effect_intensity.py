@@ -161,6 +161,13 @@ class ResourceEfficiencyMetrics:
             "RAM Energy Consumption",
             "Inference Power Draw",
             "Inference Energy Consumption",
+        ]
+
+
+class PerformanceMetrics:
+    @staticmethod
+    def metrics() -> list[str]:
+        return [
             "Inference Latency",
         ]
 

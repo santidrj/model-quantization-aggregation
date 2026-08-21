@@ -182,6 +182,7 @@ The project is organized as follows:
    | `metrics-usage-distribution.pdf` | Fig. 10 |
    | `correctness-forestplot.pdf` | Fig. 6 |
    | `resource-efficiency-forestplot.pdf` | Fig. 7 |
+   | `performance-forestplot.pdf` | Fig. 8 |
 
 Processed evidence under `data/processed/{paperkey}/` is included in the replication package, so you do not need external study data or evidence extraction for this path.
 
