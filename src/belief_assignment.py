@@ -381,6 +381,7 @@ class PublishedRow:
     intensity: frozenset[str]
     belief_percent: int
     conflict: float
+    n_primary_studies: int
     n_evidence_models: int
     conflict_abs: float
 
@@ -388,17 +389,17 @@ class PublishedRow:
 # Ground truth for the published-analogue gate after effect-specific n_eff (ADR 0009).
 # Values diverge from Evidence Factory aggregated evidence 329074 where discounts used miscounted units.
 PUBLISHED_TABLE: tuple[PublishedRow, ...] = (
-    PublishedRow("Accuracy", frozenset({"WN", "IF"}), 99, 0.18836587140823147, 41, 0.005),
-    PublishedRow("F1 Score", frozenset({"IF"}), 75, 0.14625994955969665, 9, 0.005),
-    PublishedRow("mAP", frozenset({"IF"}), 45, 0.3111319305252532, 4, 0.005),
-    PublishedRow("Storage Size", frozenset({"SP"}), 100, 1.6842985173506294e-08, 62, 5e-10),
-    PublishedRow("GPU Utilization", frozenset({"IF", "WP"}), 97, 0.0, 3, 1e-12),
-    PublishedRow("GPU Power Draw", frozenset({"IF", "WP"}), 98, 0.299198, 5, 0.005),
-    PublishedRow("GPU Energy Consumption", frozenset({"SP"}), 74, 0.11587435700528559, 5, 0.005),
-    PublishedRow("RAM Usage", frozenset({"SP"}), 47, 0.197636868, 3, 0.005),
-    PublishedRow("Inference Power Draw", frozenset({"WP"}), 74, 0.03867907470738985, 10, 0.005),
-    PublishedRow("Inference Energy Consumption", frozenset({"SP"}), 100, 0.0038724493540753346, 27, 5e-4),
-    PublishedRow("Inference Latency", frozenset({"PO", "SP"}), 100, 0.3241083276189013, 51, 0.005),
+    PublishedRow("Accuracy", frozenset({"WN", "IF"}), 99, 0.18836587140823147, 10, 41, 0.005),
+    PublishedRow("F1 Score", frozenset({"IF"}), 75, 0.14625994955969665, 2, 9, 0.005),
+    PublishedRow("mAP", frozenset({"IF"}), 45, 0.3111319305252532, 2, 4, 0.005),
+    PublishedRow("Storage Size", frozenset({"SP"}), 100, 1.6842985173506294e-08, 17, 62, 5e-10),
+    PublishedRow("GPU Utilization", frozenset({"IF", "WP"}), 97, 0.0, 2, 3, 1e-12),
+    PublishedRow("GPU Power Draw", frozenset({"IF", "WP"}), 98, 0.299198, 3, 5, 0.005),
+    PublishedRow("GPU Energy Consumption", frozenset({"SP"}), 74, 0.11587435700528559, 3, 5, 0.005),
+    PublishedRow("RAM Usage", frozenset({"SP"}), 47, 0.197636868, 2, 3, 0.005),
+    PublishedRow("Inference Power Draw", frozenset({"WP"}), 74, 0.03867907470738985, 3, 10, 0.005),
+    PublishedRow("Inference Energy Consumption", frozenset({"SP"}), 100, 0.0038724493540753346, 8, 27, 5e-4),
+    PublishedRow("Inference Latency", frozenset({"PO", "SP"}), 100, 0.3241083276189013, 12, 51, 0.005),
 )
 
 
@@ -409,7 +410,13 @@ class SynthesisRow:
     belief: float
     belief_percent: int
     conflict: float
+    n_primary_studies: int
     n_evidence_models: int
+
+
+def contributing_study_ids(models: list[EvidenceModel], effect: str) -> frozenset[str]:
+    """Return primary-study identifiers that report ``effect``."""
+    return frozenset(model.study_id for model in models if effect in model.effects)
 
 
 def synthesis_row(
@@ -430,6 +437,7 @@ def synthesis_row(
         belief=combined.belief,
         belief_percent=round(combined.belief * 100),
         conflict=combined.conflict,
+        n_primary_studies=len(contributing_study_ids(models, effect)),
         n_evidence_models=len(pieces),
     )
 
@@ -437,7 +445,13 @@ def synthesis_row(
 def reproduction_mismatches(
     models: list[EvidenceModel] | None = None,
     *,
-    checks: tuple[str, ...] = ("intensity", "belief", "conflict", "n_evidence_models"),
+    checks: tuple[str, ...] = (
+        "intensity",
+        "belief",
+        "conflict",
+        "n_primary_studies",
+        "n_evidence_models",
+    ),
 ) -> list[str]:
     """Return gate failures for the published analogue vs ``PUBLISHED_TABLE``."""
     loaded = models if models is not None else load_evidence_models()
@@ -449,6 +463,10 @@ def reproduction_mismatches(
             MassAssignment.PUBLISHED_ANALOGUE,
             selection_policy=HypothesisSelectionPolicy.EVIDENCE_FACTORY_COMPAT,
         )
+        if "n_primary_studies" in checks and actual.n_primary_studies != expected.n_primary_studies:
+            mismatches.append(
+                f"{expected.effect}: n_primary_studies {actual.n_primary_studies} != {expected.n_primary_studies}"
+            )
         if "n_evidence_models" in checks and actual.n_evidence_models != expected.n_evidence_models:
             mismatches.append(
                 f"{expected.effect}: n_evidence_models {actual.n_evidence_models} != {expected.n_evidence_models}"
@@ -467,11 +485,17 @@ def reproduction_mismatches(
     return mismatches
 
 
-def comparison_records(models: list[EvidenceModel] | None = None) -> list[dict[str, object]]:
-    """Return the four belief assignments under the Santos (2015) selector.
+def comparison_records(
+    models: list[EvidenceModel] | None = None,
+    *,
+    selection_policy: HypothesisSelectionPolicy = HypothesisSelectionPolicy.SANTOS_2015,
+) -> list[dict[str, object]]:
+    """Return the four belief assignments under one hypothesis selector.
 
-    Evidence Factory literals remain in ``published_*`` fields for impact
-    comparison; ``reproduction_mismatches`` is the separate compatibility gate.
+    The default remains Santos (2015) for the literature audit. Manuscript
+    fragments use :func:`manuscript_comparison_records` so the published-analogue
+    column matches the main table. Evidence Factory literals remain in
+    ``published_*`` fields; ``reproduction_mismatches`` is the compatibility gate.
     """
     loaded = models if models is not None else load_evidence_models()
     records: list[dict[str, object]] = []
@@ -481,7 +505,7 @@ def comparison_records(models: list[EvidenceModel] | None = None) -> list[dict[s
                 loaded,
                 expected.effect,
                 assignment,
-                selection_policy=HypothesisSelectionPolicy.SANTOS_2015,
+                selection_policy=selection_policy,
             )
             for assignment in MassAssignment
         }
@@ -492,7 +516,8 @@ def comparison_records(models: list[EvidenceModel] | None = None) -> list[dict[s
         records.append(
             {
                 "effect": expected.effect,
-                "selection_policy": HypothesisSelectionPolicy.SANTOS_2015.value,
+                "selection_policy": selection_policy.value,
+                "n_primary_studies": analogue.n_primary_studies,
                 "n_evidence_models": analogue.n_evidence_models,
                 "analogue_intensity": format_intensity(analogue.intensity),
                 "analogue_belief_percent": analogue.belief_percent,
@@ -512,6 +537,11 @@ def comparison_records(models: list[EvidenceModel] | None = None) -> list[dict[s
             }
         )
     return records
+
+
+def manuscript_comparison_records(models: list[EvidenceModel] | None = None) -> list[dict[str, object]]:
+    """Four assignments under the Evidence Factory-compatible selector used by the main table."""
+    return comparison_records(models, selection_policy=HypothesisSelectionPolicy.EVIDENCE_FACTORY_COMPAT)
 
 
 def belief_assignment_trace(
@@ -558,6 +588,73 @@ def belief_assignment_trace(
     }
 
 
+@dataclass(frozen=True)
+class LeaveOneStudyOutRow:
+    effect: str
+    n_primary_studies: int
+    n_evidence_models: int
+    full_intensity: frozenset[str]
+    full_belief: float
+    omitted_study_id: str
+    loo_intensity: frozenset[str]
+    loo_belief: float
+
+    @property
+    def belief_delta(self) -> float:
+        return self.loo_belief - self.full_belief
+
+    @property
+    def intensity_changed(self) -> bool:
+        return self.loo_intensity != self.full_intensity
+
+
+_MIN_STUDIES_FOR_LEAVE_ONE_OUT = 2
+
+
+def leave_one_study_out_records(
+    models: list[EvidenceModel] | None = None,
+    *,
+    assignment: MassAssignment = MassAssignment.PUBLISHED_ANALOGUE,
+    selection_policy: HypothesisSelectionPolicy = HypothesisSelectionPolicy.EVIDENCE_FACTORY_COMPAT,
+) -> list[LeaveOneStudyOutRow]:
+    """Return leave-one-study-out rows under the largest-belief-drop rule.
+
+    For each effect, omit the primary study whose removal yields the smallest
+    remaining aggregated belief (ties break toward the lower Study ID). If that
+    remaining belief is not strictly lower than the full-sample belief, every
+    candidate omission is reported.
+    """
+    loaded = models if models is not None else load_evidence_models()
+    records: list[LeaveOneStudyOutRow] = []
+    for expected in PUBLISHED_TABLE:
+        full = synthesis_row(loaded, expected.effect, assignment, selection_policy=selection_policy)
+        study_ids = sorted(contributing_study_ids(loaded, expected.effect), key=study_id_sort_key)
+        if len(study_ids) < _MIN_STUDIES_FOR_LEAVE_ONE_OUT:
+            continue
+        candidates: list[LeaveOneStudyOutRow] = []
+        for study_id in study_ids:
+            remaining = [model for model in loaded if model.study_id != study_id]
+            loo = synthesis_row(remaining, expected.effect, assignment, selection_policy=selection_policy)
+            candidates.append(
+                LeaveOneStudyOutRow(
+                    effect=expected.effect,
+                    n_primary_studies=full.n_primary_studies,
+                    n_evidence_models=full.n_evidence_models,
+                    full_intensity=full.intensity,
+                    full_belief=full.belief,
+                    omitted_study_id=study_id,
+                    loo_intensity=loo.intensity,
+                    loo_belief=loo.belief,
+                )
+            )
+        worst = min(candidates, key=lambda row: (row.loo_belief, *study_id_sort_key(row.omitted_study_id)))
+        if worst.loo_belief < full.belief:
+            records.append(worst)
+        else:
+            records.extend(candidates)
+    return records
+
+
 _EFFECT_LATEX_NAME = {
     "Accuracy": "Accuracy",
     "F1 Score": r"F$_1$-score",
@@ -573,6 +670,25 @@ _EFFECT_LATEX_NAME = {
 }
 
 BELIEF_ASSIGNMENT_TABLE_FILENAME = "belief-assignment.tex"
+LEAVE_ONE_STUDY_OUT_TABLE_FILENAME = "leave-one-study-out.tex"
+SENSITIVITY_MASS_PRESERVING_TABLE_FILENAME = "sensitivity-mass-preserving.tex"
+
+_SENSITIVITY_EFFECT_GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("Functional Suitability", ("Accuracy", "F1 Score", "mAP")),
+    (
+        "Resource Efficiency",
+        (
+            "Storage Size",
+            "GPU Utilization",
+            "GPU Power Draw",
+            "GPU Energy Consumption",
+            "RAM Usage",
+            "Inference Power Draw",
+            "Inference Energy Consumption",
+        ),
+    ),
+    ("Performance", ("Inference Latency",)),
+)
 
 
 def _latex_intensity(label: str) -> str:
@@ -585,6 +701,15 @@ def _two_decimals(value: float) -> str:
     return f"{value:.2f}"
 
 
+_HIGH_BELIEF_EMPHASIS_PERCENT = 97
+
+
+def _latex_belief_percent(value: int) -> str:
+    if value >= _HIGH_BELIEF_EMPHASIS_PERCENT:
+        return rf"\textbf{{{value}\%}}"
+    return f"{value}\\%"
+
+
 def _variant_cells(intensity: str, belief_percent: int, conflict: float) -> list[str]:
     return [
         _latex_intensity(intensity),
@@ -595,23 +720,29 @@ def _variant_cells(intensity: str, belief_percent: int, conflict: float) -> list
 
 def render_belief_assignment_table(records: list[dict[str, object]] | None = None) -> str:
     """Render four assignments selected consistently with Santos (2015)."""
-    rows = records if records is not None else comparison_records()
+    rows = records if records is not None else manuscript_comparison_records()
+    column_spec = r"@{}>{\raggedright\arraybackslash}p{1.5cm}cc*{12}{@{\hspace{2pt}}c}@{}"
     lines = [
-        r"\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X*{12}{c}}",
+        rf"\begin{{tabular}}{{{column_spec}}}",
         r"\toprule",
         (
-            r" & \multicolumn{3}{c}{Published analogue} & \multicolumn{3}{c}{Unsplit}"
-            r" & \multicolumn{3}{c}{Mass-preserving} & \multicolumn{3}{c}{Equitable} \\"
+            r" & \multicolumn{2}{c}{Contributors} & \multicolumn{3}{c}{Published analogue}"
+            r" & \multicolumn{3}{c}{Unsplit} & \multicolumn{3}{c}{Mass-preserving}"
+            r" & \multicolumn{3}{c}{Equitable} \\"
         ),
-        r"\cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13}",
+        r"\cmidrule(lr){2-3} \cmidrule(lr){4-6} \cmidrule(lr){7-9} \cmidrule(lr){10-12} \cmidrule(lr){13-15}",
         (
-            r"Effect & Intensity & Belief & Conflict & Intensity & Belief & Conflict"
+            r"Effect & Studies & Models & Intensity & Belief & Conflict & Intensity & Belief & Conflict"
             r" & Intensity & Belief & Conflict & Intensity & Belief & Conflict \\"
         ),
         r"\midrule",
     ]
     for record in rows:
-        cells = [_EFFECT_LATEX_NAME.get(str(record["effect"]), str(record["effect"]))]
+        cells = [
+            _EFFECT_LATEX_NAME.get(str(record["effect"]), str(record["effect"])),
+            str(int(record["n_primary_studies"])),
+            str(int(record["n_evidence_models"])),
+        ]
         for prefix in ("analogue", "unsplit", "mass_preserving", "equitable"):
             cells.extend(
                 _variant_cells(
@@ -621,6 +752,114 @@ def render_belief_assignment_table(records: list[dict[str, object]] | None = Non
                 )
             )
         lines.append(" & ".join(cells) + r" \\")
+    lines.extend([r"\bottomrule", r"\end{tabular}", ""])
+    return "\n".join(lines)
+
+
+def mass_preserving_sensitivity_rows(
+    models: list[EvidenceModel] | None = None,
+    *,
+    selection_policy: HypothesisSelectionPolicy = HypothesisSelectionPolicy.EVIDENCE_FACTORY_COMPAT,
+) -> list[SynthesisRow]:
+    """Return main-table effects synthesized under the mass-preserving belief split."""
+    loaded = models if models is not None else load_evidence_models()
+    return [
+        synthesis_row(
+            loaded,
+            expected.effect,
+            MassAssignment.MASS_PRESERVING_BELIEF_SPLIT,
+            selection_policy=selection_policy,
+        )
+        for expected in PUBLISHED_TABLE
+    ]
+
+
+def render_sensitivity_mass_preserving_table(rows: list[SynthesisRow] | None = None) -> str:
+    """Render the Results sensitivity table for the D--S root belief split."""
+    synthesis_rows = rows if rows is not None else mass_preserving_sensitivity_rows()
+    by_effect = {row.effect: row for row in synthesis_rows}
+    lines = [
+        r"\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X"
+        r">{\centering\arraybackslash}m{2cm}"
+        r">{\centering\arraybackslash}m{1cm}"
+        r">{\centering\arraybackslash}m{1.2cm}"
+        r">{\centering\arraybackslash}m{0.9cm}"
+        r">{\centering\arraybackslash}m{0.9cm}}",
+        r"\toprule",
+        (
+            r"\textbf{Effect} & \textbf{Direction \& intensity} & \textbf{Belief} & "
+            r"\textbf{Conflict} & \textbf{Studies} & \textbf{Models} \\"
+        ),
+        r"\midrule",
+    ]
+    for group_label, effect_names in _SENSITIVITY_EFFECT_GROUPS:
+        lines.append(rf"\multicolumn{{6}}{{l}}{{\textit{{{group_label}}}}} \\")
+        for effect_name in effect_names:
+            row = by_effect[effect_name]
+            belief = _latex_belief_percent(row.belief_percent)
+            lines.append(
+                " & ".join(
+                    [
+                        _EFFECT_LATEX_NAME.get(row.effect, row.effect),
+                        _latex_intensity(format_intensity(row.intensity)),
+                        belief,
+                        _two_decimals(row.conflict),
+                        str(row.n_primary_studies),
+                        str(row.n_evidence_models),
+                    ]
+                )
+                + r" \\"
+            )
+        if group_label != _SENSITIVITY_EFFECT_GROUPS[-1][0]:
+            lines.append(r"\midrule")
+    lines.extend([r"\bottomrule", r"\end{tabularx}", ""])
+    return "\n".join(lines)
+
+
+def write_sensitivity_mass_preserving_table(
+    rows: list[SynthesisRow] | None = None,
+    *,
+    output_dir: Path | None = None,
+) -> Path:
+    """Write the mass-preserving sensitivity tabular fragment."""
+    directory = output_dir if output_dir is not None else TABLES_DIR
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / SENSITIVITY_MASS_PRESERVING_TABLE_FILENAME
+    path.write_text(render_sensitivity_mass_preserving_table(rows), encoding="utf-8")
+    return path
+
+
+def render_leave_one_study_out_table(records: list[LeaveOneStudyOutRow] | None = None) -> str:
+    """Render the leave-one-study-out appendix tabular fragment."""
+    rows = records if records is not None else leave_one_study_out_records()
+    lines = [
+        r"\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}Xcc>{\centering\arraybackslash}Xc"
+        r">{\centering\arraybackslash}Xc>{\centering\arraybackslash}Xc}",
+        r"\toprule",
+        (
+            r"Effect & Studies & Models & Full intensity & Full belief & Omitted study"
+            r" & LOO intensity & LOO belief & $\Delta$ belief \\"
+        ),
+        r"\midrule",
+    ]
+    for row in rows:
+        intensity_note = r"\textsuperscript{*}" if row.intensity_changed else ""
+        lines.append(
+            " & ".join(
+                [
+                    _EFFECT_LATEX_NAME.get(row.effect, row.effect),
+                    str(row.n_primary_studies),
+                    str(row.n_evidence_models),
+                    _latex_intensity(format_intensity(row.full_intensity)),
+                    _two_decimals(row.full_belief),
+                    row.omitted_study_id,
+                    _latex_intensity(format_intensity(row.loo_intensity)) + intensity_note,
+                    _two_decimals(row.loo_belief),
+                    f"{row.belief_delta:+.2f}",
+                ]
+            )
+            + r" \\"
+        )
     lines.extend([r"\bottomrule", r"\end{tabularx}", ""])
     return "\n".join(lines)
 
@@ -634,5 +873,21 @@ def write_belief_assignment_table(
     directory = output_dir if output_dir is not None else TABLES_DIR
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / BELIEF_ASSIGNMENT_TABLE_FILENAME
-    path.write_text(render_belief_assignment_table(records), encoding="utf-8")
+    path.write_text(
+        render_belief_assignment_table(records if records is not None else manuscript_comparison_records()),
+        encoding="utf-8",
+    )
+    return path
+
+
+def write_leave_one_study_out_table(
+    records: list[LeaveOneStudyOutRow] | None = None,
+    *,
+    output_dir: Path | None = None,
+) -> Path:
+    """Write the leave-one-study-out appendix tabular fragment."""
+    directory = output_dir if output_dir is not None else TABLES_DIR
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / LEAVE_ONE_STUDY_OUT_TABLE_FILENAME
+    path.write_text(render_leave_one_study_out_table(records), encoding="utf-8")
     return path

@@ -274,7 +274,7 @@ class KnowledgeExtractor:
             pl.col(improvement_column).std().cast(pl.Float64).alias(f"{improvement_column}_std"),
             pl.col(improvement_column).quantile(Q1).alias(f"{improvement_column}_q1"),
             pl.col(improvement_column).quantile(Q3).alias(f"{improvement_column}_q3"),
-            pl.len().alias(f"{improvement_column}_sample_size"),
+            pl.col(improvement_column).count().alias(f"{improvement_column}_sample_size"),
         )
 
     def _aggregate_metric_at_configuration(self, metric: str) -> pl.DataFrame:
@@ -290,7 +290,7 @@ class KnowledgeExtractor:
             pl.col(improvement_column).std().cast(pl.Float64).alias(f"{improvement_column}_std"),
             pl.col(improvement_column).quantile(Q1).alias(f"{improvement_column}_q1"),
             pl.col(improvement_column).quantile(Q3).alias(f"{improvement_column}_q3"),
-            pl.len().alias(f"{improvement_column}_sample_size"),
+            pl.col(improvement_column).count().alias(f"{improvement_column}_sample_size"),
         )
 
     def _join_metric_precision_frames(

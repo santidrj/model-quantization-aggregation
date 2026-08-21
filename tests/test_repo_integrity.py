@@ -24,6 +24,7 @@ def test_import_smoke_for_core_modules():
         "src.run_evidence_extraction",
         "src.dempster_shafer",
         "src.belief_assignment",
+        "src.validated_synthesis",
     ]
 
     for module_name in module_names:

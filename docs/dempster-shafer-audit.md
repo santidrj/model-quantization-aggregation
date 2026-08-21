@@ -46,8 +46,8 @@ The local thesis PDF is intentionally excluded by `/PauloSergio_Thesis.pdf` in `
 5. `pieces_for_effect` retains only models reporting the effect and orders them.
 6. `src/dempster_shafer.py::combine_effect` constructs simple-support mass functions, combines them pairwise, and selects a reported hypothesis.
 7. `reproduction_mismatches` checks EvidenceFactory-compatible results against evidence 329074.
-8. `comparison_records` computes all four assignments with Santos hypothesis selection.
-9. `write_belief_assignment_table` renders the appendix fragment.
+8. `comparison_records` computes all four assignments; Santos selection is the literature audit, while `manuscript_comparison_records` uses the Evidence Factory-compatible selector.
+9. `write_all_validated_outputs` writes `data/processed/validated-synthesis.json` and every manuscript fragment derived from it, with assertions on corpus size, counts, intensity, belief, conflict, and delta.
 
 Notebook [`5.3-belief-assignment.ipynb`](../notebooks/5.3-belief-assignment.ipynb) executes the gate, comparison, trace example, and table generation.
 
@@ -81,6 +81,8 @@ For a study with \(N\) evidence models:
 \]
 
 The equitable split preserves the arithmetic allocation \(\sum_i B/N=B\); it does not claim to preserve the Dempster combination result.
+
+A fifth assignment \(1-(1-B')^{1/N}\) (discount then root) was evaluated on the 11 publication effects and **rejected** for publication. It is D–S coherent when \(N=1\) or when all \(N\) models share one \(B'\) and agree, but \(B'\) varies within study on this corpus, so “mass-preserving” no longer names a unique study-level quantity. Empirically it is not a stronger dependence stress test than the undiscounted root: Accuracy and inference latency keep the main intensities, while distinctive belief drops (mAP 45% → 31%) confound \(\alpha_n\alpha_v\) with the multiplicity cap. ADR 0010 records the comparison. Do not add this assignment to `MassAssignment` or to the rendered tables unless a later review explicitly requests the hybrid.
 
 ## Dempster–Shafer mechanics
 

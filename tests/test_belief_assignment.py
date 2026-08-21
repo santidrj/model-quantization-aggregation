@@ -4,17 +4,25 @@ import json
 from pathlib import Path
 
 from src.belief_assignment import (
+    PUBLISHED_TABLE,
     EvidenceModel,
     MassAssignment,
     assigned_mass,
     belief_assignment_trace,
     comparison_records,
+    contributing_study_ids,
+    leave_one_study_out_records,
     load_evidence_models,
+    mass_preserving_sensitivity_rows,
     pieces_for_effect,
     render_belief_assignment_table,
+    render_leave_one_study_out_table,
+    render_sensitivity_mass_preserving_table,
     reproduction_mismatches,
     synthesis_row,
     write_belief_assignment_table,
+    write_leave_one_study_out_table,
+    write_sensitivity_mass_preserving_table,
 )
 from src.dempster_shafer import HypothesisSelectionPolicy, combine_effect
 
@@ -23,6 +31,9 @@ AJI_EVIDENCE_MODEL_COUNT = 4
 AJI_PROCESSED_BELIEF = 0.327
 CORPUS_EVIDENCE_MODEL_COUNT = 76
 ACCURACY_EVIDENCE_MODEL_COUNT = 41
+ACCURACY_PRIMARY_STUDY_COUNT = 10
+ACCURACY_LOO_FULL_BELIEF = 0.99
+ACCURACY_LOO_BELIEF = 0.78
 RAM_USAGE_EVIDENCE_MODEL_COUNT = 3
 RAM_USAGE_SANTOS_BELIEF_PERCENT = 65
 ROOT_EXAMPLE_STUDY_BELIEF = 0.75
@@ -172,7 +183,7 @@ def test_aggregation_order_follows_evidence_factory_turn_list():
 
 
 def test_published_analogue_matches_intensity_and_model_counts():
-    assert reproduction_mismatches(checks=("intensity", "n_evidence_models")) == []
+    assert reproduction_mismatches(checks=("intensity", "n_primary_studies", "n_evidence_models")) == []
 
 
 def test_published_analogue_matches_belief():
@@ -275,6 +286,7 @@ def test_comparison_records_cover_published_table_effects():
         "Inference Latency",
     ]
     accuracy = records[0]
+    assert accuracy["n_primary_studies"] == ACCURACY_PRIMARY_STUDY_COUNT
     assert accuracy["n_evidence_models"] == ACCURACY_EVIDENCE_MODEL_COUNT
     assert {
         "mass_preserving_intensity",
@@ -286,11 +298,68 @@ def test_comparison_records_cover_published_table_effects():
     } <= accuracy.keys()
 
 
+def test_synthesis_row_reports_primary_study_count():
+    models = load_evidence_models()
+    row = synthesis_row(models, "Accuracy", MassAssignment.PUBLISHED_ANALOGUE)
+    assert row.n_primary_studies == ACCURACY_PRIMARY_STUDY_COUNT
+    assert row.n_evidence_models == ACCURACY_EVIDENCE_MODEL_COUNT
+    assert contributing_study_ids(models, "Accuracy") == contributing_study_ids(models, "Accuracy")
+
+
+def test_leave_one_study_out_gpu_energy_reports_all_omissions_when_belief_rises():
+    records = leave_one_study_out_records()
+    gpu_energy = [row for row in records if row.effect == "GPU Energy Consumption"]
+    assert len(gpu_energy) == len({"S3", "S13", "S14"})
+    assert all(row.belief_delta > 0 for row in gpu_energy)
+
+
+def test_leave_one_study_out_worst_drop_for_accuracy_is_s13():
+    records = {row.effect: row for row in leave_one_study_out_records()}
+    accuracy = records["Accuracy"]
+    assert accuracy.omitted_study_id == "S13"
+    assert round(accuracy.full_belief, 2) == ACCURACY_LOO_FULL_BELIEF
+    assert round(accuracy.loo_belief, 2) == ACCURACY_LOO_BELIEF
+    assert accuracy.intensity_changed
+
+
+def test_render_leave_one_study_out_table_includes_accuracy():
+    latex = render_leave_one_study_out_table()
+    assert "Accuracy" in latex
+    assert "S13" in latex
+    assert r"\begin{tabularx}" in latex
+
+
+def test_write_leave_one_study_out_table_writes_fragment(tmp_path):
+    path = write_leave_one_study_out_table(output_dir=tmp_path)
+    assert path.name == "leave-one-study-out.tex"
+    assert "Inf. latency" in path.read_text(encoding="utf-8")
+
+
+def test_mass_preserving_sensitivity_rows_match_published_effects():
+    rows = mass_preserving_sensitivity_rows()
+    assert [row.effect for row in rows] == [expected.effect for expected in PUBLISHED_TABLE]
+
+
+def test_render_sensitivity_mass_preserving_table_includes_accuracy():
+    latex = render_sensitivity_mass_preserving_table()
+    assert "Accuracy" in latex
+    assert "Functional Suitability" in latex
+    assert "83\\%" in latex or "83%" in latex
+
+
+def test_write_sensitivity_mass_preserving_table_writes_fragment(tmp_path):
+    path = write_sensitivity_mass_preserving_table(output_dir=tmp_path)
+    assert path.name == "sensitivity-mass-preserving.tex"
+    assert "Inf. latency" in path.read_text(encoding="utf-8")
+
+
 def test_render_belief_assignment_table_orders_mass_preserving_before_equitable():
     latex = render_belief_assignment_table(
         [
             {
                 "effect": "Accuracy",
+                "n_primary_studies": 10,
+                "n_evidence_models": 41,
                 "published_intensity": "{WN, IF}",
                 "published_belief_percent": 99,
                 "published_conflict": 0.1894921993508596,
@@ -309,6 +378,8 @@ def test_render_belief_assignment_table_orders_mass_preserving_before_equitable(
             },
             {
                 "effect": "Storage Size",
+                "n_primary_studies": 17,
+                "n_evidence_models": 62,
                 "published_intensity": "SP",
                 "published_belief_percent": 100,
                 "published_conflict": 6.13678329170885e-10,
@@ -327,7 +398,7 @@ def test_render_belief_assignment_table_orders_mass_preserving_before_equitable(
             },
         ]
     )
-    assert r"\begin{tabularx}" in latex
+    assert r"\begin{tabular}" in latex
     assert r"\{WN, IF\}" in latex
     assert "Accuracy" in latex
     assert "Storage size" in latex
@@ -340,7 +411,8 @@ def test_render_belief_assignment_table_orders_mass_preserving_before_equitable(
     assert "0.06" in latex
     assert "1.00" in latex
     assert " & 1.00 & 0.00 & SP & 1.00 & 0.00 & SP & 1.00 & 0.00 & SP & 1.00 & 0.00" in latex
-    assert r"\multicolumn{3}{c}{Published analogue}" in latex
+    assert r"\multicolumn{2}{c}{Contributors}" in latex
+    assert "Accuracy & 10 & 41" in latex
     assert r"\multicolumn{3}{c}{Unsplit}" in latex
     assert r"\multicolumn{3}{c}{Mass-preserving}" in latex
     assert r"\multicolumn{3}{c}{Equitable}" in latex
@@ -356,6 +428,8 @@ def test_write_belief_assignment_table_writes_fragment(tmp_path):
         [
             {
                 "effect": "mAP",
+                "n_primary_studies": 2,
+                "n_evidence_models": 4,
                 "published_intensity": "IF",
                 "published_belief_percent": 45,
                 "published_conflict": 0.31,

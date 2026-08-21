@@ -1,0 +1,1918 @@
+{
+  "schema_version": 1,
+  "selection_policy": "evidence_factory_compat",
+  "assignment": "published_analogue",
+  "corpus": {
+    "n_primary_studies": 21,
+    "n_evidence_models": 76
+  },
+  "counts": {
+    "n_increased_belief": 10,
+    "n_decreased_belief": 1,
+    "n_unchanged_belief": 0,
+    "increased_effects": [
+      "Accuracy",
+      "F1 Score",
+      "mAP",
+      "Storage Size",
+      "GPU Utilization",
+      "GPU Power Draw",
+      "GPU Energy Consumption",
+      "Inference Power Draw",
+      "Inference Energy Consumption",
+      "Inference Latency"
+    ],
+    "decreased_effects": [
+      "RAM Usage"
+    ],
+    "unchanged_effects": []
+  },
+  "effects": {
+    "Accuracy": {
+      "effect": "Accuracy",
+      "intensity": [
+        "WN",
+        "IF"
+      ],
+      "intensity_label": "{WN, IF}",
+      "belief": 0.9876314432442928,
+      "belief_percent": 99,
+      "conflict": 0.1882887260520794,
+      "max_contributor_belief": 0.665,
+      "delta_belief": 0.3226314432442927,
+      "delta_percent": 32,
+      "delta_class": "reinforced",
+      "n_primary_studies": 10,
+      "n_evidence_models": 41,
+      "study_ids": [
+        "S2",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S10",
+        "S11",
+        "S13",
+        "S14",
+        "S16"
+      ],
+      "forestplot": {
+        "lower_ci": -5.0,
+        "upper_ci": -2.0,
+        "mean": -3.5
+      }
+    },
+    "F1 Score": {
+      "effect": "F1 Score",
+      "intensity": [
+        "IF"
+      ],
+      "intensity_label": "IF",
+      "belief": 0.749740936889711,
+      "belief_percent": 75,
+      "conflict": 0.14625994955969665,
+      "max_contributor_belief": 0.642,
+      "delta_belief": 0.10774093688971098,
+      "delta_percent": 11,
+      "delta_class": "reinforced",
+      "n_primary_studies": 2,
+      "n_evidence_models": 9,
+      "study_ids": [
+        "S11",
+        "S12"
+      ],
+      "forestplot": {
+        "lower_ci": -2.0,
+        "upper_ci": 2.0,
+        "mean": 0.0
+      }
+    },
+    "mAP": {
+      "effect": "mAP",
+      "intensity": [
+        "IF"
+      ],
+      "intensity_label": "IF",
+      "belief": 0.4457676937788615,
+      "belief_percent": 45,
+      "conflict": 0.3111319305252532,
+      "max_contributor_belief": 0.425,
+      "delta_belief": 0.020767693778861507,
+      "delta_percent": 2,
+      "delta_class": "slightly_reinforced",
+      "n_primary_studies": 2,
+      "n_evidence_models": 4,
+      "study_ids": [
+        "S3",
+        "S17"
+      ],
+      "forestplot": {
+        "lower_ci": -2.0,
+        "upper_ci": 2.0,
+        "mean": 0.0
+      }
+    },
+    "Storage Size": {
+      "effect": "Storage Size",
+      "intensity": [
+        "SP"
+      ],
+      "intensity_label": "SP",
+      "belief": 0.9999998913622369,
+      "belief_percent": 100,
+      "conflict": 1.6842985173506294e-08,
+      "max_contributor_belief": 0.736,
+      "delta_belief": 0.2639998913622369,
+      "delta_percent": 26,
+      "delta_class": "reinforced",
+      "n_primary_studies": 17,
+      "n_evidence_models": 62,
+      "study_ids": [
+        "S1",
+        "S4",
+        "S6",
+        "S7",
+        "S8",
+        "S9",
+        "S10",
+        "S11",
+        "S12",
+        "S13",
+        "S14",
+        "S15",
+        "S17",
+        "S18",
+        "S19",
+        "S20",
+        "S21"
+      ],
+      "forestplot": {
+        "lower_ci": 50.0,
+        "upper_ci": 100.0,
+        "mean": 75.0
+      }
+    },
+    "GPU Utilization": {
+      "effect": "GPU Utilization",
+      "intensity": [
+        "IF",
+        "WP"
+      ],
+      "intensity_label": "{IF, WP}",
+      "belief": 0.97040692,
+      "belief_percent": 97,
+      "conflict": 0.0,
+      "max_contributor_belief": 0.718,
+      "delta_belief": 0.25240692,
+      "delta_percent": 25,
+      "delta_class": "reinforced",
+      "n_primary_studies": 2,
+      "n_evidence_models": 3,
+      "study_ids": [
+        "S13",
+        "S14"
+      ],
+      "forestplot": {
+        "lower_ci": 2.0,
+        "upper_ci": 10.0,
+        "mean": 6.0
+      }
+    },
+    "GPU Power Draw": {
+      "effect": "GPU Power Draw",
+      "intensity": [
+        "IF",
+        "WP"
+      ],
+      "intensity_label": "{IF, WP}",
+      "belief": 0.9824274834569996,
+      "belief_percent": 98,
+      "conflict": 0.299198,
+      "max_contributor_belief": 0.709,
+      "delta_belief": 0.27342748345699963,
+      "delta_percent": 27,
+      "delta_class": "reinforced",
+      "n_primary_studies": 3,
+      "n_evidence_models": 5,
+      "study_ids": [
+        "S3",
+        "S13",
+        "S14"
+      ],
+      "forestplot": {
+        "lower_ci": 2.0,
+        "upper_ci": 10.0,
+        "mean": 6.0
+      }
+    },
+    "GPU Energy Consumption": {
+      "effect": "GPU Energy Consumption",
+      "intensity": [
+        "SP"
+      ],
+      "intensity_label": "SP",
+      "belief": 0.7431902181061332,
+      "belief_percent": 74,
+      "conflict": 0.11587435700528559,
+      "max_contributor_belief": 0.718,
+      "delta_belief": 0.0251902181061332,
+      "delta_percent": 3,
+      "delta_class": "slightly_reinforced",
+      "n_primary_studies": 3,
+      "n_evidence_models": 5,
+      "study_ids": [
+        "S3",
+        "S13",
+        "S14"
+      ],
+      "forestplot": {
+        "lower_ci": 50.0,
+        "upper_ci": 100.0,
+        "mean": 75.0
+      }
+    },
+    "RAM Usage": {
+      "effect": "RAM Usage",
+      "intensity": [
+        "SP"
+      ],
+      "intensity_label": "SP",
+      "belief": 0.46657569007046534,
+      "belief_percent": 47,
+      "conflict": 0.197636868,
+      "max_contributor_belief": 0.572,
+      "delta_belief": -0.10542430992953461,
+      "delta_percent": -11,
+      "delta_class": "weakened",
+      "n_primary_studies": 2,
+      "n_evidence_models": 3,
+      "study_ids": [
+        "S18",
+        "S20"
+      ],
+      "forestplot": {
+        "lower_ci": 50.0,
+        "upper_ci": 100.0,
+        "mean": 75.0
+      }
+    },
+    "Inference Power Draw": {
+      "effect": "Inference Power Draw",
+      "intensity": [
+        "WP"
+      ],
+      "intensity_label": "WP",
+      "belief": 0.7435876015171575,
+      "belief_percent": 74,
+      "conflict": 0.03867907470738985,
+      "max_contributor_belief": 0.65,
+      "delta_belief": 0.0935876015171575,
+      "delta_percent": 9,
+      "delta_class": "reinforced",
+      "n_primary_studies": 3,
+      "n_evidence_models": 10,
+      "study_ids": [
+        "S11",
+        "S13",
+        "S18"
+      ],
+      "forestplot": {
+        "lower_ci": 10.0,
+        "upper_ci": 20.0,
+        "mean": 15.0
+      }
+    },
+    "Inference Energy Consumption": {
+      "effect": "Inference Energy Consumption",
+      "intensity": [
+        "SP"
+      ],
+      "intensity_label": "SP",
+      "belief": 0.9961605657553824,
+      "belief_percent": 100,
+      "conflict": 0.0038724493540753346,
+      "max_contributor_belief": 0.715,
+      "delta_belief": 0.2811605657553824,
+      "delta_percent": 28,
+      "delta_class": "reinforced",
+      "n_primary_studies": 8,
+      "n_evidence_models": 27,
+      "study_ids": [
+        "S5",
+        "S9",
+        "S10",
+        "S11",
+        "S13",
+        "S16",
+        "S18",
+        "S20"
+      ],
+      "forestplot": {
+        "lower_ci": 50.0,
+        "upper_ci": 100.0,
+        "mean": 75.0
+      }
+    },
+    "Inference Latency": {
+      "effect": "Inference Latency",
+      "intensity": [
+        "PO",
+        "SP"
+      ],
+      "intensity_label": "{PO, SP}",
+      "belief": 0.9997836960125243,
+      "belief_percent": 100,
+      "conflict": 0.3241083276189013,
+      "max_contributor_belief": 0.716,
+      "delta_belief": 0.2837836960125243,
+      "delta_percent": 28,
+      "delta_class": "reinforced",
+      "n_primary_studies": 12,
+      "n_evidence_models": 51,
+      "study_ids": [
+        "S3",
+        "S4",
+        "S6",
+        "S8",
+        "S11",
+        "S13",
+        "S14",
+        "S15",
+        "S17",
+        "S18",
+        "S20",
+        "S21"
+      ],
+      "forestplot": {
+        "lower_ci": 40.0,
+        "upper_ci": 50.0,
+        "mean": 45.0
+      }
+    }
+  },
+  "forestplot_overlays": {
+    "Accuracy": {
+      "effect": "Accuracy",
+      "intensity": [
+        "WN",
+        "IF"
+      ],
+      "intensity_label": "{WN, IF}",
+      "belief": 0.9876314432442928,
+      "belief_percent": 99,
+      "conflict": 0.1882887260520794,
+      "max_contributor_belief": 0.665,
+      "delta_belief": 0.3226314432442927,
+      "delta_percent": 32,
+      "delta_class": "reinforced",
+      "n_primary_studies": 10,
+      "n_evidence_models": 41,
+      "study_ids": [
+        "S2",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S10",
+        "S11",
+        "S13",
+        "S14",
+        "S16"
+      ],
+      "forestplot": {
+        "lower_ci": -5.0,
+        "upper_ci": -2.0,
+        "mean": -3.5
+      }
+    },
+    "Precision": {
+      "effect": "Precision",
+      "intensity": [
+        "WN"
+      ],
+      "intensity_label": "WN",
+      "belief": 0.1617770326906957,
+      "belief_percent": 16,
+      "conflict": 0.037249000000000004,
+      "max_contributor_belief": 0.193,
+      "delta_belief": -0.031222967309304295,
+      "delta_percent": -3,
+      "delta_class": "weakened",
+      "n_primary_studies": 1,
+      "n_evidence_models": 2,
+      "study_ids": [
+        "S15"
+      ],
+      "forestplot": {
+        "lower_ci": -10.0,
+        "upper_ci": -5.0,
+        "mean": -7.5
+      }
+    },
+    "Recall": {
+      "effect": "Recall",
+      "intensity": [
+        "SN"
+      ],
+      "intensity_label": "SN",
+      "belief": 0.1617770326906957,
+      "belief_percent": 16,
+      "conflict": 0.037249000000000004,
+      "max_contributor_belief": 0.193,
+      "delta_belief": -0.031222967309304295,
+      "delta_percent": -3,
+      "delta_class": "weakened",
+      "n_primary_studies": 1,
+      "n_evidence_models": 2,
+      "study_ids": [
+        "S15"
+      ],
+      "forestplot": {
+        "lower_ci": -100.0,
+        "upper_ci": -25.0,
+        "mean": -62.5
+      }
+    },
+    "F1 Score": {
+      "effect": "F1 Score",
+      "intensity": [
+        "IF"
+      ],
+      "intensity_label": "IF",
+      "belief": 0.749740936889711,
+      "belief_percent": 75,
+      "conflict": 0.14625994955969665,
+      "max_contributor_belief": 0.642,
+      "delta_belief": 0.10774093688971098,
+      "delta_percent": 11,
+      "delta_class": "reinforced",
+      "n_primary_studies": 2,
+      "n_evidence_models": 9,
+      "study_ids": [
+        "S11",
+        "S12"
+      ],
+      "forestplot": {
+        "lower_ci": -2.0,
+        "upper_ci": 2.0,
+        "mean": 0.0
+      }
+    },
+    "DSC": {
+      "effect": "DSC",
+      "intensity": [
+        "IF"
+      ],
+      "intensity_label": "IF",
+      "belief": 0.249,
+      "belief_percent": 25,
+      "conflict": 0.0,
+      "max_contributor_belief": 0.249,
+      "delta_belief": 0.0,
+      "delta_percent": 0,
+      "delta_class": "unchanged",
+      "n_primary_studies": 1,
+      "n_evidence_models": 1,
+      "study_ids": [
+        "S10"
+      ],
+      "forestplot": {
+        "lower_ci": -2.0,
+        "upper_ci": 2.0,
+        "mean": 0.0
+      }
+    },
+    "mAP": {
+      "effect": "mAP",
+      "intensity": [
+        "IF"
+      ],
+      "intensity_label": "IF",
+      "belief": 0.4457676937788615,
+      "belief_percent": 45,
+      "conflict": 0.3111319305252532,
+      "max_contributor_belief": 0.425,
+      "delta_belief": 0.020767693778861507,
+      "delta_percent": 2,
+      "delta_class": "slightly_reinforced",
+      "n_primary_studies": 2,
+      "n_evidence_models": 4,
+      "study_ids": [
+        "S3",
+        "S17"
+      ],
+      "forestplot": {
+        "lower_ci": -2.0,
+        "upper_ci": 2.0,
+        "mean": 0.0
+      }
+    },
+    "mAP@0.5": {
+      "effect": "mAP@0.5",
+      "intensity": [
+        "SN",
+        "NE"
+      ],
+      "intensity_label": "{SN, NE}",
+      "belief": 0.34875100000000003,
+      "belief_percent": 35,
+      "conflict": 0.0,
+      "max_contributor_belief": 0.193,
+      "delta_belief": 0.15575100000000003,
+      "delta_percent": 16,
+      "delta_class": "reinforced",
+      "n_primary_studies": 1,
+      "n_evidence_models": 2,
+      "study_ids": [
+        "S15"
+      ],
+      "forestplot": {
+        "lower_ci": -25.0,
+        "upper_ci": -20.0,
+        "mean": -22.5
+      }
+    },
+    "mAP@0.5:0.95": {
+      "effect": "mAP@0.5:0.95",
+      "intensity": [
+        "SN"
+      ],
+      "intensity_label": "SN",
+      "belief": 0.34875100000000003,
+      "belief_percent": 35,
+      "conflict": 0.0,
+      "max_contributor_belief": 0.193,
+      "delta_belief": 0.15575100000000003,
+      "delta_percent": 16,
+      "delta_class": "reinforced",
+      "n_primary_studies": 1,
+      "n_evidence_models": 2,
+      "study_ids": [
+        "S15"
+      ],
+      "forestplot": {
+        "lower_ci": -100.0,
+        "upper_ci": -25.0,
+        "mean": -62.5
+      }
+    },
+    "mIoU": {
+      "effect": "mIoU",
+      "intensity": [
+        "IF",
+        "WP"
+      ],
+      "intensity_label": "{IF, WP}",
+      "belief": 0.31152767052445557,
+      "belief_percent": 31,
+      "conflict": 0.055627167774072124,
+      "max_contributor_belief": 0.221,
+      "delta_belief": 0.09052767052445557,
+      "delta_percent": 9,
+      "delta_class": "reinforced",
+      "n_primary_studies": 1,
+      "n_evidence_models": 4,
+      "study_ids": [
+        "S16"
+      ],
+      "forestplot": {
+        "lower_ci": 2.0,
+        "upper_ci": 5.0,
+        "mean": 3.5
+      }
+    },
+    "Perplexity": {
+      "effect": "Perplexity",
+      "intensity": [
+        "NE",
+        "WN"
+      ],
+      "intensity_label": "{NE, WN}",
+      "belief": 0.9345779650065713,
+      "belief_percent": 93,
+      "conflict": 0.48132376533344107,
+      "max_contributor_belief": 0.495,
+      "delta_belief": 0.4395779650065713,
+      "delta_percent": 44,
+      "delta_class": "reinforced",
+      "n_primary_studies": 1,
+      "n_evidence_models": 17,
+      "study_ids": [
+        "S6"
+      ],
+      "forestplot": {
+        "lower_ci": -15.0,
+        "upper_ci": -10.0,
+        "mean": -12.5
+      }
+    },
+    "Word Error Rate": {
+      "effect": "Word Error Rate",
+      "intensity": [
+        "WN",
+        "IF"
+      ],
+      "intensity_label": "{WN, IF}",
+      "belief": 0.9989959473802508,
+      "belief_percent": 100,
+      "conflict": 0.28949066288947606,
+      "max_contributor_belief": 0.495,
+      "delta_belief": 0.5039959473802508,
+      "delta_percent": 50,
+      "delta_class": "reinforced",
+      "n_primary_studies": 1,
+      "n_evidence_models": 17,
+      "study_ids": [
+        "S6"
+      ],
+      "forestplot": {
+        "lower_ci": -5.0,
+        "upper_ci": -2.0,
+        "mean": -3.5
+      }
+    },
+    "BLEU": {
+      "effect": "BLEU",
+      "intensity": [
+        "IF"
+      ],
+      "intensity_label": "IF",
+      "belief": 0.3536172547995536,
+      "belief_percent": 35,
+      "conflict": 0.1466244316929097,
+      "max_contributor_belief": 0.327,
+      "delta_belief": 0.02661725479955357,
+      "delta_percent": 3,
+      "delta_class": "slightly_reinforced",
+      "n_primary_studies": 1,
+      "n_evidence_models": 4,
+      "study_ids": [
+        "S1"
+      ],
+      "forestplot": {
+        "lower_ci": -2.0,
+        "upper_ci": 2.0,
+        "mean": 0.0
+      }
+    },
+    "Storage Size": {
+      "effect": "Storage Size",
+      "intensity": [
+        "SP"
+      ],
+      "intensity_label": "SP",
+      "belief": 0.9999998913622369,
+      "belief_percent": 100,
+      "conflict": 1.6842985173506294e-08,
+      "max_contributor_belief": 0.736,
+      "delta_belief": 0.2639998913622369,
+      "delta_percent": 26,
+      "delta_class": "reinforced",
+      "n_primary_studies": 17,
+      "n_evidence_models": 62,
+      "study_ids": [
+        "S1",
+        "S4",
+        "S6",
+        "S7",
+        "S8",
+        "S9",
+        "S10",
+        "S11",
+        "S12",
+        "S13",
+        "S14",
+        "S15",
+        "S17",
+        "S18",
+        "S19",
+        "S20",
+        "S21"
+      ],
+      "forestplot": {
+        "lower_ci": 50.0,
+        "upper_ci": 100.0,
+        "mean": 75.0
+      }
+    },
+    "GPU Utilization": {
+      "effect": "GPU Utilization",
+      "intensity": [
+        "IF",
+        "WP"
+      ],
+      "intensity_label": "{IF, WP}",
+      "belief": 0.97040692,
+      "belief_percent": 97,
+      "conflict": 0.0,
+      "max_contributor_belief": 0.718,
+      "delta_belief": 0.25240692,
+      "delta_percent": 25,
+      "delta_class": "reinforced",
+      "n_primary_studies": 2,
+      "n_evidence_models": 3,
+      "study_ids": [
+        "S13",
+        "S14"
+      ],
+      "forestplot": {
+        "lower_ci": 2.0,
+        "upper_ci": 10.0,
+        "mean": 6.0
+      }
+    },
+    "GPU Memory Utilization": {
+      "effect": "GPU Memory Utilization",
+      "intensity": [
+        "PO",
+        "SP"
+      ],
+      "intensity_label": "{PO, SP}",
+      "belief": 0.705,
+      "belief_percent": 70,
+      "conflict": 0.0,
+      "max_contributor_belief": 0.705,
+      "delta_belief": 0.0,
+      "delta_percent": 0,
+      "delta_class": "unchanged",
+      "n_primary_studies": 1,
+      "n_evidence_models": 2,
+      "study_ids": [
+        "S14"
+      ],
+      "forestplot": {
+        "lower_ci": 40.0,
+        "upper_ci": 50.0,
+        "mean": 45.0
+      }
+    },
+    "GPU Power Draw": {
+      "effect": "GPU Power Draw",
+      "intensity": [
+        "IF",
+        "WP"
+      ],
+      "intensity_label": "{IF, WP}",
+      "belief": 0.9824274834569996,
+      "belief_percent": 98,
+      "conflict": 0.299198,
+      "max_contributor_belief": 0.709,
+      "delta_belief": 0.27342748345699963,
+      "delta_percent": 27,
+      "delta_class": "reinforced",
+      "n_primary_studies": 3,
+      "n_evidence_models": 5,
+      "study_ids": [
+        "S3",
+        "S13",
+        "S14"
+      ],
+      "forestplot": {
+        "lower_ci": 2.0,
+        "upper_ci": 10.0,
+        "mean": 6.0
+      }
+    },
+    "GPU Energy Consumption": {
+      "effect": "GPU Energy Consumption",
+      "intensity": [
+        "SP"
+      ],
+      "intensity_label": "SP",
+      "belief": 0.7431902181061332,
+      "belief_percent": 74,
+      "conflict": 0.11587435700528559,
+      "max_contributor_belief": 0.718,
+      "delta_belief": 0.0251902181061332,
+      "delta_percent": 3,
+      "delta_class": "slightly_reinforced",
+      "n_primary_studies": 3,
+      "n_evidence_models": 5,
+      "study_ids": [
+        "S3",
+        "S13",
+        "S14"
+      ],
+      "forestplot": {
+        "lower_ci": 50.0,
+        "upper_ci": 100.0,
+        "mean": 75.0
+      }
+    },
+    "RAM Usage": {
+      "effect": "RAM Usage",
+      "intensity": [
+        "SP"
+      ],
+      "intensity_label": "SP",
+      "belief": 0.46657569007046534,
+      "belief_percent": 47,
+      "conflict": 0.197636868,
+      "max_contributor_belief": 0.572,
+      "delta_belief": -0.10542430992953461,
+      "delta_percent": -11,
+      "delta_class": "weakened",
+      "n_primary_studies": 2,
+      "n_evidence_models": 3,
+      "study_ids": [
+        "S18",
+        "S20"
+      ],
+      "forestplot": {
+        "lower_ci": 50.0,
+        "upper_ci": 100.0,
+        "mean": 75.0
+      }
+    },
+    "RAM Energy Consumption": {
+      "effect": "RAM Energy Consumption",
+      "intensity": [
+        "PO",
+        "SP"
+      ],
+      "intensity_label": "{PO, SP}",
+      "belief": 0.32375421472937,
+      "belief_percent": 32,
+      "conflict": 0.0,
+      "max_contributor_belief": 0.127,
+      "delta_belief": 0.19675421472937,
+      "delta_percent": 20,
+      "delta_class": "reinforced",
+      "n_primary_studies": 1,
+      "n_evidence_models": 3,
+      "study_ids": [
+        "S2"
+      ],
+      "forestplot": {
+        "lower_ci": 40.0,
+        "upper_ci": 50.0,
+        "mean": 45.0
+      }
+    },
+    "Inference Power Draw": {
+      "effect": "Inference Power Draw",
+      "intensity": [
+        "WP"
+      ],
+      "intensity_label": "WP",
+      "belief": 0.7435876015171575,
+      "belief_percent": 74,
+      "conflict": 0.03867907470738985,
+      "max_contributor_belief": 0.65,
+      "delta_belief": 0.0935876015171575,
+      "delta_percent": 9,
+      "delta_class": "reinforced",
+      "n_primary_studies": 3,
+      "n_evidence_models": 10,
+      "study_ids": [
+        "S11",
+        "S13",
+        "S18"
+      ],
+      "forestplot": {
+        "lower_ci": 10.0,
+        "upper_ci": 20.0,
+        "mean": 15.0
+      }
+    },
+    "Inference Energy Consumption": {
+      "effect": "Inference Energy Consumption",
+      "intensity": [
+        "SP"
+      ],
+      "intensity_label": "SP",
+      "belief": 0.9961605657553824,
+      "belief_percent": 100,
+      "conflict": 0.0038724493540753346,
+      "max_contributor_belief": 0.715,
+      "delta_belief": 0.2811605657553824,
+      "delta_percent": 28,
+      "delta_class": "reinforced",
+      "n_primary_studies": 8,
+      "n_evidence_models": 27,
+      "study_ids": [
+        "S5",
+        "S9",
+        "S10",
+        "S11",
+        "S13",
+        "S16",
+        "S18",
+        "S20"
+      ],
+      "forestplot": {
+        "lower_ci": 50.0,
+        "upper_ci": 100.0,
+        "mean": 75.0
+      }
+    },
+    "Inference Latency": {
+      "effect": "Inference Latency",
+      "intensity": [
+        "PO",
+        "SP"
+      ],
+      "intensity_label": "{PO, SP}",
+      "belief": 0.9997836960125243,
+      "belief_percent": 100,
+      "conflict": 0.3241083276189013,
+      "max_contributor_belief": 0.716,
+      "delta_belief": 0.2837836960125243,
+      "delta_percent": 28,
+      "delta_class": "reinforced",
+      "n_primary_studies": 12,
+      "n_evidence_models": 51,
+      "study_ids": [
+        "S3",
+        "S4",
+        "S6",
+        "S8",
+        "S11",
+        "S13",
+        "S14",
+        "S15",
+        "S17",
+        "S18",
+        "S20",
+        "S21"
+      ],
+      "forestplot": {
+        "lower_ci": 40.0,
+        "upper_ci": 50.0,
+        "mean": 45.0
+      }
+    }
+  },
+  "belief_assignment": {
+    "selection_policy": "evidence_factory_compat",
+    "effects": {
+      "Accuracy": {
+        "n_primary_studies": 10,
+        "n_evidence_models": 41,
+        "analogue_intensity": "{WN, IF}",
+        "analogue_belief_percent": 99,
+        "analogue_conflict": 0.1882887260520794,
+        "unsplit_intensity": "IF",
+        "unsplit_belief_percent": 99,
+        "unsplit_conflict": 0.6670807973447248,
+        "mass_preserving_intensity": "IF",
+        "mass_preserving_belief_percent": 83,
+        "mass_preserving_conflict": 0.09487786719144821,
+        "equitable_intensity": "IF",
+        "equitable_belief_percent": 76,
+        "equitable_conflict": 0.06027418047513863
+      },
+      "F1 Score": {
+        "n_primary_studies": 2,
+        "n_evidence_models": 9,
+        "analogue_intensity": "IF",
+        "analogue_belief_percent": 75,
+        "analogue_conflict": 0.14625994955969665,
+        "unsplit_intensity": "IF",
+        "unsplit_belief_percent": 94,
+        "unsplit_conflict": 0.6449765670665684,
+        "mass_preserving_intensity": "IF",
+        "mass_preserving_belief_percent": 74,
+        "mass_preserving_conflict": 0.09672102717837427,
+        "equitable_intensity": "IF",
+        "equitable_belief_percent": 72,
+        "equitable_conflict": 0.060933634493702184
+      },
+      "mAP": {
+        "n_primary_studies": 2,
+        "n_evidence_models": 4,
+        "analogue_intensity": "IF",
+        "analogue_belief_percent": 45,
+        "analogue_conflict": 0.3111319305252532,
+        "unsplit_intensity": "IF",
+        "unsplit_belief_percent": 61,
+        "unsplit_conflict": 0.6116271064102576,
+        "mass_preserving_intensity": "IF",
+        "mass_preserving_belief_percent": 45,
+        "mass_preserving_conflict": 0.3136249741555008,
+        "equitable_intensity": "IF",
+        "equitable_belief_percent": 38,
+        "equitable_conflict": 0.21430128650077523
+      },
+      "Storage Size": {
+        "n_primary_studies": 17,
+        "n_evidence_models": 62,
+        "analogue_intensity": "SP",
+        "analogue_belief_percent": 100,
+        "analogue_conflict": 1.6842985173506294e-08,
+        "unsplit_intensity": "SP",
+        "unsplit_belief_percent": 100,
+        "unsplit_conflict": 2.0653385096586093e-17,
+        "mass_preserving_intensity": "SP",
+        "mass_preserving_belief_percent": 100,
+        "mass_preserving_conflict": 6.126810903966904e-06,
+        "equitable_intensity": "SP",
+        "equitable_belief_percent": 100,
+        "equitable_conflict": 5.5137863460809415e-05
+      },
+      "GPU Utilization": {
+        "n_primary_studies": 2,
+        "n_evidence_models": 3,
+        "analogue_intensity": "{IF, WP}",
+        "analogue_belief_percent": 97,
+        "analogue_conflict": 0.0,
+        "unsplit_intensity": "IF",
+        "unsplit_belief_percent": 74,
+        "unsplit_conflict": 0.0,
+        "mass_preserving_intensity": "IF",
+        "mass_preserving_belief_percent": 74,
+        "mass_preserving_conflict": 0.0,
+        "equitable_intensity": "IF",
+        "equitable_belief_percent": 74,
+        "equitable_conflict": 0.0
+      },
+      "GPU Power Draw": {
+        "n_primary_studies": 3,
+        "n_evidence_models": 5,
+        "analogue_intensity": "{IF, WP}",
+        "analogue_belief_percent": 98,
+        "analogue_conflict": 0.299198,
+        "unsplit_intensity": "{IF, WP}",
+        "unsplit_belief_percent": 100,
+        "unsplit_conflict": 0.49165718403472225,
+        "mass_preserving_intensity": "{IF, WP}",
+        "mass_preserving_belief_percent": 96,
+        "mass_preserving_conflict": 0.3119120013222958,
+        "equitable_intensity": "{IF, WP}",
+        "equitable_belief_percent": 94,
+        "equitable_conflict": 0.24582859201736112
+      },
+      "GPU Energy Consumption": {
+        "n_primary_studies": 3,
+        "n_evidence_models": 5,
+        "analogue_intensity": "SP",
+        "analogue_belief_percent": 74,
+        "analogue_conflict": 0.11587435700528559,
+        "unsplit_intensity": "SP",
+        "unsplit_belief_percent": 91,
+        "unsplit_conflict": 0.11939609032541466,
+        "mass_preserving_intensity": "SP",
+        "mass_preserving_belief_percent": 85,
+        "mass_preserving_conflict": 0.04933476186483828,
+        "equitable_intensity": "SP",
+        "equitable_belief_percent": 83,
+        "equitable_conflict": 0.02963063029592842
+      },
+      "RAM Usage": {
+        "n_primary_studies": 2,
+        "n_evidence_models": 3,
+        "analogue_intensity": "SP",
+        "analogue_belief_percent": 47,
+        "analogue_conflict": 0.197636868,
+        "unsplit_intensity": "PO",
+        "unsplit_belief_percent": 74,
+        "unsplit_conflict": 0.5915670531868281,
+        "mass_preserving_intensity": "PO",
+        "mass_preserving_belief_percent": 41,
+        "mass_preserving_conflict": 0.44688687031406255,
+        "equitable_intensity": "SP",
+        "equitable_belief_percent": 46,
+        "equitable_conflict": 0.37133519845373836
+      },
+      "Inference Power Draw": {
+        "n_primary_studies": 3,
+        "n_evidence_models": 10,
+        "analogue_intensity": "WP",
+        "analogue_belief_percent": 74,
+        "analogue_conflict": 0.03867907470738985,
+        "unsplit_intensity": "WP",
+        "unsplit_belief_percent": 99,
+        "unsplit_conflict": 0.017464580677950054,
+        "mass_preserving_intensity": "WP",
+        "mass_preserving_belief_percent": 78,
+        "mass_preserving_conflict": 0.029991100157963448,
+        "equitable_intensity": "WP",
+        "equitable_belief_percent": 74,
+        "equitable_conflict": 0.022403864555732695
+      },
+      "Inference Energy Consumption": {
+        "n_primary_studies": 8,
+        "n_evidence_models": 27,
+        "analogue_intensity": "SP",
+        "analogue_belief_percent": 100,
+        "analogue_conflict": 0.0038724493540753346,
+        "unsplit_intensity": "SP",
+        "unsplit_belief_percent": 100,
+        "unsplit_conflict": 0.0034424126301696467,
+        "mass_preserving_intensity": "SP",
+        "mass_preserving_belief_percent": 99,
+        "mass_preserving_conflict": 0.013402384324753394,
+        "equitable_intensity": "SP",
+        "equitable_belief_percent": 99,
+        "equitable_conflict": 0.012681444878669582
+      },
+      "Inference Latency": {
+        "n_primary_studies": 12,
+        "n_evidence_models": 51,
+        "analogue_intensity": "{PO, SP}",
+        "analogue_belief_percent": 100,
+        "analogue_conflict": 0.3241083276189013,
+        "unsplit_intensity": "SP",
+        "unsplit_belief_percent": 95,
+        "unsplit_conflict": 0.08841122543704541,
+        "mass_preserving_intensity": "SP",
+        "mass_preserving_belief_percent": 92,
+        "mass_preserving_conflict": 0.12658730820560207,
+        "equitable_intensity": "SP",
+        "equitable_belief_percent": 91,
+        "equitable_conflict": 0.12637897078209434
+      }
+    }
+  },
+  "mass_preserving_sensitivity": {
+    "selection_policy": "evidence_factory_compat",
+    "effects": {
+      "Accuracy": {
+        "intensity": [
+          "IF"
+        ],
+        "intensity_label": "IF",
+        "belief": 0.831702113267488,
+        "belief_percent": 83,
+        "conflict": 0.09487786719144821,
+        "n_primary_studies": 10,
+        "n_evidence_models": 41
+      },
+      "F1 Score": {
+        "intensity": [
+          "IF"
+        ],
+        "intensity_label": "IF",
+        "belief": 0.7443131408519471,
+        "belief_percent": 74,
+        "conflict": 0.09672102717837427,
+        "n_primary_studies": 2,
+        "n_evidence_models": 9
+      },
+      "mAP": {
+        "intensity": [
+          "IF"
+        ],
+        "intensity_label": "IF",
+        "belief": 0.4465666013534683,
+        "belief_percent": 45,
+        "conflict": 0.3136249741555008,
+        "n_primary_studies": 2,
+        "n_evidence_models": 4
+      },
+      "Storage Size": {
+        "intensity": [
+          "SP"
+        ],
+        "intensity_label": "SP",
+        "belief": 0.999995396718203,
+        "belief_percent": 100,
+        "conflict": 6.126810903966904e-06,
+        "n_primary_studies": 17,
+        "n_evidence_models": 62
+      },
+      "GPU Utilization": {
+        "intensity": [
+          "IF"
+        ],
+        "intensity_label": "IF",
+        "belief": 0.7361083333333334,
+        "belief_percent": 74,
+        "conflict": 0.0,
+        "n_primary_studies": 2,
+        "n_evidence_models": 3
+      },
+      "GPU Power Draw": {
+        "intensity": [
+          "IF",
+          "WP"
+        ],
+        "intensity_label": "{IF, WP}",
+        "belief": 0.9634426940667167,
+        "belief_percent": 96,
+        "conflict": 0.3119120013222958,
+        "n_primary_studies": 3,
+        "n_evidence_models": 5
+      },
+      "GPU Energy Consumption": {
+        "intensity": [
+          "SP"
+        ],
+        "intensity_label": "SP",
+        "belief": 0.8479737461477737,
+        "belief_percent": 85,
+        "conflict": 0.04933476186483828,
+        "n_primary_studies": 3,
+        "n_evidence_models": 5
+      },
+      "RAM Usage": {
+        "intensity": [
+          "PO"
+        ],
+        "intensity_label": "PO",
+        "belief": 0.4146744442970848,
+        "belief_percent": 41,
+        "conflict": 0.44688687031406255,
+        "n_primary_studies": 2,
+        "n_evidence_models": 3
+      },
+      "Inference Power Draw": {
+        "intensity": [
+          "WP"
+        ],
+        "intensity_label": "WP",
+        "belief": 0.7770301115662163,
+        "belief_percent": 78,
+        "conflict": 0.029991100157963448,
+        "n_primary_studies": 3,
+        "n_evidence_models": 10
+      },
+      "Inference Energy Consumption": {
+        "intensity": [
+          "SP"
+        ],
+        "intensity_label": "SP",
+        "belief": 0.9889700531604253,
+        "belief_percent": 99,
+        "conflict": 0.013402384324753394,
+        "n_primary_studies": 8,
+        "n_evidence_models": 27
+      },
+      "Inference Latency": {
+        "intensity": [
+          "SP"
+        ],
+        "intensity_label": "SP",
+        "belief": 0.920243062967284,
+        "belief_percent": 92,
+        "conflict": 0.12658730820560207,
+        "n_primary_studies": 12,
+        "n_evidence_models": 51
+      }
+    }
+  },
+  "leave_one_study_out": {
+    "rule": "For each effect, omit the primary study whose removal yields the smallest remaining aggregated belief under published-analogue masses and the Evidence Factory-compatible selector. Ties break toward the omitted study with the lower Study ID. If that remaining belief is not strictly lower than the full-sample belief, every candidate omission is reported.",
+    "effects": {
+      "Accuracy": {
+        "reports_all_omissions": false,
+        "omissions": [
+          {
+            "omitted_study_id": "S13",
+            "full_intensity": [
+              "WN",
+              "IF"
+            ],
+            "full_belief": 0.9876314432442928,
+            "loo_intensity": [
+              "IF"
+            ],
+            "loo_belief": 0.7766608506049495,
+            "belief_delta": -0.21097059263934326,
+            "intensity_changed": true
+          }
+        ]
+      },
+      "F1 Score": {
+        "reports_all_omissions": false,
+        "omissions": [
+          {
+            "omitted_study_id": "S12",
+            "full_intensity": [
+              "IF"
+            ],
+            "full_belief": 0.749740936889711,
+            "loo_intensity": [
+              "IF"
+            ],
+            "loo_belief": 0.4165164040205934,
+            "belief_delta": -0.3332245328691176,
+            "intensity_changed": false
+          }
+        ]
+      },
+      "mAP": {
+        "reports_all_omissions": false,
+        "omissions": [
+          {
+            "omitted_study_id": "S3",
+            "full_intensity": [
+              "IF"
+            ],
+            "full_belief": 0.4457676937788615,
+            "loo_intensity": [
+              "SN"
+            ],
+            "loo_belief": 0.2982456140350877,
+            "belief_delta": -0.1475220797437738,
+            "intensity_changed": true
+          }
+        ]
+      },
+      "Storage Size": {
+        "reports_all_omissions": false,
+        "omissions": [
+          {
+            "omitted_study_id": "S6",
+            "full_intensity": [
+              "SP"
+            ],
+            "full_belief": 0.9999998913622369,
+            "loo_intensity": [
+              "SP"
+            ],
+            "loo_belief": 0.9999370832517418,
+            "belief_delta": -6.280811049508284e-05,
+            "intensity_changed": false
+          }
+        ]
+      },
+      "GPU Utilization": {
+        "reports_all_omissions": false,
+        "omissions": [
+          {
+            "omitted_study_id": "S14",
+            "full_intensity": [
+              "IF",
+              "WP"
+            ],
+            "full_belief": 0.97040692,
+            "loo_intensity": [
+              "IF"
+            ],
+            "loo_belief": 0.718,
+            "belief_delta": -0.25240692,
+            "intensity_changed": true
+          }
+        ]
+      },
+      "GPU Power Draw": {
+        "reports_all_omissions": false,
+        "omissions": [
+          {
+            "omitted_study_id": "S14",
+            "full_intensity": [
+              "IF",
+              "WP"
+            ],
+            "full_belief": 0.9824274834569996,
+            "loo_intensity": [
+              "IF",
+              "WP"
+            ],
+            "loo_belief": 0.8612754472732673,
+            "belief_delta": -0.12115203618373227,
+            "intensity_changed": false
+          }
+        ]
+      },
+      "GPU Energy Consumption": {
+        "reports_all_omissions": true,
+        "omissions": [
+          {
+            "omitted_study_id": "S3",
+            "full_intensity": [
+              "SP"
+            ],
+            "full_belief": 0.7431902181061332,
+            "loo_intensity": [
+              "PO",
+              "SP"
+            ],
+            "loo_belief": 0.9487079728096556,
+            "belief_delta": 0.2055177547035224,
+            "intensity_changed": true
+          },
+          {
+            "omitted_study_id": "S13",
+            "full_intensity": [
+              "SP"
+            ],
+            "full_belief": 0.7431902181061332,
+            "loo_intensity": [
+              "PO",
+              "SP"
+            ],
+            "loo_belief": 0.9433733491118867,
+            "belief_delta": 0.20018313100575358,
+            "intensity_changed": true
+          },
+          {
+            "omitted_study_id": "S14",
+            "full_intensity": [
+              "SP"
+            ],
+            "full_belief": 0.7431902181061332,
+            "loo_intensity": [
+              "SP"
+            ],
+            "loo_belief": 0.9057883120000001,
+            "belief_delta": 0.16259809389386692,
+            "intensity_changed": false
+          }
+        ]
+      },
+      "RAM Usage": {
+        "reports_all_omissions": false,
+        "omissions": [
+          {
+            "omitted_study_id": "S18",
+            "full_intensity": [
+              "SP"
+            ],
+            "full_belief": 0.46657569007046534,
+            "loo_intensity": [
+              "PO"
+            ],
+            "loo_belief": 0.345519,
+            "belief_delta": -0.12105669007046532,
+            "intensity_changed": true
+          }
+        ]
+      },
+      "Inference Power Draw": {
+        "reports_all_omissions": false,
+        "omissions": [
+          {
+            "omitted_study_id": "S13",
+            "full_intensity": [
+              "WP"
+            ],
+            "full_belief": 0.7435876015171575,
+            "loo_intensity": [
+              "WP"
+            ],
+            "loo_belief": 0.6571816917142659,
+            "belief_delta": -0.08640590980289165,
+            "intensity_changed": false
+          }
+        ]
+      },
+      "Inference Energy Consumption": {
+        "reports_all_omissions": false,
+        "omissions": [
+          {
+            "omitted_study_id": "S16",
+            "full_intensity": [
+              "SP"
+            ],
+            "full_belief": 0.9961605657553824,
+            "loo_intensity": [
+              "SP"
+            ],
+            "loo_belief": 0.8944776242071778,
+            "belief_delta": -0.10168294154820456,
+            "intensity_changed": false
+          }
+        ]
+      },
+      "Inference Latency": {
+        "reports_all_omissions": false,
+        "omissions": [
+          {
+            "omitted_study_id": "S6",
+            "full_intensity": [
+              "PO",
+              "SP"
+            ],
+            "full_belief": 0.9997836960125243,
+            "loo_intensity": [
+              "PO",
+              "SP"
+            ],
+            "loo_belief": 0.7497843158029828,
+            "belief_delta": -0.2499993802095415,
+            "intensity_changed": false
+          }
+        ]
+      }
+    }
+  },
+  "subgroup": {
+    "baseline_precision_configuration": "full-fp32",
+    "quantization_method": "ptq",
+    "precision_configuration": "w-int8, a-int8",
+    "n_primary_studies": 9,
+    "n_evidence_models": 9,
+    "one_model_per_study": true,
+    "study_ids": [
+      "S3",
+      "S4",
+      "S6",
+      "S10",
+      "S15",
+      "S17",
+      "S18",
+      "S20",
+      "S21"
+    ],
+    "effects": {
+      "Accuracy": {
+        "effect": "Accuracy",
+        "intensity": [
+          "IF"
+        ],
+        "intensity_label": "IF",
+        "belief": 0.49307500000000004,
+        "belief_percent": 49,
+        "conflict": 0.0,
+        "max_contributor_belief": 0.325,
+        "delta_belief": 0.16807500000000003,
+        "delta_percent": 17,
+        "delta_class": "reinforced",
+        "n_primary_studies": 2,
+        "n_evidence_models": 2,
+        "study_ids": [
+          "S4",
+          "S10"
+        ],
+        "forestplot": {
+          "lower_ci": -2.0,
+          "upper_ci": 2.0,
+          "mean": 0.0
+        }
+      },
+      "Precision": {
+        "effect": "Precision",
+        "intensity": [
+          "SN",
+          "NE"
+        ],
+        "intensity_label": "{SN, NE}",
+        "belief": 0.193,
+        "belief_percent": 19,
+        "conflict": 0.0,
+        "max_contributor_belief": 0.193,
+        "delta_belief": 0.0,
+        "delta_percent": 0,
+        "delta_class": "unchanged",
+        "n_primary_studies": 1,
+        "n_evidence_models": 1,
+        "study_ids": [
+          "S15"
+        ],
+        "forestplot": {
+          "lower_ci": -25.0,
+          "upper_ci": -20.0,
+          "mean": -22.5
+        }
+      },
+      "Recall": {
+        "effect": "Recall",
+        "intensity": [
+          "SN"
+        ],
+        "intensity_label": "SN",
+        "belief": 0.193,
+        "belief_percent": 19,
+        "conflict": 0.0,
+        "max_contributor_belief": 0.193,
+        "delta_belief": 0.0,
+        "delta_percent": 0,
+        "delta_class": "unchanged",
+        "n_primary_studies": 1,
+        "n_evidence_models": 1,
+        "study_ids": [
+          "S15"
+        ],
+        "forestplot": {
+          "lower_ci": -100.0,
+          "upper_ci": -25.0,
+          "mean": -62.5
+        }
+      },
+      "DSC": {
+        "effect": "DSC",
+        "intensity": [
+          "IF"
+        ],
+        "intensity_label": "IF",
+        "belief": 0.249,
+        "belief_percent": 25,
+        "conflict": 0.0,
+        "max_contributor_belief": 0.249,
+        "delta_belief": 0.0,
+        "delta_percent": 0,
+        "delta_class": "unchanged",
+        "n_primary_studies": 1,
+        "n_evidence_models": 1,
+        "study_ids": [
+          "S10"
+        ],
+        "forestplot": {
+          "lower_ci": -2.0,
+          "upper_ci": 2.0,
+          "mean": 0.0
+        }
+      },
+      "mAP": {
+        "effect": "mAP",
+        "intensity": [
+          "SN"
+        ],
+        "intensity_label": "SN",
+        "belief": 0.2993358922805094,
+        "belief_percent": 30,
+        "conflict": 0.17934999999999998,
+        "max_contributor_belief": 0.425,
+        "delta_belief": -0.1256641077194906,
+        "delta_percent": -13,
+        "delta_class": "weakened",
+        "n_primary_studies": 2,
+        "n_evidence_models": 2,
+        "study_ids": [
+          "S3",
+          "S17"
+        ],
+        "forestplot": {
+          "lower_ci": -100.0,
+          "upper_ci": -25.0,
+          "mean": -62.5
+        }
+      },
+      "mAP@0.5": {
+        "effect": "mAP@0.5",
+        "intensity": [
+          "SN",
+          "NE"
+        ],
+        "intensity_label": "{SN, NE}",
+        "belief": 0.193,
+        "belief_percent": 19,
+        "conflict": 0.0,
+        "max_contributor_belief": 0.193,
+        "delta_belief": 0.0,
+        "delta_percent": 0,
+        "delta_class": "unchanged",
+        "n_primary_studies": 1,
+        "n_evidence_models": 1,
+        "study_ids": [
+          "S15"
+        ],
+        "forestplot": {
+          "lower_ci": -25.0,
+          "upper_ci": -20.0,
+          "mean": -22.5
+        }
+      },
+      "mAP@0.5:0.95": {
+        "effect": "mAP@0.5:0.95",
+        "intensity": [
+          "SN"
+        ],
+        "intensity_label": "SN",
+        "belief": 0.193,
+        "belief_percent": 19,
+        "conflict": 0.0,
+        "max_contributor_belief": 0.193,
+        "delta_belief": 0.0,
+        "delta_percent": 0,
+        "delta_class": "unchanged",
+        "n_primary_studies": 1,
+        "n_evidence_models": 1,
+        "study_ids": [
+          "S15"
+        ],
+        "forestplot": {
+          "lower_ci": -100.0,
+          "upper_ci": -25.0,
+          "mean": -62.5
+        }
+      },
+      "Perplexity": {
+        "effect": "Perplexity",
+        "intensity": [
+          "NE",
+          "WN"
+        ],
+        "intensity_label": "{NE, WN}",
+        "belief": 0.327,
+        "belief_percent": 33,
+        "conflict": 0.0,
+        "max_contributor_belief": 0.327,
+        "delta_belief": 0.0,
+        "delta_percent": 0,
+        "delta_class": "unchanged",
+        "n_primary_studies": 1,
+        "n_evidence_models": 1,
+        "study_ids": [
+          "S6"
+        ],
+        "forestplot": {
+          "lower_ci": -15.0,
+          "upper_ci": -10.0,
+          "mean": -12.5
+        }
+      },
+      "Word Error Rate": {
+        "effect": "Word Error Rate",
+        "intensity": [
+          "IF"
+        ],
+        "intensity_label": "IF",
+        "belief": 0.327,
+        "belief_percent": 33,
+        "conflict": 0.0,
+        "max_contributor_belief": 0.327,
+        "delta_belief": 0.0,
+        "delta_percent": 0,
+        "delta_class": "unchanged",
+        "n_primary_studies": 1,
+        "n_evidence_models": 1,
+        "study_ids": [
+          "S6"
+        ],
+        "forestplot": {
+          "lower_ci": -2.0,
+          "upper_ci": 2.0,
+          "mean": 0.0
+        }
+      },
+      "Storage Size": {
+        "effect": "Storage Size",
+        "intensity": [
+          "SP"
+        ],
+        "intensity_label": "SP",
+        "belief": 0.8523848814815512,
+        "belief_percent": 85,
+        "conflict": 0.5325286611887526,
+        "max_contributor_belief": 0.572,
+        "delta_belief": 0.2803848814815513,
+        "delta_percent": 28,
+        "delta_class": "reinforced",
+        "n_primary_studies": 8,
+        "n_evidence_models": 8,
+        "study_ids": [
+          "S4",
+          "S6",
+          "S10",
+          "S15",
+          "S17",
+          "S18",
+          "S20",
+          "S21"
+        ],
+        "forestplot": {
+          "lower_ci": 50.0,
+          "upper_ci": 100.0,
+          "mean": 75.0
+        }
+      },
+      "GPU Power Draw": {
+        "effect": "GPU Power Draw",
+        "intensity": [
+          "IF"
+        ],
+        "intensity_label": "IF",
+        "belief": 0.422,
+        "belief_percent": 42,
+        "conflict": 0.0,
+        "max_contributor_belief": 0.422,
+        "delta_belief": 0.0,
+        "delta_percent": 0,
+        "delta_class": "unchanged",
+        "n_primary_studies": 1,
+        "n_evidence_models": 1,
+        "study_ids": [
+          "S3"
+        ],
+        "forestplot": {
+          "lower_ci": -2.0,
+          "upper_ci": 2.0,
+          "mean": 0.0
+        }
+      },
+      "GPU Energy Consumption": {
+        "effect": "GPU Energy Consumption",
+        "intensity": [
+          "SP"
+        ],
+        "intensity_label": "SP",
+        "belief": 0.422,
+        "belief_percent": 42,
+        "conflict": 0.0,
+        "max_contributor_belief": 0.422,
+        "delta_belief": 0.0,
+        "delta_percent": 0,
+        "delta_class": "unchanged",
+        "n_primary_studies": 1,
+        "n_evidence_models": 1,
+        "study_ids": [
+          "S3"
+        ],
+        "forestplot": {
+          "lower_ci": 50.0,
+          "upper_ci": 100.0,
+          "mean": 75.0
+        }
+      },
+      "RAM Usage": {
+        "effect": "RAM Usage",
+        "intensity": [
+          "SP"
+        ],
+        "intensity_label": "SP",
+        "belief": 0.5195049553858105,
+        "belief_percent": 52,
+        "conflict": 0.10925199999999999,
+        "max_contributor_belief": 0.572,
+        "delta_belief": -0.05249504461418941,
+        "delta_percent": -5,
+        "delta_class": "weakened",
+        "n_primary_studies": 2,
+        "n_evidence_models": 2,
+        "study_ids": [
+          "S18",
+          "S20"
+        ],
+        "forestplot": {
+          "lower_ci": 50.0,
+          "upper_ci": 100.0,
+          "mean": 75.0
+        }
+      },
+      "Inference Power Draw": {
+        "effect": "Inference Power Draw",
+        "intensity": [
+          "WP"
+        ],
+        "intensity_label": "WP",
+        "belief": 0.533,
+        "belief_percent": 53,
+        "conflict": 0.0,
+        "max_contributor_belief": 0.533,
+        "delta_belief": 0.0,
+        "delta_percent": 0,
+        "delta_class": "unchanged",
+        "n_primary_studies": 1,
+        "n_evidence_models": 1,
+        "study_ids": [
+          "S18"
+        ],
+        "forestplot": {
+          "lower_ci": 10.0,
+          "upper_ci": 20.0,
+          "mean": 15.0
+        }
+      },
+      "Inference Energy Consumption": {
+        "effect": "Inference Energy Consumption",
+        "intensity": [
+          "SP"
+        ],
+        "intensity_label": "SP",
+        "belief": 0.771286801,
+        "belief_percent": 77,
+        "conflict": 0.0,
+        "max_contributor_belief": 0.571,
+        "delta_belief": 0.20028680100000007,
+        "delta_percent": 20,
+        "delta_class": "reinforced",
+        "n_primary_studies": 3,
+        "n_evidence_models": 3,
+        "study_ids": [
+          "S10",
+          "S18",
+          "S20"
+        ],
+        "forestplot": {
+          "lower_ci": 50.0,
+          "upper_ci": 100.0,
+          "mean": 75.0
+        }
+      },
+      "Inference Latency": {
+        "effect": "Inference Latency",
+        "intensity": [
+          "SP"
+        ],
+        "intensity_label": "SP",
+        "belief": 0.7738680507617225,
+        "belief_percent": 77,
+        "conflict": 0.14363042046260735,
+        "max_contributor_belief": 0.572,
+        "delta_belief": 0.20186805076172254,
+        "delta_percent": 20,
+        "delta_class": "reinforced",
+        "n_primary_studies": 8,
+        "n_evidence_models": 8,
+        "study_ids": [
+          "S3",
+          "S4",
+          "S6",
+          "S15",
+          "S17",
+          "S18",
+          "S20",
+          "S21"
+        ],
+        "forestplot": {
+          "lower_ci": 50.0,
+          "upper_ci": 100.0,
+          "mean": 75.0
+        }
+      }
+    }
+  }
+}

@@ -29,8 +29,8 @@ This replication package consists of the following components:
      - [3.0-final-selection-analysis.ipynb](notebooks/3.0-final-selection-analysis.ipynb): Analyzes the final selection of papers.
      - [4.0-paper-metadata-analysis.ipynb](notebooks/4.0-paper-metadata-analysis.ipynb): **Supplementary** — optional audit and characterization of manually extracted paper metadata.
      - [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb): **Core** — reproduces the paper's evidence figures (Fig. 6, Fig. 7, and Fig. 10).
-     - [5.2-sensitivity-ts-le-5.ipynb](notebooks/5.2-sensitivity-ts-le-5.ipynb): **Core** — sensitivity analysis of the main by-precision aggregation restricted to studies with ≤ 5 theoretical structures.
-     - [5.3-belief-assignment.ipynb](notebooks/5.3-belief-assignment.ipynb): **Core** — reproduces the Evidence Factory gate and compares all four belief assignments using the literature selector.
+     - [5.2-sensitivity-ts-le-5.ipynb](notebooks/5.2-sensitivity-ts-le-5.ipynb): **Supplementary** — exploratory sample restriction to studies with ≤ 5 theoretical structures (not reported in the manuscript; superseded by the mass-preserving root-belief sensitivity analysis in 5.3).
+     - [5.3-belief-assignment.ipynb](notebooks/5.3-belief-assignment.ipynb): **Core** — reproduces the Evidence Factory gate, writes `validated-synthesis.json`, and compares Santos selection as a literature audit.
 
 4. **Documentation**:
    - [data/processed/evidence-diagrams-mapping.md](data/processed/evidence-diagrams-mapping.md): Links to evidence diagrams generated during the study.
@@ -213,7 +213,7 @@ Processed evidence under `data/processed/{paperkey}/` is included in the replica
 
 ### Sensitivity notebooks
 
-- [5.2-sensitivity-ts-le-5.ipynb](notebooks/5.2-sensitivity-ts-le-5.ipynb) — main by-precision aggregation restricted to studies with ≤ 5 theoretical structures; figures `sensitivity-ts-le-5-*-forestplot.pdf`.
+- [5.2-sensitivity-ts-le-5.ipynb](notebooks/5.2-sensitivity-ts-le-5.ipynb) — supplementary exploratory restriction to studies with ≤ 5 theoretical structures (superseded in the manuscript by the mass-preserving root-belief sensitivity analysis in 5.3).
 
 ### Belief-assignment audit
 

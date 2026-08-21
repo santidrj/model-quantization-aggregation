@@ -24,6 +24,7 @@ from src.data.selection.select_papers import (
 from src.data.utils import read_scopus_quantization_papers
 from src.run_evidence_extraction import extract_knowledge_from
 from src.tables.studies_summary import generate_studies_summary_tables
+from src.validated_synthesis import write_all_validated_outputs
 
 NOTEBOOKS_DIR = ROOT_DIR / "notebooks"
 EVIDENCE_ANALYSIS_NOTEBOOK = NOTEBOOKS_DIR / "5.0-evidence-analysis.ipynb"
@@ -46,6 +47,12 @@ CORE_FIGURES = (
 CORE_TABLES = (
     TABLES_DIR / "studies-quasi-experiments.tex",
     TABLES_DIR / "studies-observational.tex",
+    TABLES_DIR / "aggregated-effects.tex",
+    TABLES_DIR / "belief-assignment.tex",
+    TABLES_DIR / "leave-one-study-out.tex",
+    TABLES_DIR / "sensitivity-mass-preserving.tex",
+    TABLES_DIR / "subgroup-ptq-w-int8-a-int8.tex",
+    TABLES_DIR / "result-macros.tex",
 )
 PROCESSED_OUTPUT_FILENAMES = (
     "improvement_metrics.parquet",
@@ -250,7 +257,8 @@ def reproduce_figures(*, run_notebook: bool = True) -> list[Path]:
 
 
 def reproduce_tables() -> list[Path]:
-    paths = generate_studies_summary_tables(output_dir=TABLES_DIR)
+    paths = list(generate_studies_summary_tables(output_dir=TABLES_DIR))
+    paths.extend(write_all_validated_outputs())
     validate_paths_exist(CORE_TABLES, label="core table outputs")
     return paths
 

@@ -20,11 +20,11 @@
             "improvement": null,
             "std": null,
             "iqr": null,
-            "sample_size_discount": 0.632,
+            "sample_size_discount": 0.0,
             "variability_discount": 1.0,
-            "discount_factor": 0.632,
-            "p_value": 0.368,
-            "belief": 0.249,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
             "intensity": null
         },
         "inference_energy_consumption": {
@@ -60,11 +60,11 @@
             "improvement": null,
             "std": null,
             "iqr": null,
-            "sample_size_discount": 0.632,
+            "sample_size_discount": 0.0,
             "variability_discount": 1.0,
-            "discount_factor": 0.632,
-            "p_value": 0.368,
-            "belief": 0.249,
+            "discount_factor": 0.0,
+            "p_value": 1.0,
+            "belief": 0.0,
             "intensity": null
         },
         "dsc": {

@@ -63,6 +63,20 @@ def test_alizadeh_storage_and_energy_precision_unit_counts():
     assert energy_units.height == 72
 
 
+def test_sathish_correctness_sample_size_counts_metric_applicable_units_only():
+    paper = Papers.SATHISH.value
+    frame = pl.read_parquet(f"data/processed/{paper.KEY}/improvement_metrics.parquet")
+    subset = frame.filter(pl.col("precision_configuration") == "w-int8, a-int8")
+
+    for metric, expected_n in [("accuracy", 3), ("dsc", 3), ("inference_energy_consumption", 6)]:
+        units = collapse_metric_to_units(
+            subset,
+            metric,
+            unit_columns_for_precision(metric, paper),
+        )
+        assert units.filter(pl.col(f"{metric}_improvement").is_not_null()).height == expected_n
+
+
 def test_gonzalez_latency_precision_unit_count_ignores_replicates():
     paper = Papers.GONZALEZ.value
     frame = pl.read_parquet(f"data/processed/{paper.KEY}/improvement_metrics.parquet")
