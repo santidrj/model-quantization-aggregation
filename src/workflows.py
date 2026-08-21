@@ -52,6 +52,7 @@ CORE_TABLES = (
     TABLES_DIR / "leave-one-study-out.tex",
     TABLES_DIR / "sensitivity-mass-preserving.tex",
     TABLES_DIR / "subgroup-ptq-w-int8-a-int8.tex",
+    TABLES_DIR / "intensity-thresholds.tex",
     TABLES_DIR / "result-macros.tex",
 )
 PROCESSED_OUTPUT_FILENAMES = (

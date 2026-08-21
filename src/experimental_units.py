@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import polars as pl
-from statsmodels.stats import descriptivestats as sms
+from statsmodels.stats.weightstats import DescrStatsW
 
 if TYPE_CHECKING:
     from src.data.papers.entities import Paper
@@ -60,7 +60,13 @@ def collapse_metric_to_units(
 
 
 def unit_level_statistics(values: pl.Series) -> dict[str, float | int | None]:
-    """Mean and 95% CI from unit-level relative improvements."""
+    """Mean and two-sided 95% Student's t interval from unit-level relative improvements.
+
+    The inferential unit is one experimental unit after averaging replicate runs. Units are
+    treated as independent observations; nested model--task structure is not clustered.
+    The interval is omitted when ``n_eff=1`` or all values are identical, because the t
+    standard error is then undefined.
+    """
     clean = values.drop_nulls()
     n_eff = clean.len()
     if n_eff == 0:
@@ -69,11 +75,11 @@ def unit_level_statistics(values: pl.Series) -> dict[str, float | int | None]:
         mean = clean.item(0) if n_eff == 1 else clean.unique().item()
         return {"n_eff": n_eff, "mean": mean, "lower_ci": None, "upper_ci": None}
 
-    frame = pl.DataFrame({"value": clean})
-    stats = pl.from_pandas(sms.describe(frame, stats=["mean", "ci"], alpha=0.05).T)
+    stats = DescrStatsW(clean.to_list())
+    lower_ci, upper_ci = stats.tconfint_mean(alpha=0.05)
     return {
         "n_eff": n_eff,
-        "mean": stats["mean"].item(),
-        "lower_ci": stats["lower_ci"].item(),
-        "upper_ci": stats["upper_ci"].item(),
+        "mean": float(stats.mean),
+        "lower_ci": float(lower_ci),
+        "upper_ci": float(upper_ci),
     }

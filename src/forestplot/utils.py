@@ -11,6 +11,10 @@ import forestplot as fp
 from src.data.papers.study_id import study_id_numeric_rank
 from src.effect_intensity import CorrectnessIntensity, CorrectnessMetrics, EffectIntensity
 
+EVIDENCE_MODEL_CI_LINEWIDTH = 1.4
+SSM_INTENSITY_RANGE_LINEWIDTH = 8.0
+SSM_INTENSITY_RANGE_COLOR = "steelblue"
+
 
 def draw_ci(  # noqa: PLR0913
     data: pl.DataFrame,  # noqa: PLR0913
@@ -22,36 +26,38 @@ def draw_ci(  # noqa: PLR0913
     **kwargs: Any,
 ) -> Axes:
     """
-    Draws a confidence interval on the given axis.
+    Draws a horizontal interval on the given axis.
 
     Parameters
     ----------
     data : pl.DataFrame
-        The data frame containing the estimates and confidence intervals.
+        The data frame containing the estimates and interval bounds.
     estimate : str
         The column name for the estimate.
     y_tick_label : str
         The label for the y-tick.
     lower_ci_col : str
-        The column name for the lower confidence interval.
+        The column name for the lower bound.
     higher_ci_col : str
-        The column name for the higher confidence interval.
+        The column name for the upper bound.
     ax : Axes
         The axis to draw on.
 
     Returns
     -------
     Axes
-        The axis with the confidence interval drawn.
+        The axis with the interval drawn.
     """
     ecolor = kwargs.get("ecolor", "black")
+    linewidth = kwargs.get("linewidth", EVIDENCE_MODEL_CI_LINEWIDTH)
+    draw_caps = kwargs.get("draw_caps", True)
 
     lower_ci = data.select(lower_ci_col).to_numpy().flatten()
     upper_ci = data.select(higher_ci_col).to_numpy().flatten()
     y_tick_label_values = data.select(y_tick_label).to_numpy().flatten()
 
     for lower, upper, y_value in zip(lower_ci, upper_ci, y_tick_label_values, strict=False):
-        _draw_clipped_ci(ax, lower, upper, y_value, ecolor, linewidth=1.4)
+        _draw_clipped_interval(ax, lower, upper, y_value, ecolor, linewidth=linewidth, draw_caps=draw_caps)
 
     return ax
 
@@ -337,8 +343,8 @@ def _draw_ci_cap(ax: Axes, x: float, y: float, color: str, linewidth: float) -> 
     )
 
 
-def _draw_clipped_ci(  # noqa: PLR0913
-    ax: Axes, lower: float, upper: float, y: float, color: str, linewidth: float
+def _draw_clipped_interval(  # noqa: PLR0913
+    ax: Axes, lower: float, upper: float, y: float, color: str, linewidth: float, *, draw_caps: bool
 ) -> None:
     if not (_is_finite(lower) and _is_finite(upper)):
         return
@@ -351,12 +357,12 @@ def _draw_clipped_ci(  # noqa: PLR0913
 
     if lower < x_min:
         _draw_overflow_arrow(ax, x_min, y, "left", color, linewidth)
-    else:
+    elif draw_caps:
         _draw_ci_cap(ax, clipped_lower, y, color, linewidth)
 
     if upper > x_max:
         _draw_overflow_arrow(ax, x_max, y, "right", color, linewidth)
-    else:
+    elif draw_caps:
         _draw_ci_cap(ax, clipped_upper, y, color, linewidth)
 
 
@@ -598,9 +604,19 @@ def _plot_effect_markers(ax: Axes, ordered_df: pd.DataFrame) -> tuple[str, float
 
     summary_data = plot_rows.loc[plot_rows["yticklabel"].str.contains("Aggregated")]
     for _, row in summary_data.iterrows():
-        _plot_marker_row(ax, row, marker="D", color="blue", size=50)
-    ax.scatter([], [], marker="D", color="blue", s=50, label="Aggregated")
-    draw_ci(pl.from_pandas(summary_data), "mean", "index", "lower_ci", "upper_ci", ax, ecolor="blue")
+        _plot_marker_row(ax, row, marker="D", color=SSM_INTENSITY_RANGE_COLOR, size=50)
+    ax.scatter([], [], marker="D", color=SSM_INTENSITY_RANGE_COLOR, s=50, label="Aggregated SSM intensity range")
+    draw_ci(
+        pl.from_pandas(summary_data),
+        "mean",
+        "index",
+        "lower_ci",
+        "upper_ci",
+        ax,
+        ecolor=SSM_INTENSITY_RANGE_COLOR,
+        linewidth=SSM_INTENSITY_RANGE_LINEWIDTH,
+        draw_caps=False,
+    )
 
     last_effect_row = plot_rows.iloc[-1]
     return last_effect_row["effect"], last_effect_row["index"].max() + 0.5

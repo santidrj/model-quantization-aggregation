@@ -31,7 +31,13 @@ from src.config import PROCESSED_DATA_DIR, TABLES_DIR
 from src.data.papers.entities import Papers
 from src.data.papers.study_id import study_id_sort_key
 from src.dempster_shafer import ATOMS, HypothesisSelectionPolicy, format_intensity, intensity_to_hypothesis
-from src.effect_intensity import CorrectnessIntensity, CorrectnessMetrics, EffectIntensity, ResourceEfficiencyMetrics
+from src.effect_intensity import (
+    CorrectnessIntensity,
+    CorrectnessMetrics,
+    EffectIntensity,
+    ResourceEfficiencyMetrics,
+    render_intensity_thresholds_table,
+)
 
 VALIDATED_SYNTHESIS_FILENAME = "validated-synthesis.json"
 VALIDATED_SYNTHESIS_PATH = PROCESSED_DATA_DIR / VALIDATED_SYNTHESIS_FILENAME
@@ -56,6 +62,7 @@ CONFLICT_ABS = 1e-9
 AGGREGATED_EFFECTS_TABLE_FILENAME = "aggregated-effects.tex"
 SUBGROUP_TABLE_FILENAME = "subgroup-ptq-w-int8-a-int8.tex"
 RESULT_MACROS_FILENAME = "result-macros.tex"
+INTENSITY_THRESHOLDS_TABLE_FILENAME = "intensity-thresholds.tex"
 PROSE_LOO_FILENAME = "prose-leave-one-study-out.tex"
 PROSE_SUBGROUP_INTRO_FILENAME = "prose-subgroup-intro.tex"
 PROSE_SUBGROUP_LATENCY_FILENAME = "prose-subgroup-latency.tex"
@@ -539,7 +546,12 @@ def forestplot_overlay_frame(
     *,
     key: str = "forestplot_overlays",
 ) -> pl.DataFrame:
-    """Aggregated forest-plot rows generated from the validated synthesis file."""
+    """Aggregated forest-plot rows generated from the validated synthesis file.
+
+    ``lower_ci``/``upper_ci`` are SSM intensity-range endpoints on the relative-improvement
+    axis, not sampling intervals. Unbounded SN and SP ranges are clipped to
+    ``FORESTPLOT_CLIP``.
+    """
     data = payload if payload is not None else load_validated_synthesis()
     rows = []
     for effect, record in data[key].items():
@@ -813,6 +825,7 @@ def write_validated_tables(
         PROSE_SUBGROUP_INTRO_FILENAME: render_subgroup_intro(data),
         PROSE_SUBGROUP_NOTE_FILENAME: render_subgroup_note(data),
         PROSE_SUBGROUP_LATENCY_FILENAME: render_subgroup_latency_prose(data),
+        INTENSITY_THRESHOLDS_TABLE_FILENAME: render_intensity_thresholds_table(),
     }
     for filename, text in fragments.items():
         path = directory / filename

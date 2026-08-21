@@ -1,4 +1,6 @@
 import polars as pl
+import pytest
+from statsmodels.stats.weightstats import DescrStatsW
 
 from src.data.papers.entities import Papers
 from src.experimental_units import (
@@ -35,13 +37,25 @@ def test_collapse_metric_to_units_averages_repeated_runs():
     assert units.filter(pl.col("Model") == "m1").select("inference_latency_improvement").item() == 20.0
 
 
-def test_unit_level_statistics_uses_unit_count_not_replicate_count():
-    values = pl.Series("value", [10.0, 20.0, 30.0])
-    stats = unit_level_statistics(values)
-    assert stats["n_eff"] == 3
-    assert stats["mean"] == 20.0
-    assert stats["lower_ci"] is not None
-    assert stats["upper_ci"] is not None
+def test_unit_level_statistics_uses_student_t_mean_interval():
+    values = [10.0, 20.0, 30.0]
+    stats = unit_level_statistics(pl.Series("value", values))
+    lower, upper = DescrStatsW(values).tconfint_mean(alpha=0.05)
+    assert stats["n_eff"] == len(values)
+    assert stats["mean"] == pytest.approx(sum(values) / len(values))
+    assert stats["lower_ci"] == pytest.approx(lower)
+    assert stats["upper_ci"] == pytest.approx(upper)
+
+
+def test_unit_level_statistics_omits_interval_for_n_eff_one_or_zero_variance():
+    single = unit_level_statistics(pl.Series("value", [12.0]))
+    assert single == {"n_eff": 1, "mean": 12.0, "lower_ci": None, "upper_ci": None}
+    identical = [12.0, 12.0, 12.0]
+    tied = unit_level_statistics(pl.Series("value", identical))
+    assert tied["n_eff"] == len(identical)
+    assert tied["mean"] == identical[0]
+    assert tied["lower_ci"] is None
+    assert tied["upper_ci"] is None
 
 
 def test_alizadeh_storage_and_energy_precision_unit_counts():

@@ -1,4 +1,132 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+
 import numpy as np
+
+ORDERED_INTENSITY_CODES: tuple[str, ...] = (
+    "SN",
+    "SN-NE",
+    "NE",
+    "NE-WN",
+    "WN",
+    "WN-IF",
+    "IF",
+    "IF-WP",
+    "WP",
+    "WP-PO",
+    "PO",
+    "PO-SP",
+    "SP",
+)
+
+_POSITIVE_LABEL_TO_CODE = {
+    "indifferent": "IF",
+    "indifferent - weakly positive": "IF-WP",
+    "weakly positive": "WP",
+    "weakly positive - positive": "WP-PO",
+    "positive": "PO",
+    "positive - strongly positive": "PO-SP",
+    "strongly positive": "SP",
+}
+_NEGATIVE_LABEL_TO_CODE = {
+    "indifferent": "IF",
+    "weakly negative - indifferent": "WN-IF",
+    "weakly negative": "WN",
+    "negative - weakly negative": "NE-WN",
+    "negative": "NE",
+    "strongly negative - negative": "SN-NE",
+    "strongly negative": "SN",
+}
+
+
+@dataclass(frozen=True)
+class SignedIntensityInterval:
+    """Closed/open span of a Likert atom or adjacent compound on signed relative improvement (%)."""
+
+    code: str
+    lower: float
+    upper: float
+    lower_inclusive: bool
+    upper_inclusive: bool
+
+    def contains(self, value: float) -> bool:
+        left = value >= self.lower if self.lower_inclusive else value > self.lower
+        right = value <= self.upper if self.upper_inclusive else value < self.upper
+        return left and right
+
+    def set_latex(self) -> str:
+        return r"\{" + ", ".join(self.code.split("-")) + r"\}"
+
+    def interval_latex(self) -> str:
+        lower = r"-\infty" if self.lower == -np.inf else f"{self.lower:g}"
+        upper = r"\infty" if self.upper == np.inf else f"{self.upper:g}"
+        left = "[" if self.lower_inclusive else "("
+        right = "]" if self.upper_inclusive else ")"
+        return rf"${left}{lower},{upper}{right}$"
+
+
+def intensity_label_to_code(label: str) -> str:
+    """Map an evidence-model intensity phrase to an ordered Likert code."""
+    if label in _POSITIVE_LABEL_TO_CODE:
+        return _POSITIVE_LABEL_TO_CODE[label]
+    if label in _NEGATIVE_LABEL_TO_CODE:
+        return _NEGATIVE_LABEL_TO_CODE[label]
+    raise ValueError(f"Unknown effect intensity label: {label!r}")
+
+
+def signed_intensity_intervals(scale: EffectIntensity) -> tuple[SignedIntensityInterval, ...]:
+    """Partition of the relative-improvement axis matching ``get_intensity`` cut-points."""
+    indifferent = scale.WEAK_INDIFFERENT_EFFECT
+    weak = scale.WEAK_EFFECT
+    weak_moderate = scale.WEAK_MODERATE_EFFECT
+    moderate = scale.MODERATE_EFFECT
+    strong_moderate = scale.STRONG_MODERATE_EFFECT
+    strong = scale.STRONG_EFFECT
+    return (
+        SignedIntensityInterval("SN", -np.inf, -strong, False, False),
+        SignedIntensityInterval("SN-NE", -strong, -strong_moderate, True, False),
+        SignedIntensityInterval("NE", -strong_moderate, -moderate, True, False),
+        SignedIntensityInterval("NE-WN", -moderate, -weak_moderate, True, False),
+        SignedIntensityInterval("WN", -weak_moderate, -weak, True, False),
+        SignedIntensityInterval("WN-IF", -weak, -indifferent, True, False),
+        SignedIntensityInterval("IF", -indifferent, indifferent, True, True),
+        SignedIntensityInterval("IF-WP", indifferent, weak, False, True),
+        SignedIntensityInterval("WP", weak, weak_moderate, False, True),
+        SignedIntensityInterval("WP-PO", weak_moderate, moderate, False, True),
+        SignedIntensityInterval("PO", moderate, strong_moderate, False, True),
+        SignedIntensityInterval("PO-SP", strong_moderate, strong, False, True),
+        SignedIntensityInterval("SP", strong, np.inf, False, False),
+    )
+
+
+def render_intensity_thresholds_table() -> str:
+    """LaTeX tabular of the complete functional-suitability and resource/performance thresholds."""
+    correctness = {interval.code: interval for interval in signed_intensity_intervals(CorrectnessIntensity())}
+    resource = {interval.code: interval for interval in signed_intensity_intervals(EffectIntensity())}
+    lines = [
+        r"\begin{tabular}{@{}lcc@{}}",
+        r"\toprule",
+        (
+            r"\textbf{Intensity} & \textbf{Functional suitability (\%)} & "
+            r"\textbf{Resource efficiency / performance (\%)} \\"
+        ),
+        r"\midrule",
+    ]
+    for code in ORDERED_INTENSITY_CODES:
+        interval = resource[code]
+        lines.append(
+            " & ".join(
+                [
+                    interval.set_latex(),
+                    correctness[code].interval_latex(),
+                    interval.interval_latex(),
+                ]
+            )
+            + r" \\"
+        )
+    lines.extend([r"\bottomrule", r"\end{tabular}", ""])
+    return "\n".join(lines)
 
 
 class CorrectnessMetrics:
@@ -72,7 +200,10 @@ class EffectIntensity:
     def _threshold_labels(self, sign: str) -> list[tuple[int, str]]:
         return [
             (self.WEAK_INDIFFERENT_EFFECT, "indifferent"),
-            (self.WEAK_EFFECT, f"indifferent - weakly {sign}" if sign == "positive" else f"weakly {sign} - indifferent"),
+            (
+                self.WEAK_EFFECT,
+                f"indifferent - weakly {sign}" if sign == "positive" else f"weakly {sign} - indifferent",
+            ),
             (self.WEAK_MODERATE_EFFECT, f"weakly {sign}"),
             (self.MODERATE_EFFECT, f"weakly {sign} - {sign}" if sign == "positive" else f"{sign} - weakly {sign}"),
             (self.STRONG_MODERATE_EFFECT, sign),

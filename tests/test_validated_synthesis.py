@@ -98,6 +98,7 @@ def test_write_all_validated_outputs(tmp_path):
     names = {path.name for path in paths}
     assert "validated-synthesis.json" in names
     assert "aggregated-effects.tex" in names
+    assert "intensity-thresholds.tex" in names
     assert "leave-one-study-out.tex" in names
     loo = (tmp_path / "leave-one-study-out.tex").read_text(encoding="utf-8")
     gpu_energy_rows = [row for row in loo.splitlines() if row.startswith("GPU energy")]

@@ -206,6 +206,10 @@ _Avoid_: Percent change, delta (unsigned), improvement rate
 The Likert-style hypothesis for a relative improvement. Evidence-model inputs are a simple atom (SN, NE, WN, IF, WP, PO, SP) or an adjacent two-atom compound; a synthesized result may be a wider direction-compatible interval under Santos hypothesis selection.
 _Avoid_: Effect magnitude; belief (when direction and strength are meant); confidence interval (when the intensity band is meant)
 
+**SSM intensity range**:
+The numeric span of a selected effect-intensity hypothesis on the relative-improvement axis, including adjacent two-atom compounds. It is a categorical encoding, not a sampling interval.
+_Avoid_: 95% confidence interval; aggregated CI
+
 **Conflict**:
 The Dempster–Shafer \(K = m(\emptyset)\) of the last pairwise combination step when pooling the evidence models that report an effect (two at a time, renormalized after each step, in Evidence Factory aggregation-turn order). Ground truth is the combination result on Evidence Factory aggregated evidence 329074. Distinct from the n-fold empty-set mass of combining all sources in one product, and from Evidence Factory's red eligible-element mismatches in the aggregator UI.
 _Avoid_: Eligible element; difference (when \(K\) is meant); disagreement of mean relative improvements (when combination conflict is meant); n-fold \(m(\emptyset)\) (when last-step \(K\) is meant)

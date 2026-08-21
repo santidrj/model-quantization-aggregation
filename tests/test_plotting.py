@@ -9,6 +9,8 @@ import pandas as pd
 import polars as pl
 
 from src.forestplot.utils import (
+    EVIDENCE_MODEL_CI_LINEWIDTH,
+    SSM_INTENSITY_RANGE_LINEWIDTH,
     draw_forestplot,
     format_forestplot_annote_value,
     generate_forestplot_data,
@@ -561,3 +563,82 @@ def test_generate_forestplot_data_keeps_header_and_blanks_aggregated_n_eff():
         correctness_df["yticklabel"].astype(str).str.contains("Aggregated"), "yticklabel"
     ].astype(str)
     assert not aggregated_labels.str.contains("nan", case=False).any()
+
+
+def _horizontal_linewidths_at_y(axis, y: float) -> list[float]:
+    widths = []
+    for collection in axis.collections:
+        segments = getattr(collection, "get_segments", lambda: [])()
+        linewidths = collection.get_linewidths()
+        for index, segment in enumerate(segments):
+            if len(segment) != 2:  # noqa: PLR2004
+                continue
+            (x0, y0), (x1, y1) = segment
+            if y0 == y1 == y and x0 != x1:
+                width = linewidths[0] if len(linewidths) == 1 else linewidths[index]
+                widths.append(float(width))
+    return widths
+
+
+def _has_vertical_caps_at_y(axis, y: float) -> bool:
+    for collection in axis.collections:
+        segments = getattr(collection, "get_segments", lambda: [])()
+        for segment in segments:
+            if len(segment) != 2:  # noqa: PLR2004
+                continue
+            (x0, y0), (x1, y1) = segment
+            if x0 == x1 and min(y0, y1) < y < max(y0, y1):
+                return True
+    return False
+
+
+def test_forest_plot_styles_aggregated_ranges_unlike_confidence_intervals():
+    frame = pd.DataFrame(
+        [
+            {
+                "index": 0,
+                "id": "S1",
+                "evidence_id": 2,
+                "effect": "Accuracy",
+                "yticklabel": "Quantized A",
+                "mean": 8.0,
+                "lower_ci": 5.0,
+                "upper_ci": 11.0,
+            },
+            {
+                "index": 1,
+                "id": "S1",
+                "evidence_id": 1,
+                "effect": "Accuracy",
+                "yticklabel": "Aggregated Accuracy",
+                "mean": 7.0,
+                "lower_ci": 6.0,
+                "upper_ci": 8.0,
+            },
+            {
+                "index": 2,
+                "id": "S1",
+                "evidence_id": 0,
+                "effect": "Accuracy",
+                "yticklabel": "Accuracy Belief",
+                "mean": None,
+                "lower_ci": None,
+                "upper_ci": None,
+            },
+        ]
+    )
+
+    figure, axis = plt.subplots(figsize=(8, 4))
+    draw_forestplot(frame, axis, main_effects=["Accuracy"], xlim=100)
+
+    labels = [tick.get_text() for tick in axis.get_yticklabels()]
+    positions = list(axis.get_yticks())
+    study_y = positions[labels.index("Quantized A")]
+    aggregated_y = positions[labels.index("Aggregated Accuracy")]
+
+    assert EVIDENCE_MODEL_CI_LINEWIDTH in _horizontal_linewidths_at_y(axis, study_y)
+    assert SSM_INTENSITY_RANGE_LINEWIDTH in _horizontal_linewidths_at_y(axis, aggregated_y)
+    assert _has_vertical_caps_at_y(axis, study_y)
+    assert not _has_vertical_caps_at_y(axis, aggregated_y)
+
+    plt.close(figure)
