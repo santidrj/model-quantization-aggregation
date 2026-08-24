@@ -31,6 +31,7 @@ from src.config import PROCESSED_DATA_DIR, TABLES_DIR
 from src.data.papers.entities import Papers
 from src.data.papers.study_id import study_id_sort_key
 from src.dempster_shafer import ATOMS, HypothesisSelectionPolicy, format_intensity, intensity_to_hypothesis
+from src.discount_sensitivity import write_discount_sensitivity_tables
 from src.effect_intensity import (
     CorrectnessIntensity,
     CorrectnessMetrics,
@@ -713,9 +714,7 @@ def render_result_macros(payload: Mapping[str, Any] | None = None) -> str:
     lines.append(
         rf"\newcommand{{\SubgroupMAPIntensity}}{{{_latex_intensity(subgroup['effects']['mAP']['intensity_label'])}}}"
     )
-    lines.append(
-        rf"\newcommand{{\SubgroupLatencyIntensity}}{{{_latex_intensity(latency['intensity_label'])}}}"
-    )
+    lines.append(rf"\newcommand{{\SubgroupLatencyIntensity}}{{{_latex_intensity(latency['intensity_label'])}}}")
     loo = data["leave_one_study_out"]["effects"]
     storage = loo["Storage Size"]["omissions"][0]
     latency_loo = loo["Inference Latency"]["omissions"][0]
@@ -788,9 +787,7 @@ def render_subgroup_latency_prose(payload: Mapping[str, Any] | None = None) -> s
             continue
         intensity = intensity_to_hypothesis(model.effects["Inference Latency"][0])
         if intensity != frozenset({"SP"}):
-            below_sp.append(
-                f"{_STUDY_MACRO[model.study_id]} reports {_latex_intensity(format_intensity(intensity))}"
-            )
+            below_sp.append(f"{_STUDY_MACRO[model.study_id]} reports {_latex_intensity(format_intensity(intensity))}")
     latency = data["subgroup"]["effects"]["Inference Latency"]
     listed = "; ".join(below_sp)
     return (
@@ -844,4 +841,6 @@ def write_all_validated_outputs(
     """Write the validated JSON and every manuscript fragment derived from it."""
     payload = build_validated_synthesis(models)
     json_file = write_validated_synthesis(payload, path=json_path, models=models)
-    return [json_file, *write_validated_tables(payload, output_dir=output_dir)]
+    table_paths = write_validated_tables(payload, output_dir=output_dir)
+    sensitivity_paths = write_discount_sensitivity_tables(output_dir=output_dir, models=models)
+    return [json_file, *table_paths, *sensitivity_paths]

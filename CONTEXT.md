@@ -48,21 +48,29 @@ _Avoid_: Theoretical structure as something other than by-precision aggregation;
 The SSM diagrammatic representation of one theoretical structure, carrying that by-precision aggregation's effects, intensities, and beliefs. One-to-one with theoretical structure; not an experimental unit and not a DL model.
 _Avoid_: Experimental unit; DL model; incoming evidence model (when the Evidence Factory merge side is meant)
 
+**Evidence-model effect**:
+One effect carried by one evidence model. This is the grain at which \(n_{\mathrm{eff}}\), the sample-size discount, the variability discount, and discounted support mass are defined, and the observation in the effective-sample-size summary table.
+_Avoid_: Study (when an effect-level \(n_{\mathrm{eff}}\) is meant); experimental unit; theoretical structure (the whole by-precision aggregation)
+
 **Operational system**:
 The System-archetype contextual aspect that names the software system in which the quantized model is expected to operate (e.g. an LLM-based code assistant or a machine translation system). Distinct from the System-archetype node that names the quantized artifact (typically a DL model). Also distinct from the statistical experimental unit used for relative-improvement aggregation. Operational-system labels are removed at synthesis to reduce noise.
 _Avoid_: Application domain (when this System node is meant), DL model / experimental unit (when the host system is meant)
 
 **Experimental unit**:
-The unique combination of a study's grouping columns that identifies one independent observation inside a by-precision aggregation (for example a model, or a model–dataset pair). Not necessarily a DL model alone.
-_Avoid_: Treating every experimental unit as a single model when grouping columns include dataset or device; conflating with the System-archetype DL-model label in an evidence model
+The unique combination of a study's grouping columns that identifies one observation for the mean relative improvement and IQR inside a by-precision aggregation (for example a model, or a model–task pair). Not necessarily a DL model alone, and not necessarily an independent draw when tasks or datasets nest inside a model family.
+_Avoid_: Treating every experimental unit as independent when grouping columns include task or dataset nested in a model; treating every experimental unit as a single model; conflating with cluster unit or with the System-archetype DL-model label in an evidence model
+
+**Cluster unit**:
+The nesting factor treated as the independent unit for effective sample size, sample-size discount, and interval estimation when experimental units share a model family. It is the experimental-unit key after dropping evaluation-context columns (`Dataset`, `dataset`, `task`) only — Device, compute unit, frequency, library, and filter multiplier stay. Distinct from the experimental unit used for the mean and IQR.
+_Avoid_: Experimental unit (when independence is meant); DL model as always the cluster; collapsing task-dependent outcomes to cluster means before computing the evidence-model mean; collapsing hardware or library factors as if they were tasks
 
 **Artifact-invariant metric**:
 A resource-efficiency metric whose value depends only on the quantized artifact (for example `storage_size`), not on the evaluation task or dataset. Such metrics use a reduced grouping key that omits evaluation-context columns from `GROUPING_COLUMNS`.
 _Avoid_: Treating task-invariant metrics as if they varied per dataset; conflating with experimental unit for task-dependent outcomes
 
 **Effective sample size**:
-The count of experimental units for a specific effect inside a by-precision aggregation (\(n_{\mathrm{eff}}\)). It is effect-specific: task-dependent metrics use the study's full grouping columns; artifact-invariant metrics (for example storage) omit evaluation-context columns such as `Dataset` or `task`. Repeated measurement runs on the same experimental unit do not increase \(n_{\mathrm{eff}}\).
-_Avoid_: Number of models (when grouping columns are wider); number of measurement runs; forest-plot raw row counts (`nobs`)
+The count of independent units for a specific effect inside a by-precision aggregation (\(n_{\mathrm{eff}}\)). When experimental units nest inside cluster units, that count is the number of cluster units, not the number of experimental units. It remains effect-specific: task-dependent metrics use the study's grouping columns to form experimental units, then collapse to cluster units; artifact-invariant metrics (for example storage) already omit evaluation-context columns. Repeated measurement runs on the same experimental unit do not increase \(n_{\mathrm{eff}}\). Forest-plot intervals are cluster-robust intervals for the experimental-unit mean, using this cluster count.
+_Avoid_: Number of models (when grouping columns are wider); number of measurement runs; forest-plot raw row counts (`nobs`); counting nested tasks as independent units; iid Student's \(t\) on nested experimental units
 
 **Subgroup**:
 One moderator level used when interpreting the main by-precision aggregation: the triple `(baseline precision configuration, quantization method, precision configuration)`. Distinct from by-precision aggregation itself, which does not include the baseline in its grouping key.
@@ -77,8 +85,8 @@ The committed JSON result file that is the authority for manuscript tables, fore
 _Avoid_: Hand-authored Aggregated rows; copying Evidence Factory UI numbers into plots or prose
 
 **Sensitivity analysis**:
-Analysis that tests whether primary synthesis conclusions are robust when the main pooling assumptions change. The published sensitivity analysis holds the included study set and extracted intensities fixed and recombines evidence under the mass-preserving belief split ($1-(1-B)^{1/N}$ per evidence model), thereby limiting repeated commitment of the same study belief across configurations from one publication. Leave-one-study-out recombination of the main discounted pooling and the equitable split ($B/N$) are reported as supplementary stress tests in appendices. Distinct from subgroup analysis, which restricts the moderator triple while holding the study set fixed.
-_Avoid_: Subgroup analysis (when the cut is which studies are in, not which cell); reusing corpus-wide Aggregated rows as if they were sensitivity-sample-specific; study-set exclusion by theoretical-structure count (retired TS $\le 5$ analysis)
+Analysis that tests whether primary synthesis conclusions are robust when the main pooling assumptions change. The published sensitivity analysis holds the included study set and extracted intensities fixed and recombines evidence under the mass-preserving belief split ($1-(1-B)^{1/N}$ per evidence model), thereby limiting repeated commitment of the same study belief across configurations from one publication. Leave-one-study-out recombination of the main discounted pooling and the equitable split ($B/N$) are reported as supplementary stress tests in appendices. A further appendix stress test varies the main discount parameters one at a time without changing the \(\alpha_v\) denominator and without replacing the published forest plots: \(n_0\in\{2,n_0^{Q3},6\}\), \(k\in\{0.05,0.1,0.2\}\), and cutoff \(\in\{3,4,8\}\), reporting aggregated direction/intensity and accuracy \(B'\). Distinct from subgroup analysis, which restricts the moderator triple while holding the study set fixed.
+_Avoid_: Subgroup analysis (when the cut is which studies are in, not which cell); reusing corpus-wide Aggregated rows as if they were sensitivity-sample-specific; study-set exclusion by theoretical-structure count (retired TS $\le 5$ analysis); treating an alternative \(\alpha_v\) denominator as a published sensitivity variant
 
 **Belief assignment**:
 The rule that maps study belief onto simple-support masses on evidence models for Dempster–Shafer synthesis of the full by-precision aggregation, holding the included study set fixed. The variants are published analogue, undiscounted unsplit combination, mass-preserving belief split, and equitable belief split.
@@ -182,9 +190,13 @@ _Avoid_: Belief measure; probability distribution over singleton intensities
 The Dempster–Shafer quantity \(\mathrm{Bel}(A)=\sum_{B\subseteq A}m(B)\) for a hypothesis \(A\), computed from a mass function. It is distinct from study belief and discounted support mass.
 _Avoid_: Study belief; discounted support mass; posterior probability
 
+**Sample-size discount**:
+The reliability factor \(\alpha_n = 1 - e^{-n_{\mathrm{eff}}/n_0}\) applied to study belief for one evidence-model effect. The saturation parameter \(n_0\) is the third quartile of the effective-sample-size distribution over evidence-model effects, recomputed when that distribution's population or unit definition changes.
+_Avoid_: Freezing \(n_0=3\) after the table population changes; calibrating \(n_0\) to studies rather than evidence-model effects; treating the code comment "median" as the rule
+
 **Variability discount**:
-The reliability factor applied to study belief when relative improvements inside one by-precision aggregation are heterogeneous. The IQR is taken over the experimental-unit relative improvements in that aggregation. Distinct from by-precision aggregation itself, which is the grouping, not the discount.
-_Avoid_: treating this discount as a second meaning of aggregation; IQR of model-level means when experimental units are model–dataset pairs
+The reliability factor applied to study belief when relative improvements inside one by-precision aggregation are heterogeneous. The IQR is taken over the experimental-unit relative improvements in that aggregation. The main-analysis denominator is \(\mu+\varepsilon\) with a numerical stabilizer \(\varepsilon\), not a negligible-effect floor. Distinct from by-precision aggregation itself, which is the grouping, not the discount.
+_Avoid_: treating this discount as a second meaning of aggregation; IQR of model-level means when experimental units are model–dataset pairs; replacing the main-analysis denominator with \(\max(|\mu|,\delta)\)
 
 **Correctness metric**:
 A measure of model prediction quality reported by a study (e.g. accuracy, F1 score, perplexity). Correctness metrics are distinct from resource-efficiency metrics even when a correctness metric is minimized rather than maximized.

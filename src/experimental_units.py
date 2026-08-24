@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import numpy as np
 import polars as pl
+import statsmodels.api as sm
 from statsmodels.stats.weightstats import DescrStatsW
 
 if TYPE_CHECKING:
@@ -29,6 +31,20 @@ def grouping_columns_for_metric(metric: str, paper: Paper) -> list[str] | None:
         return cols or list(paper.GROUPING_COLUMNS)
 
     return list(paper.GROUPING_COLUMNS)
+
+
+def cluster_columns_for_metric(metric: str, paper: Paper) -> list[str] | None:
+    """Return grouping columns that identify one cluster unit for ``metric``.
+
+    Cluster units drop evaluation-context columns only. Hardware, library, and
+    filter-multiplier factors stay. Artifact-invariant metrics already omit those
+    columns from grouping, so their cluster key matches the experimental unit.
+    """
+    grouping = grouping_columns_for_metric(metric, paper)
+    if grouping is None:
+        return None
+    columns = [column for column in grouping if column not in EVALUATION_CONTEXT_COLUMNS]
+    return columns or list(grouping)
 
 
 def unit_columns_for_precision(metric: str, paper: Paper) -> list[str]:
@@ -59,27 +75,61 @@ def collapse_metric_to_units(
     return improvement_metrics.group_by(unit_columns).agg(pl.col(improvement_column).mean().alias(improvement_column))
 
 
-def unit_level_statistics(values: pl.Series) -> dict[str, float | int | None]:
-    """Mean and two-sided 95% Student's t interval from unit-level relative improvements.
+def cluster_columns_from_unit_columns(unit_columns: list[str]) -> list[str]:
+    """Drop evaluation-context columns from an experimental-unit key to form the cluster key."""
+    columns = [column for column in unit_columns if column not in EVALUATION_CONTEXT_COLUMNS]
+    return columns or list(unit_columns)
 
-    The inferential unit is one experimental unit after averaging replicate runs. Units are
-    treated as independent observations; nested model--task structure is not clustered.
-    The interval is omitted when ``n_eff=1`` or all values are identical, because the t
-    standard error is then undefined.
+
+def unit_level_statistics(
+    values: pl.Series,
+    cluster_ids: pl.Series | None = None,
+) -> dict[str, float | int | None]:
+    """Mean of experimental-unit relative improvements and a 95% interval.
+
+    ``n_eff`` is the number of cluster units when ``cluster_ids`` is provided, otherwise
+    the number of experimental units. The interval is a Student's t interval when each
+    experimental unit is its own cluster, and a cluster-robust OLS interval when units
+    nest inside clusters. The interval is omitted when ``n_eff=1`` or all values are
+    identical, because the standard error is then undefined.
     """
-    clean = values.drop_nulls()
-    n_eff = clean.len()
-    if n_eff == 0:
+    frame = pl.DataFrame({"value": values})
+    if cluster_ids is not None:
+        frame = frame.with_columns(cluster_ids.alias("cluster"))
+    frame = frame.filter(pl.col("value").is_not_null())
+    n_units = frame.height
+    if n_units == 0:
         return {"n_eff": 0, "mean": None, "lower_ci": None, "upper_ci": None}
-    if n_eff == 1 or clean.n_unique() == 1:
-        mean = clean.item(0) if n_eff == 1 else clean.unique().item()
+
+    nested = cluster_ids is not None and frame["cluster"].n_unique() < n_units
+    n_eff = int(frame["cluster"].n_unique()) if cluster_ids is not None else n_units
+    values_arr = frame["value"].to_numpy()
+    spread = float(np.ptp(values_arr))
+    scale = max(abs(float(np.mean(values_arr))), 1.0)
+    if n_units == 1 or spread <= 1e-9 * scale:
+        mean = float(values_arr[0]) if n_units == 1 else float(np.mean(values_arr))
         return {"n_eff": n_eff, "mean": mean, "lower_ci": None, "upper_ci": None}
 
-    stats = DescrStatsW(clean.to_list())
-    lower_ci, upper_ci = stats.tconfint_mean(alpha=0.05)
+    if not nested:
+        stats = DescrStatsW(frame["value"].to_list())
+        lower_ci, upper_ci = stats.tconfint_mean(alpha=0.05)
+        return {
+            "n_eff": n_eff,
+            "mean": float(stats.mean),
+            "lower_ci": float(lower_ci),
+            "upper_ci": float(upper_ci),
+        }
+
+    if n_eff < 2:  # noqa: PLR2004
+        return {"n_eff": n_eff, "mean": float(frame["value"].mean()), "lower_ci": None, "upper_ci": None}
+
+    response = frame["value"].to_numpy()
+    design = np.ones((n_units, 1))
+    fit = sm.OLS(response, design).fit(cov_type="cluster", cov_kwds={"groups": frame["cluster"].to_list()})
+    lower_ci, upper_ci = fit.conf_int(alpha=0.05)[0]
     return {
         "n_eff": n_eff,
-        "mean": float(stats.mean),
+        "mean": float(fit.params[0]),
         "lower_ci": float(lower_ci),
         "upper_ci": float(upper_ci),
     }

@@ -7,13 +7,12 @@
     "n_evidence_models": 76
   },
   "counts": {
-    "n_increased_belief": 10,
-    "n_decreased_belief": 1,
+    "n_increased_belief": 9,
+    "n_decreased_belief": 2,
     "n_unchanged_belief": 0,
     "increased_effects": [
       "Accuracy",
       "F1 Score",
-      "mAP",
       "Storage Size",
       "GPU Utilization",
       "GPU Power Draw",
@@ -23,6 +22,7 @@
       "Inference Latency"
     ],
     "decreased_effects": [
+      "mAP",
       "RAM Usage"
     ],
     "unchanged_effects": []
@@ -35,12 +35,12 @@
         "IF"
       ],
       "intensity_label": "{WN, IF}",
-      "belief": 0.9876314432442928,
-      "belief_percent": 99,
-      "conflict": 0.1882887260520794,
+      "belief": 0.9962741507053217,
+      "belief_percent": 100,
+      "conflict": 0.26168541399681616,
       "max_contributor_belief": 0.665,
-      "delta_belief": 0.3226314432442927,
-      "delta_percent": 32,
+      "delta_belief": 0.3312741507053216,
+      "delta_percent": 33,
       "delta_class": "reinforced",
       "n_primary_studies": 10,
       "n_evidence_models": 41,
@@ -68,12 +68,12 @@
         "IF"
       ],
       "intensity_label": "IF",
-      "belief": 0.749740936889711,
-      "belief_percent": 75,
-      "conflict": 0.14625994955969665,
-      "max_contributor_belief": 0.642,
-      "delta_belief": 0.10774093688971098,
-      "delta_percent": 11,
+      "belief": 0.7973313118034271,
+      "belief_percent": 80,
+      "conflict": 0.21794922393389693,
+      "max_contributor_belief": 0.669,
+      "delta_belief": 0.12833131180342705,
+      "delta_percent": 13,
       "delta_class": "reinforced",
       "n_primary_studies": 2,
       "n_evidence_models": 9,
@@ -93,13 +93,13 @@
         "IF"
       ],
       "intensity_label": "IF",
-      "belief": 0.4457676937788615,
-      "belief_percent": 45,
-      "conflict": 0.3111319305252532,
-      "max_contributor_belief": 0.425,
-      "delta_belief": 0.020767693778861507,
-      "delta_percent": 2,
-      "delta_class": "slightly_reinforced",
+      "belief": 0.5106164919462729,
+      "belief_percent": 51,
+      "conflict": 0.425588642279707,
+      "max_contributor_belief": 0.522,
+      "delta_belief": -0.01138350805372712,
+      "delta_percent": -1,
+      "delta_class": "weakened",
       "n_primary_studies": 2,
       "n_evidence_models": 4,
       "study_ids": [
@@ -118,11 +118,11 @@
         "SP"
       ],
       "intensity_label": "SP",
-      "belief": 0.9999998913622369,
+      "belief": 0.999999999280472,
       "belief_percent": 100,
-      "conflict": 1.6842985173506294e-08,
+      "conflict": 1.877059463046368e-10,
       "max_contributor_belief": 0.736,
-      "delta_belief": 0.2639998913622369,
+      "delta_belief": 0.263999999280472,
       "delta_percent": 26,
       "delta_class": "reinforced",
       "n_primary_studies": 17,
@@ -185,12 +185,12 @@
         "WP"
       ],
       "intensity_label": "{IF, WP}",
-      "belief": 0.9824274834569996,
-      "belief_percent": 98,
-      "conflict": 0.299198,
+      "belief": 0.9865064331980464,
+      "belief_percent": 99,
+      "conflict": 0.367971,
       "max_contributor_belief": 0.709,
-      "delta_belief": 0.27342748345699963,
-      "delta_percent": 27,
+      "delta_belief": 0.27750643319804646,
+      "delta_percent": 28,
       "delta_class": "reinforced",
       "n_primary_studies": 3,
       "n_evidence_models": 5,
@@ -211,13 +211,13 @@
         "SP"
       ],
       "intensity_label": "SP",
-      "belief": 0.7431902181061332,
-      "belief_percent": 74,
-      "conflict": 0.11587435700528559,
+      "belief": 0.8117634673683286,
+      "belief_percent": 81,
+      "conflict": 0.12432195548392229,
       "max_contributor_belief": 0.718,
-      "delta_belief": 0.0251902181061332,
-      "delta_percent": 3,
-      "delta_class": "slightly_reinforced",
+      "delta_belief": 0.09376346736832863,
+      "delta_percent": 9,
+      "delta_class": "reinforced",
       "n_primary_studies": 3,
       "n_evidence_models": 5,
       "study_ids": [
@@ -237,12 +237,12 @@
         "SP"
       ],
       "intensity_label": "SP",
-      "belief": 0.46657569007046534,
-      "belief_percent": 47,
-      "conflict": 0.197636868,
-      "max_contributor_belief": 0.572,
-      "delta_belief": -0.10542430992953461,
-      "delta_percent": -11,
+      "belief": 0.4763062122494207,
+      "belief_percent": 48,
+      "conflict": 0.289661232,
+      "max_contributor_belief": 0.628,
+      "delta_belief": -0.1516937877505793,
+      "delta_percent": -15,
       "delta_class": "weakened",
       "n_primary_studies": 2,
       "n_evidence_models": 3,
@@ -262,12 +262,12 @@
         "WP"
       ],
       "intensity_label": "WP",
-      "belief": 0.7435876015171575,
-      "belief_percent": 74,
-      "conflict": 0.03867907470738985,
+      "belief": 0.8258560002202832,
+      "belief_percent": 83,
+      "conflict": 0.04673133433409124,
       "max_contributor_belief": 0.65,
-      "delta_belief": 0.0935876015171575,
-      "delta_percent": 9,
+      "delta_belief": 0.17585600022028314,
+      "delta_percent": 18,
       "delta_class": "reinforced",
       "n_primary_studies": 3,
       "n_evidence_models": 10,
@@ -288,11 +288,11 @@
         "SP"
       ],
       "intensity_label": "SP",
-      "belief": 0.9961605657553824,
+      "belief": 0.9978432363449722,
       "belief_percent": 100,
-      "conflict": 0.0038724493540753346,
+      "conflict": 0.003113229586864148,
       "max_contributor_belief": 0.715,
-      "delta_belief": 0.2811605657553824,
+      "delta_belief": 0.2828432363449722,
       "delta_percent": 28,
       "delta_class": "reinforced",
       "n_primary_studies": 8,
@@ -316,16 +316,15 @@
     "Inference Latency": {
       "effect": "Inference Latency",
       "intensity": [
-        "PO",
         "SP"
       ],
-      "intensity_label": "{PO, SP}",
-      "belief": 0.9997836960125243,
-      "belief_percent": 100,
-      "conflict": 0.3241083276189013,
+      "intensity_label": "SP",
+      "belief": 0.8033865510020888,
+      "belief_percent": 80,
+      "conflict": 0.24681553893677785,
       "max_contributor_belief": 0.716,
-      "delta_belief": 0.2837836960125243,
-      "delta_percent": 28,
+      "delta_belief": 0.08738655100208881,
+      "delta_percent": 9,
       "delta_class": "reinforced",
       "n_primary_studies": 12,
       "n_evidence_models": 51,
@@ -344,9 +343,9 @@
         "S21"
       ],
       "forestplot": {
-        "lower_ci": 40.0,
-        "upper_ci": 50.0,
-        "mean": 45.0
+        "lower_ci": 50.0,
+        "upper_ci": 100.0,
+        "mean": 75.0
       }
     }
   },
@@ -358,12 +357,12 @@
         "IF"
       ],
       "intensity_label": "{WN, IF}",
-      "belief": 0.9876314432442928,
-      "belief_percent": 99,
-      "conflict": 0.1882887260520794,
+      "belief": 0.9962741507053217,
+      "belief_percent": 100,
+      "conflict": 0.26168541399681616,
       "max_contributor_belief": 0.665,
-      "delta_belief": 0.3226314432442927,
-      "delta_percent": 32,
+      "delta_belief": 0.3312741507053216,
+      "delta_percent": 33,
       "delta_class": "reinforced",
       "n_primary_studies": 10,
       "n_evidence_models": 41,
@@ -391,12 +390,12 @@
         "WN"
       ],
       "intensity_label": "WN",
-      "belief": 0.1617770326906957,
-      "belief_percent": 16,
-      "conflict": 0.037249000000000004,
-      "max_contributor_belief": 0.193,
-      "delta_belief": -0.031222967309304295,
-      "delta_percent": -3,
+      "belief": 0.2119779353821907,
+      "belief_percent": 21,
+      "conflict": 0.07236100000000001,
+      "max_contributor_belief": 0.269,
+      "delta_belief": -0.057022064617809315,
+      "delta_percent": -6,
       "delta_class": "weakened",
       "n_primary_studies": 1,
       "n_evidence_models": 2,
@@ -415,12 +414,12 @@
         "SN"
       ],
       "intensity_label": "SN",
-      "belief": 0.1617770326906957,
-      "belief_percent": 16,
-      "conflict": 0.037249000000000004,
-      "max_contributor_belief": 0.193,
-      "delta_belief": -0.031222967309304295,
-      "delta_percent": -3,
+      "belief": 0.2119779353821907,
+      "belief_percent": 21,
+      "conflict": 0.07236100000000001,
+      "max_contributor_belief": 0.269,
+      "delta_belief": -0.057022064617809315,
+      "delta_percent": -6,
       "delta_class": "weakened",
       "n_primary_studies": 1,
       "n_evidence_models": 2,
@@ -439,12 +438,12 @@
         "IF"
       ],
       "intensity_label": "IF",
-      "belief": 0.749740936889711,
-      "belief_percent": 75,
-      "conflict": 0.14625994955969665,
-      "max_contributor_belief": 0.642,
-      "delta_belief": 0.10774093688971098,
-      "delta_percent": 11,
+      "belief": 0.7973313118034271,
+      "belief_percent": 80,
+      "conflict": 0.21794922393389693,
+      "max_contributor_belief": 0.669,
+      "delta_belief": 0.12833131180342705,
+      "delta_percent": 13,
       "delta_class": "reinforced",
       "n_primary_studies": 2,
       "n_evidence_models": 9,
@@ -464,10 +463,10 @@
         "IF"
       ],
       "intensity_label": "IF",
-      "belief": 0.249,
-      "belief_percent": 25,
+      "belief": 0.306,
+      "belief_percent": 31,
       "conflict": 0.0,
-      "max_contributor_belief": 0.249,
+      "max_contributor_belief": 0.306,
       "delta_belief": 0.0,
       "delta_percent": 0,
       "delta_class": "unchanged",
@@ -488,13 +487,13 @@
         "IF"
       ],
       "intensity_label": "IF",
-      "belief": 0.4457676937788615,
-      "belief_percent": 45,
-      "conflict": 0.3111319305252532,
-      "max_contributor_belief": 0.425,
-      "delta_belief": 0.020767693778861507,
-      "delta_percent": 2,
-      "delta_class": "slightly_reinforced",
+      "belief": 0.5106164919462729,
+      "belief_percent": 51,
+      "conflict": 0.425588642279707,
+      "max_contributor_belief": 0.522,
+      "delta_belief": -0.01138350805372712,
+      "delta_percent": -1,
+      "delta_class": "weakened",
       "n_primary_studies": 2,
       "n_evidence_models": 4,
       "study_ids": [
@@ -514,12 +513,12 @@
         "NE"
       ],
       "intensity_label": "{SN, NE}",
-      "belief": 0.34875100000000003,
-      "belief_percent": 35,
+      "belief": 0.465639,
+      "belief_percent": 47,
       "conflict": 0.0,
-      "max_contributor_belief": 0.193,
-      "delta_belief": 0.15575100000000003,
-      "delta_percent": 16,
+      "max_contributor_belief": 0.269,
+      "delta_belief": 0.196639,
+      "delta_percent": 20,
       "delta_class": "reinforced",
       "n_primary_studies": 1,
       "n_evidence_models": 2,
@@ -538,12 +537,12 @@
         "SN"
       ],
       "intensity_label": "SN",
-      "belief": 0.34875100000000003,
-      "belief_percent": 35,
+      "belief": 0.465639,
+      "belief_percent": 47,
       "conflict": 0.0,
-      "max_contributor_belief": 0.193,
-      "delta_belief": 0.15575100000000003,
-      "delta_percent": 16,
+      "max_contributor_belief": 0.269,
+      "delta_belief": 0.196639,
+      "delta_percent": 20,
       "delta_class": "reinforced",
       "n_primary_studies": 1,
       "n_evidence_models": 2,
@@ -563,11 +562,11 @@
         "WP"
       ],
       "intensity_label": "{IF, WP}",
-      "belief": 0.31152767052445557,
-      "belief_percent": 31,
-      "conflict": 0.055627167774072124,
-      "max_contributor_belief": 0.221,
-      "delta_belief": 0.09052767052445557,
+      "belief": 0.37394470404639957,
+      "belief_percent": 37,
+      "conflict": 0.08788755498688418,
+      "max_contributor_belief": 0.287,
+      "delta_belief": 0.08694470404639959,
       "delta_percent": 9,
       "delta_class": "reinforced",
       "n_primary_studies": 1,
@@ -588,12 +587,12 @@
         "WN"
       ],
       "intensity_label": "{NE, WN}",
-      "belief": 0.9345779650065713,
-      "belief_percent": 93,
-      "conflict": 0.48132376533344107,
-      "max_contributor_belief": 0.495,
-      "delta_belief": 0.4395779650065713,
-      "delta_percent": 44,
+      "belief": 0.9478930117796531,
+      "belief_percent": 95,
+      "conflict": 0.41533690392505573,
+      "max_contributor_belief": 0.425,
+      "delta_belief": 0.5228930117796531,
+      "delta_percent": 52,
       "delta_class": "reinforced",
       "n_primary_studies": 1,
       "n_evidence_models": 17,
@@ -613,12 +612,12 @@
         "IF"
       ],
       "intensity_label": "{WN, IF}",
-      "belief": 0.9989959473802508,
+      "belief": 0.9988633814374608,
       "belief_percent": 100,
-      "conflict": 0.28949066288947606,
-      "max_contributor_belief": 0.495,
-      "delta_belief": 0.5039959473802508,
-      "delta_percent": 50,
+      "conflict": 0.2697058006622558,
+      "max_contributor_belief": 0.425,
+      "delta_belief": 0.5738633814374607,
+      "delta_percent": 56,
       "delta_class": "reinforced",
       "n_primary_studies": 1,
       "n_evidence_models": 17,
@@ -634,25 +633,26 @@
     "BLEU": {
       "effect": "BLEU",
       "intensity": [
-        "IF"
+        "NE",
+        "WN"
       ],
-      "intensity_label": "IF",
-      "belief": 0.3536172547995536,
-      "belief_percent": 35,
-      "conflict": 0.1466244316929097,
-      "max_contributor_belief": 0.327,
-      "delta_belief": 0.02661725479955357,
-      "delta_percent": 3,
-      "delta_class": "slightly_reinforced",
+      "intensity_label": "{NE, WN}",
+      "belief": 0.4009734181954322,
+      "belief_percent": 40,
+      "conflict": 0.22861627322953282,
+      "max_contributor_belief": 0.425,
+      "delta_belief": -0.024026581804567793,
+      "delta_percent": -2,
+      "delta_class": "weakened",
       "n_primary_studies": 1,
       "n_evidence_models": 4,
       "study_ids": [
         "S1"
       ],
       "forestplot": {
-        "lower_ci": -2.0,
-        "upper_ci": 2.0,
-        "mean": 0.0
+        "lower_ci": -15.0,
+        "upper_ci": -10.0,
+        "mean": -12.5
       }
     },
     "Storage Size": {
@@ -661,11 +661,11 @@
         "SP"
       ],
       "intensity_label": "SP",
-      "belief": 0.9999998913622369,
+      "belief": 0.999999999280472,
       "belief_percent": 100,
-      "conflict": 1.6842985173506294e-08,
+      "conflict": 1.877059463046368e-10,
       "max_contributor_belief": 0.736,
-      "delta_belief": 0.2639998913622369,
+      "delta_belief": 0.263999999280472,
       "delta_percent": 26,
       "delta_class": "reinforced",
       "n_primary_studies": 17,
@@ -753,12 +753,12 @@
         "WP"
       ],
       "intensity_label": "{IF, WP}",
-      "belief": 0.9824274834569996,
-      "belief_percent": 98,
-      "conflict": 0.299198,
+      "belief": 0.9865064331980464,
+      "belief_percent": 99,
+      "conflict": 0.367971,
       "max_contributor_belief": 0.709,
-      "delta_belief": 0.27342748345699963,
-      "delta_percent": 27,
+      "delta_belief": 0.27750643319804646,
+      "delta_percent": 28,
       "delta_class": "reinforced",
       "n_primary_studies": 3,
       "n_evidence_models": 5,
@@ -779,13 +779,13 @@
         "SP"
       ],
       "intensity_label": "SP",
-      "belief": 0.7431902181061332,
-      "belief_percent": 74,
-      "conflict": 0.11587435700528559,
+      "belief": 0.8117634673683286,
+      "belief_percent": 81,
+      "conflict": 0.12432195548392229,
       "max_contributor_belief": 0.718,
-      "delta_belief": 0.0251902181061332,
-      "delta_percent": 3,
-      "delta_class": "slightly_reinforced",
+      "delta_belief": 0.09376346736832863,
+      "delta_percent": 9,
+      "delta_class": "reinforced",
       "n_primary_studies": 3,
       "n_evidence_models": 5,
       "study_ids": [
@@ -805,12 +805,12 @@
         "SP"
       ],
       "intensity_label": "SP",
-      "belief": 0.46657569007046534,
-      "belief_percent": 47,
-      "conflict": 0.197636868,
-      "max_contributor_belief": 0.572,
-      "delta_belief": -0.10542430992953461,
-      "delta_percent": -11,
+      "belief": 0.4763062122494207,
+      "belief_percent": 48,
+      "conflict": 0.289661232,
+      "max_contributor_belief": 0.628,
+      "delta_belief": -0.1516937877505793,
+      "delta_percent": -15,
       "delta_class": "weakened",
       "n_primary_studies": 2,
       "n_evidence_models": 3,
@@ -831,12 +831,12 @@
         "SP"
       ],
       "intensity_label": "{PO, SP}",
-      "belief": 0.32375421472937,
-      "belief_percent": 32,
+      "belief": 0.42263945578231304,
+      "belief_percent": 42,
       "conflict": 0.0,
-      "max_contributor_belief": 0.127,
-      "delta_belief": 0.19675421472937,
-      "delta_percent": 20,
+      "max_contributor_belief": 0.176,
+      "delta_belief": 0.24663945578231306,
+      "delta_percent": 25,
       "delta_class": "reinforced",
       "n_primary_studies": 1,
       "n_evidence_models": 3,
@@ -855,12 +855,12 @@
         "WP"
       ],
       "intensity_label": "WP",
-      "belief": 0.7435876015171575,
-      "belief_percent": 74,
-      "conflict": 0.03867907470738985,
+      "belief": 0.8258560002202832,
+      "belief_percent": 83,
+      "conflict": 0.04673133433409124,
       "max_contributor_belief": 0.65,
-      "delta_belief": 0.0935876015171575,
-      "delta_percent": 9,
+      "delta_belief": 0.17585600022028314,
+      "delta_percent": 18,
       "delta_class": "reinforced",
       "n_primary_studies": 3,
       "n_evidence_models": 10,
@@ -881,11 +881,11 @@
         "SP"
       ],
       "intensity_label": "SP",
-      "belief": 0.9961605657553824,
+      "belief": 0.9978432363449722,
       "belief_percent": 100,
-      "conflict": 0.0038724493540753346,
+      "conflict": 0.003113229586864148,
       "max_contributor_belief": 0.715,
-      "delta_belief": 0.2811605657553824,
+      "delta_belief": 0.2828432363449722,
       "delta_percent": 28,
       "delta_class": "reinforced",
       "n_primary_studies": 8,
@@ -909,16 +909,15 @@
     "Inference Latency": {
       "effect": "Inference Latency",
       "intensity": [
-        "PO",
         "SP"
       ],
-      "intensity_label": "{PO, SP}",
-      "belief": 0.9997836960125243,
-      "belief_percent": 100,
-      "conflict": 0.3241083276189013,
+      "intensity_label": "SP",
+      "belief": 0.8033865510020888,
+      "belief_percent": 80,
+      "conflict": 0.24681553893677785,
       "max_contributor_belief": 0.716,
-      "delta_belief": 0.2837836960125243,
-      "delta_percent": 28,
+      "delta_belief": 0.08738655100208881,
+      "delta_percent": 9,
       "delta_class": "reinforced",
       "n_primary_studies": 12,
       "n_evidence_models": 51,
@@ -937,9 +936,9 @@
         "S21"
       ],
       "forestplot": {
-        "lower_ci": 40.0,
-        "upper_ci": 50.0,
-        "mean": 45.0
+        "lower_ci": 50.0,
+        "upper_ci": 100.0,
+        "mean": 75.0
       }
     }
   },
@@ -950,8 +949,8 @@
         "n_primary_studies": 10,
         "n_evidence_models": 41,
         "analogue_intensity": "{WN, IF}",
-        "analogue_belief_percent": 99,
-        "analogue_conflict": 0.1882887260520794,
+        "analogue_belief_percent": 100,
+        "analogue_conflict": 0.26168541399681616,
         "unsplit_intensity": "IF",
         "unsplit_belief_percent": 99,
         "unsplit_conflict": 0.6670807973447248,
@@ -966,8 +965,8 @@
         "n_primary_studies": 2,
         "n_evidence_models": 9,
         "analogue_intensity": "IF",
-        "analogue_belief_percent": 75,
-        "analogue_conflict": 0.14625994955969665,
+        "analogue_belief_percent": 80,
+        "analogue_conflict": 0.21794922393389693,
         "unsplit_intensity": "IF",
         "unsplit_belief_percent": 94,
         "unsplit_conflict": 0.6449765670665684,
@@ -982,8 +981,8 @@
         "n_primary_studies": 2,
         "n_evidence_models": 4,
         "analogue_intensity": "IF",
-        "analogue_belief_percent": 45,
-        "analogue_conflict": 0.3111319305252532,
+        "analogue_belief_percent": 51,
+        "analogue_conflict": 0.425588642279707,
         "unsplit_intensity": "IF",
         "unsplit_belief_percent": 61,
         "unsplit_conflict": 0.6116271064102576,
@@ -999,7 +998,7 @@
         "n_evidence_models": 62,
         "analogue_intensity": "SP",
         "analogue_belief_percent": 100,
-        "analogue_conflict": 1.6842985173506294e-08,
+        "analogue_conflict": 1.877059463046368e-10,
         "unsplit_intensity": "SP",
         "unsplit_belief_percent": 100,
         "unsplit_conflict": 2.0653385096586093e-17,
@@ -1030,8 +1029,8 @@
         "n_primary_studies": 3,
         "n_evidence_models": 5,
         "analogue_intensity": "{IF, WP}",
-        "analogue_belief_percent": 98,
-        "analogue_conflict": 0.299198,
+        "analogue_belief_percent": 99,
+        "analogue_conflict": 0.367971,
         "unsplit_intensity": "{IF, WP}",
         "unsplit_belief_percent": 100,
         "unsplit_conflict": 0.49165718403472225,
@@ -1046,8 +1045,8 @@
         "n_primary_studies": 3,
         "n_evidence_models": 5,
         "analogue_intensity": "SP",
-        "analogue_belief_percent": 74,
-        "analogue_conflict": 0.11587435700528559,
+        "analogue_belief_percent": 81,
+        "analogue_conflict": 0.12432195548392229,
         "unsplit_intensity": "SP",
         "unsplit_belief_percent": 91,
         "unsplit_conflict": 0.11939609032541466,
@@ -1062,8 +1061,8 @@
         "n_primary_studies": 2,
         "n_evidence_models": 3,
         "analogue_intensity": "SP",
-        "analogue_belief_percent": 47,
-        "analogue_conflict": 0.197636868,
+        "analogue_belief_percent": 48,
+        "analogue_conflict": 0.289661232,
         "unsplit_intensity": "PO",
         "unsplit_belief_percent": 74,
         "unsplit_conflict": 0.5915670531868281,
@@ -1078,8 +1077,8 @@
         "n_primary_studies": 3,
         "n_evidence_models": 10,
         "analogue_intensity": "WP",
-        "analogue_belief_percent": 74,
-        "analogue_conflict": 0.03867907470738985,
+        "analogue_belief_percent": 83,
+        "analogue_conflict": 0.04673133433409124,
         "unsplit_intensity": "WP",
         "unsplit_belief_percent": 99,
         "unsplit_conflict": 0.017464580677950054,
@@ -1095,7 +1094,7 @@
         "n_evidence_models": 27,
         "analogue_intensity": "SP",
         "analogue_belief_percent": 100,
-        "analogue_conflict": 0.0038724493540753346,
+        "analogue_conflict": 0.003113229586864148,
         "unsplit_intensity": "SP",
         "unsplit_belief_percent": 100,
         "unsplit_conflict": 0.0034424126301696467,
@@ -1109,9 +1108,9 @@
       "Inference Latency": {
         "n_primary_studies": 12,
         "n_evidence_models": 51,
-        "analogue_intensity": "{PO, SP}",
-        "analogue_belief_percent": 100,
-        "analogue_conflict": 0.3241083276189013,
+        "analogue_intensity": "SP",
+        "analogue_belief_percent": 80,
+        "analogue_conflict": 0.24681553893677785,
         "unsplit_intensity": "SP",
         "unsplit_belief_percent": 95,
         "unsplit_conflict": 0.08841122543704541,
@@ -1258,17 +1257,17 @@
         "reports_all_omissions": false,
         "omissions": [
           {
-            "omitted_study_id": "S13",
+            "omitted_study_id": "S11",
             "full_intensity": [
               "WN",
               "IF"
             ],
-            "full_belief": 0.9876314432442928,
+            "full_belief": 0.9962741507053217,
             "loo_intensity": [
               "IF"
             ],
-            "loo_belief": 0.7766608506049495,
-            "belief_delta": -0.21097059263934326,
+            "loo_belief": 0.7410968185584175,
+            "belief_delta": -0.2551773321469042,
             "intensity_changed": true
           }
         ]
@@ -1281,12 +1280,12 @@
             "full_intensity": [
               "IF"
             ],
-            "full_belief": 0.749740936889711,
+            "full_belief": 0.7973313118034271,
             "loo_intensity": [
               "IF"
             ],
-            "loo_belief": 0.4165164040205934,
-            "belief_delta": -0.3332245328691176,
+            "loo_belief": 0.5025964385816416,
+            "belief_delta": -0.2947348732217855,
             "intensity_changed": false
           }
         ]
@@ -1299,12 +1298,12 @@
             "full_intensity": [
               "IF"
             ],
-            "full_belief": 0.4457676937788615,
+            "full_belief": 0.5106164919462729,
             "loo_intensity": [
               "SN"
             ],
-            "loo_belief": 0.2982456140350877,
-            "belief_delta": -0.1475220797437738,
+            "loo_belief": 0.342969776609724,
+            "belief_delta": -0.1676467153365489,
             "intensity_changed": true
           }
         ]
@@ -1317,12 +1316,12 @@
             "full_intensity": [
               "SP"
             ],
-            "full_belief": 0.9999998913622369,
+            "full_belief": 0.999999999280472,
             "loo_intensity": [
               "SP"
             ],
-            "loo_belief": 0.9999370832517418,
-            "belief_delta": -6.280811049508284e-05,
+            "loo_belief": 0.9999946511435336,
+            "belief_delta": -5.3481369384211774e-06,
             "intensity_changed": false
           }
         ]
@@ -1355,13 +1354,13 @@
               "IF",
               "WP"
             ],
-            "full_belief": 0.9824274834569996,
+            "full_belief": 0.9865064331980464,
             "loo_intensity": [
               "IF",
               "WP"
             ],
-            "loo_belief": 0.8612754472732673,
-            "belief_delta": -0.12115203618373227,
+            "loo_belief": 0.8934763262445237,
+            "belief_delta": -0.09303010695352276,
             "intensity_changed": false
           }
         ]
@@ -1374,13 +1373,13 @@
             "full_intensity": [
               "SP"
             ],
-            "full_belief": 0.7431902181061332,
+            "full_belief": 0.8117634673683286,
             "loo_intensity": [
               "PO",
               "SP"
             ],
             "loo_belief": 0.9487079728096556,
-            "belief_delta": 0.2055177547035224,
+            "belief_delta": 0.13694450544132697,
             "intensity_changed": true
           },
           {
@@ -1388,13 +1387,13 @@
             "full_intensity": [
               "SP"
             ],
-            "full_belief": 0.7431902181061332,
+            "full_belief": 0.8117634673683286,
             "loo_intensity": [
               "PO",
               "SP"
             ],
-            "loo_belief": 0.9433733491118867,
-            "belief_delta": 0.20018313100575358,
+            "loo_belief": 0.9546994352879844,
+            "belief_delta": 0.1429359679196558,
             "intensity_changed": true
           },
           {
@@ -1402,12 +1401,12 @@
             "full_intensity": [
               "SP"
             ],
-            "full_belief": 0.7431902181061332,
+            "full_belief": 0.8117634673683286,
             "loo_intensity": [
               "SP"
             ],
-            "loo_belief": 0.9057883120000001,
-            "belief_delta": 0.16259809389386692,
+            "loo_belief": 0.934756198,
+            "belief_delta": 0.12299273063167138,
             "intensity_changed": false
           }
         ]
@@ -1420,12 +1419,12 @@
             "full_intensity": [
               "SP"
             ],
-            "full_belief": 0.46657569007046534,
+            "full_belief": 0.4763062122494207,
             "loo_intensity": [
               "PO"
             ],
-            "loo_belief": 0.345519,
-            "belief_delta": -0.12105669007046532,
+            "loo_belief": 0.461244,
+            "belief_delta": -0.015062212249420726,
             "intensity_changed": true
           }
         ]
@@ -1438,12 +1437,12 @@
             "full_intensity": [
               "WP"
             ],
-            "full_belief": 0.7435876015171575,
+            "full_belief": 0.8258560002202832,
             "loo_intensity": [
               "WP"
             ],
-            "loo_belief": 0.6571816917142659,
-            "belief_delta": -0.08640590980289165,
+            "loo_belief": 0.7427654207748629,
+            "belief_delta": -0.08309057944542031,
             "intensity_changed": false
           }
         ]
@@ -1456,12 +1455,12 @@
             "full_intensity": [
               "SP"
             ],
-            "full_belief": 0.9961605657553824,
+            "full_belief": 0.9978432363449722,
             "loo_intensity": [
               "SP"
             ],
-            "loo_belief": 0.8944776242071778,
-            "belief_delta": -0.10168294154820456,
+            "loo_belief": 0.9044846271025468,
+            "belief_delta": -0.09335860924242534,
             "intensity_changed": false
           }
         ]
@@ -1472,16 +1471,14 @@
           {
             "omitted_study_id": "S6",
             "full_intensity": [
-              "PO",
               "SP"
             ],
-            "full_belief": 0.9997836960125243,
+            "full_belief": 0.8033865510020888,
             "loo_intensity": [
-              "PO",
               "SP"
             ],
-            "loo_belief": 0.7497843158029828,
-            "belief_delta": -0.2499993802095415,
+            "loo_belief": 0.48581634118246475,
+            "belief_delta": -0.317570209819624,
             "intensity_changed": false
           }
         ]
@@ -1513,12 +1510,12 @@
           "IF"
         ],
         "intensity_label": "IF",
-        "belief": 0.49307500000000004,
-        "belief_percent": 49,
+        "belief": 0.598868,
+        "belief_percent": 60,
         "conflict": 0.0,
-        "max_contributor_belief": 0.325,
-        "delta_belief": 0.16807500000000003,
-        "delta_percent": 17,
+        "max_contributor_belief": 0.422,
+        "delta_belief": 0.17686799999999997,
+        "delta_percent": 18,
         "delta_class": "reinforced",
         "n_primary_studies": 2,
         "n_evidence_models": 2,
@@ -1539,10 +1536,10 @@
           "NE"
         ],
         "intensity_label": "{SN, NE}",
-        "belief": 0.193,
-        "belief_percent": 19,
+        "belief": 0.269,
+        "belief_percent": 27,
         "conflict": 0.0,
-        "max_contributor_belief": 0.193,
+        "max_contributor_belief": 0.269,
         "delta_belief": 0.0,
         "delta_percent": 0,
         "delta_class": "unchanged",
@@ -1563,10 +1560,10 @@
           "SN"
         ],
         "intensity_label": "SN",
-        "belief": 0.193,
-        "belief_percent": 19,
+        "belief": 0.269,
+        "belief_percent": 27,
         "conflict": 0.0,
-        "max_contributor_belief": 0.193,
+        "max_contributor_belief": 0.269,
         "delta_belief": 0.0,
         "delta_percent": 0,
         "delta_class": "unchanged",
@@ -1587,10 +1584,10 @@
           "IF"
         ],
         "intensity_label": "IF",
-        "belief": 0.249,
-        "belief_percent": 25,
+        "belief": 0.306,
+        "belief_percent": 31,
         "conflict": 0.0,
-        "max_contributor_belief": 0.249,
+        "max_contributor_belief": 0.306,
         "delta_belief": 0.0,
         "delta_percent": 0,
         "delta_class": "unchanged",
@@ -1611,12 +1608,12 @@
           "SN"
         ],
         "intensity_label": "SN",
-        "belief": 0.2993358922805094,
-        "belief_percent": 30,
-        "conflict": 0.17934999999999998,
-        "max_contributor_belief": 0.425,
-        "delta_belief": -0.1256641077194906,
-        "delta_percent": -13,
+        "belief": 0.3443810161271298,
+        "belief_percent": 34,
+        "conflict": 0.270918,
+        "max_contributor_belief": 0.522,
+        "delta_belief": -0.17761898387287023,
+        "delta_percent": -18,
         "delta_class": "weakened",
         "n_primary_studies": 2,
         "n_evidence_models": 2,
@@ -1637,10 +1634,10 @@
           "NE"
         ],
         "intensity_label": "{SN, NE}",
-        "belief": 0.193,
-        "belief_percent": 19,
+        "belief": 0.269,
+        "belief_percent": 27,
         "conflict": 0.0,
-        "max_contributor_belief": 0.193,
+        "max_contributor_belief": 0.269,
         "delta_belief": 0.0,
         "delta_percent": 0,
         "delta_class": "unchanged",
@@ -1661,10 +1658,10 @@
           "SN"
         ],
         "intensity_label": "SN",
-        "belief": 0.193,
-        "belief_percent": 19,
+        "belief": 0.269,
+        "belief_percent": 27,
         "conflict": 0.0,
-        "max_contributor_belief": 0.193,
+        "max_contributor_belief": 0.269,
         "delta_belief": 0.0,
         "delta_percent": 0,
         "delta_class": "unchanged",
@@ -1686,10 +1683,10 @@
           "WN"
         ],
         "intensity_label": "{NE, WN}",
-        "belief": 0.327,
-        "belief_percent": 33,
+        "belief": 0.425,
+        "belief_percent": 42,
         "conflict": 0.0,
-        "max_contributor_belief": 0.327,
+        "max_contributor_belief": 0.425,
         "delta_belief": 0.0,
         "delta_percent": 0,
         "delta_class": "unchanged",
@@ -1710,10 +1707,10 @@
           "IF"
         ],
         "intensity_label": "IF",
-        "belief": 0.327,
-        "belief_percent": 33,
+        "belief": 0.425,
+        "belief_percent": 42,
         "conflict": 0.0,
-        "max_contributor_belief": 0.327,
+        "max_contributor_belief": 0.425,
         "delta_belief": 0.0,
         "delta_percent": 0,
         "delta_class": "unchanged",
@@ -1734,12 +1731,12 @@
           "SP"
         ],
         "intensity_label": "SP",
-        "belief": 0.8523848814815512,
-        "belief_percent": 85,
-        "conflict": 0.5325286611887526,
-        "max_contributor_belief": 0.572,
-        "delta_belief": 0.2803848814815513,
-        "delta_percent": 28,
+        "belief": 0.9240699706937112,
+        "belief_percent": 92,
+        "conflict": 0.6093733353064569,
+        "max_contributor_belief": 0.628,
+        "delta_belief": 0.2960699706937112,
+        "delta_percent": 30,
         "delta_class": "reinforced",
         "n_primary_studies": 8,
         "n_evidence_models": 8,
@@ -1765,10 +1762,10 @@
           "IF"
         ],
         "intensity_label": "IF",
-        "belief": 0.422,
-        "belief_percent": 42,
+        "belief": 0.519,
+        "belief_percent": 52,
         "conflict": 0.0,
-        "max_contributor_belief": 0.422,
+        "max_contributor_belief": 0.519,
         "delta_belief": 0.0,
         "delta_percent": 0,
         "delta_class": "unchanged",
@@ -1789,10 +1786,10 @@
           "SP"
         ],
         "intensity_label": "SP",
-        "belief": 0.422,
-        "belief_percent": 42,
+        "belief": 0.519,
+        "belief_percent": 52,
         "conflict": 0.0,
-        "max_contributor_belief": 0.422,
+        "max_contributor_belief": 0.519,
         "delta_belief": 0.0,
         "delta_percent": 0,
         "delta_class": "unchanged",
@@ -1813,12 +1810,12 @@
           "SP"
         ],
         "intensity_label": "SP",
-        "belief": 0.5195049553858105,
-        "belief_percent": 52,
-        "conflict": 0.10925199999999999,
-        "max_contributor_belief": 0.572,
-        "delta_belief": -0.05249504461418941,
-        "delta_percent": -5,
+        "belief": 0.553395633842046,
+        "belief_percent": 55,
+        "conflict": 0.167048,
+        "max_contributor_belief": 0.628,
+        "delta_belief": -0.07460436615795396,
+        "delta_percent": -7,
         "delta_class": "weakened",
         "n_primary_studies": 2,
         "n_evidence_models": 2,
@@ -1838,10 +1835,10 @@
           "WP"
         ],
         "intensity_label": "WP",
-        "belief": 0.533,
-        "belief_percent": 53,
+        "belief": 0.586,
+        "belief_percent": 59,
         "conflict": 0.0,
-        "max_contributor_belief": 0.533,
+        "max_contributor_belief": 0.586,
         "delta_belief": 0.0,
         "delta_percent": 0,
         "delta_class": "unchanged",
@@ -1862,11 +1859,11 @@
           "SP"
         ],
         "intensity_label": "SP",
-        "belief": 0.771286801,
-        "belief_percent": 77,
+        "belief": 0.828612468,
+        "belief_percent": 83,
         "conflict": 0.0,
-        "max_contributor_belief": 0.571,
-        "delta_belief": 0.20028680100000007,
+        "max_contributor_belief": 0.627,
+        "delta_belief": 0.201612468,
         "delta_percent": 20,
         "delta_class": "reinforced",
         "n_primary_studies": 3,
@@ -1888,12 +1885,12 @@
           "SP"
         ],
         "intensity_label": "SP",
-        "belief": 0.7738680507617225,
-        "belief_percent": 77,
-        "conflict": 0.14363042046260735,
-        "max_contributor_belief": 0.572,
-        "delta_belief": 0.20186805076172254,
-        "delta_percent": 20,
+        "belief": 0.8506012007779792,
+        "belief_percent": 85,
+        "conflict": 0.13496660718188797,
+        "max_contributor_belief": 0.628,
+        "delta_belief": 0.22260120077797918,
+        "delta_percent": 22,
         "delta_class": "reinforced",
         "n_primary_studies": 8,
         "n_evidence_models": 8,

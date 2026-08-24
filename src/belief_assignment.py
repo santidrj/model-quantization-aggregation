@@ -389,17 +389,17 @@ class PublishedRow:
 # Ground truth for the published-analogue gate after effect-specific n_eff (ADR 0009).
 # Values diverge from Evidence Factory aggregated evidence 329074 where discounts used miscounted units.
 PUBLISHED_TABLE: tuple[PublishedRow, ...] = (
-    PublishedRow("Accuracy", frozenset({"WN", "IF"}), 99, 0.18836587140823147, 10, 41, 0.005),
-    PublishedRow("F1 Score", frozenset({"IF"}), 75, 0.14625994955969665, 2, 9, 0.005),
-    PublishedRow("mAP", frozenset({"IF"}), 45, 0.3111319305252532, 2, 4, 0.005),
-    PublishedRow("Storage Size", frozenset({"SP"}), 100, 1.6842985173506294e-08, 17, 62, 5e-10),
+    PublishedRow("Accuracy", frozenset({"WN", "IF"}), 100, 0.26168541399681616, 10, 41, 0.005),
+    PublishedRow("F1 Score", frozenset({"IF"}), 80, 0.21794922393389693, 2, 9, 0.005),
+    PublishedRow("mAP", frozenset({"IF"}), 51, 0.425588642279707, 2, 4, 0.005),
+    PublishedRow("Storage Size", frozenset({"SP"}), 100, 1.877059463046368e-10, 17, 62, 5e-10),
     PublishedRow("GPU Utilization", frozenset({"IF", "WP"}), 97, 0.0, 2, 3, 1e-12),
-    PublishedRow("GPU Power Draw", frozenset({"IF", "WP"}), 98, 0.299198, 3, 5, 0.005),
-    PublishedRow("GPU Energy Consumption", frozenset({"SP"}), 74, 0.11587435700528559, 3, 5, 0.005),
-    PublishedRow("RAM Usage", frozenset({"SP"}), 47, 0.197636868, 2, 3, 0.005),
-    PublishedRow("Inference Power Draw", frozenset({"WP"}), 74, 0.03867907470738985, 3, 10, 0.005),
-    PublishedRow("Inference Energy Consumption", frozenset({"SP"}), 100, 0.0038724493540753346, 8, 27, 5e-4),
-    PublishedRow("Inference Latency", frozenset({"PO", "SP"}), 100, 0.3241083276189013, 12, 51, 0.005),
+    PublishedRow("GPU Power Draw", frozenset({"IF", "WP"}), 99, 0.367971, 3, 5, 0.005),
+    PublishedRow("GPU Energy Consumption", frozenset({"SP"}), 81, 0.12432195548392229, 3, 5, 0.005),
+    PublishedRow("RAM Usage", frozenset({"SP"}), 48, 0.289661232, 2, 3, 0.005),
+    PublishedRow("Inference Power Draw", frozenset({"WP"}), 83, 0.04673133433409124, 3, 10, 0.005),
+    PublishedRow("Inference Energy Consumption", frozenset({"SP"}), 100, 0.003113229586864148, 8, 27, 5e-4),
+    PublishedRow("Inference Latency", frozenset({"SP"}), 80, 0.24681553893677785, 12, 51, 0.005),
 )
 
 

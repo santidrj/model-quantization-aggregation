@@ -66,6 +66,4 @@ def test_effects_match_processed_json_shape_and_keys(dubhir_extractor):
     assert sorted(extractor.effects_by_configuration.to_dicts()[0].keys()) == sorted(
         expected_by_configuration[0].keys()
     )
-    assert sorted(extractor.effects_by_precision.to_dicts()[0].keys()) == sorted(
-        expected_by_precision[0].keys()
-    )
+    assert sorted(extractor.effects_by_precision.to_dicts()[0].keys()) == sorted(expected_by_precision[0].keys())

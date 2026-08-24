@@ -19,6 +19,7 @@ from src.effect_intensity import (
     ResourceUsageIntensity,
 )
 from src.experimental_units import (
+    cluster_columns_from_unit_columns,
     collapse_metric_to_units,
     unit_columns_for_configuration,
     unit_columns_for_precision,
@@ -29,7 +30,7 @@ CORRECTNESS_METRICS = CorrectnessMetrics()
 Q1 = 0.25
 Q3 = 0.75
 DISCOUNT_FACTOR = 0.1
-STABILIZATION_SIZE = 3  # Computed as the median of the number of observations per study
+STABILIZATION_SIZE = 2  # Third quartile of evidence-model-effect cluster n_eff
 EPSILON = 1e-10
 MIN_SAMPLE_SIZE_FOR_VARIABILITY_DISCOUNT = 4
 
@@ -42,6 +43,22 @@ STATS_COLUMNS_ORDER = [
     "upper_ci",
     "belief",
 ]
+
+
+def _cluster_sample_size_expr(unit_columns: list[str], improvement_column: str) -> pl.Expr:
+    cluster_columns = cluster_columns_from_unit_columns(unit_columns)
+    return (
+        pl.struct(cluster_columns)
+        .filter(pl.col(improvement_column).is_not_null())
+        .n_unique()
+        .alias(f"{improvement_column}_sample_size")
+    )
+
+
+def _cluster_ids_for_units(units: pl.DataFrame, unit_columns: list[str]) -> pl.Series:
+    cluster_columns = cluster_columns_from_unit_columns(unit_columns)
+    cluster_key = pl.concat_str([pl.col(column).cast(pl.String) for column in cluster_columns], separator="\0")
+    return units.select(cluster_key).to_series()
 
 
 class KnowledgeExtractor:
@@ -264,33 +281,27 @@ class KnowledgeExtractor:
 
     def _aggregate_metric_at_precision(self, metric: str) -> pl.DataFrame:
         improvement_column = f"{metric}_improvement"
-        units = collapse_metric_to_units(
-            self.improvement_metrics,
-            metric,
-            unit_columns_for_precision(metric, self.paper),
-        )
+        unit_columns = unit_columns_for_precision(metric, self.paper)
+        units = collapse_metric_to_units(self.improvement_metrics, metric, unit_columns)
         return units.group_by(self._by_precision_key()).agg(
             pl.col(improvement_column).mean().cast(pl.Float64).alias(improvement_column),
             pl.col(improvement_column).std().cast(pl.Float64).alias(f"{improvement_column}_std"),
             pl.col(improvement_column).quantile(Q1).alias(f"{improvement_column}_q1"),
             pl.col(improvement_column).quantile(Q3).alias(f"{improvement_column}_q3"),
-            pl.col(improvement_column).count().alias(f"{improvement_column}_sample_size"),
+            _cluster_sample_size_expr(unit_columns, improvement_column),
         )
 
     def _aggregate_metric_at_configuration(self, metric: str) -> pl.DataFrame:
         improvement_column = f"{metric}_improvement"
         available_columns = set(self.improvement_metrics.columns)
-        units = collapse_metric_to_units(
-            self.improvement_metrics,
-            metric,
-            unit_columns_for_configuration(metric, self.paper, available_columns),
-        )
+        unit_columns = unit_columns_for_configuration(metric, self.paper, available_columns)
+        units = collapse_metric_to_units(self.improvement_metrics, metric, unit_columns)
         return units.group_by("configuration").agg(
             pl.col(improvement_column).mean().cast(pl.Float64).alias(improvement_column),
             pl.col(improvement_column).std().cast(pl.Float64).alias(f"{improvement_column}_std"),
             pl.col(improvement_column).quantile(Q1).alias(f"{improvement_column}_q1"),
             pl.col(improvement_column).quantile(Q3).alias(f"{improvement_column}_q3"),
-            pl.col(improvement_column).count().alias(f"{improvement_column}_sample_size"),
+            _cluster_sample_size_expr(unit_columns, improvement_column),
         )
 
     def _join_metric_precision_frames(
@@ -421,7 +432,10 @@ class KnowledgeExtractor:
     ) -> dict[str, float | int | str | None]:
         improvement_column = f"{metric}_improvement"
         units = collapse_metric_to_units(subset, metric, unit_columns)
-        stats = unit_level_statistics(units[improvement_column])
+        stats = unit_level_statistics(
+            units[improvement_column],
+            cluster_ids=_cluster_ids_for_units(units, unit_columns),
+        )
         return {"effect": improvement_column, **stats}
 
     def _get_improvement_statistics_by_precision(self) -> pl.DataFrame:

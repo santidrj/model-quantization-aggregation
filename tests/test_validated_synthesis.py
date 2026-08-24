@@ -1,7 +1,6 @@
 """Validated synthesis file: one source for manuscript numbers."""
 
 import polars as pl
-import pytest
 
 from src.belief_assignment import PUBLISHED_TABLE, leave_one_study_out_records, manuscript_comparison_records
 from src.dempster_shafer import format_intensity
@@ -63,11 +62,11 @@ def test_forestplot_overlay_uses_main_gpu_utilization():
     assert gpu["upper_ci"] == int(overlay["forestplot"]["upper_ci"])
 
 
-def test_counts_ten_increased_one_decreased():
+def test_counts_nine_increased_two_decreased():
     payload = build_validated_synthesis()
     assert payload["counts"]["n_increased_belief"] == len(payload["counts"]["increased_effects"])
-    assert payload["counts"]["n_decreased_belief"] == 1  # noqa: PLR2004
-    assert payload["counts"]["decreased_effects"] == ["RAM Usage"]
+    assert payload["counts"]["n_decreased_belief"] == 2  # noqa: PLR2004
+    assert payload["counts"]["decreased_effects"] == ["mAP", "RAM Usage"]
     assert "F1 Score" in payload["counts"]["increased_effects"]
     assert "GPU Utilization" in payload["counts"]["increased_effects"]
 
@@ -88,8 +87,8 @@ def test_subgroup_has_nine_studies_and_complete_source_list():
 def test_aggregated_effects_table_uses_validated_beliefs():
     latex = render_aggregated_effects_table(build_validated_synthesis())
     assert r"GPU utilization & \{IF, WP\} & \textbf{97\%}" in latex
-    assert "Inf. power draw" in latex and "74\\%" in latex
-    assert "Inf. latency" in latex and r"\textbf{100\%}" in latex
+    assert "Inf. power draw" in latex and "83\\%" in latex
+    assert "Inf. latency" in latex and "80\\%" in latex
     assert "F$_1$-score" in latex
 
 
@@ -104,5 +103,5 @@ def test_write_all_validated_outputs(tmp_path):
     gpu_energy_rows = [row for row in loo.splitlines() if row.startswith("GPU energy")]
     assert len(gpu_energy_rows) == len({"S3", "S13", "S14"})
     analogue = (tmp_path / "belief-assignment.tex").read_text(encoding="utf-8")
-    assert "mAP & 2 & 4 & IF & 0.45" in analogue
-    assert "RAM usage & 2 & 3 & SP & 0.47" in analogue
+    assert "mAP & 2 & 4 & IF & 0.51" in analogue
+    assert "RAM usage & 2 & 3 & SP & 0.48" in analogue

@@ -55,6 +55,8 @@ CORE_TABLES = (
     TABLES_DIR / "subgroup-ptq-w-int8-a-int8.tex",
     TABLES_DIR / "intensity-thresholds.tex",
     TABLES_DIR / "result-macros.tex",
+    TABLES_DIR / "effective-sample-size.tex",
+    TABLES_DIR / "discount-parameter-sensitivity.tex",
 )
 PROCESSED_OUTPUT_FILENAMES = (
     "improvement_metrics.parquet",

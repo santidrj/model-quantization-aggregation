@@ -93,11 +93,7 @@ def test_xu_read_data_derives_switchboard_word_error_rate_from_component_columns
     paper = Papers.XU.value
     data = paper.read_data().collect()
 
-    row = data.filter(
-        (pl.col("dataset") == "Switchboard")
-        & (pl.col("Model") == "LSTM-RNN")
-        & (pl.col("lm_id") == 1)
-    )
+    row = data.filter((pl.col("dataset") == "Switchboard") & (pl.col("Model") == "LSTM-RNN") & (pl.col("lm_id") == 1))
     assert row.height == 1
     assert row["wer_avg_pct"].item() == pytest.approx(SWITCHBOARD_BASELINE_WER, rel=0, abs=1e-12)
 
@@ -106,11 +102,7 @@ def test_xu_read_data_derives_ami_word_error_rate_from_component_columns():
     paper = Papers.XU.value
     data = paper.read_data().collect()
 
-    row = data.filter(
-        (pl.col("dataset") == "AMI")
-        & (pl.col("Model") == "LSTM-RNN")
-        & (pl.col("lm_id") == 1)
-    )
+    row = data.filter((pl.col("dataset") == "AMI") & (pl.col("Model") == "LSTM-RNN") & (pl.col("lm_id") == 1))
     assert row.height == 1
     assert row["wer_avg_pct"].item() == pytest.approx(AMI_BASELINE_WER, rel=0, abs=1e-12)
 

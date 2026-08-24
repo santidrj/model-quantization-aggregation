@@ -10,7 +10,7 @@
       "precision_configuration": "w-int8, a-int8",
       "evidence_factory_id": 279077,
       "intensity_label": "positive",
-      "mass": 0.191
+      "mass": 0.266
     },
     {
       "index": 2,
@@ -20,7 +20,7 @@
       "precision_configuration": "full-int8",
       "evidence_factory_id": 279074,
       "intensity_label": "positive",
-      "mass": 0.191
+      "mass": 0.266
     },
     {
       "index": 3,
@@ -30,7 +30,7 @@
       "precision_configuration": "w-int8, a-int8",
       "evidence_factory_id": 278905,
       "intensity_label": "strongly positive",
-      "mass": 0.572
+      "mass": 0.628
     }
   ],
   "combination": {
@@ -41,7 +41,7 @@
         "hypothesis": [
           "PO"
         ],
-        "mass": 0.191
+        "mass": 0.266
       },
       {
         "index": 2,
@@ -49,7 +49,7 @@
         "hypothesis": [
           "PO"
         ],
-        "mass": 0.191
+        "mass": 0.266
       },
       {
         "index": 3,
@@ -57,7 +57,7 @@
         "hypothesis": [
           "SP"
         ],
-        "mass": 0.572
+        "mass": 0.628
       }
     ],
     "steps": [
@@ -77,13 +77,13 @@
               "PO",
               "SP"
             ],
-            "mass": 0.6544809999999999
+            "mass": 0.538756
           },
           {
             "hypothesis": [
               "PO"
             ],
-            "mass": 0.345519
+            "mass": 0.461244
           }
         ],
         "normalized_masses": [
@@ -97,25 +97,25 @@
               "PO",
               "SP"
             ],
-            "mass": 0.6544809999999999
+            "mass": 0.538756
           },
           {
             "hypothesis": [
               "PO"
             ],
-            "mass": 0.345519
+            "mass": 0.461244
           }
         ]
       },
       {
         "step": 2,
         "incoming_piece_index": 3,
-        "conflict": 0.197636868,
-        "normalization_factor": 0.802363132,
+        "conflict": 0.289661232,
+        "normalization_factor": 0.710338768,
         "unnormalized_masses": [
           {
             "hypothesis": [],
-            "mass": 0.197636868
+            "mass": 0.289661232
           },
           {
             "hypothesis": [
@@ -127,19 +127,19 @@
               "PO",
               "SP"
             ],
-            "mass": 0.280117868
+            "mass": 0.200417232
           },
           {
             "hypothesis": [
               "PO"
             ],
-            "mass": 0.14788213200000003
+            "mass": 0.171582768
           },
           {
             "hypothesis": [
               "SP"
             ],
-            "mass": 0.3743631319999999
+            "mass": 0.338338768
           }
         ],
         "normalized_masses": [
@@ -153,24 +153,24 @@
               "PO",
               "SP"
             ],
-            "mass": 0.34911607578699166
+            "mass": 0.2821431703133511
           },
           {
             "hypothesis": [
               "PO"
             ],
-            "mass": 0.18430823414254288
+            "mass": 0.24155061743722822
           },
           {
             "hypothesis": [
               "SP"
             ],
-            "mass": 0.46657569007046534
+            "mass": 0.4763062122494207
           }
         ]
       }
     ],
-    "mean_conflict": 0.098818434,
+    "mean_conflict": 0.144830616,
     "final_masses": [
       {
         "hypothesis": [
@@ -182,19 +182,19 @@
           "PO",
           "SP"
         ],
-        "mass": 0.34911607578699166
+        "mass": 0.2821431703133511
       },
       {
         "hypothesis": [
           "PO"
         ],
-        "mass": 0.18430823414254288
+        "mass": 0.24155061743722822
       },
       {
         "hypothesis": [
           "SP"
         ],
-        "mass": 0.46657569007046534
+        "mass": 0.4763062122494207
       }
     ]
   },
@@ -206,13 +206,13 @@
           "hypothesis": [
             "PO"
           ],
-          "mass": 0.18430823414254288
+          "mass": 0.24155061743722822
         },
         {
           "hypothesis": [
             "SP"
           ],
-          "mass": 0.46657569007046534
+          "mass": 0.4763062122494207
         }
       ],
       "selection_steps": [],
@@ -225,8 +225,8 @@
         "intensity": [
           "SP"
         ],
-        "belief": 0.46657569007046534,
-        "final_step_conflict": 0.197636868
+        "belief": 0.4763062122494207,
+        "final_step_conflict": 0.289661232
       }
     },
     "santos_2015": {
@@ -238,7 +238,7 @@
             "WP",
             "PO"
           ],
-          "mass": 0.18430823414254288
+          "mass": 0.24155061743722822
         },
         {
           "hypothesis": [
@@ -247,14 +247,14 @@
             "PO",
             "SP"
           ],
-          "mass": 0.6508839242130082
+          "mass": 0.717856829686649
         },
         {
           "hypothesis": [
             "WP",
             "PO"
           ],
-          "mass": 0.18430823414254288
+          "mass": 0.24155061743722822
         },
         {
           "hypothesis": [
@@ -262,26 +262,26 @@
             "PO",
             "SP"
           ],
-          "mass": 0.6508839242130082
+          "mass": 0.717856829686649
         },
         {
           "hypothesis": [
             "PO"
           ],
-          "mass": 0.18430823414254288
+          "mass": 0.24155061743722822
         },
         {
           "hypothesis": [
             "PO",
             "SP"
           ],
-          "mass": 0.6508839242130082
+          "mass": 0.717856829686649
         },
         {
           "hypothesis": [
             "SP"
           ],
-          "mass": 0.46657569007046534
+          "mass": 0.4763062122494207
         }
       ],
       "selection_steps": [
@@ -292,7 +292,7 @@
             "PO",
             "SP"
           ],
-          "parent_belief": 0.6508839242130082,
+          "parent_belief": 0.717856829686649,
           "children": [
             {
               "hypothesis": [
@@ -300,7 +300,7 @@
                 "WP",
                 "PO"
               ],
-              "mass": 0.18430823414254288
+              "mass": 0.24155061743722822
             },
             {
               "hypothesis": [
@@ -308,7 +308,7 @@
                 "PO",
                 "SP"
               ],
-              "mass": 0.6508839242130082
+              "mass": 0.717856829686649
             }
           ],
           "chosen_child": [
@@ -316,7 +316,7 @@
             "PO",
             "SP"
           ],
-          "threshold": 0.48816294315975617,
+          "threshold": 0.5383926222649867,
           "descended": true
         },
         {
@@ -325,28 +325,28 @@
             "PO",
             "SP"
           ],
-          "parent_belief": 0.6508839242130082,
+          "parent_belief": 0.717856829686649,
           "children": [
             {
               "hypothesis": [
                 "WP",
                 "PO"
               ],
-              "mass": 0.18430823414254288
+              "mass": 0.24155061743722822
             },
             {
               "hypothesis": [
                 "PO",
                 "SP"
               ],
-              "mass": 0.6508839242130082
+              "mass": 0.717856829686649
             }
           ],
           "chosen_child": [
             "PO",
             "SP"
           ],
-          "threshold": 0.48816294315975617,
+          "threshold": 0.5383926222649867,
           "descended": true
         },
         {
@@ -354,25 +354,25 @@
             "PO",
             "SP"
           ],
-          "parent_belief": 0.6508839242130082,
+          "parent_belief": 0.717856829686649,
           "children": [
             {
               "hypothesis": [
                 "PO"
               ],
-              "mass": 0.18430823414254288
+              "mass": 0.24155061743722822
             },
             {
               "hypothesis": [
                 "SP"
               ],
-              "mass": 0.46657569007046534
+              "mass": 0.4763062122494207
             }
           ],
           "chosen_child": [
             "SP"
           ],
-          "threshold": 0.48816294315975617,
+          "threshold": 0.5383926222649867,
           "descended": false
         }
       ],
@@ -386,8 +386,8 @@
           "PO",
           "SP"
         ],
-        "belief": 0.6508839242130082,
-        "final_step_conflict": 0.197636868
+        "belief": 0.717856829686649,
+        "final_step_conflict": 0.289661232
       }
     }
   }

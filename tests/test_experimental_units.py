@@ -4,6 +4,7 @@ from statsmodels.stats.weightstats import DescrStatsW
 
 from src.data.papers.entities import Papers
 from src.experimental_units import (
+    cluster_columns_for_metric,
     collapse_metric_to_units,
     grouping_columns_for_metric,
     unit_columns_for_precision,
@@ -58,6 +59,15 @@ def test_unit_level_statistics_omits_interval_for_n_eff_one_or_zero_variance():
     assert tied["upper_ci"] is None
 
 
+def test_unit_level_statistics_omits_interval_for_numerically_identical_values():
+    values = pl.Series("value", [75.0, 75.0 + 1e-12, 75.0 - 1e-12])
+    stats = unit_level_statistics(values)
+    assert stats["n_eff"] == 3
+    assert stats["mean"] == pytest.approx(75.0)
+    assert stats["lower_ci"] is None
+    assert stats["upper_ci"] is None
+
+
 def test_alizadeh_storage_and_energy_precision_unit_counts():
     paper = Papers.ALIZADEH.value
     frame = pl.read_parquet(f"data/processed/{paper.KEY}/improvement_metrics.parquet")
@@ -103,3 +113,52 @@ def test_gonzalez_latency_precision_unit_count_ignores_replicates():
 
     assert frame.height == 28_000
     assert units.height == 28
+
+
+def test_cluster_columns_drop_only_evaluation_context():
+    alizadeh = Papers.ALIZADEH.value
+    assert cluster_columns_for_metric("gpu_energy_consumption", alizadeh) == ["Model"]
+    assert cluster_columns_for_metric("storage_size", alizadeh) == ["Model"]
+    assert cluster_columns_for_metric("inference_latency", Papers.FLICH.value) == ["Model", "device"]
+    assert cluster_columns_for_metric("accuracy", Papers.DEPUTTER.value) == [
+        "Device",
+        "Model",
+        "Filter Multiplier",
+    ]
+    assert cluster_columns_for_metric("inference_latency", Papers.GONZALEZ.value) == ["Model"]
+
+
+def test_nested_units_count_clusters_as_n_eff_and_keep_experimental_unit_mean():
+    values = pl.Series("value", [10.0, 11.0, 12.0, 13.0, 30.0, 31.0, 32.0, 33.0])
+    clusters = pl.Series("cluster", ["a", "a", "a", "a", "b", "b", "b", "b"])
+    stats = unit_level_statistics(values, cluster_ids=clusters)
+    iid = unit_level_statistics(values)
+    assert stats["n_eff"] == 2
+    assert stats["mean"] == pytest.approx(21.5)
+    assert iid["n_eff"] == 8
+    assert stats["lower_ci"] < iid["lower_ci"]
+    assert stats["upper_ci"] > iid["upper_ci"]
+    assert stats["lower_ci"] < stats["mean"] < stats["upper_ci"]
+
+
+def test_one_to_one_clusters_keep_student_t_interval():
+    values = pl.Series("value", [10.0, 20.0, 30.0])
+    clusters = pl.Series("cluster", ["a", "b", "c"])
+    clustered = unit_level_statistics(values, cluster_ids=clusters)
+    iid = unit_level_statistics(values)
+    assert clustered == iid
+
+
+def test_alizadeh_energy_n_eff_is_model_family_count():
+    paper = Papers.ALIZADEH.value
+    frame = pl.read_parquet(f"data/processed/{paper.KEY}/improvement_metrics.parquet")
+    unit_columns = unit_columns_for_precision("gpu_energy_consumption", paper)
+    energy_units = collapse_metric_to_units(frame, "gpu_energy_consumption", unit_columns).filter(
+        pl.col("precision_configuration") == "w-int4"
+    )
+    cluster_columns = [column for column in unit_columns if column not in {"Dataset", "dataset", "task"}]
+    cluster_ids = energy_units.select(pl.concat_str(cluster_columns, separator="\0")).to_series()
+    stats = unit_level_statistics(energy_units["gpu_energy_consumption_improvement"], cluster_ids=cluster_ids)
+    assert energy_units.height == 72
+    assert stats["n_eff"] == 18
+    assert stats["mean"] == pytest.approx(energy_units["gpu_energy_consumption_improvement"].mean())
