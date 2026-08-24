@@ -49,7 +49,7 @@ The SSM diagrammatic representation of one theoretical structure, carrying that 
 _Avoid_: Experimental unit; DL model; incoming evidence model (when the Evidence Factory merge side is meant)
 
 **Evidence-model effect**:
-One effect carried by one evidence model. This is the grain at which \(n_{\mathrm{eff}}\), the sample-size discount, the variability discount, and discounted support mass are defined, and the observation in the effective-sample-size summary table.
+One effect carried by one evidence model. This is the grain at which \(n_{\mathrm{eff}}\), the sample-size discount, the variability discount, discount residual, and discounted support mass are defined, and the observation in the effective-sample-size summary table.
 _Avoid_: Study (when an effect-level \(n_{\mathrm{eff}}\) is meant); experimental unit; theoretical structure (the whole by-precision aggregation)
 
 **Operational system**:
@@ -180,7 +180,11 @@ _Avoid_: Belief as an effect-level posterior; quality-rubric score (when the sto
 
 **Discounted support mass**:
 The study belief after sample-size and variability discounts, assigned as simple-support mass to one evidence-model effect. The processed Evidence Factory-compatible field is named `belief`; this value is not the combined belief measure.
-_Avoid_: Study belief; belief measure; posterior belief
+_Avoid_: Study belief; belief measure; posterior belief; discount residual; Evidence Factory `p_value`
+
+**Discount residual**:
+The complementary discount \(1-\alpha_n\alpha_v\) on one evidence-model effect, the share of mass those discounts transfer toward \(\Theta\). Evidence Factory names this field `p_value`; it is not a statistical p-value and not discounted support mass.
+_Avoid_: p-value (statistical); discounted support mass; study belief; belief measure
 
 **Mass function**:
 The Dempster–Shafer basic probability assignment \(m\) over subsets of the effect-intensity frame, including residual mass on \(\Theta\). It is the state combined between successive evidence pieces.

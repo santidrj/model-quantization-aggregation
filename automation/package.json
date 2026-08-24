@@ -9,7 +9,9 @@
     "start:anon": "tsx src/index.ts --allow-anonymous --target test --human-default add",
     "typecheck": "tsc --noEmit",
     "probe": "tsx src/probeLive.ts",
-    "probe:remove": "tsx src/probeLive.ts --remove"
+    "probe:remove": "tsx src/probeLive.ts --remove",
+    "editor:plan": "tsx src/evidenceEditor/cli.ts plan",
+    "editor:apply": "tsx src/evidenceEditor/cli.ts apply"
   },
   "engines": {
     "node": ">=20"

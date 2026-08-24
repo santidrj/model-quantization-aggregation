@@ -58,6 +58,21 @@ npm run start:anon
 
 `--human-default add|remove|abort` answers residual human decision points without a terminal prompt. Set `EF_CAPTURE_RESULT=1` to dump the result-page tree text and a screenshot to `/tmp/ef-golden-result.png` after submit.
 
+## Evidence editor write-back
+
+Sync locally processed effect intensity, discount residual (`p_value`), and effect comments (supporting statistics) onto Evidence Factory evidence editors. Domain language: `evidence-editor/CONTEXT.md`.
+
+```bash
+# Live-read editors, print deltas. Does not write. Safe while mapping integrity is broken.
+npm run editor:plan
+
+# Write deltas. Refused for the whole corpus while mapping integrity fails.
+# Reuses .auth/storage-state.json (run npm run auth first).
+npm run editor:apply
+```
+
+The plan/catalog logic lives in `src/evidence_editor_sync.py` (`uv run python -m src.evidence_editor_sync plan`).
+
 ## Config
 
 - Named targets and semantic map: `src/config.ts` (`EF_TARGET`, `EF_SYNTHESIS_ID`)
