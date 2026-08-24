@@ -44,6 +44,19 @@ function pythonSync(args: string[], input?: string): string {
   });
 }
 
+type EvidenceDto = {
+  relationships?: Array<Record<string, unknown>>;
+};
+
+/** GET DTOs include nested term objects; POST rejects them and returns HTTP 500. */
+function stripRelationshipTerms(dto: EvidenceDto): EvidenceDto {
+  for (const relationship of dto.relationships ?? []) {
+    delete relationship.toTerm;
+    delete relationship.fromTerm;
+  }
+  return dto;
+}
+
 function printFaults(faults: MappingFault[]): void {
   console.error("Apply refused: mapping integrity faults");
   for (const fault of faults) {
@@ -67,9 +80,9 @@ async function applyPlans(plans: ModelPlan[]): Promise<void> {
         throw new Error(`Failed to read evidence ${plan.evidence_factory_id}: HTTP ${getResponse.status()}`);
       }
       const dto = await getResponse.json();
-      const patched = JSON.parse(
-        pythonSync(["patch-dto"], JSON.stringify({ dto, deltas: plan.deltas })),
-      ) as unknown;
+      const patched = stripRelationshipTerms(
+        JSON.parse(pythonSync(["patch-dto"], JSON.stringify({ dto, deltas: plan.deltas }))) as EvidenceDto,
+      );
       const postResponse = await page.request.post(`${config.baseUrl}/evidenceEditor`, {
         data: [patched],
         headers: { "content-type": "application/json" },
