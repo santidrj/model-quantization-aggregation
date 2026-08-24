@@ -46,6 +46,44 @@ _CAUSE_EFFECT_INTENSITY_BY_PROPOSITION: dict[tuple[int, float], str] = {
 
 EVIDENCE_DATA_URL = "https://evidencefactory.lens-ese.cos.ufrj.br/evidenceEditor/evidencedata"
 
+# Evidence Factory Effect-node display names → local processed effect labels (_effect_name).
+_EFFECT_LABEL_ALIASES = {
+    "dice coefficient": "DSC",
+    "dice score": "DSC",
+    "dice similarity coefficient": "DSC",
+    "model storage size": "Storage Size",
+    "classification accuracy": "Accuracy",
+    "inference latency": "Inference Latency",
+    "ram energy consumption": "RAM Energy Consumption",
+    "gpu power draw": "GPU Power Draw",
+    "gpu energy": "GPU Energy Consumption",
+    "gpu energy consumption": "GPU Energy Consumption",
+    "bleu score": "BLEU",
+    "f1": "F1 Score",
+    "f-score": "F1 Score",
+    "f1-score": "F1 Score",
+    "f1 score": "F1 Score",
+    "wer": "Word Error Rate",
+    "mean iou": "mIoU",
+    "mean intersection over union (miou)": "mIoU",
+    "mean intersection over union": "mIoU",
+    "mean average precision": "mAP",
+    "map50": "mAP@0.5",
+    "map@0.5": "mAP@0.5",
+    "clock cycle": "Inference Latency",
+    "clock cycles": "Inference Latency",
+}
+
+
+def _fold_label(label: str) -> str:
+    return " ".join(label.split()).casefold()
+
+
+def canonical_effect_label(label: str) -> str:
+    """Local effect name for an Evidence Factory or processed display label."""
+    folded = _fold_label(label)
+    return _fold_label(_EFFECT_LABEL_ALIASES.get(folded, folded))
+
 
 def intensity_control_option(processed_intensity: str) -> str:
     """Title-case phrase matching the evidence editor intensity drop-down."""
@@ -131,6 +169,7 @@ class EffectDelta:
     intensity_option: str
     p_value: float
     comment: str
+    differs: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -156,12 +195,12 @@ def _comments_match(desired: str, live: str | None) -> bool:
 def plan_model(desired: DesiredModel, live_elements: tuple[LiveElement, ...]) -> ModelPlan:
     """Diff one evidence model against live evidence-editor elements."""
     effect_nodes = [element for element in live_elements if element.kind.lower() == "effect"]
-    nodes_by_label: dict[str, list[LiveElement]] = {}
+    nodes_by_canonical: dict[str, list[LiveElement]] = {}
     for node in effect_nodes:
-        nodes_by_label.setdefault(node.label, []).append(node)
+        nodes_by_canonical.setdefault(canonical_effect_label(node.label), []).append(node)
 
-    desired_labels = {effect.label for effect in desired.effects}
-    extra = tuple(node.label for node in effect_nodes if node.label not in desired_labels)
+    desired_canonical = {canonical_effect_label(effect.label) for effect in desired.effects}
+    extra = tuple(node.label for node in effect_nodes if canonical_effect_label(node.label) not in desired_canonical)
 
     deltas: list[EffectDelta] = []
     unmatched: list[str] = []
@@ -171,7 +210,7 @@ def plan_model(desired: DesiredModel, live_elements: tuple[LiveElement, ...]) ->
     for effect in desired.effects:
         if not effect.complete:
             continue
-        matches = nodes_by_label.get(effect.label, [])
+        matches = nodes_by_canonical.get(canonical_effect_label(effect.label), [])
         if len(matches) == 0:
             unmatched.append(effect.label)
             continue
@@ -180,17 +219,24 @@ def plan_model(desired: DesiredModel, live_elements: tuple[LiveElement, ...]) ->
             continue
         live = matches[0]
         comment = effect.comment or ""
-        if (
-            live.intensity != effect.intensity_option
-            or live.p_value != effect.p_value
-            or not _comments_match(comment, live.comment)
-        ):
+        intensity_differs = live.intensity != effect.intensity_option
+        p_value_differs = live.p_value != effect.p_value
+        comment_differs = not _comments_match(comment, live.comment)
+        if intensity_differs or p_value_differs or comment_differs:
+            differs: list[str] = []
+            if intensity_differs:
+                differs.append("intensity")
+            if p_value_differs:
+                differs.append("discount_residual")
+            if comment_differs:
+                differs.append("comment")
             deltas.append(
                 EffectDelta(
-                    label=effect.label,
+                    label=live.label,
                     intensity_option=effect.intensity_option or "",
                     p_value=effect.p_value or 0.0,
                     comment=comment,
+                    differs=tuple(differs),
                 )
             )
 
@@ -469,6 +515,12 @@ def collect_live_plans(catalog: WriteBackCatalog) -> tuple[ModelPlan, ...]:
     return plan_catalog(catalog, live_by_id)
 
 
+def _delta_differs_phrase(differs: tuple[str, ...]) -> str:
+    joined = ", ".join(differs)
+    verb = "differs" if len(differs) == 1 else "differ"
+    return f"{joined} {verb}"
+
+
 def render_plan(catalog: WriteBackCatalog, plans: tuple[ModelPlan, ...]) -> str:
     lines: list[str] = []
     if catalog.faults:
@@ -493,8 +545,8 @@ def render_plan(catalog: WriteBackCatalog, plans: tuple[ModelPlan, ...]) -> str:
         if plan.deltas:
             for delta in plan.deltas:
                 lines.append(
-                    f"  delta {delta.label}: intensity={delta.intensity_option} "
-                    f"discount_residual={delta.p_value} comment=replaced"
+                    f"  delta {delta.label}: {_delta_differs_phrase(delta.differs)} "
+                    f"(intensity={delta.intensity_option} discount_residual={delta.p_value})"
                 )
         else:
             lines.append("  no deltas")

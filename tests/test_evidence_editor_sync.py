@@ -146,6 +146,22 @@ def test_plan_reports_delta_when_live_intensity_or_discount_residual_or_comment_
     plan = plan_model(desired, live)
     assert [delta.label for delta in plan.deltas] == ["Accuracy"]
     assert plan.deltas[0].intensity_option == "Indifferent"
+    assert plan.deltas[0].differs == ("intensity",)
+
+
+def test_plan_delta_lists_comment_when_only_effect_comment_differs():
+    desired = _accuracy_model()
+    live = (
+        LiveElement(
+            label="Accuracy",
+            kind="Effect",
+            intensity="Indifferent",
+            p_value=0.136,
+            comment="old free text",
+        ),
+    )
+    plan = plan_model(desired, live)
+    assert plan.deltas[0].differs == ("comment",)
 
 
 def test_plan_fails_effect_when_label_matches_two_nodes():
@@ -157,6 +173,108 @@ def test_plan_fails_effect_when_label_matches_two_nodes():
     plan = plan_model(desired, live)
     assert plan.ambiguous_local_effects == ("Accuracy",)
     assert plan.deltas == ()
+
+
+def test_plan_matches_ef_label_aliases_and_writes_the_live_display_name():
+    desired = DesiredModel(
+        study_id="S10",
+        evidence_factory_id=260079,
+        quantization_method="ptq",
+        precision_configuration="w-int8, a-int8",
+        effects=(
+            desired_effect("dsc", _COMPLETE_ACCURACY),
+            desired_effect("storage_size", {**_COMPLETE_ACCURACY, "intensity": "strongly positive"}),
+            desired_effect("accuracy", _COMPLETE_ACCURACY),
+            desired_effect("inference_energy_consumption", {**_COMPLETE_ACCURACY, "intensity": "strongly positive"}),
+        ),
+    )
+    live = (
+        LiveElement("Dice coefficient", "Effect", "Strongly Positive", 0.9, "{}"),
+        LiveElement("Model storage size", "Effect", "Indifferent", 0.9, "{}"),
+        LiveElement("Classification accuracy", "Effect", "Strongly Positive", 0.9, "{}"),
+        LiveElement("Inference energy consumption", "Effect", "Indifferent", 0.9, "{}"),
+    )
+    plan = plan_model(desired, live)
+    assert plan.unmatched_local_effects == ()
+    assert plan.extra_effect_nodes == ()
+    assert plan.ambiguous_local_effects == ()
+    assert [delta.label for delta in plan.deltas] == [
+        "Dice coefficient",
+        "Model storage size",
+        "Classification accuracy",
+        "Inference energy consumption",
+    ]
+
+
+def test_plan_treats_accuracy_and_classification_accuracy_as_the_same_effect():
+    desired = _accuracy_model()
+    live = (
+        LiveElement("Accuracy", "Effect", "Indifferent", 0.136, desired.effects[0].comment),
+        LiveElement("Classification accuracy", "Effect", "Strongly Positive", 0.9, "{}"),
+    )
+    plan = plan_model(desired, live)
+    assert plan.ambiguous_local_effects == ("Accuracy",)
+    assert plan.deltas == ()
+
+
+def test_plan_matches_ef_inference_latency_storage_accuracy_ram_and_gpu_labels():
+    desired = DesiredModel(
+        study_id="S13",
+        evidence_factory_id=1,
+        quantization_method="ptq",
+        precision_configuration="w-int8",
+        effects=(
+            desired_effect("inference_latency", _COMPLETE_ACCURACY),
+            desired_effect("storage_size", _COMPLETE_ACCURACY),
+            desired_effect("accuracy", _COMPLETE_ACCURACY),
+            desired_effect("ram_energy_consumption", _COMPLETE_ACCURACY),
+            desired_effect("gpu_power_draw", _COMPLETE_ACCURACY),
+            desired_effect("gpu_energy_consumption", _COMPLETE_ACCURACY),
+        ),
+    )
+    live = (
+        LiveElement("Inference latency", "Effect", "Strongly Positive", 0.9, "{}"),
+        LiveElement("Model storage size", "Effect", "Strongly Positive", 0.9, "{}"),
+        LiveElement("Classification accuracy", "Effect", "Strongly Positive", 0.9, "{}"),
+        LiveElement("RAM energy consumption", "Effect", "Strongly Positive", 0.9, "{}"),
+        LiveElement("GPU power draw", "Effect", "Strongly Positive", 0.9, "{}"),
+        LiveElement("GPU energy consumption", "Effect", "Strongly Positive", 0.9, "{}"),
+    )
+    plan = plan_model(desired, live)
+    assert plan.unmatched_local_effects == ()
+    assert plan.extra_effect_nodes == ()
+    assert [delta.label for delta in plan.deltas] == [
+        "Inference latency",
+        "Model storage size",
+        "Classification accuracy",
+        "RAM energy consumption",
+        "GPU power draw",
+        "GPU energy consumption",
+    ]
+
+
+def test_plan_matches_map50_and_mean_iou_ef_labels():
+    desired = DesiredModel(
+        study_id="S15",
+        evidence_factory_id=1,
+        quantization_method="qat",
+        precision_configuration="w-int8",
+        effects=(
+            desired_effect("mAP_5", _COMPLETE_ACCURACY),
+            desired_effect("mIoU", _COMPLETE_ACCURACY),
+        ),
+    )
+    live = (
+        LiveElement("mAP50", "Effect", "Strongly Positive", 0.9, "{}"),
+        LiveElement("Mean Intersection over Union (mIoU)", "Effect", "Strongly Positive", 0.9, "{}"),
+    )
+    plan = plan_model(desired, live)
+    assert plan.unmatched_local_effects == ()
+    assert plan.extra_effect_nodes == ()
+    assert [delta.label for delta in plan.deltas] == [
+        "mAP50",
+        "Mean Intersection over Union (mIoU)",
+    ]
 
 
 def test_plan_skips_incomplete_effects_and_warns_on_unmatched_and_extra_effects():
@@ -221,11 +339,7 @@ def test_plan_does_not_open_duplicated_ids_but_live_reads_intact_studies():
         mapping_ids_by_study={"S1": [11], "S4": [21, 21]},
         record_counts_by_study={"S1": 1, "S4": 2},
     )
-    live = {
-        11: (
-            LiveElement("Accuracy", "Effect", "Strongly Positive", 0.5, "{}"),
-        )
-    }
+    live = {11: (LiveElement("Accuracy", "Effect", "Strongly Positive", 0.5, "{}"),)}
     plans = plan_catalog(catalog, live)
     assert [plan.evidence_factory_id for plan in plans] == [11]
     assert plans[0].deltas[0].label == "Accuracy"
@@ -358,6 +472,36 @@ def test_apply_deltas_updates_matching_causes_and_leaves_belief_alone():
     assert relationship["explanation"] == '{"p_value": 0.136}'
     assert relationship["beliefProbability"] == 0.4
     assert dto["relationships"][0]["pValue"] == 0.9
+
+
+def test_apply_deltas_patches_the_live_ef_display_name():
+    dto = {
+        "id": 1,
+        "relationships": [
+            {
+                "type": "CAUSES",
+                "toTerm": {"name": "Dice coefficient"},
+                "propositionId": 30,
+                "propositionOrder": 0.0,
+                "pValue": 0.9,
+                "explanation": "old",
+                "beliefProbability": 0.4,
+            }
+        ],
+    }
+    updated = apply_deltas_to_evidence_dto(
+        dto,
+        (
+            EffectDelta(
+                label="Dice coefficient",
+                intensity_option="Indifferent",
+                p_value=0.136,
+                comment='{"p_value": 0.136}',
+            ),
+        ),
+    )
+    assert updated["relationships"][0]["pValue"] == 0.136
+    assert updated["relationships"][0]["toTerm"]["name"] == "Dice coefficient"
 
 
 def test_apply_deltas_skips_when_label_matches_two_causes():

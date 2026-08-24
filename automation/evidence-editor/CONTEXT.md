@@ -33,8 +33,12 @@ A one-to-one, unique alignment of evidence-diagram mapping IDs to by-precision e
 _Avoid_: Last-write-wins on a duplicated ID; applying every other study while one mapping is broken; treating mapping repair as part of write-back
 
 **Unmatched local effect**:
-A local evidence-model effect whose label matches no Effect node on that evidence editor. Write-back skips it and warns.
+A local evidence-model effect whose label matches no Effect node on that evidence editor, after effect-label aliases. Write-back skips it and warns.
 _Avoid_: Creating an Effect node; matching by page order
+
+**Effect-label alias**:
+An Evidence Factory Effect-node display name that denotes the same evidence-model effect as a local processed label (e.g. `Dice coefficient` for local `DSC`, `Model storage size` for `Storage Size`, `Classification accuracy` for `Accuracy`, `Inference latency` for `Inference Latency`, `RAM energy consumption` for `RAM Energy Consumption`, `GPU power draw` for `GPU Power Draw`, `GPU energy consumption` for `GPU Energy Consumption`, `mAP50` for `mAP@0.5`, `Mean Intersection over Union (mIoU)` for `mIoU`). Write-back matches aliases and case-insensitive wording; it writes the live display name. Two live nodes that alias the same local effect are ambiguous.
+_Avoid_: Matching by page order; treating an alias as an extra effect node
 
 **Extra effect node**:
 An Effect node on the evidence editor that matches no local evidence-model effect. Write-back warns and does not edit it.
