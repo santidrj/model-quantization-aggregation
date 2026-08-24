@@ -22,8 +22,8 @@ def test_alizadeh_wint4_energy_sample_size_discount_uses_model_family_n_eff():
     )["n_eff"].item()
     assert energy_n == 18
     assert storage_n == 18
-    assert energy["sample_size_discount"] == 1.0
-    assert storage["sample_size_discount"] == 1.0
+    assert energy["sample_size_discount"] == 0.998
+    assert storage["sample_size_discount"] == 0.998
     storage_stats = stats.filter(
         (pl.col("configuration").struct.field("precision_configuration") == "w-int4")
         & (pl.col("effect") == "Storage Size")

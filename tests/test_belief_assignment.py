@@ -32,10 +32,10 @@ AJI_PROCESSED_BELIEF = 0.327
 CORPUS_EVIDENCE_MODEL_COUNT = 76
 ACCURACY_EVIDENCE_MODEL_COUNT = 41
 ACCURACY_PRIMARY_STUDY_COUNT = 10
-ACCURACY_LOO_FULL_BELIEF = 1.00
-ACCURACY_LOO_BELIEF = 0.74
+ACCURACY_LOO_FULL_BELIEF = 0.99
+ACCURACY_LOO_BELIEF = 0.78
 RAM_USAGE_EVIDENCE_MODEL_COUNT = 3
-RAM_USAGE_SANTOS_BELIEF_PERCENT = 72
+RAM_USAGE_SANTOS_BELIEF_PERCENT = 65
 ROOT_EXAMPLE_STUDY_BELIEF = 0.75
 ROOT_EXAMPLE_EVIDENCE_MODEL_COUNT = 2
 ROOT_EXAMPLE_MASS = 0.5
@@ -237,7 +237,7 @@ def test_undiscounted_synthesis_uses_explicit_santos_policy():
 
 def test_comparison_records_use_santos_2015_for_every_local_assignment():
     records = {record["effect"]: record for record in comparison_records()}
-    assert records["mAP"]["analogue_intensity"] == "IF"
+    assert records["mAP"]["analogue_intensity"] == "{NE, WN, IF}"
     assert records["mAP"]["mass_preserving_intensity"] == "{NE, WN, IF}"
     assert records["mAP"]["equitable_intensity"] == "{NE, WN, IF}"
     assert records["RAM Usage"]["analogue_intensity"] == "{PO, SP}"
@@ -313,10 +313,10 @@ def test_leave_one_study_out_gpu_energy_reports_all_omissions_when_belief_rises(
     assert all(row.belief_delta > 0 for row in gpu_energy)
 
 
-def test_leave_one_study_out_worst_drop_for_accuracy_is_s11():
+def test_leave_one_study_out_worst_drop_for_accuracy_is_s13():
     records = {row.effect: row for row in leave_one_study_out_records()}
     accuracy = records["Accuracy"]
-    assert accuracy.omitted_study_id == "S11"
+    assert accuracy.omitted_study_id == "S13"
     assert round(accuracy.full_belief, 2) == ACCURACY_LOO_FULL_BELIEF
     assert round(accuracy.loo_belief, 2) == ACCURACY_LOO_BELIEF
     assert accuracy.intensity_changed

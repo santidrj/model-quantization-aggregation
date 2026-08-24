@@ -191,8 +191,8 @@ The Dempster–Shafer quantity \(\mathrm{Bel}(A)=\sum_{B\subseteq A}m(B)\) for a
 _Avoid_: Study belief; discounted support mass; posterior probability
 
 **Sample-size discount**:
-The reliability factor \(\alpha_n = 1 - e^{-n_{\mathrm{eff}}/n_0}\) applied to study belief for one evidence-model effect. The saturation parameter \(n_0\) is the third quartile of the effective-sample-size distribution over evidence-model effects, recomputed when that distribution's population or unit definition changes.
-_Avoid_: Freezing \(n_0=3\) after the table population changes; calibrating \(n_0\) to studies rather than evidence-model effects; treating the code comment "median" as the rule
+The reliability factor \(\alpha_n = 1 - e^{-n_{\mathrm{eff}}/n_0}\) applied to study belief for one evidence-model effect. The saturation parameter \(n_0\) is 3, the integer nearest \(2/\ln 2\), so that two independent cluster units sit at the median of that factor (\(\alpha_n(2)\approx 0.49\)) rather than at the characteristic point \(1-1/e\). The observed \(n_{\mathrm{eff}}\) distribution is diagnostic; it does not choose \(n_0\).
+_Avoid_: Treating the third quartile of the \(n_{\mathrm{eff}}\) table as \(n_0\); claiming Dempster–Shafer theory, SSM, or reliability engineering require \(n_0=3\); calibrating \(n_0\) to studies rather than cluster units
 
 **Variability discount**:
 The reliability factor applied to study belief when relative improvements inside one by-precision aggregation are heterogeneous. The IQR is taken over the experimental-unit relative improvements in that aggregation. The main-analysis denominator is \(\mu+\varepsilon\) with a numerical stabilizer \(\varepsilon\), not a negligible-effect floor. Distinct from by-precision aggregation itself, which is the grouping, not the discount.

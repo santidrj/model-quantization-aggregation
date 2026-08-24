@@ -28,7 +28,7 @@ def test_render_effective_sample_size_table_includes_quartiles():
     assert "18" in latex
 
 
-def test_discount_sensitivity_rows_skip_duplicate_n0_when_q3_equals_two():
+def test_discount_sensitivity_rows_include_two_three_and_six_with_three_as_reference():
     model = EvidenceModel(
         study_id="S1",
         quantization_method="ptq",
@@ -38,9 +38,10 @@ def test_discount_sensitivity_rows_skip_duplicate_n0_when_q3_equals_two():
         effects={"Accuracy": ("indifferent", 0.5)},
     )
     inputs = {("S1", "ptq", "w-int8", "Accuracy"): (2, 0.0, 1.0)}
-    rows = discount_sensitivity_rows([model], inputs, n0_main=2)
-    n0_labels = [row.label for row in rows if row.label.startswith("$n_0=")]
-    assert n0_labels == ["$n_0=2$", "$n_0=6$"]
+    rows = discount_sensitivity_rows([model], inputs)
+    n0_rows = [row for row in rows if row.label.startswith("$n_0=")]
+    assert [row.label for row in n0_rows] == ["$n_0=2$", "$n_0=3$", "$n_0=6$"]
+    assert [row.is_reference for row in n0_rows] == [False, True, False]
 
 
 def test_render_discount_sensitivity_table_marks_reference_row():

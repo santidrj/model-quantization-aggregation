@@ -8,7 +8,7 @@ import math
 
 import polars as pl
 
-DEFAULT_SATURATION_SIZE = 2
+DEFAULT_SATURATION_SIZE = 3  # integer nearest 2 / ln 2; α_n(2) is the median of 1-e^{-n/n_0}
 DEFAULT_VARIABILITY_K = 0.1
 DEFAULT_VARIABILITY_CUTOFF = 4
 EPSILON = 1e-10
@@ -50,7 +50,7 @@ def discounted_belief(  # noqa: PLR0913
 
 
 def saturation_parameter(n_effs: Sequence[int]) -> int:
-    """n0 as the third quartile of evidence-model-effect n_eff."""
+    """Third quartile of evidence-model-effect n_eff (diagnostic; not n_0)."""
     if not n_effs:
         raise ValueError("saturation_parameter requires at least one n_eff")
     quartile = float(pl.Series(list(n_effs), dtype=pl.Float64).quantile(0.75))

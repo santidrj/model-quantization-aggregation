@@ -16,8 +16,8 @@ def test_sathish_wint8_discounts_use_task_specific_unit_counts():
     dsc = row["dsc"]
     energy = row["inference_energy_consumption"]
 
-    assert accuracy["sample_size_discount"] == 0.777
-    assert dsc["sample_size_discount"] == 0.777
-    assert accuracy["belief"] == 0.306
-    assert dsc["belief"] == 0.306
-    assert energy["sample_size_discount"] == 0.950
+    assert accuracy["sample_size_discount"] == 0.632
+    assert dsc["sample_size_discount"] == 0.632
+    assert accuracy["belief"] == 0.249
+    assert dsc["belief"] == 0.249
+    assert energy["sample_size_discount"] == 0.865

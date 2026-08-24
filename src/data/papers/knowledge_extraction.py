@@ -4,6 +4,7 @@ from os import PathLike
 import numpy as np
 import polars as pl
 
+from src.belief_discounts import DEFAULT_SATURATION_SIZE
 from src.data.papers.entities import CorrectnessMetrics, Paper, Papers
 from src.data.papers.metric_polarity import is_minimized_correctness_metric
 from src.data.papers.precision_nomenclature import (
@@ -30,7 +31,7 @@ CORRECTNESS_METRICS = CorrectnessMetrics()
 Q1 = 0.25
 Q3 = 0.75
 DISCOUNT_FACTOR = 0.1
-STABILIZATION_SIZE = 2  # Third quartile of evidence-model-effect cluster n_eff
+STABILIZATION_SIZE = DEFAULT_SATURATION_SIZE
 EPSILON = 1e-10
 MIN_SAMPLE_SIZE_FOR_VARIABILITY_DISCOUNT = 4
 

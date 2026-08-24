@@ -20,14 +20,13 @@ from src.belief_discounts import (
     DEFAULT_VARIABILITY_CUTOFF,
     DEFAULT_VARIABILITY_K,
     discounted_belief,
-    saturation_parameter,
     summarize_effective_sample_sizes,
 )
 from src.config import PROCESSED_DATA_DIR, TABLES_DIR
 from src.data.papers.entities import Papers
 from src.dempster_shafer import format_intensity
 
-N0_GRID = (2, "q3", 6)
+N0_GRID = (2, 3, 6)
 K_GRID = (0.05, 0.1, 0.2)
 CUTOFF_GRID = (3, 4, 8)
 ACCURACY_EFFECT = "Accuracy"
@@ -150,7 +149,7 @@ def discount_sensitivity_rows(
     specs: list[tuple[str, float, float, int, bool]] = []
     seen_n0: set[float] = set()
     for item in N0_GRID:
-        n0 = float(n0_main if item == "q3" else item)
+        n0 = float(item)
         if n0 in seen_n0:
             continue
         seen_n0.add(n0)
@@ -229,7 +228,7 @@ def write_discount_sensitivity_tables(
     directory = output_dir or TABLES_DIR
     directory.mkdir(parents=True, exist_ok=True)
     n_effs = load_precision_n_effs(processed_root)
-    n0_main = saturation_parameter(n_effs) if n_effs else DEFAULT_SATURATION_SIZE
+    n0_main = DEFAULT_SATURATION_SIZE
     sample_path = directory / "effective-sample-size.tex"
     sample_path.write_text(render_effective_sample_size_table(n_effs or [1]), encoding="utf-8")
     loaded_models = models if models is not None else load_evidence_models(processed_root)

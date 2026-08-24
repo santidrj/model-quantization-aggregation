@@ -13,7 +13,9 @@ def test_sample_size_reliability_matches_worked_examples():
     assert sample_size_reliability(1, n0=3) == 0.283
     assert sample_size_reliability(2, n0=3) == 0.487
     assert sample_size_reliability(18, n0=3) == 0.998
-    assert sample_size_reliability(18) == 1.0
+    assert sample_size_reliability(1) == 0.283
+    assert sample_size_reliability(2) == 0.487
+    assert sample_size_reliability(18) == 0.998
     assert sample_size_reliability(72) == 1.0
 
 
@@ -35,8 +37,8 @@ def test_discounted_belief_uses_both_reliabilities():
     assert discounted_belief(0.713, n_eff=18, iqr=0.0, mean=75.0, n0=3) == 0.712
 
 
-def test_saturation_parameter_is_third_quartile():
-    assert saturation_parameter([1, 1, 1, 2, 2, 3, 3, 18]) == 3
+def test_saturation_parameter_is_third_quartile_of_n_eff_not_n0():
+    assert saturation_parameter([1, 1, 1, 2, 2, 2, 2, 18]) == 2
 
 
 def test_summarize_effective_sample_sizes_reports_quartiles():

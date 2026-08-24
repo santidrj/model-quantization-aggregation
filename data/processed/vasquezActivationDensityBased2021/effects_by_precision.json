@@ -6,11 +6,11 @@
             "improvement": 79.835,
             "std": 0.907,
             "iqr": 1.283,
-            "sample_size_discount": 0.632,
+            "sample_size_discount": 0.487,
             "variability_discount": 1.0,
-            "discount_factor": 0.632,
-            "p_value": 0.368,
-            "belief": 0.24,
+            "discount_factor": 0.487,
+            "p_value": 0.513,
+            "belief": 0.185,
             "intensity": "strongly positive"
         }
     }

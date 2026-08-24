@@ -6,22 +6,22 @@
             "improvement": -0.276,
             "std": 0.551,
             "iqr": 0.0,
-            "sample_size_discount": 0.989,
+            "sample_size_discount": 0.95,
             "variability_discount": 1.0,
-            "discount_factor": 0.989,
-            "p_value": 0.011,
-            "belief": 0.669,
+            "discount_factor": 0.95,
+            "p_value": 0.05,
+            "belief": 0.642,
             "intensity": "indifferent"
         },
         "storage_size": {
             "improvement": 72.431,
             "std": 2.575,
             "iqr": 1.175,
-            "sample_size_discount": 0.989,
+            "sample_size_discount": 0.95,
             "variability_discount": 0.998,
-            "discount_factor": 0.987,
-            "p_value": 0.013,
-            "belief": 0.667,
+            "discount_factor": 0.948,
+            "p_value": 0.052,
+            "belief": 0.641,
             "intensity": "strongly positive"
         }
     }
