@@ -177,11 +177,11 @@ def test_frozen_selection_manifest_matches_published_decomposition():
         interim_dir=INTERIM_DATA_DIR,
         processed_dir=PROCESSED_DATA_DIR,
     )
-    assert summary["n_search"] == 1224  # noqa: PLR2004
-    assert summary["n_search_by_source"] == {"Scopus": 1174, "arXiv": 50}
+    assert summary["n_search"] == 1226  # noqa: PLR2004
+    assert summary["n_search_by_source"] == {"Scopus": 1176, "arXiv": 50}
     assert summary["n_calibration_unique"] == 200  # noqa: PLR2004
-    assert summary["n_calibration_nested"] == 198  # noqa: PLR2004
-    assert summary["n_calibration_orphans"] == 2  # noqa: PLR2004
+    assert summary["n_calibration_nested"] == 200  # noqa: PLR2004
+    assert summary["n_calibration_orphans"] == 0  # noqa: PLR2004
     assert summary["n_remaining_search"] == 1026  # noqa: PLR2004
     assert summary["n_llm_prescreen_retained"] == 536  # noqa: PLR2004
     assert summary["n_calibration_positive"] == 35  # noqa: PLR2004

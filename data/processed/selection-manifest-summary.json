@@ -7,17 +7,17 @@
     "successes": 33,
     "trials": 35
   },
-  "n_calibration_nested": 198,
-  "n_calibration_orphans": 2,
+  "n_calibration_nested": 200,
+  "n_calibration_orphans": 0,
   "n_calibration_positive": 35,
   "n_calibration_unique": 200,
   "n_final_included": 21,
   "n_fulltext_included_database": 16,
   "n_llm_prescreen_retained": 536,
   "n_remaining_search": 1026,
-  "n_search": 1224,
+  "n_search": 1226,
   "n_search_by_source": {
-    "Scopus": 1174,
+    "Scopus": 1176,
     "arXiv": 50
   },
   "n_snowball_included": 5,
