@@ -8,6 +8,7 @@ from src.dempster_shafer import (
     combine_bpas,
     combine_effect,
     intensity_to_hypothesis,
+    reconcile_intensities,
     select_hypothesis,
     simple_support,
     trace_effect,
@@ -257,3 +258,13 @@ def test_combine_bpas_reports_last_pairwise_conflict_from_thesis_table_6():
     hypothesis, selected_belief = select_hypothesis(combined)
     assert hypothesis == sp
     assert selected_belief == pytest.approx(0.84, abs=0.005)
+
+
+def test_reconcile_intensities_returns_intersection():
+    assert reconcile_intensities(frozenset({"WN", "IF"}), frozenset({"IF"})) == frozenset({"IF"})
+    assert reconcile_intensities(frozenset({"PO", "SP"}), frozenset({"SP"})) == frozenset({"SP"})
+    assert reconcile_intensities(frozenset({"IF", "WP"}), frozenset({"IF", "WP"})) == frozenset({"IF", "WP"})
+
+
+def test_reconcile_intensities_returns_none_when_intersection_empty():
+    assert reconcile_intensities(frozenset({"SP"}), frozenset({"PO"})) is None

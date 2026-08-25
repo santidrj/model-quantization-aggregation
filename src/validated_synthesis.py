@@ -30,7 +30,13 @@ from src.belief_assignment import (
 from src.config import PROCESSED_DATA_DIR, TABLES_DIR
 from src.data.papers.entities import Papers
 from src.data.papers.study_id import study_id_sort_key
-from src.dempster_shafer import ATOMS, HypothesisSelectionPolicy, format_intensity, intensity_to_hypothesis
+from src.dempster_shafer import (
+    ATOMS,
+    HypothesisSelectionPolicy,
+    format_intensity,
+    intensity_to_hypothesis,
+    reconcile_intensities,
+)
 from src.discount_sensitivity import write_discount_sensitivity_tables
 from src.effect_intensity import (
     CorrectnessIntensity,
@@ -43,7 +49,7 @@ from src.effect_intensity import (
 
 VALIDATED_SYNTHESIS_FILENAME = "validated-synthesis.json"
 VALIDATED_SYNTHESIS_PATH = PROCESSED_DATA_DIR / VALIDATED_SYNTHESIS_FILENAME
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 MAIN_SELECTION_POLICY = HypothesisSelectionPolicy.EVIDENCE_FACTORY_COMPAT
 MAIN_ASSIGNMENT = MassAssignment.PUBLISHED_ANALOGUE
 SUBGROUP_BASELINE = "full-fp32"
@@ -220,6 +226,43 @@ def _intensity_prose(intensity: Iterable[str]) -> str:
     if len(ordered) == 1:
         return _ATOM_PROSE[ordered[0]]
     return " -- ".join(_ATOM_PROSE[atom] for atom in ordered)
+
+
+def _intensity_reconciliation_effects(
+    main_effects: Sequence[SynthesisRow],
+    mass_preserving: Sequence[SynthesisRow],
+) -> dict[str, Any]:
+    """Intersect primary and mass-preserving intensities for theory arrows."""
+    check_by_effect = {row.effect: row for row in mass_preserving}
+    effects: dict[str, Any] = {}
+    for row in main_effects:
+        check = check_by_effect[row.effect]
+        reconciled = reconcile_intensities(row.intensity, check.intensity)
+        differs = row.intensity != check.intensity
+        record = {
+            "primary_intensity": _ordered_atoms(row.intensity),
+            "dependence_check_intensity": _ordered_atoms(check.intensity),
+            "differs_from_primary": differs,
+        }
+        if reconciled is None:
+            effects[row.effect] = {
+                **record,
+                "intensity": None,
+                "intensity_label": None,
+                "has_theory_arrow": False,
+            }
+            continue
+        effects[row.effect] = {
+            **record,
+            "intensity": _ordered_atoms(reconciled),
+            "intensity_label": format_intensity(reconciled),
+            "has_theory_arrow": True,
+        }
+    return {
+        "dependence_check": MassAssignment.MASS_PRESERVING_BELIEF_SPLIT.value,
+        "rule": "set_intersection",
+        "effects": effects,
+    }
 
 
 def _latex_intensity(label: str) -> str:
@@ -417,6 +460,7 @@ def build_validated_synthesis(models: list[EvidenceModel] | None = None) -> dict
                 for row in mass_preserving
             },
         },
+        "intensity_reconciliation": _intensity_reconciliation_effects(main_effects, mass_preserving),
         "leave_one_study_out": _loo_payload(loo_rows),
         "subgroup": {
             "baseline_precision_configuration": SUBGROUP_BASELINE,
@@ -480,6 +524,21 @@ def validate_synthesis(payload: Mapping[str, Any], models: list[EvidenceModel] |
             failures.append(
                 f"{expected.effect}: mass-preserving {mass['belief_percent']} != appendix {comparison_mass}"
             )
+        recon = payload["intensity_reconciliation"]["effects"][expected.effect]
+        check_intensity = frozenset(mass["intensity"])
+        expected_recon = reconcile_intensities(actual.intensity, check_intensity)
+        if expected_recon is None:
+            if recon["intensity"] is not None or recon["has_theory_arrow"]:
+                failures.append(f"{expected.effect}: reconciliation should omit theory arrow")
+        else:
+            if recon["intensity"] != _ordered_atoms(expected_recon):
+                failures.append(
+                    f"{expected.effect}: reconciled intensity {recon['intensity']} != {_ordered_atoms(expected_recon)}"
+                )
+            if not recon["has_theory_arrow"]:
+                failures.append(f"{expected.effect}: reconciliation should keep theory arrow")
+        if bool(recon["differs_from_primary"]) != (actual.intensity != check_intensity):
+            failures.append(f"{expected.effect}: differs_from_primary mismatch")
 
     counts = payload["counts"]
     increased = [name for name, row in payload["effects"].items() if int(row["delta_percent"]) > 0]
@@ -704,6 +763,17 @@ def render_result_macros(payload: Mapping[str, Any] | None = None) -> str:
     lines.append(
         rf"\newcommand{{\MassPresLatencyIntensity}}{{{_latex_intensity(mass['Inference Latency']['intensity_label'])}}}"
     )
+    recon = data["intensity_reconciliation"]["effects"]
+    for effect, stem in _MACRO_STEM.items():
+        record = recon[effect]
+        has_arrow = "true" if record["has_theory_arrow"] else "false"
+        lines.append(rf"\newcommand{{\Theory{stem}HasArrow}}{{{has_arrow}}}")
+        if record["has_theory_arrow"]:
+            lines.append(rf"\newcommand{{\Theory{stem}Intensity}}{{{_latex_intensity(record['intensity_label'])}}}")
+            lines.append(rf"\newcommand{{\Theory{stem}Prose}}{{{_intensity_prose(record['intensity'])}}}")
+        else:
+            lines.append(rf"\newcommand{{\Theory{stem}Intensity}}{{}}")
+            lines.append(rf"\newcommand{{\Theory{stem}Prose}}{{}}")
     subgroup = data["subgroup"]
     lines.append(rf"\newcommand{{\SubgroupNStudies}}{{{subgroup['n_primary_studies']}}}")
     lines.append(rf"\newcommand{{\SubgroupNModels}}{{{subgroup['n_evidence_models']}}}")

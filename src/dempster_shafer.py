@@ -278,6 +278,19 @@ def format_intensity(hypothesis: frozenset[str]) -> str:
     return "{" + ", ".join(ordered) + "}"
 
 
+def reconcile_intensities(
+    primary: frozenset[str],
+    companion: frozenset[str],
+) -> frozenset[str] | None:
+    """Intersect primary and dependence-check intensities for theory claims.
+
+    Returns the set intersection when non-empty; ``None`` when the sets are
+    disjoint (no theory arrow). Belief-magnitude drops alone are out of scope.
+    """
+    shared = primary & companion
+    return shared if shared else None
+
+
 @dataclass(frozen=True)
 class CombinedEffect:
     """Published SSM effect result; conflict is the final pairwise K."""

@@ -9,6 +9,7 @@ from src.validated_synthesis import (
     build_validated_synthesis,
     forestplot_overlay_frame,
     render_aggregated_effects_table,
+    render_result_macros,
     validate_synthesis,
     write_all_validated_outputs,
 )
@@ -105,3 +106,21 @@ def test_write_all_validated_outputs(tmp_path):
     analogue = (tmp_path / "belief-assignment.tex").read_text(encoding="utf-8")
     assert "mAP & 2 & 4 & IF & 0.45" in analogue
     assert "RAM usage & 2 & 3 & SP & 0.47" in analogue
+
+
+def test_intensity_reconciliation_intersects_primary_and_mass_preserving():
+    payload = build_validated_synthesis()
+    recon = payload["intensity_reconciliation"]["effects"]
+    assert recon["Accuracy"]["intensity"] == ["IF"]
+    assert recon["Accuracy"]["differs_from_primary"] is True
+    assert recon["Accuracy"]["has_theory_arrow"] is True
+    assert recon["Inference Latency"]["intensity"] == ["SP"]
+    assert recon["Inference Latency"]["differs_from_primary"] is True
+    assert recon["RAM Usage"]["intensity"] is None
+    assert recon["RAM Usage"]["has_theory_arrow"] is False
+    assert recon["Storage Size"]["differs_from_primary"] is False
+    macros = render_result_macros(payload)
+    assert r"\newcommand{\TheoryAccuracyIntensity}{IF}" in macros
+    assert r"\newcommand{\TheoryAccuracyProse}{indifferently}" in macros
+    assert r"\newcommand{\TheoryInfLatencyIntensity}{SP}" in macros
+    assert r"\newcommand{\TheoryRAMUsageHasArrow}{false}" in macros

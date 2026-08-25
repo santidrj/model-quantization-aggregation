@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "selection_policy": "evidence_factory_compat",
   "assignment": "published_analogue",
   "corpus": {
@@ -1248,6 +1248,170 @@
         "conflict": 0.12658730820560207,
         "n_primary_studies": 12,
         "n_evidence_models": 51
+      }
+    }
+  },
+  "intensity_reconciliation": {
+    "dependence_check": "mass_preserving_belief_split",
+    "rule": "set_intersection",
+    "effects": {
+      "Accuracy": {
+        "primary_intensity": [
+          "WN",
+          "IF"
+        ],
+        "dependence_check_intensity": [
+          "IF"
+        ],
+        "differs_from_primary": true,
+        "intensity": [
+          "IF"
+        ],
+        "intensity_label": "IF",
+        "has_theory_arrow": true
+      },
+      "F1 Score": {
+        "primary_intensity": [
+          "IF"
+        ],
+        "dependence_check_intensity": [
+          "IF"
+        ],
+        "differs_from_primary": false,
+        "intensity": [
+          "IF"
+        ],
+        "intensity_label": "IF",
+        "has_theory_arrow": true
+      },
+      "mAP": {
+        "primary_intensity": [
+          "IF"
+        ],
+        "dependence_check_intensity": [
+          "IF"
+        ],
+        "differs_from_primary": false,
+        "intensity": [
+          "IF"
+        ],
+        "intensity_label": "IF",
+        "has_theory_arrow": true
+      },
+      "Storage Size": {
+        "primary_intensity": [
+          "SP"
+        ],
+        "dependence_check_intensity": [
+          "SP"
+        ],
+        "differs_from_primary": false,
+        "intensity": [
+          "SP"
+        ],
+        "intensity_label": "SP",
+        "has_theory_arrow": true
+      },
+      "GPU Utilization": {
+        "primary_intensity": [
+          "IF",
+          "WP"
+        ],
+        "dependence_check_intensity": [
+          "IF"
+        ],
+        "differs_from_primary": true,
+        "intensity": [
+          "IF"
+        ],
+        "intensity_label": "IF",
+        "has_theory_arrow": true
+      },
+      "GPU Power Draw": {
+        "primary_intensity": [
+          "IF",
+          "WP"
+        ],
+        "dependence_check_intensity": [
+          "IF",
+          "WP"
+        ],
+        "differs_from_primary": false,
+        "intensity": [
+          "IF",
+          "WP"
+        ],
+        "intensity_label": "{IF, WP}",
+        "has_theory_arrow": true
+      },
+      "GPU Energy Consumption": {
+        "primary_intensity": [
+          "SP"
+        ],
+        "dependence_check_intensity": [
+          "SP"
+        ],
+        "differs_from_primary": false,
+        "intensity": [
+          "SP"
+        ],
+        "intensity_label": "SP",
+        "has_theory_arrow": true
+      },
+      "RAM Usage": {
+        "primary_intensity": [
+          "SP"
+        ],
+        "dependence_check_intensity": [
+          "PO"
+        ],
+        "differs_from_primary": true,
+        "intensity": null,
+        "intensity_label": null,
+        "has_theory_arrow": false
+      },
+      "Inference Power Draw": {
+        "primary_intensity": [
+          "WP"
+        ],
+        "dependence_check_intensity": [
+          "WP"
+        ],
+        "differs_from_primary": false,
+        "intensity": [
+          "WP"
+        ],
+        "intensity_label": "WP",
+        "has_theory_arrow": true
+      },
+      "Inference Energy Consumption": {
+        "primary_intensity": [
+          "SP"
+        ],
+        "dependence_check_intensity": [
+          "SP"
+        ],
+        "differs_from_primary": false,
+        "intensity": [
+          "SP"
+        ],
+        "intensity_label": "SP",
+        "has_theory_arrow": true
+      },
+      "Inference Latency": {
+        "primary_intensity": [
+          "PO",
+          "SP"
+        ],
+        "dependence_check_intensity": [
+          "SP"
+        ],
+        "differs_from_primary": true,
+        "intensity": [
+          "SP"
+        ],
+        "intensity_label": "SP",
+        "has_theory_arrow": true
       }
     }
   },

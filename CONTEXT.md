@@ -63,8 +63,8 @@ Manuscript label for one by-precision aggregation that appears in a study's by-p
 _Avoid_: Theoretical structure as something other than by-precision aggregation; using metadata `precision_configurations` length when by-precision results are meant; evidence model (when the SSM diagram is meant)
 
 **Evidence model**:
-The SSM diagrammatic representation of one theoretical structure, carrying that by-precision aggregation's effects, intensities, and beliefs. One-to-one with theoretical structure; not an experimental unit and not a DL model.
-_Avoid_: Experimental unit; DL model; incoming evidence model (when the Evidence Factory merge side is meant)
+The SSM diagrammatic representation of one theoretical structure, carrying that by-precision aggregation's effects, intensities, and beliefs. One-to-one with theoretical structure; not an experimental unit and not a DL model. It is also the primary Dempster–Shafer source in the published synthesis: combination across evidence models is a pragmatic pooling of intervention-level support, not a claim that configurations from the same publication are independent BPAs.
+_Avoid_: Experimental unit; DL model; incoming evidence model (when the Evidence Factory merge side is meant); treating each evidence model as an independent primary study
 
 **Evidence-model effect**:
 One effect carried by one evidence model. This is the grain at which \(n_{\mathrm{eff}}\), the sample-size discount, the variability discount, discount residual, and discounted support mass are defined, and the observation in the effective-sample-size summary table.
@@ -103,8 +103,12 @@ The committed JSON result file that is the authority for manuscript tables, fore
 _Avoid_: Hand-authored Aggregated rows; copying Evidence Factory UI numbers into plots or prose
 
 **Sensitivity analysis**:
-Analysis that tests whether primary synthesis conclusions are robust when the main pooling assumptions change. The published sensitivity analysis holds the included study set and extracted intensities fixed and recombines evidence under the mass-preserving belief split ($1-(1-B)^{1/N}$ per evidence model), thereby limiting repeated commitment of the same study belief across configurations from one publication. Leave-one-study-out recombination of the main discounted pooling and the equitable split ($B/N$) are reported as supplementary stress tests in appendices. A further appendix stress test varies the main discount parameters one at a time without changing the \(\alpha_v\) denominator and without replacing the published forest plots: \(n_0\in\{2,n_0^{Q3},6\}\), \(k\in\{0.05,0.1,0.2\}\), and cutoff \(\in\{3,4,8\}\), reporting aggregated direction/intensity and accuracy \(B'\). Distinct from subgroup analysis, which restricts the moderator triple while holding the study set fixed.
-_Avoid_: Subgroup analysis (when the cut is which studies are in, not which cell); reusing corpus-wide Aggregated rows as if they were sensitivity-sample-specific; study-set exclusion by theoretical-structure count (retired TS $\le 5$ analysis); treating an alternative \(\alpha_v\) denominator as a published sensitivity variant
+Analysis that tests whether primary synthesis conclusions are robust when the main pooling assumptions change. The published lead dependence check holds the included study set and extracted intensities fixed and recombines evidence under the undiscounted mass-preserving belief split ($1-(1-B)^{1/N}$ per evidence model), deliberately omitting \(\alpha_n\) and \(\alpha_v\) so the table isolates repeated commitment of study belief rather than mixing that allocation with discounting (ADR 0010). Leave-one-study-out recombination of the main discounted pooling and the equitable split ($B/N$) are supplementary appendix stress tests. A further appendix stress test varies the main discount parameters one at a time without changing the \(\alpha_v\) denominator and without replacing the published forest plots: \(n_0\in\{2,n_0^{Q3},6\}\), \(k\in\{0.05,0.1,0.2\}\), and cutoff \(\in\{3,4,8\}\), reporting aggregated direction/intensity and accuracy \(B'\). Distinct from subgroup analysis, which restricts the moderator triple while holding the study set fixed.
+_Avoid_: Subgroup analysis (when the cut is which studies are in, not which cell); reusing corpus-wide Aggregated rows as if they were sensitivity-sample-specific; study-set exclusion by theoretical-structure count (retired TS $\le 5$ analysis); treating an alternative \(\alpha_v\) denominator as a published sensitivity variant; publishing a discounted mass-preserving root as the lead dependence check
+
+**Intensity reconciliation**:
+The rule that sets a theory-diagram intensity to the set intersection of the primary selected intensity and the lead dependence-check intensity when those selected sets differ; an empty intersection yields no theory arrow for that effect. Pure belief-magnitude drops without an intensity change stay in Threats, not in the arrow. Results prose continues to lead with the primary estimator; the dependence check is reported in sensitivity.
+_Avoid_: Min-belief downgrade of theory arrows; replacing Results primary intensity with the dependence check; treating belief drops alone as intensity changes
 
 **Belief assignment**:
 The rule that maps study belief onto simple-support masses on evidence models for Dempster–Shafer synthesis of the full by-precision aggregation, holding the included study set fixed. The variants are published analogue, undiscounted unsplit combination, mass-preserving belief split, and equitable belief split.
@@ -209,8 +213,12 @@ The Dempster–Shafer basic probability assignment \(m\) over subsets of the eff
 _Avoid_: Belief measure; probability distribution over singleton intensities
 
 **Belief measure**:
-The Dempster–Shafer quantity \(\mathrm{Bel}(A)=\sum_{B\subseteq A}m(B)\) for a hypothesis \(A\), computed from a mass function. It is distinct from study belief and discounted support mass.
-_Avoid_: Study belief; discounted support mass; posterior probability
+The Dempster–Shafer quantity \(\mathrm{Bel}(A)=\sum_{B\subseteq A}m(B)\) for a hypothesis \(A\), computed from a mass function. It is distinct from study belief and discounted support mass. In manuscript results for the primary aggregation, the reported belief percent is accumulated configuration-level support under intervention-level pooling — not independent corroboration across publications and not a frequentist confidence level.
+_Avoid_: Study belief; discounted support mass; posterior probability; confidence; confidence level (when this Dempster–Shafer quantity is meant)
+
+**Accumulated configuration-level support**:
+The public gloss for the primary aggregated belief measure: support accumulated by Dempster–Shafer combination of discounted evidence-model masses. It tracks how strongly compatible intervention-level evidence models reinforce a hypothesis, not how many independent primary studies agree.
+_Avoid_: Confidence; independent-study corroboration; study-count confidence
 
 **Sample-size discount**:
 The reliability factor \(\alpha_n = 1 - e^{-n_{\mathrm{eff}}/n_0}\) applied to study belief for one evidence-model effect. The saturation parameter \(n_0\) is 3, the integer nearest \(2/\ln 2\), so that two independent cluster units sit at the median of that factor (\(\alpha_n(2)\approx 0.49\)) rather than at the characteristic point \(1-1/e\). The observed \(n_{\mathrm{eff}}\) distribution is diagnostic; it does not choose \(n_0\).
