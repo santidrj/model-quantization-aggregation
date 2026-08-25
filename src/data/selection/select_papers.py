@@ -15,6 +15,7 @@ from src.data.selection.llm import (
     create_paper_context_message,
     gemini_query,
 )
+from src.data.selection.title_key import canonical_title_key
 
 PAPERS_FILENAME = "model-quantization-papers.csv"
 SAMPLE_PAPERS_FILENAME = "model-quantization-papers-200-sample.xlsx"
@@ -28,9 +29,17 @@ def load_selection_papers(
     """
     Load papers that still need LLM scoring.
     """
-    papers = pl.read_csv(papers_path, encoding="utf8")
-    sample_papers = pl.read_excel(sample_papers_path)
-    return papers.join(sample_papers, on="Title", how="anti").select(list(REQUIRED_QUERY_COLUMNS))
+    papers = pl.read_csv(papers_path, encoding="utf8").with_columns(
+        pl.col("Title").map_elements(canonical_title_key, return_dtype=pl.String).alias("title_key")
+    )
+    sample_papers = pl.read_excel(sample_papers_path).with_columns(
+        pl.col("Title").map_elements(canonical_title_key, return_dtype=pl.String).alias("title_key")
+    )
+    return (
+        papers.join(sample_papers.select("title_key").unique(), on="title_key", how="anti")
+        .drop("title_key")
+        .select(list(REQUIRED_QUERY_COLUMNS))
+    )
 
 
 def build_single_paper_queries(papers: pl.DataFrame) -> Generator[str, None, None]:

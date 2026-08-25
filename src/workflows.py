@@ -7,11 +7,19 @@ import subprocess
 import sys
 
 from google import genai
+from matplotlib.patches import FancyBboxPatch
+import matplotlib.pyplot as plt
 import polars as pl
 
-from src.config import FIGURES_DIR, INTERIM_DATA_DIR, ROOT_DIR, TABLES_DIR, processed_paper_path
+from src.config import FIGURES_DIR, INTERIM_DATA_DIR, PROCESSED_DATA_DIR, ROOT_DIR, TABLES_DIR, processed_paper_path
 from src.data.download import clean_titles, download_arxiv_papers, papers_dict_to_polars_df
 from src.data.papers.entities import Paper, Papers
+from src.data.selection.manifest import (
+    MANIFEST_PARQUET_NAME,
+    MANIFEST_SUMMARY_NAME,
+    build_frozen_selection_artifacts,
+    write_selection_manifest,
+)
 from src.data.selection.select_papers import (
     PAPERS_FILENAME,
     SAMPLE_PAPERS_FILENAME,
@@ -204,6 +212,155 @@ def run_llm_selection(
     scores_df = scores_to_frame(collect_query_results(client, relevant_data))
     write_scores(scores_df, output_path=output_path)
     return output_path
+
+
+def build_selection_manifest_outputs(
+    *,
+    interim_dir: Path = INTERIM_DATA_DIR,
+    processed_dir: Path = PROCESSED_DATA_DIR,
+) -> list[Path]:
+    """Build the frozen selection manifest and summary under ``data/processed/``."""
+    manifest, summary = build_frozen_selection_artifacts(
+        interim_dir=interim_dir,
+        processed_dir=processed_dir,
+    )
+    parquet_path = processed_dir / MANIFEST_PARQUET_NAME
+    summary_path = processed_dir / MANIFEST_SUMMARY_NAME
+    write_selection_manifest(manifest, summary, parquet_path, summary_path)
+    macros_path = write_selection_macros(summary, TABLES_DIR / "selection-manifest-macros.tex")
+    figure_path = write_selection_prisma_figure(summary, FIGURES_DIR / "selection-prisma-flow.pdf")
+    return [parquet_path, summary_path, macros_path, figure_path]
+
+
+def write_selection_macros(summary: dict, path: Path) -> Path:
+    """Write LaTeX macros for study-selection counts derived from the selection manifest."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    recall = summary["calibration_recall"]
+    audit = summary["negative_audit"]
+    n_cal_neg = summary["n_calibration_unique"] - summary["n_calibration_positive"]
+
+    def pct(value: float) -> str:
+        return f"{100.0 * value:.1f}"
+
+    lines = [
+        r"% Generated from data/processed/selection-manifest-summary.json. Do not edit by hand.",
+        rf"\newcommand{{\SelectionNSearch}}{{{summary['n_search']}}}",
+        rf"\newcommand{{\SelectionNCalibration}}{{{summary['n_calibration_unique']}}}",
+        rf"\newcommand{{\SelectionNCalibrationNested}}{{{summary['n_calibration_nested']}}}",
+        rf"\newcommand{{\SelectionNCalibrationOrphans}}{{{summary['n_calibration_orphans']}}}",
+        rf"\newcommand{{\SelectionNRemaining}}{{{summary['n_remaining_search']}}}",
+        rf"\newcommand{{\SelectionNLlmRetained}}{{{summary['n_llm_prescreen_retained']}}}",
+        rf"\newcommand{{\SelectionNCalibrationPositive}}{{{summary['n_calibration_positive']}}}",
+        rf"\newcommand{{\SelectionNCalibrationNegative}}{{{n_cal_neg}}}",
+        rf"\newcommand{{\SelectionNTitleAbstractPool}}{{{summary['n_title_abstract_pool']}}}",
+        rf"\newcommand{{\SelectionNTitleAbstractFulltext}}{{{summary['n_title_abstract_to_fulltext']}}}",
+        rf"\newcommand{{\SelectionNFulltextDatabase}}{{{summary['n_fulltext_included_database']}}}",
+        rf"\newcommand{{\SelectionNSnowball}}{{{summary['n_snowball_included']}}}",
+        rf"\newcommand{{\SelectionNFinal}}{{{summary['n_final_included']}}}",
+        rf"\newcommand{{\SelectionCalibrationRecallPct}}{{{pct(recall['estimate'])}}}",
+        rf"\newcommand{{\SelectionCalibrationRecallLowPct}}{{{pct(recall['jeffreys_low'])}}}",
+        rf"\newcommand{{\SelectionCalibrationRecallHighPct}}{{{pct(recall['jeffreys_high'])}}}",
+        rf"\newcommand{{\SelectionNegativeAuditFN}}{{{audit['false_negatives']}}}",
+        rf"\newcommand{{\SelectionNegativeAuditN}}{{{audit['trials']}}}",
+        rf"\newcommand{{\SelectionNegativeAuditFNRateHighPct}}{{{pct(audit['false_negative_rate_jeffreys_high'])}}}",
+        "",
+    ]
+    path.write_text("\n".join(lines))
+    return path
+
+
+def write_selection_prisma_figure(summary: dict, path: Path) -> Path:
+    """Render a PRISMA-style flow figure from selection-manifest summary counts."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig, ax = plt.subplots(figsize=(10, 8))
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 12)
+    ax.axis("off")
+
+    def box(x: float, y: float, w: float, h: float, text: str) -> None:
+        patch = FancyBboxPatch(
+            (x, y),
+            w,
+            h,
+            boxstyle="round,pad=0.02,rounding_size=0.15",
+            linewidth=1.2,
+            edgecolor="black",
+            facecolor="white",
+        )
+        ax.add_patch(patch)
+        ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=9)
+
+    box(2.5, 10.5, 5, 1.0, f"Database search\nN = {summary['n_search']}")
+    box(
+        0.3,
+        8.6,
+        4.2,
+        1.4,
+        f"Calibration subset\nN = {summary['n_calibration_unique']}\n"
+        f"(nested {summary['n_calibration_nested']}; "
+        f"orphans {summary['n_calibration_orphans']})",
+    )
+    box(5.5, 8.6, 4.2, 1.4, f"Remaining search hits\nN = {summary['n_remaining_search']}")
+    box(
+        5.5,
+        6.8,
+        4.2,
+        1.4,
+        f"LLM pre-screen retention\nN = {summary['n_llm_prescreen_retained']}",
+    )
+    box(
+        2.5,
+        5.0,
+        5,
+        1.4,
+        "Title–abstract screening pool\n"
+        f"{summary['n_llm_prescreen_retained']} LLM pre-screen retention + "
+        f"{summary['n_calibration_positive']} calibration positives\n"
+        f"= {summary['n_title_abstract_pool']}",
+    )
+    box(
+        2.5,
+        3.4,
+        5,
+        1.2,
+        f"Retained for full-text assessment\nN = {summary['n_title_abstract_to_fulltext']}",
+    )
+    box(
+        2.5,
+        1.8,
+        5,
+        1.2,
+        f"Included after full-text (database path)\nN = {summary['n_fulltext_included_database']}",
+    )
+    box(
+        2.5,
+        0.3,
+        5,
+        1.2,
+        "Final included studies\n"
+        f"{summary['n_fulltext_included_database']} database + "
+        f"{summary['n_snowball_included']} snowball = {summary['n_final_included']}",
+    )
+
+    ax.annotate("", xy=(5, 10.0), xytext=(5, 10.5), arrowprops={"arrowstyle": "->", "color": "black"})
+    ax.annotate("", xy=(7.6, 8.6), xytext=(7.6, 10.5), arrowprops={"arrowstyle": "->", "color": "black"})
+    ax.annotate("", xy=(2.4, 8.6), xytext=(5, 10.5), arrowprops={"arrowstyle": "->", "color": "black"})
+    ax.annotate("", xy=(7.6, 8.2), xytext=(7.6, 8.6), arrowprops={"arrowstyle": "->", "color": "black"})
+    ax.annotate("", xy=(5, 6.4), xytext=(7.6, 7.5), arrowprops={"arrowstyle": "->", "color": "black"})
+    ax.annotate(
+        "",
+        xy=(5, 6.4),
+        xytext=(2.4, 8.6),
+        arrowprops={"arrowstyle": "->", "color": "black", "connectionstyle": "arc3,rad=0.15"},
+    )
+    ax.annotate("", xy=(5, 4.6), xytext=(5, 5.0), arrowprops={"arrowstyle": "->", "color": "black"})
+    ax.annotate("", xy=(5, 3.0), xytext=(5, 3.4), arrowprops={"arrowstyle": "->", "color": "black"})
+    ax.annotate("", xy=(5, 1.5), xytext=(5, 1.8), arrowprops={"arrowstyle": "->", "color": "black"})
+
+    fig.tight_layout()
+    fig.savefig(path, bbox_inches="tight")
+    plt.close(fig)
+    return path
 
 
 def run_evidence_extraction_workflow(

@@ -1,0 +1,31 @@
+{
+  "calibration_recall": {
+    "estimate": 0.9428571428571428,
+    "jeffreys_high": 0.9879363478701096,
+    "jeffreys_low": 0.829083151178946,
+    "label": "in-sample calibration performance",
+    "successes": 33,
+    "trials": 35
+  },
+  "n_calibration_nested": 198,
+  "n_calibration_orphans": 2,
+  "n_calibration_positive": 35,
+  "n_calibration_unique": 200,
+  "n_final_included": 21,
+  "n_fulltext_included_database": 16,
+  "n_llm_prescreen_retained": 536,
+  "n_remaining_search": 1026,
+  "n_search": 1224,
+  "n_snowball_included": 5,
+  "n_title_abstract_pool": 571,
+  "n_title_abstract_to_fulltext": 84,
+  "negative_audit": {
+    "false_negative_rate_estimate": 0.0,
+    "false_negative_rate_jeffreys_high": 0.02474527001526989,
+    "false_negative_rate_jeffreys_low": 0.0,
+    "false_negatives": 0,
+    "label": "in-sample audit of predicted negatives",
+    "trials": 100,
+    "true_negative_rate_estimate": 1.0
+  }
+}

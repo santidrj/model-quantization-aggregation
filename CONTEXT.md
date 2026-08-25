@@ -4,6 +4,24 @@ Evidence extraction and meta-analysis of quantization experiments reported in pr
 
 ## Language
 
+### Study selection
+
+**Selection manifest**:
+The record-level disposition of every retrieved search hit through calibration membership, LLM pre-screen, title-abstract screening, full-text assessment, snowballing, and final inclusion or exclusion. It is the single source that regenerates selection counts in prose and PRISMA-style diagrams.
+_Avoid_: Screening log (vague); treating notebook outputs or figure callouts as the authority when they disagree
+
+**Calibration subset**:
+The randomly sampled search hits held aside while refining the screening prompt, each carrying a human title-and-abstract inclusion label. Distinct from the remaining search hits scored only under the finalized prompt.
+_Avoid_: Validation set (when the sample was used to tune the prompt); held-out test set (when labels informed prompt changes)
+
+**LLM pre-screen retention**:
+A remaining-search-hit record that the finalized screening prompt marks for human title-and-abstract review (conservative rule: Likert score greater than 3 on every inclusion criterion). Not a final inclusion decision.
+_Avoid_: Included study; Gemini-selected corpus (when the title-abstract screening pool is meant)
+
+**Title-abstract screening pool**:
+The records that enter human title-and-abstract review: the union of LLM pre-screen retention and human-positive calibration-subset records. Human-negative calibration-subset records do not re-enter this pool; they remain title-abstract exclusions from calibration.
+_Avoid_: Retained by Gemini; LLM-selected papers (when this union is meant)
+
 **Study ID**:
 The systematic-review label of an included primary study, written `S1`…`Sn`. Assignment is by publication year ascending, then lead-author citation name ascending within a year (the name as cited, including particles and compound surnames — e.g. De Putter, Gonzalez Alvarez), yielding consecutive integers with no gaps. Ordering by study ID is numeric on the integer after `S`, not lexicographic on the string. Distinct from the paper key.
 _Avoid_: Paper ID (ambiguous with paper key), study key, citation key (when the `S#` is meant)

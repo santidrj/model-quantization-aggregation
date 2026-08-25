@@ -89,6 +89,15 @@ def select_papers(run_llm: bool) -> None:
     click.echo(f"Wrote LLM selection scores to {output_path}")
 
 
+@papers.command(
+    "build-selection-manifest",
+    help="Build the record-level selection manifest from frozen screening artifacts.",
+)
+def build_selection_manifest() -> None:
+    paths = workflows.build_selection_manifest_outputs()
+    _print_paths(paths, "Selection manifest outputs")
+
+
 @papers.command("ensure-external-data", help="Preflight or fetch external paper data for one or more papers.")
 @click.option(
     "--paper",

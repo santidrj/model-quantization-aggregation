@@ -16,13 +16,13 @@ def test_load_selection_papers_filters_prompt_refinement_sample(tmp_path):
 
     pl.DataFrame(
         {
-            "Title": ["Keep Me", "Drop Me"],
-            "Abstract": ["A", "B"],
-            "Author Keywords": ["k1", "k2"],
-            "Extra": [1, 2],
+            "Title": ["Keep Me", "Drop Me", "μLayer Keep Out"],
+            "Abstract": ["A", "B", "C"],
+            "Author Keywords": ["k1", "k2", "k3"],
+            "Extra": [1, 2, 3],
         }
     ).write_csv(papers_path)
-    pl.DataFrame({"Title": ["Drop Me"]}).write_excel(sample_path)
+    pl.DataFrame({"Title": ["Drop Me", "µLayer Keep Out"]}).write_excel(sample_path)
 
     result = load_selection_papers(papers_path=papers_path, sample_papers_path=sample_path)
 
