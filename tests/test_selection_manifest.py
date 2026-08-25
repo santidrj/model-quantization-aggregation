@@ -23,7 +23,16 @@ def _mini_inputs(tmp_path):
                 "Calibration Nested Positive",
                 "Calibration Nested Negative",
                 "Full Text Later Excluded",
-            ]
+                "μLayer Near Miss",
+            ],
+            "Source": [
+                "Scopus",
+                "Scopus",
+                "Scopus",
+                "arXiv",
+                "Scopus",
+                "arXiv",
+            ],
         }
     )
     calibration = pl.DataFrame(
@@ -36,13 +45,6 @@ def _mini_inputs(tmp_path):
             ],
             "Included": ["y", "n", "n", "n"],
         }
-    )
-    # Search uses Greek mu; calibration used micro sign — added as separate search hit
-    papers = pl.concat(
-        [
-            papers,
-            pl.DataFrame({"Title": ["μLayer Near Miss"]}),
-        ]
     )
     frozen_screening_pool = pl.DataFrame(
         {
@@ -85,6 +87,7 @@ def test_build_selection_manifest_dispositions_calibration_and_pool():
 
     kept = by_key[canonical_title_key("Remaining Kept By LLM")]
     assert kept["in_search"] is True
+    assert kept["source"] == "Scopus"
     assert kept["llm_prescreen_retained"] is True
     assert kept["in_title_abstract_pool"] is True
     assert kept["final_included"] is True
@@ -93,11 +96,13 @@ def test_build_selection_manifest_dispositions_calibration_and_pool():
     cal_neg = by_key[canonical_title_key("Calibration Nested Negative")]
     assert cal_neg["calibration_member"] is True
     assert cal_neg["calibration_label"] == "n"
+    assert cal_neg["source"] == "arXiv"
     assert cal_neg["in_title_abstract_pool"] is False
     assert cal_neg["llm_prescreen_retained"] is False
 
     orphan = by_key[canonical_title_key("Orphan Calibration Negative")]
     assert orphan["in_search"] is False
+    assert orphan["source"] is None
     assert orphan["calibration_orphan"] is True
     assert orphan["calibration_member"] is True
 
@@ -105,6 +110,7 @@ def test_build_selection_manifest_dispositions_calibration_and_pool():
     assert snow["final_included"] is True
     assert snow["identification_path"] == "snowball"
     assert snow["in_search"] is False
+    assert snow["source"] is None
 
 
 def test_selection_summary_counts_match_frozen_decomposition_rules():
@@ -125,6 +131,7 @@ def test_selection_summary_counts_match_frozen_decomposition_rules():
     )
 
     assert summary["n_search"] == 6  # noqa: PLR2004
+    assert summary["n_search_by_source"] == {"Scopus": 4, "arXiv": 2}
     assert summary["n_calibration_unique"] == 4  # noqa: PLR2004
     assert summary["n_calibration_nested"] == 3  # noqa: PLR2004
     assert summary["n_calibration_orphans"] == 1  # noqa: PLR2004
@@ -171,6 +178,7 @@ def test_frozen_selection_manifest_matches_published_decomposition():
         processed_dir=PROCESSED_DATA_DIR,
     )
     assert summary["n_search"] == 1224  # noqa: PLR2004
+    assert summary["n_search_by_source"] == {"Scopus": 1174, "arXiv": 50}
     assert summary["n_calibration_unique"] == 200  # noqa: PLR2004
     assert summary["n_calibration_nested"] == 198  # noqa: PLR2004
     assert summary["n_calibration_orphans"] == 2  # noqa: PLR2004

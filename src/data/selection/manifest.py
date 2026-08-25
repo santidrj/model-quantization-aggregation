@@ -34,9 +34,14 @@ def build_selection_manifest(
     LLM pre-screen retention of remaining search hits union human-positive
     calibration records. Human-negative calibration records do not re-enter that pool.
     """
-    papers_k = _with_key(papers.select("Title")).rename({"Title": "title"})
+    paper_cols = ["Title"] + (["Source"] if "Source" in papers.columns else [])
+    papers_k = _with_key(papers.select(paper_cols)).rename({"Title": "title"})
+    if "Source" not in papers_k.columns:
+        papers_k = papers_k.with_columns(pl.lit(None).cast(pl.String).alias("Source"))
+    papers_k = papers_k.rename({"Source": "source"})
     search_keys = set(papers_k["title_key"].to_list())
     search_title_by_key = dict(zip(papers_k["title_key"], papers_k["title"], strict=True))
+    search_source_by_key = dict(zip(papers_k["title_key"], papers_k["source"], strict=True))
 
     calibration_k = (
         _with_key(calibration.select(["Title", "Included"]))
@@ -98,6 +103,7 @@ def build_selection_manifest(
                 "title": title,
                 "title_key": title_key,
                 "paper_key": included["paper_key"] if included else None,
+                "source": search_source_by_key.get(title_key),
                 "in_search": in_search,
                 "calibration_member": calibration_member,
                 "calibration_label": calibration_label,
@@ -117,6 +123,7 @@ def build_selection_manifest(
             "title": pl.String,
             "title_key": pl.String,
             "paper_key": pl.String,
+            "source": pl.String,
             "in_search": pl.Boolean,
             "calibration_member": pl.Boolean,
             "calibration_label": pl.String,
@@ -154,8 +161,20 @@ def selection_summary(
     fn_est = proportion(negative_audit_false_negatives, negative_audit_trials)
     fn_low, fn_high = jeffreys_interval(negative_audit_false_negatives, negative_audit_trials)
 
+    n_search_by_source = {
+        row["source"]: row["len"]
+        for row in (
+            search.filter(pl.col("source").is_not_null())
+            .group_by("source")
+            .len()
+            .sort("source")
+            .to_dicts()
+        )
+    }
+
     return {
         "n_search": search.height,
+        "n_search_by_source": n_search_by_source,
         "n_calibration_unique": manifest.filter(pl.col("calibration_member")).height,
         "n_calibration_nested": nested_cal.height,
         "n_calibration_orphans": manifest.filter(pl.col("calibration_orphan")).height,

@@ -242,9 +242,15 @@ def write_selection_macros(summary: dict, path: Path) -> Path:
     def pct(value: float) -> str:
         return f"{100.0 * value:.1f}"
 
+    by_source = summary.get("n_search_by_source", {})
+    n_scopus = by_source.get("Scopus", 0)
+    n_arxiv = by_source.get("arXiv", 0)
+
     lines = [
         r"% Generated from data/processed/selection-manifest-summary.json. Do not edit by hand.",
         rf"\newcommand{{\SelectionNSearch}}{{{summary['n_search']}}}",
+        rf"\newcommand{{\SelectionNSearchScopus}}{{{n_scopus}}}",
+        rf"\newcommand{{\SelectionNSearchArxiv}}{{{n_arxiv}}}",
         rf"\newcommand{{\SelectionNCalibration}}{{{summary['n_calibration_unique']}}}",
         rf"\newcommand{{\SelectionNCalibrationNested}}{{{summary['n_calibration_nested']}}}",
         rf"\newcommand{{\SelectionNCalibrationOrphans}}{{{summary['n_calibration_orphans']}}}",
@@ -290,7 +296,12 @@ def write_selection_prisma_figure(summary: dict, path: Path) -> Path:
         ax.add_patch(patch)
         ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=9)
 
-    box(2.5, 10.5, 5, 1.0, f"Database search\nN = {summary['n_search']}")
+    by_source = summary.get("n_search_by_source", {})
+    source_bits = ", ".join(f"{name} = {count}" for name, count in sorted(by_source.items()))
+    search_label = f"Database search\nN = {summary['n_search']}"
+    if source_bits:
+        search_label = f"{search_label}\n({source_bits})"
+    box(2.5, 10.5, 5, 1.0, search_label)
     box(
         0.3,
         8.6,
