@@ -694,12 +694,13 @@ def render_subgroup_table(payload: Mapping[str, Any] | None = None) -> str:
         r"  >{\centering\arraybackslash}m{1cm}",
         r"  >{\centering\arraybackslash}m{1.4cm}",
         r"  >{\centering\arraybackslash}X",
-        r"  >{\centering\arraybackslash}m{1.2cm}}",
+        r"  >{\centering\arraybackslash}m{0.9cm}",
+        r"  >{\centering\arraybackslash}m{0.9cm}}",
         r"\toprule",
         r"\rowcolor{gray!30}%",
         (
             r"\textbf{Effect} & \textbf{Direction \& intensity}\footnotemark[1] & \textbf{Belief} & "
-            r"\textbf{Conflict} & \textbf{$\Delta$ Belief} & \textbf{Evidence models} \\"
+            r"\textbf{Conflict} & \textbf{$\Delta$ Belief} & \textbf{Studies} & \textbf{Models} \\"
         ),
         r"\midrule",
     ]
@@ -708,7 +709,7 @@ def render_subgroup_table(payload: Mapping[str, Any] | None = None) -> str:
         if not present:
             continue
         lines.append(r"\rowcolor{gray!20}%")
-        lines.append(rf"\multicolumn{{6}}{{l}}{{\textit{{{group_label}}}}} \\")
+        lines.append(rf"\multicolumn{{7}}{{l}}{{\textit{{{group_label}}}}} \\")
         for effect in present:
             row = effects[effect]
             lines.append(
@@ -719,6 +720,7 @@ def render_subgroup_table(payload: Mapping[str, Any] | None = None) -> str:
                         f"{int(row['belief_percent'])}\\%",
                         _latex_conflict(float(row["conflict"])),
                         _delta_phrase(int(row["delta_percent"])),
+                        str(row["n_primary_studies"]),
                         str(row["n_evidence_models"]),
                     ]
                 )
