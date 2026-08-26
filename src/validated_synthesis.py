@@ -46,6 +46,7 @@ from src.effect_intensity import (
     ResourceEfficiencyMetrics,
     render_intensity_thresholds_table,
 )
+from src.intensity_threshold_sensitivity import write_intensity_threshold_sensitivity_tables
 
 VALIDATED_SYNTHESIS_FILENAME = "validated-synthesis.json"
 VALIDATED_SYNTHESIS_PATH = PROCESSED_DATA_DIR / VALIDATED_SYNTHESIS_FILENAME
@@ -915,4 +916,5 @@ def write_all_validated_outputs(
     json_file = write_validated_synthesis(payload, path=json_path, models=models)
     table_paths = write_validated_tables(payload, output_dir=output_dir)
     sensitivity_paths = write_discount_sensitivity_tables(output_dir=output_dir, models=models)
-    return [json_file, *table_paths, *sensitivity_paths]
+    threshold_paths = write_intensity_threshold_sensitivity_tables(output_dir=output_dir, models=models)
+    return [json_file, *table_paths, *sensitivity_paths, *threshold_paths]

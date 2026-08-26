@@ -75,14 +75,84 @@ def intensity_label_to_code(label: str) -> str:
     raise ValueError(f"Unknown effect intensity label: {label!r}")
 
 
-def signed_intensity_intervals(scale: EffectIntensity) -> tuple[SignedIntensityInterval, ...]:
+@dataclass(frozen=True)
+class IntensityScale:
+    """Immutable RI%→intensity cut-points (avoids mutating the EffectIntensity singleton)."""
+
+    strong_effect: int
+    strong_moderate_effect: int
+    moderate_effect: int
+    weak_moderate_effect: int
+    weak_effect: int
+    weak_indifferent_effect: int
+
+    def get_intensity(self, improvement_metric: float) -> str:
+        sign = "negative" if improvement_metric < 0 else "positive"
+        improvement = abs(improvement_metric)
+        for threshold, label in (
+            (self.weak_indifferent_effect, "indifferent"),
+            (
+                self.weak_effect,
+                f"indifferent - weakly {sign}" if sign == "positive" else f"weakly {sign} - indifferent",
+            ),
+            (self.weak_moderate_effect, f"weakly {sign}"),
+            (
+                self.moderate_effect,
+                f"weakly {sign} - {sign}" if sign == "positive" else f"{sign} - weakly {sign}",
+            ),
+            (self.strong_moderate_effect, sign),
+            (
+                self.strong_effect,
+                f"{sign} - strongly {sign}" if sign == "positive" else f"strongly {sign} - {sign}",
+            ),
+        ):
+            if improvement <= threshold:
+                return label
+        return f"strongly {sign}"
+
+
+def default_correctness_scale(**overrides: int) -> IntensityScale:
+    cuts = {
+        "strong_effect": 25,
+        "strong_moderate_effect": 20,
+        "moderate_effect": 15,
+        "weak_moderate_effect": 10,
+        "weak_effect": 5,
+        "weak_indifferent_effect": 2,
+    }
+    cuts.update(overrides)
+    return IntensityScale(**cuts)
+
+
+def default_resource_scale(**overrides: int) -> IntensityScale:
+    cuts = {
+        "strong_effect": 50,
+        "strong_moderate_effect": 40,
+        "moderate_effect": 30,
+        "weak_moderate_effect": 20,
+        "weak_effect": 10,
+        "weak_indifferent_effect": 2,
+    }
+    cuts.update(overrides)
+    return IntensityScale(**cuts)
+
+
+def signed_intensity_intervals(scale: EffectIntensity | IntensityScale) -> tuple[SignedIntensityInterval, ...]:
     """Partition of the relative-improvement axis matching ``get_intensity`` cut-points."""
-    indifferent = scale.WEAK_INDIFFERENT_EFFECT
-    weak = scale.WEAK_EFFECT
-    weak_moderate = scale.WEAK_MODERATE_EFFECT
-    moderate = scale.MODERATE_EFFECT
-    strong_moderate = scale.STRONG_MODERATE_EFFECT
-    strong = scale.STRONG_EFFECT
+    if isinstance(scale, IntensityScale):
+        indifferent = scale.weak_indifferent_effect
+        weak = scale.weak_effect
+        weak_moderate = scale.weak_moderate_effect
+        moderate = scale.moderate_effect
+        strong_moderate = scale.strong_moderate_effect
+        strong = scale.strong_effect
+    else:
+        indifferent = scale.WEAK_INDIFFERENT_EFFECT
+        weak = scale.WEAK_EFFECT
+        weak_moderate = scale.WEAK_MODERATE_EFFECT
+        moderate = scale.MODERATE_EFFECT
+        strong_moderate = scale.STRONG_MODERATE_EFFECT
+        strong = scale.STRONG_EFFECT
     return (
         SignedIntensityInterval("SN", -np.inf, -strong, False, False),
         SignedIntensityInterval("SN-NE", -strong, -strong_moderate, True, False),

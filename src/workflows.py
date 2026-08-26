@@ -65,6 +65,7 @@ CORE_TABLES = (
     TABLES_DIR / "result-macros.tex",
     TABLES_DIR / "effective-sample-size.tex",
     TABLES_DIR / "discount-parameter-sensitivity.tex",
+    TABLES_DIR / "intensity-threshold-sensitivity.tex",
 )
 PROCESSED_OUTPUT_FILENAMES = (
     "improvement_metrics.parquet",
