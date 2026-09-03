@@ -39,7 +39,7 @@
         "index": 1,
         "intensity_label": "positive",
         "hypothesis": [
-          "PO"
+          "P"
         ],
         "mass": 0.191
       },
@@ -47,7 +47,7 @@
         "index": 2,
         "intensity_label": "positive",
         "hypothesis": [
-          "PO"
+          "P"
         ],
         "mass": 0.191
       },
@@ -70,18 +70,18 @@
           {
             "hypothesis": [
               "SN",
-              "NE",
+              "N",
               "WN",
-              "IF",
+              "I",
               "WP",
-              "PO",
+              "P",
               "SP"
             ],
             "mass": 0.6544809999999999
           },
           {
             "hypothesis": [
-              "PO"
+              "P"
             ],
             "mass": 0.345519
           }
@@ -90,18 +90,18 @@
           {
             "hypothesis": [
               "SN",
-              "NE",
+              "N",
               "WN",
-              "IF",
+              "I",
               "WP",
-              "PO",
+              "P",
               "SP"
             ],
             "mass": 0.6544809999999999
           },
           {
             "hypothesis": [
-              "PO"
+              "P"
             ],
             "mass": 0.345519
           }
@@ -120,18 +120,18 @@
           {
             "hypothesis": [
               "SN",
-              "NE",
+              "N",
               "WN",
-              "IF",
+              "I",
               "WP",
-              "PO",
+              "P",
               "SP"
             ],
             "mass": 0.280117868
           },
           {
             "hypothesis": [
-              "PO"
+              "P"
             ],
             "mass": 0.14788213200000003
           },
@@ -146,18 +146,18 @@
           {
             "hypothesis": [
               "SN",
-              "NE",
+              "N",
               "WN",
-              "IF",
+              "I",
               "WP",
-              "PO",
+              "P",
               "SP"
             ],
             "mass": 0.34911607578699166
           },
           {
             "hypothesis": [
-              "PO"
+              "P"
             ],
             "mass": 0.18430823414254288
           },
@@ -175,18 +175,18 @@
       {
         "hypothesis": [
           "SN",
-          "NE",
+          "N",
           "WN",
-          "IF",
+          "I",
           "WP",
-          "PO",
+          "P",
           "SP"
         ],
         "mass": 0.34911607578699166
       },
       {
         "hypothesis": [
-          "PO"
+          "P"
         ],
         "mass": 0.18430823414254288
       },
@@ -204,7 +204,7 @@
       "selection_beliefs": [
         {
           "hypothesis": [
-            "PO"
+            "P"
           ],
           "mass": 0.18430823414254288
         },
@@ -234,17 +234,17 @@
       "selection_beliefs": [
         {
           "hypothesis": [
-            "IF",
+            "I",
             "WP",
-            "PO"
+            "P"
           ],
           "mass": 0.18430823414254288
         },
         {
           "hypothesis": [
-            "IF",
+            "I",
             "WP",
-            "PO",
+            "P",
             "SP"
           ],
           "mass": 0.6508839242130082
@@ -252,27 +252,27 @@
         {
           "hypothesis": [
             "WP",
-            "PO"
+            "P"
           ],
           "mass": 0.18430823414254288
         },
         {
           "hypothesis": [
             "WP",
-            "PO",
+            "P",
             "SP"
           ],
           "mass": 0.6508839242130082
         },
         {
           "hypothesis": [
-            "PO"
+            "P"
           ],
           "mass": 0.18430823414254288
         },
         {
           "hypothesis": [
-            "PO",
+            "P",
             "SP"
           ],
           "mass": 0.6508839242130082
@@ -287,25 +287,25 @@
       "selection_steps": [
         {
           "parent": [
-            "IF",
+            "I",
             "WP",
-            "PO",
+            "P",
             "SP"
           ],
           "parent_belief": 0.6508839242130082,
           "children": [
             {
               "hypothesis": [
-                "IF",
+                "I",
                 "WP",
-                "PO"
+                "P"
               ],
               "mass": 0.18430823414254288
             },
             {
               "hypothesis": [
                 "WP",
-                "PO",
+                "P",
                 "SP"
               ],
               "mass": 0.6508839242130082
@@ -313,7 +313,7 @@
           ],
           "chosen_child": [
             "WP",
-            "PO",
+            "P",
             "SP"
           ],
           "threshold": 0.48816294315975617,
@@ -322,7 +322,7 @@
         {
           "parent": [
             "WP",
-            "PO",
+            "P",
             "SP"
           ],
           "parent_belief": 0.6508839242130082,
@@ -330,20 +330,20 @@
             {
               "hypothesis": [
                 "WP",
-                "PO"
+                "P"
               ],
               "mass": 0.18430823414254288
             },
             {
               "hypothesis": [
-                "PO",
+                "P",
                 "SP"
               ],
               "mass": 0.6508839242130082
             }
           ],
           "chosen_child": [
-            "PO",
+            "P",
             "SP"
           ],
           "threshold": 0.48816294315975617,
@@ -351,14 +351,14 @@
         },
         {
           "parent": [
-            "PO",
+            "P",
             "SP"
           ],
           "parent_belief": 0.6508839242130082,
           "children": [
             {
               "hypothesis": [
-                "PO"
+                "P"
               ],
               "mass": 0.18430823414254288
             },
@@ -383,7 +383,7 @@
       ],
       "result": {
         "intensity": [
-          "PO",
+          "P",
           "SP"
         ],
         "belief": 0.6508839242130082,

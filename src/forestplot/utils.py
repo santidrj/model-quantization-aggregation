@@ -458,17 +458,17 @@ def _plot_marker_row(ax: Axes, row: pd.Series, marker: str, color: str, size: fl
 
 intensity_labels = {
     "SN": "{SN}",
-    "SN-NE": "{SN,NE}",
-    "NE": "{NE}",
-    "NE-WN": "{NE,WN}",
+    "SN-N": "{SN,N}",
+    "N": "{N}",
+    "N-WN": "{N,WN}",
     "WN": "{WN}",
-    "WN-IF": "{WN,IF}",
-    "IF": "{IF}",
-    "IF-WP": "{IF,WP}",
+    "WN-I": "{WN,I}",
+    "I": "{I}",
+    "I-WP": "{I,WP}",
     "WP": "{WP}",
-    "WP-PO": "{WP,PO}",
-    "PO": "{PO}",
-    "PO-SP": "{PO,SP}",
+    "WP-P": "{WP,P}",
+    "P": "{P}",
+    "P-SP": "{P,SP}",
     "SP": "{SP}",
 }
 
@@ -516,17 +516,17 @@ def draw_intensity_labels(ax: Axes, metric: str, y: float, x_min: float, x_max: 
 
 intensity_colors = {
     "SN": "#67001F",
-    "SN-NE": "#8E063B",
-    "NE": "#B2182B",
-    "NE-WN": "#D6604D",
+    "SN-N": "#8E063B",
+    "N": "#B2182B",
+    "N-WN": "#D6604D",
     "WN": "#EA6B5F",
-    "WN-IF": "#F4A582",
-    "IF": "#999999",
-    "IF-WP": "#D9F0D3",
+    "WN-I": "#F4A582",
+    "I": "#999999",
+    "I-WP": "#D9F0D3",
     "WP": "#A6DBA0",
-    "WP-PO": "#7FBC41",
-    "PO": "#4DAC26",
-    "PO-SP": "#1B7837",
+    "WP-P": "#7FBC41",
+    "P": "#4DAC26",
+    "P-SP": "#1B7837",
     "SP": "#00441B",
 }
 

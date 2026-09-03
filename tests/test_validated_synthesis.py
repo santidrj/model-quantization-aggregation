@@ -89,7 +89,7 @@ def test_subgroup_has_nine_studies_and_complete_source_list():
 
 def test_aggregated_effects_table_uses_validated_beliefs():
     latex = render_aggregated_effects_table(build_validated_synthesis())
-    assert r"GPU utilization & \{IF, WP\} & \textbf{97\%}" in latex
+    assert r"GPU utilization & \{I, WP\} & \textbf{97\%}" in latex
     assert "Inf. power draw" in latex and "74\\%" in latex
     assert "Inf. latency" in latex and "100\\%" in latex
     assert "F$_1$-score" in latex
@@ -107,15 +107,15 @@ def test_write_all_validated_outputs(tmp_path):
     gpu_energy_rows = [row for row in loo.splitlines() if row.startswith("GPU energy")]
     assert len(gpu_energy_rows) == len({"S3", "S13", "S14"})
     analogue = (tmp_path / "belief-assignment.tex").read_text(encoding="utf-8")
-    assert "mAP & 2 & 4 & IF & 0.45" in analogue
+    assert "mAP & 2 & 4 & I & 0.45" in analogue
     assert "RAM usage & 2 & 3 & SP & 0.47" in analogue
-    assert "Accuracy & 10 & 41 & IF & 0.91" in analogue
+    assert "Accuracy & 10 & 41 & I & 0.91" in analogue
 
 
 def test_intensity_reconciliation_intersects_primary_and_mass_preserving():
     payload = build_validated_synthesis()
     recon = payload["intensity_reconciliation"]["effects"]
-    assert recon["Accuracy"]["intensity"] == ["IF"]
+    assert recon["Accuracy"]["intensity"] == ["I"]
     assert recon["Accuracy"]["differs_from_primary"] is False
     assert recon["Accuracy"]["has_theory_arrow"] is True
     assert recon["Inference Latency"]["intensity"] == ["SP"]
@@ -124,7 +124,7 @@ def test_intensity_reconciliation_intersects_primary_and_mass_preserving():
     assert recon["RAM Usage"]["has_theory_arrow"] is False
     assert recon["Storage Size"]["differs_from_primary"] is False
     macros = render_result_macros(payload)
-    assert r"\newcommand{\TheoryAccuracyIntensity}{IF}" in macros
+    assert r"\newcommand{\TheoryAccuracyIntensity}{I}" in macros
     assert r"\newcommand{\TheoryAccuracyProse}{indifferently}" in macros
     assert r"\newcommand{\TheoryInfLatencyIntensity}{SP}" in macros
     assert r"\newcommand{\TheoryRAMUsageHasArrow}{false}" in macros

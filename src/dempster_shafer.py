@@ -7,15 +7,15 @@ from enum import Enum
 
 ATOM_BY_LABEL = {
     "strongly negative": "SN",
-    "negative": "NE",
+    "negative": "N",
     "weakly negative": "WN",
-    "indifferent": "IF",
+    "indifferent": "I",
     "weakly positive": "WP",
-    "positive": "PO",
+    "positive": "P",
     "strongly positive": "SP",
 }
 
-ATOMS: tuple[str, ...] = ("SN", "NE", "WN", "IF", "WP", "PO", "SP")
+ATOMS: tuple[str, ...] = ("SN", "N", "WN", "I", "WP", "P", "SP")
 THETA: frozenset[str] = frozenset(ATOMS)
 ADJACENT_COMPOUNDS: tuple[frozenset[str], ...] = tuple(
     frozenset({ATOMS[index], ATOMS[index + 1]}) for index in range(len(ATOMS) - 1)

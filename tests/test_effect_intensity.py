@@ -37,7 +37,7 @@ def test_signed_intervals_match_get_intensity():
 def test_intensity_thresholds_table_lists_both_scales():
     latex = render_intensity_thresholds_table()
     assert r"\{SN\}" in latex
-    assert r"\{IF, WP\}" in latex
+    assert r"\{I, WP\}" in latex
     assert r"$(-\infty,-25)$" in latex
     assert r"$(-\infty,-50)$" in latex
     assert r"$[-2,2]$" in latex

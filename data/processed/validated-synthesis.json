@@ -31,9 +31,9 @@
     "Accuracy": {
       "effect": "Accuracy",
       "intensity": [
-        "IF"
+        "I"
       ],
-      "intensity_label": "IF",
+      "intensity_label": "I",
       "belief": 0.9074893015777279,
       "belief_percent": 91,
       "conflict": 0.18884597898784045,
@@ -64,9 +64,9 @@
     "F1 Score": {
       "effect": "F1 Score",
       "intensity": [
-        "IF"
+        "I"
       ],
-      "intensity_label": "IF",
+      "intensity_label": "I",
       "belief": 0.7161102586550834,
       "belief_percent": 72,
       "conflict": 0.14062183186849211,
@@ -89,9 +89,9 @@
     "mAP": {
       "effect": "mAP",
       "intensity": [
-        "IF"
+        "I"
       ],
-      "intensity_label": "IF",
+      "intensity_label": "I",
       "belief": 0.4457676937788615,
       "belief_percent": 45,
       "conflict": 0.3111319305252532,
@@ -154,10 +154,10 @@
     "GPU Utilization": {
       "effect": "GPU Utilization",
       "intensity": [
-        "IF",
+        "I",
         "WP"
       ],
-      "intensity_label": "{IF, WP}",
+      "intensity_label": "{I, WP}",
       "belief": 0.9675821920000001,
       "belief_percent": 97,
       "conflict": 0.0,
@@ -180,10 +180,10 @@
     "GPU Power Draw": {
       "effect": "GPU Power Draw",
       "intensity": [
-        "IF",
+        "I",
         "WP"
       ],
-      "intensity_label": "{IF, WP}",
+      "intensity_label": "{I, WP}",
       "belief": 0.9835389396888118,
       "belief_percent": 98,
       "conflict": 0.29835399999999995,
@@ -315,10 +315,10 @@
     "Inference Latency": {
       "effect": "Inference Latency",
       "intensity": [
-        "PO",
+        "P",
         "SP"
       ],
-      "intensity_label": "{PO, SP}",
+      "intensity_label": "{P, SP}",
       "belief": 0.9984107186481516,
       "belief_percent": 100,
       "conflict": 0.32869212132935427,
@@ -353,9 +353,9 @@
     "Accuracy": {
       "effect": "Accuracy",
       "intensity": [
-        "IF"
+        "I"
       ],
-      "intensity_label": "IF",
+      "intensity_label": "I",
       "belief": 0.9074893015777279,
       "belief_percent": 91,
       "conflict": 0.18884597898784045,
@@ -434,9 +434,9 @@
     "F1 Score": {
       "effect": "F1 Score",
       "intensity": [
-        "IF"
+        "I"
       ],
-      "intensity_label": "IF",
+      "intensity_label": "I",
       "belief": 0.7161102586550834,
       "belief_percent": 72,
       "conflict": 0.14062183186849211,
@@ -459,9 +459,9 @@
     "DSC": {
       "effect": "DSC",
       "intensity": [
-        "IF"
+        "I"
       ],
-      "intensity_label": "IF",
+      "intensity_label": "I",
       "belief": 0.249,
       "belief_percent": 25,
       "conflict": 0.0,
@@ -483,9 +483,9 @@
     "mAP": {
       "effect": "mAP",
       "intensity": [
-        "IF"
+        "I"
       ],
-      "intensity_label": "IF",
+      "intensity_label": "I",
       "belief": 0.4457676937788615,
       "belief_percent": 45,
       "conflict": 0.3111319305252532,
@@ -509,9 +509,9 @@
       "effect": "mAP@0.5",
       "intensity": [
         "SN",
-        "NE"
+        "N"
       ],
-      "intensity_label": "{SN, NE}",
+      "intensity_label": "{SN, N}",
       "belief": 0.34875100000000003,
       "belief_percent": 35,
       "conflict": 0.0,
@@ -557,10 +557,10 @@
     "mIoU": {
       "effect": "mIoU",
       "intensity": [
-        "IF",
+        "I",
         "WP"
       ],
-      "intensity_label": "{IF, WP}",
+      "intensity_label": "{I, WP}",
       "belief": 0.31152767052445557,
       "belief_percent": 31,
       "conflict": 0.055627167774072124,
@@ -582,10 +582,10 @@
     "Perplexity": {
       "effect": "Perplexity",
       "intensity": [
-        "NE",
+        "N",
         "WN"
       ],
-      "intensity_label": "{NE, WN}",
+      "intensity_label": "{N, WN}",
       "belief": 0.8882571219045439,
       "belief_percent": 89,
       "conflict": 0.3083346417562401,
@@ -608,9 +608,9 @@
       "effect": "Word Error Rate",
       "intensity": [
         "WN",
-        "IF"
+        "I"
       ],
-      "intensity_label": "{WN, IF}",
+      "intensity_label": "{WN, I}",
       "belief": 0.9932043082061698,
       "belief_percent": 99,
       "conflict": 0.18599174844903676,
@@ -632,9 +632,9 @@
     "BLEU": {
       "effect": "BLEU",
       "intensity": [
-        "IF"
+        "I"
       ],
-      "intensity_label": "IF",
+      "intensity_label": "I",
       "belief": 0.3536172547995536,
       "belief_percent": 35,
       "conflict": 0.1466244316929097,
@@ -696,10 +696,10 @@
     "GPU Utilization": {
       "effect": "GPU Utilization",
       "intensity": [
-        "IF",
+        "I",
         "WP"
       ],
-      "intensity_label": "{IF, WP}",
+      "intensity_label": "{I, WP}",
       "belief": 0.9675821920000001,
       "belief_percent": 97,
       "conflict": 0.0,
@@ -722,10 +722,10 @@
     "GPU Memory Utilization": {
       "effect": "GPU Memory Utilization",
       "intensity": [
-        "PO",
+        "P",
         "SP"
       ],
-      "intensity_label": "{PO, SP}",
+      "intensity_label": "{P, SP}",
       "belief": 0.704,
       "belief_percent": 70,
       "conflict": 0.0,
@@ -747,10 +747,10 @@
     "GPU Power Draw": {
       "effect": "GPU Power Draw",
       "intensity": [
-        "IF",
+        "I",
         "WP"
       ],
-      "intensity_label": "{IF, WP}",
+      "intensity_label": "{I, WP}",
       "belief": 0.9835389396888118,
       "belief_percent": 98,
       "conflict": 0.29835399999999995,
@@ -825,10 +825,10 @@
     "RAM Energy Consumption": {
       "effect": "RAM Energy Consumption",
       "intensity": [
-        "PO",
+        "P",
         "SP"
       ],
-      "intensity_label": "{PO, SP}",
+      "intensity_label": "{P, SP}",
       "belief": 0.32375421472937,
       "belief_percent": 32,
       "conflict": 0.0,
@@ -907,10 +907,10 @@
     "Inference Latency": {
       "effect": "Inference Latency",
       "intensity": [
-        "PO",
+        "P",
         "SP"
       ],
-      "intensity_label": "{PO, SP}",
+      "intensity_label": "{P, SP}",
       "belief": 0.9984107186481516,
       "belief_percent": 100,
       "conflict": 0.32869212132935427,
@@ -947,48 +947,48 @@
       "Accuracy": {
         "n_primary_studies": 10,
         "n_evidence_models": 41,
-        "analogue_intensity": "IF",
+        "analogue_intensity": "I",
         "analogue_belief_percent": 91,
         "analogue_conflict": 0.18884597898784045,
-        "unsplit_intensity": "IF",
+        "unsplit_intensity": "I",
         "unsplit_belief_percent": 99,
         "unsplit_conflict": 0.6670807973447248,
-        "mass_preserving_intensity": "IF",
+        "mass_preserving_intensity": "I",
         "mass_preserving_belief_percent": 83,
         "mass_preserving_conflict": 0.09487786719144821,
-        "equitable_intensity": "IF",
+        "equitable_intensity": "I",
         "equitable_belief_percent": 76,
         "equitable_conflict": 0.06027418047513863
       },
       "F1 Score": {
         "n_primary_studies": 2,
         "n_evidence_models": 9,
-        "analogue_intensity": "IF",
+        "analogue_intensity": "I",
         "analogue_belief_percent": 72,
         "analogue_conflict": 0.14062183186849211,
-        "unsplit_intensity": "IF",
+        "unsplit_intensity": "I",
         "unsplit_belief_percent": 94,
         "unsplit_conflict": 0.6449765670665684,
-        "mass_preserving_intensity": "IF",
+        "mass_preserving_intensity": "I",
         "mass_preserving_belief_percent": 74,
         "mass_preserving_conflict": 0.09672102717837427,
-        "equitable_intensity": "IF",
+        "equitable_intensity": "I",
         "equitable_belief_percent": 72,
         "equitable_conflict": 0.060933634493702184
       },
       "mAP": {
         "n_primary_studies": 2,
         "n_evidence_models": 4,
-        "analogue_intensity": "IF",
+        "analogue_intensity": "I",
         "analogue_belief_percent": 45,
         "analogue_conflict": 0.3111319305252532,
-        "unsplit_intensity": "IF",
+        "unsplit_intensity": "I",
         "unsplit_belief_percent": 61,
         "unsplit_conflict": 0.6116271064102576,
-        "mass_preserving_intensity": "IF",
+        "mass_preserving_intensity": "I",
         "mass_preserving_belief_percent": 45,
         "mass_preserving_conflict": 0.3136249741555008,
-        "equitable_intensity": "IF",
+        "equitable_intensity": "I",
         "equitable_belief_percent": 38,
         "equitable_conflict": 0.21430128650077523
       },
@@ -1011,32 +1011,32 @@
       "GPU Utilization": {
         "n_primary_studies": 2,
         "n_evidence_models": 3,
-        "analogue_intensity": "{IF, WP}",
+        "analogue_intensity": "{I, WP}",
         "analogue_belief_percent": 97,
         "analogue_conflict": 0.0,
-        "unsplit_intensity": "IF",
+        "unsplit_intensity": "I",
         "unsplit_belief_percent": 74,
         "unsplit_conflict": 0.0,
-        "mass_preserving_intensity": "IF",
+        "mass_preserving_intensity": "I",
         "mass_preserving_belief_percent": 74,
         "mass_preserving_conflict": 0.0,
-        "equitable_intensity": "IF",
+        "equitable_intensity": "I",
         "equitable_belief_percent": 74,
         "equitable_conflict": 0.0
       },
       "GPU Power Draw": {
         "n_primary_studies": 3,
         "n_evidence_models": 5,
-        "analogue_intensity": "{IF, WP}",
+        "analogue_intensity": "{I, WP}",
         "analogue_belief_percent": 98,
         "analogue_conflict": 0.29835399999999995,
-        "unsplit_intensity": "{IF, WP}",
+        "unsplit_intensity": "{I, WP}",
         "unsplit_belief_percent": 100,
         "unsplit_conflict": 0.49165718403472225,
-        "mass_preserving_intensity": "{IF, WP}",
+        "mass_preserving_intensity": "{I, WP}",
         "mass_preserving_belief_percent": 96,
         "mass_preserving_conflict": 0.3119120013222958,
-        "equitable_intensity": "{IF, WP}",
+        "equitable_intensity": "{I, WP}",
         "equitable_belief_percent": 94,
         "equitable_conflict": 0.24582859201736112
       },
@@ -1062,10 +1062,10 @@
         "analogue_intensity": "SP",
         "analogue_belief_percent": 47,
         "analogue_conflict": 0.197636868,
-        "unsplit_intensity": "PO",
+        "unsplit_intensity": "P",
         "unsplit_belief_percent": 74,
         "unsplit_conflict": 0.5915670531868281,
-        "mass_preserving_intensity": "PO",
+        "mass_preserving_intensity": "P",
         "mass_preserving_belief_percent": 41,
         "mass_preserving_conflict": 0.44688687031406255,
         "equitable_intensity": "SP",
@@ -1107,7 +1107,7 @@
       "Inference Latency": {
         "n_primary_studies": 12,
         "n_evidence_models": 51,
-        "analogue_intensity": "{PO, SP}",
+        "analogue_intensity": "{P, SP}",
         "analogue_belief_percent": 100,
         "analogue_conflict": 0.32869212132935427,
         "unsplit_intensity": "SP",
@@ -1127,9 +1127,9 @@
     "effects": {
       "Accuracy": {
         "intensity": [
-          "IF"
+          "I"
         ],
-        "intensity_label": "IF",
+        "intensity_label": "I",
         "belief": 0.831702113267488,
         "belief_percent": 83,
         "conflict": 0.09487786719144821,
@@ -1138,9 +1138,9 @@
       },
       "F1 Score": {
         "intensity": [
-          "IF"
+          "I"
         ],
-        "intensity_label": "IF",
+        "intensity_label": "I",
         "belief": 0.7443131408519471,
         "belief_percent": 74,
         "conflict": 0.09672102717837427,
@@ -1149,9 +1149,9 @@
       },
       "mAP": {
         "intensity": [
-          "IF"
+          "I"
         ],
-        "intensity_label": "IF",
+        "intensity_label": "I",
         "belief": 0.4465666013534683,
         "belief_percent": 45,
         "conflict": 0.3136249741555008,
@@ -1171,9 +1171,9 @@
       },
       "GPU Utilization": {
         "intensity": [
-          "IF"
+          "I"
         ],
-        "intensity_label": "IF",
+        "intensity_label": "I",
         "belief": 0.7361083333333334,
         "belief_percent": 74,
         "conflict": 0.0,
@@ -1182,10 +1182,10 @@
       },
       "GPU Power Draw": {
         "intensity": [
-          "IF",
+          "I",
           "WP"
         ],
-        "intensity_label": "{IF, WP}",
+        "intensity_label": "{I, WP}",
         "belief": 0.9634426940667167,
         "belief_percent": 96,
         "conflict": 0.3119120013222958,
@@ -1205,9 +1205,9 @@
       },
       "RAM Usage": {
         "intensity": [
-          "PO"
+          "P"
         ],
-        "intensity_label": "PO",
+        "intensity_label": "P",
         "belief": 0.4146744442970848,
         "belief_percent": 41,
         "conflict": 0.44688687031406255,
@@ -1255,44 +1255,44 @@
     "effects": {
       "Accuracy": {
         "primary_intensity": [
-          "IF"
+          "I"
         ],
         "dependence_check_intensity": [
-          "IF"
+          "I"
         ],
         "differs_from_primary": false,
         "intensity": [
-          "IF"
+          "I"
         ],
-        "intensity_label": "IF",
+        "intensity_label": "I",
         "has_theory_arrow": true
       },
       "F1 Score": {
         "primary_intensity": [
-          "IF"
+          "I"
         ],
         "dependence_check_intensity": [
-          "IF"
+          "I"
         ],
         "differs_from_primary": false,
         "intensity": [
-          "IF"
+          "I"
         ],
-        "intensity_label": "IF",
+        "intensity_label": "I",
         "has_theory_arrow": true
       },
       "mAP": {
         "primary_intensity": [
-          "IF"
+          "I"
         ],
         "dependence_check_intensity": [
-          "IF"
+          "I"
         ],
         "differs_from_primary": false,
         "intensity": [
-          "IF"
+          "I"
         ],
-        "intensity_label": "IF",
+        "intensity_label": "I",
         "has_theory_arrow": true
       },
       "Storage Size": {
@@ -1311,34 +1311,34 @@
       },
       "GPU Utilization": {
         "primary_intensity": [
-          "IF",
+          "I",
           "WP"
         ],
         "dependence_check_intensity": [
-          "IF"
+          "I"
         ],
         "differs_from_primary": true,
         "intensity": [
-          "IF"
+          "I"
         ],
-        "intensity_label": "IF",
+        "intensity_label": "I",
         "has_theory_arrow": true
       },
       "GPU Power Draw": {
         "primary_intensity": [
-          "IF",
+          "I",
           "WP"
         ],
         "dependence_check_intensity": [
-          "IF",
+          "I",
           "WP"
         ],
         "differs_from_primary": false,
         "intensity": [
-          "IF",
+          "I",
           "WP"
         ],
-        "intensity_label": "{IF, WP}",
+        "intensity_label": "{I, WP}",
         "has_theory_arrow": true
       },
       "GPU Energy Consumption": {
@@ -1360,7 +1360,7 @@
           "SP"
         ],
         "dependence_check_intensity": [
-          "PO"
+          "P"
         ],
         "differs_from_primary": true,
         "intensity": null,
@@ -1397,7 +1397,7 @@
       },
       "Inference Latency": {
         "primary_intensity": [
-          "PO",
+          "P",
           "SP"
         ],
         "dependence_check_intensity": [
@@ -1421,11 +1421,11 @@
           {
             "omitted_study_id": "S4",
             "full_intensity": [
-              "IF"
+              "I"
             ],
             "full_belief": 0.9074893015777279,
             "loo_intensity": [
-              "IF"
+              "I"
             ],
             "loo_belief": 0.7787122745696288,
             "belief_delta": -0.12877702700809912,
@@ -1439,11 +1439,11 @@
           {
             "omitted_study_id": "S12",
             "full_intensity": [
-              "IF"
+              "I"
             ],
             "full_belief": 0.7161102586550834,
             "loo_intensity": [
-              "IF"
+              "I"
             ],
             "loo_belief": 0.4165164040205934,
             "belief_delta": -0.29959385463448995,
@@ -1457,7 +1457,7 @@
           {
             "omitted_study_id": "S3",
             "full_intensity": [
-              "IF"
+              "I"
             ],
             "full_belief": 0.4457676937788615,
             "loo_intensity": [
@@ -1493,12 +1493,12 @@
           {
             "omitted_study_id": "S14",
             "full_intensity": [
-              "IF",
+              "I",
               "WP"
             ],
             "full_belief": 0.9675821920000001,
             "loo_intensity": [
-              "IF"
+              "I"
             ],
             "loo_belief": 0.668,
             "belief_delta": -0.299582192,
@@ -1512,12 +1512,12 @@
           {
             "omitted_study_id": "S14",
             "full_intensity": [
-              "IF",
+              "I",
               "WP"
             ],
             "full_belief": 0.9835389396888118,
             "loo_intensity": [
-              "IF",
+              "I",
               "WP"
             ],
             "loo_belief": 0.860490030585224,
@@ -1536,7 +1536,7 @@
             ],
             "full_belief": 0.7420250950093884,
             "loo_intensity": [
-              "PO",
+              "P",
               "SP"
             ],
             "loo_belief": 0.9489383881662634,
@@ -1550,7 +1550,7 @@
             ],
             "full_belief": 0.7420250950093884,
             "loo_intensity": [
-              "PO",
+              "P",
               "SP"
             ],
             "loo_belief": 0.9435404674867096,
@@ -1582,7 +1582,7 @@
             ],
             "full_belief": 0.46657569007046534,
             "loo_intensity": [
-              "PO"
+              "P"
             ],
             "loo_belief": 0.345519,
             "belief_delta": -0.12105669007046532,
@@ -1632,12 +1632,12 @@
           {
             "omitted_study_id": "S6",
             "full_intensity": [
-              "PO",
+              "P",
               "SP"
             ],
             "full_belief": 0.9984107186481516,
             "loo_intensity": [
-              "PO",
+              "P",
               "SP"
             ],
             "loo_belief": 0.7536210174140233,
@@ -1670,9 +1670,9 @@
       "Accuracy": {
         "effect": "Accuracy",
         "intensity": [
-          "IF"
+          "I"
         ],
-        "intensity_label": "IF",
+        "intensity_label": "I",
         "belief": 0.49307500000000004,
         "belief_percent": 49,
         "conflict": 0.0,
@@ -1696,9 +1696,9 @@
         "effect": "Precision",
         "intensity": [
           "SN",
-          "NE"
+          "N"
         ],
-        "intensity_label": "{SN, NE}",
+        "intensity_label": "{SN, N}",
         "belief": 0.193,
         "belief_percent": 19,
         "conflict": 0.0,
@@ -1744,9 +1744,9 @@
       "DSC": {
         "effect": "DSC",
         "intensity": [
-          "IF"
+          "I"
         ],
-        "intensity_label": "IF",
+        "intensity_label": "I",
         "belief": 0.249,
         "belief_percent": 25,
         "conflict": 0.0,
@@ -1794,9 +1794,9 @@
         "effect": "mAP@0.5",
         "intensity": [
           "SN",
-          "NE"
+          "N"
         ],
-        "intensity_label": "{SN, NE}",
+        "intensity_label": "{SN, N}",
         "belief": 0.193,
         "belief_percent": 19,
         "conflict": 0.0,
@@ -1842,10 +1842,10 @@
       "Perplexity": {
         "effect": "Perplexity",
         "intensity": [
-          "NE",
+          "N",
           "WN"
         ],
-        "intensity_label": "{NE, WN}",
+        "intensity_label": "{N, WN}",
         "belief": 0.327,
         "belief_percent": 33,
         "conflict": 0.0,
@@ -1867,9 +1867,9 @@
       "Word Error Rate": {
         "effect": "Word Error Rate",
         "intensity": [
-          "IF"
+          "I"
         ],
-        "intensity_label": "IF",
+        "intensity_label": "I",
         "belief": 0.327,
         "belief_percent": 33,
         "conflict": 0.0,
@@ -1922,9 +1922,9 @@
       "GPU Power Draw": {
         "effect": "GPU Power Draw",
         "intensity": [
-          "IF"
+          "I"
         ],
-        "intensity_label": "IF",
+        "intensity_label": "I",
         "belief": 0.422,
         "belief_percent": 42,
         "conflict": 0.0,

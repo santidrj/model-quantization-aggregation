@@ -51,7 +51,7 @@ def test_render_discount_sensitivity_table_marks_reference_row():
         k=0.1,
         cutoff=4,
         is_reference=True,
-        accuracy_intensity="{IF}",
+        accuracy_intensity="{I}",
         accuracy_belief_percent=99,
         alizadeh_accuracy_belief=0.031,
     )

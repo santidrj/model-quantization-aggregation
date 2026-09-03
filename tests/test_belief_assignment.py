@@ -202,7 +202,7 @@ def test_synthesis_can_select_santos_2015_policy_explicitly():
         MassAssignment.PUBLISHED_ANALOGUE,
         selection_policy=HypothesisSelectionPolicy.SANTOS_2015,
     )
-    assert result.intensity == frozenset({"PO", "SP"})
+    assert result.intensity == frozenset({"P", "SP"})
     assert result.belief_percent == RAM_USAGE_SANTOS_BELIEF_PERCENT
 
 
@@ -232,17 +232,17 @@ def test_undiscounted_synthesis_uses_explicit_santos_policy():
         MassAssignment.UNDISCOUNTED_UNSPLIT,
         selection_policy=HypothesisSelectionPolicy.SANTOS_2015,
     )
-    assert result.intensity == frozenset({"PO", "SP"})
+    assert result.intensity == frozenset({"P", "SP"})
 
 
 def test_comparison_records_use_santos_2015_for_every_local_assignment():
     records = {record["effect"]: record for record in comparison_records()}
-    assert records["mAP"]["analogue_intensity"] == "{NE, WN, IF}"
-    assert records["mAP"]["mass_preserving_intensity"] == "{NE, WN, IF}"
-    assert records["mAP"]["equitable_intensity"] == "{NE, WN, IF}"
-    assert records["RAM Usage"]["analogue_intensity"] == "{PO, SP}"
-    assert records["RAM Usage"]["mass_preserving_intensity"] == "{PO, SP}"
-    assert records["RAM Usage"]["equitable_intensity"] == "{PO, SP}"
+    assert records["mAP"]["analogue_intensity"] == "{N, WN, I}"
+    assert records["mAP"]["mass_preserving_intensity"] == "{N, WN, I}"
+    assert records["mAP"]["equitable_intensity"] == "{N, WN, I}"
+    assert records["RAM Usage"]["analogue_intensity"] == "{P, SP}"
+    assert records["RAM Usage"]["mass_preserving_intensity"] == "{P, SP}"
+    assert records["RAM Usage"]["equitable_intensity"] == "{P, SP}"
     assert {record["selection_policy"] for record in records.values()} == {"santos_2015"}
 
 
@@ -256,7 +256,7 @@ def test_ram_usage_trace_exposes_both_selection_policies():
     assert trace["assignment"] == "published_analogue"
     assert len(trace["ordered_inputs"]) == RAM_USAGE_EVIDENCE_MODEL_COUNT
     assert trace["policies"]["evidence_factory_compat"]["result"]["intensity"] == ["SP"]
-    assert trace["policies"]["santos_2015"]["result"]["intensity"] == ["PO", "SP"]
+    assert trace["policies"]["santos_2015"]["result"]["intensity"] == ["P", "SP"]
 
 
 def test_ram_usage_trace_matches_committed_fixture():
@@ -360,19 +360,19 @@ def test_render_belief_assignment_table_orders_mass_preserving_before_equitable(
                 "effect": "Accuracy",
                 "n_primary_studies": 10,
                 "n_evidence_models": 41,
-                "published_intensity": "{WN, IF}",
+                "published_intensity": "{WN, I}",
                 "published_belief_percent": 99,
                 "published_conflict": 0.1894921993508596,
-                "analogue_intensity": "{WN, IF}",
+                "analogue_intensity": "{WN, I}",
                 "analogue_belief_percent": 99,
                 "analogue_conflict": 0.1894921993508596,
-                "unsplit_intensity": "IF",
+                "unsplit_intensity": "I",
                 "unsplit_belief_percent": 99,
                 "unsplit_conflict": 0.6670807973447248,
-                "mass_preserving_intensity": "IF",
+                "mass_preserving_intensity": "I",
                 "mass_preserving_belief_percent": 88,
                 "mass_preserving_conflict": 0.12,
-                "equitable_intensity": "IF",
+                "equitable_intensity": "I",
                 "equitable_belief_percent": 76,
                 "equitable_conflict": 0.06027418047513863,
             },
@@ -399,7 +399,7 @@ def test_render_belief_assignment_table_orders_mass_preserving_before_equitable(
         ]
     )
     assert r"\begin{tabular}" in latex
-    assert r"\{WN, IF\}" in latex
+    assert r"\{WN, I\}" in latex
     assert "Accuracy" in latex
     assert "Storage size" in latex
     assert "0.99" in latex
@@ -430,19 +430,19 @@ def test_write_belief_assignment_table_writes_fragment(tmp_path):
                 "effect": "mAP",
                 "n_primary_studies": 2,
                 "n_evidence_models": 4,
-                "published_intensity": "IF",
+                "published_intensity": "I",
                 "published_belief_percent": 45,
                 "published_conflict": 0.31,
-                "analogue_intensity": "IF",
+                "analogue_intensity": "I",
                 "analogue_belief_percent": 45,
                 "analogue_conflict": 0.31,
-                "unsplit_intensity": "IF",
+                "unsplit_intensity": "I",
                 "unsplit_belief_percent": 61,
                 "unsplit_conflict": 0.61,
-                "mass_preserving_intensity": "IF",
+                "mass_preserving_intensity": "I",
                 "mass_preserving_belief_percent": 50,
                 "mass_preserving_conflict": 0.40,
-                "equitable_intensity": "IF",
+                "equitable_intensity": "I",
                 "equitable_belief_percent": 38,
                 "equitable_conflict": 0.21,
             }

@@ -93,11 +93,11 @@ _EFFECT_LATEX_NAME = {
 
 _ATOM_PROSE = {
     "SN": "strongly negatively",
-    "NE": "negatively",
+    "N": "negatively",
     "WN": "weakly negatively",
-    "IF": "indifferently",
+    "I": "indifferently",
     "WP": "weakly positively",
-    "PO": "positively",
+    "P": "positively",
     "SP": "strongly positively",
 }
 

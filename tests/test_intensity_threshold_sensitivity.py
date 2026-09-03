@@ -22,7 +22,7 @@ from src.intensity_threshold_sensitivity import (
 
 
 def test_correctness_scale_indifferent_one_moves_boundary_crossing_ri():
-    """|RI|=1.5 is IF at published indifferent=2 and WN-IF when indifferent=1."""
+    """|RI|=1.5 is I at published indifferent=2 and WN-I when indifferent=1."""
     published = default_correctness_scale()
     tight = default_correctness_scale(weak_indifferent_effect=1)
     assert published.get_intensity(-1.5) == "indifferent"
@@ -111,7 +111,7 @@ def test_render_marks_reference_and_lists_effect_columns():
         ),
         is_reference=True,
         effect="Accuracy",
-        intensity="{IF}",
+        intensity="{I}",
         belief_percent=99,
     )
     latex = render_intensity_threshold_sensitivity_table([row])
