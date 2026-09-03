@@ -32,7 +32,7 @@ AJI_PROCESSED_BELIEF = 0.327
 CORPUS_EVIDENCE_MODEL_COUNT = 76
 ACCURACY_EVIDENCE_MODEL_COUNT = 41
 ACCURACY_PRIMARY_STUDY_COUNT = 10
-ACCURACY_LOO_FULL_BELIEF = 0.99
+ACCURACY_LOO_FULL_BELIEF = 0.91
 ACCURACY_LOO_BELIEF = 0.78
 RAM_USAGE_EVIDENCE_MODEL_COUNT = 3
 RAM_USAGE_SANTOS_BELIEF_PERCENT = 65
@@ -313,19 +313,19 @@ def test_leave_one_study_out_gpu_energy_reports_all_omissions_when_belief_rises(
     assert all(row.belief_delta > 0 for row in gpu_energy)
 
 
-def test_leave_one_study_out_worst_drop_for_accuracy_is_s13():
+def test_leave_one_study_out_worst_drop_for_accuracy_is_s4():
     records = {row.effect: row for row in leave_one_study_out_records()}
     accuracy = records["Accuracy"]
-    assert accuracy.omitted_study_id == "S13"
+    assert accuracy.omitted_study_id == "S4"
     assert round(accuracy.full_belief, 2) == ACCURACY_LOO_FULL_BELIEF
     assert round(accuracy.loo_belief, 2) == ACCURACY_LOO_BELIEF
-    assert accuracy.intensity_changed
+    assert not accuracy.intensity_changed
 
 
 def test_render_leave_one_study_out_table_includes_accuracy():
     latex = render_leave_one_study_out_table()
     assert "Accuracy" in latex
-    assert "S13" in latex
+    assert "S4" in latex
     assert r"\begin{tabularx}" in latex
 
 

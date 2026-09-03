@@ -11,7 +11,6 @@ import polars as pl
 DEFAULT_SATURATION_SIZE = 3  # integer nearest 2 / ln 2; α_n(2) is the median of 1-e^{-n/n_0}
 DEFAULT_VARIABILITY_K = 0.1
 DEFAULT_VARIABILITY_CUTOFF = 4
-EPSILON = 1e-10
 
 
 def sample_size_reliability(n_eff: int, n0: float = DEFAULT_SATURATION_SIZE) -> float:
@@ -19,25 +18,32 @@ def sample_size_reliability(n_eff: int, n0: float = DEFAULT_SATURATION_SIZE) -> 
     return round(1 - math.exp(-n_eff / n0), 3)
 
 
+def second_order_coefficient_of_variation(std: float, mean: float) -> float:
+    """Kvålseth V_2 = σ / sqrt(σ² + μ²) on a real-valued sample."""
+    scale = math.hypot(std, mean)
+    if scale == 0.0:
+        return 0.0
+    return std / scale
+
+
 def variability_reliability(  # noqa: PLR0913
     n_eff: int,
-    iqr: float,
+    std: float,
     mean: float,
     *,
     k: float = DEFAULT_VARIABILITY_K,
     cutoff: int = DEFAULT_VARIABILITY_CUTOFF,
-    epsilon: float = EPSILON,
 ) -> float:
-    """α_v from relative IQR, or 1 when n_eff is at most the cutoff."""
+    """α_v = exp(-k V_2), or 1 when n_eff is at most the cutoff."""
     if n_eff <= cutoff:
         return 1.0
-    return round(math.exp(-k * abs(iqr / (mean + epsilon))), 3)
+    return round(math.exp(-k * second_order_coefficient_of_variation(std, mean)), 3)
 
 
 def discounted_belief(  # noqa: PLR0913
     study_belief: float,
     n_eff: int,
-    iqr: float,
+    std: float,
     mean: float,
     *,
     n0: float = DEFAULT_SATURATION_SIZE,
@@ -45,7 +51,9 @@ def discounted_belief(  # noqa: PLR0913
     cutoff: int = DEFAULT_VARIABILITY_CUTOFF,
 ) -> float:
     """B' = B α_n α_v, rounded to three decimals."""
-    reliability = sample_size_reliability(n_eff, n0) * variability_reliability(n_eff, iqr, mean, k=k, cutoff=cutoff)
+    reliability = sample_size_reliability(n_eff, n0) * variability_reliability(
+        n_eff, std, mean, k=k, cutoff=cutoff
+    )
     return round(study_belief * reliability, 3)
 
 

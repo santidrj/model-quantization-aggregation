@@ -9,10 +9,10 @@
             "std": 0.551,
             "iqr": 0.0,
             "sample_size_discount": 0.95,
-            "variability_discount": 1.0,
-            "discount_factor": 0.95,
-            "p_value": 0.05,
-            "belief": 0.642,
+            "variability_discount": 0.914,
+            "discount_factor": 0.868,
+            "p_value": 0.132,
+            "belief": 0.587,
             "intensity": "indifferent"
         },
         "storage_size": {
@@ -20,10 +20,10 @@
             "std": 2.575,
             "iqr": 1.175,
             "sample_size_discount": 0.95,
-            "variability_discount": 0.998,
-            "discount_factor": 0.948,
-            "p_value": 0.052,
-            "belief": 0.641,
+            "variability_discount": 0.996,
+            "discount_factor": 0.946,
+            "p_value": 0.054,
+            "belief": 0.64,
             "intensity": "strongly positive"
         }
     }

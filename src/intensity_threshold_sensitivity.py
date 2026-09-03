@@ -59,7 +59,7 @@ def load_mean_relative_improvements(
     processed_root: Path | None = None,
 ) -> dict[ImprovementKey, float]:
     """Map (study, method, precision, effect) → mean relative improvement (%)."""
-    return {key: mean for key, (_n_eff, _iqr, mean) in load_discount_inputs(processed_root).items()}
+    return {key: mean for key, (_n_eff, _std, mean) in load_discount_inputs(processed_root).items()}
 
 
 def remap_evidence_model_intensities(

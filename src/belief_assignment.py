@@ -389,17 +389,17 @@ class PublishedRow:
 # Ground truth for the published-analogue gate after effect-specific n_eff (ADR 0009).
 # Values diverge from Evidence Factory aggregated evidence 329074 where discounts used miscounted units.
 PUBLISHED_TABLE: tuple[PublishedRow, ...] = (
-    PublishedRow("Accuracy", frozenset({"WN", "IF"}), 99, 0.18818553179171113, 10, 41, 0.005),
-    PublishedRow("F1 Score", frozenset({"IF"}), 75, 0.14625994955969665, 2, 9, 0.005),
+    PublishedRow("Accuracy", frozenset({"IF"}), 91, 0.18884597898784045, 10, 41, 0.005),
+    PublishedRow("F1 Score", frozenset({"IF"}), 72, 0.14062183186849211, 2, 9, 0.005),
     PublishedRow("mAP", frozenset({"IF"}), 45, 0.3111319305252532, 2, 4, 0.005),
-    PublishedRow("Storage Size", frozenset({"SP"}), 100, 1.6842985173506294e-08, 17, 62, 5e-10),
+    PublishedRow("Storage Size", frozenset({"SP"}), 100, 1.7785578074364585e-08, 17, 62, 5e-10),
     PublishedRow("GPU Utilization", frozenset({"IF", "WP"}), 97, 0.0, 2, 3, 1e-12),
-    PublishedRow("GPU Power Draw", frozenset({"IF", "WP"}), 98, 0.299198, 3, 5, 0.005),
-    PublishedRow("GPU Energy Consumption", frozenset({"SP"}), 74, 0.11507854162029818, 3, 5, 0.005),
+    PublishedRow("GPU Power Draw", frozenset({"IF", "WP"}), 98, 0.29835399999999995, 3, 5, 0.005),
+    PublishedRow("GPU Energy Consumption", frozenset({"SP"}), 74, 0.11677990732411626, 3, 5, 0.005),
     PublishedRow("RAM Usage", frozenset({"SP"}), 47, 0.197636868, 2, 3, 0.005),
-    PublishedRow("Inference Power Draw", frozenset({"WP"}), 74, 0.03867907470738985, 3, 10, 0.005),
-    PublishedRow("Inference Energy Consumption", frozenset({"SP"}), 100, 0.0038724493540753346, 8, 27, 5e-4),
-    PublishedRow("Inference Latency", frozenset({"PO", "SP"}), 100, 0.32224622980687556, 12, 51, 0.005),
+    PublishedRow("Inference Power Draw", frozenset({"WP"}), 74, 0.035493798470844606, 3, 10, 0.005),
+    PublishedRow("Inference Energy Consumption", frozenset({"SP"}), 100, 0.003865165144118208, 8, 27, 5e-4),
+    PublishedRow("Inference Latency", frozenset({"PO", "SP"}), 100, 0.32869212132935427, 12, 51, 0.005),
 )
 
 

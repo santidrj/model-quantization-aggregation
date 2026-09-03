@@ -63,13 +63,15 @@ def test_forestplot_overlay_uses_main_gpu_utilization():
     assert gpu["upper_ci"] == int(overlay["forestplot"]["upper_ci"])
 
 
-def test_counts_nine_increased_two_decreased():
+def test_counts_ten_increased_one_decreased():
     payload = build_validated_synthesis()
     assert payload["counts"]["n_increased_belief"] == len(payload["counts"]["increased_effects"])
     assert payload["counts"]["n_decreased_belief"] == 1  # noqa: PLR2004
     assert payload["counts"]["decreased_effects"] == ["RAM Usage"]
     assert "F1 Score" in payload["counts"]["increased_effects"]
+    assert "Accuracy" in payload["counts"]["increased_effects"]
     assert "GPU Utilization" in payload["counts"]["increased_effects"]
+    assert payload["counts"]["n_increased_belief"] == 10  # noqa: PLR2004
 
 
 def test_subgroup_has_nine_studies_and_complete_source_list():
@@ -107,13 +109,14 @@ def test_write_all_validated_outputs(tmp_path):
     analogue = (tmp_path / "belief-assignment.tex").read_text(encoding="utf-8")
     assert "mAP & 2 & 4 & IF & 0.45" in analogue
     assert "RAM usage & 2 & 3 & SP & 0.47" in analogue
+    assert "Accuracy & 10 & 41 & IF & 0.91" in analogue
 
 
 def test_intensity_reconciliation_intersects_primary_and_mass_preserving():
     payload = build_validated_synthesis()
     recon = payload["intensity_reconciliation"]["effects"]
     assert recon["Accuracy"]["intensity"] == ["IF"]
-    assert recon["Accuracy"]["differs_from_primary"] is True
+    assert recon["Accuracy"]["differs_from_primary"] is False
     assert recon["Accuracy"]["has_theory_arrow"] is True
     assert recon["Inference Latency"]["intensity"] == ["SP"]
     assert recon["Inference Latency"]["differs_from_primary"] is True

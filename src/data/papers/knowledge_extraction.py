@@ -4,7 +4,11 @@ from os import PathLike
 import numpy as np
 import polars as pl
 
-from src.belief_discounts import DEFAULT_SATURATION_SIZE
+from src.belief_discounts import (
+    DEFAULT_SATURATION_SIZE,
+    DEFAULT_VARIABILITY_CUTOFF,
+    DEFAULT_VARIABILITY_K,
+)
 from src.data.papers.entities import CorrectnessMetrics, Paper, Papers
 from src.data.papers.metric_polarity import is_minimized_correctness_metric
 from src.data.papers.precision_nomenclature import (
@@ -30,10 +34,9 @@ from src.experimental_units import (
 CORRECTNESS_METRICS = CorrectnessMetrics()
 Q1 = 0.25
 Q3 = 0.75
-DISCOUNT_FACTOR = 0.1
+DISCOUNT_FACTOR = DEFAULT_VARIABILITY_K
 STABILIZATION_SIZE = DEFAULT_SATURATION_SIZE
-EPSILON = 1e-10
-MIN_SAMPLE_SIZE_FOR_VARIABILITY_DISCOUNT = 4
+MIN_SAMPLE_SIZE_FOR_VARIABILITY_DISCOUNT = DEFAULT_VARIABILITY_CUTOFF
 
 STATS_COLUMNS_ORDER = [
     "configuration",
@@ -671,14 +674,15 @@ class KnowledgeExtractor:
 
     def _add_variability_discount(self, df: pl.DataFrame) -> pl.DataFrame:
         """
-        Calculate a discount factor based on data variability (IQR).
+        Calculate a discount factor from Kvålseth's second-order CV (V_2).
 
-        High variability relative to the mean effect sizes decreases the discount factor.
+        α_v = exp(-k V_2) with V_2 = σ / sqrt(σ² + μ²) on experimental-unit relative
+        improvements; α_v = 1 when cluster n_eff is at most the cutoff.
 
         Parameters
         ----------
         df : pl.DataFrame
-            DataFrame containing quartile information (Q1, Q3).
+            DataFrame containing mean, std, and quartile information.
 
         Returns
         -------
@@ -687,11 +691,17 @@ class KnowledgeExtractor:
         """
         metrics = df.select("^*_improvement$").columns
         for metric in metrics:
+            scale_sq = pl.col(f"{metric}_std") ** 2 + pl.col(metric) ** 2
+            v2 = (
+                pl.when(scale_sq == 0)
+                .then(pl.lit(0.0))
+                .otherwise(pl.col(f"{metric}_std") / scale_sq.sqrt())
+            )
             df = df.with_columns(
                 (pl.col(f"{metric}_q3") - pl.col(f"{metric}_q1")).round(3).alias(f"{metric}_iqr")
             ).with_columns(
                 pl.when(pl.col(f"{metric}_sample_size") > MIN_SAMPLE_SIZE_FOR_VARIABILITY_DISCOUNT)
-                .then(np.e ** (-DISCOUNT_FACTOR * (pl.col(f"{metric}_iqr") / (pl.col(metric) + EPSILON).abs())))
+                .then(np.e ** (-DISCOUNT_FACTOR * v2))
                 .otherwise(pl.lit(1))
                 .round(3)
                 .alias(f"{metric}_variability_discount")

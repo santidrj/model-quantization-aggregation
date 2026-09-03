@@ -27,7 +27,7 @@ from src.data.papers.entities import Papers
 from src.dempster_shafer import format_intensity
 
 N0_GRID = (2, 3, 6)
-K_GRID = (0.05, 0.1, 0.2)
+K_GRID = (0.05, 0.1, 0.5)
 CUTOFF_GRID = (3, 4, 8)
 ACCURACY_EFFECT = "Accuracy"
 ALIZADEH_STUDY_ID = "S14"
@@ -48,7 +48,7 @@ def load_precision_n_effs(processed_root: Path | None = None) -> list[int]:
 def load_discount_inputs(
     processed_root: Path | None = None,
 ) -> dict[DiscountKey, tuple[int, float, float]]:
-    """Map (study, method, precision, effect) to (n_eff, iqr, mean)."""
+    """Map (study, method, precision, effect) to (n_eff, std, mean)."""
     root = processed_root or PROCESSED_DATA_DIR
     n_eff_by_key: dict[DiscountKey, int] = {}
     for paper in Papers:
@@ -75,15 +75,19 @@ def load_discount_inputs(
             method = record["quantization_method"]
             precision = record["precision_configuration"]
             for key, payload in record.items():
-                if not isinstance(payload, dict) or "iqr" not in payload or "improvement" not in payload:
+                if not isinstance(payload, dict) or "std" not in payload or "improvement" not in payload:
+                    continue
+                if payload["improvement"] is None:
                     continue
                 effect = _effect_name(key)
                 n_eff = n_eff_by_key.get((paper.value.ID, method, precision, effect))
                 if n_eff is None:
                     continue
+                # Single-unit rows store std as null; treat as zero dispersion for V_2.
+                std = 0.0 if payload["std"] is None else float(payload["std"])
                 lookup[(paper.value.ID, method, precision, effect)] = (
                     n_eff,
-                    float(payload["iqr"]),
+                    std,
                     float(payload["improvement"]),
                 )
     return lookup
@@ -105,10 +109,10 @@ def remap_evidence_models(
             if key not in inputs:
                 effects[effect] = (intensity, belief)
                 continue
-            n_eff, iqr, mean = inputs[key]
+            n_eff, std, mean = inputs[key]
             effects[effect] = (
                 intensity,
-                discounted_belief(model.study_belief, n_eff, iqr, mean, n0=n0, k=k, cutoff=cutoff),
+                discounted_belief(model.study_belief, n_eff, std, mean, n0=n0, k=k, cutoff=cutoff),
             )
         remapped.append(replace(model, effects=effects))
     return remapped
