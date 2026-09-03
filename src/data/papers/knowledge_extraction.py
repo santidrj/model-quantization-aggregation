@@ -8,6 +8,7 @@ from src.belief_discounts import (
     DEFAULT_SATURATION_SIZE,
     DEFAULT_VARIABILITY_CUTOFF,
     DEFAULT_VARIABILITY_K,
+    variability_reliability_expr,
 )
 from src.data.papers.entities import CorrectnessMetrics, Paper, Papers
 from src.data.papers.metric_polarity import is_minimized_correctness_metric
@@ -691,20 +692,16 @@ class KnowledgeExtractor:
         """
         metrics = df.select("^*_improvement$").columns
         for metric in metrics:
-            scale_sq = pl.col(f"{metric}_std") ** 2 + pl.col(metric) ** 2
-            v2 = (
-                pl.when(scale_sq == 0)
-                .then(pl.lit(0.0))
-                .otherwise(pl.col(f"{metric}_std") / scale_sq.sqrt())
-            )
             df = df.with_columns(
                 (pl.col(f"{metric}_q3") - pl.col(f"{metric}_q1")).round(3).alias(f"{metric}_iqr")
             ).with_columns(
-                pl.when(pl.col(f"{metric}_sample_size") > MIN_SAMPLE_SIZE_FOR_VARIABILITY_DISCOUNT)
-                .then(np.e ** (-DISCOUNT_FACTOR * v2))
-                .otherwise(pl.lit(1))
-                .round(3)
-                .alias(f"{metric}_variability_discount")
+                variability_reliability_expr(
+                    pl.col(f"{metric}_sample_size"),
+                    pl.col(f"{metric}_std"),
+                    pl.col(metric),
+                    k=DEFAULT_VARIABILITY_K,
+                    cutoff=DEFAULT_VARIABILITY_CUTOFF,
+                ).alias(f"{metric}_variability_discount")
             )
         return df
 

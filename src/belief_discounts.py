@@ -26,6 +26,12 @@ def second_order_coefficient_of_variation(std: float, mean: float) -> float:
     return std / scale
 
 
+def second_order_coefficient_of_variation_expr(std: pl.Expr, mean: pl.Expr) -> pl.Expr:
+    """Polars form of Kvålseth V_2; same definition as the scalar helper."""
+    scale_sq = std**2 + mean**2
+    return pl.when(scale_sq == 0).then(pl.lit(0.0)).otherwise(std / scale_sq.sqrt())
+
+
 def variability_reliability(  # noqa: PLR0913
     n_eff: int,
     std: float,
@@ -38,6 +44,23 @@ def variability_reliability(  # noqa: PLR0913
     if n_eff <= cutoff:
         return 1.0
     return round(math.exp(-k * second_order_coefficient_of_variation(std, mean)), 3)
+
+
+def variability_reliability_expr(  # noqa: PLR0913
+    n_eff: pl.Expr,
+    std: pl.Expr,
+    mean: pl.Expr,
+    *,
+    k: float = DEFAULT_VARIABILITY_K,
+    cutoff: int = DEFAULT_VARIABILITY_CUTOFF,
+) -> pl.Expr:
+    """Polars form of α_v; same definition as the scalar helper."""
+    return (
+        pl.when(n_eff <= cutoff)
+        .then(pl.lit(1.0))
+        .otherwise((-k * second_order_coefficient_of_variation_expr(std, mean)).exp())
+        .round(3)
+    )
 
 
 def discounted_belief(  # noqa: PLR0913

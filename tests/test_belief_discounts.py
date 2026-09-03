@@ -1,5 +1,6 @@
 import math
 
+import polars as pl
 import pytest
 
 from src.belief_discounts import (
@@ -7,8 +8,10 @@ from src.belief_discounts import (
     sample_size_reliability,
     saturation_parameter,
     second_order_coefficient_of_variation,
+    second_order_coefficient_of_variation_expr,
     summarize_effective_sample_sizes,
     variability_reliability,
+    variability_reliability_expr,
 )
 
 
@@ -47,6 +50,31 @@ def test_variability_reliability_matches_alizadeh_energy_v2():
 def test_variability_reliability_stable_for_near_zero_mean():
     # σ=29.842, μ=0.485 → V2≈1 → e^{-0.1} rounds to 0.905 (not ~0.044).
     assert variability_reliability(18, std=29.842, mean=0.485) == 0.905
+
+
+def test_polars_v2_and_alpha_v_match_scalar_helpers():
+    frame = pl.DataFrame(
+        {
+            "n_eff": [4, 18, 18, 18],
+            "std": [10.0, 0.0, 8.080, 29.842],
+            "mean": [5.0, 75.0, 41.3, 0.485],
+        }
+    ).with_columns(
+        second_order_coefficient_of_variation_expr(pl.col("std"), pl.col("mean")).alias("v2"),
+        variability_reliability_expr(pl.col("n_eff"), pl.col("std"), pl.col("mean")).alias("alpha_v"),
+    )
+    expected_v2 = [
+        second_order_coefficient_of_variation(std, mean)
+        for std, mean in zip(frame["std"].to_list(), frame["mean"].to_list(), strict=True)
+    ]
+    expected_alpha_v = [
+        variability_reliability(n_eff, std, mean)
+        for n_eff, std, mean in zip(
+            frame["n_eff"].to_list(), frame["std"].to_list(), frame["mean"].to_list(), strict=True
+        )
+    ]
+    assert frame["v2"].to_list() == pytest.approx(expected_v2)
+    assert frame["alpha_v"].to_list() == expected_alpha_v
 
 
 def test_variability_cutoff_grid_changes_when_alpha_v_applies():
