@@ -629,7 +629,7 @@ def _has_vertical_caps_at_y(axis, y: float) -> bool:
     return False
 
 
-def test_forest_plot_styles_aggregated_ranges_unlike_confidence_intervals():
+def test_forest_plot_styles_aggregated_ranges_like_ci_but_without_caps():
     frame = pd.DataFrame(
         [
             {
@@ -674,6 +674,7 @@ def test_forest_plot_styles_aggregated_ranges_unlike_confidence_intervals():
     aggregated_y = positions[labels.index("Aggregated Accuracy")]
 
     assert EVIDENCE_MODEL_CI_LINEWIDTH in _horizontal_linewidths_at_y(axis, study_y)
+    assert SSM_INTENSITY_RANGE_LINEWIDTH == EVIDENCE_MODEL_CI_LINEWIDTH
     assert SSM_INTENSITY_RANGE_LINEWIDTH in _horizontal_linewidths_at_y(axis, aggregated_y)
     assert _has_vertical_caps_at_y(axis, study_y)
     assert not _has_vertical_caps_at_y(axis, aggregated_y)
