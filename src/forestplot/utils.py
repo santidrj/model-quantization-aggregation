@@ -17,9 +17,9 @@ from src.effect_intensity import (
     ResourceEfficiencyMetrics,
 )
 
-EVIDENCE_MODEL_CI_LINEWIDTH = 1.4
+EVIDENCE_MODEL_CI_LINEWIDTH = 0.8
 SSM_INTENSITY_RANGE_LINEWIDTH = EVIDENCE_MODEL_CI_LINEWIDTH
-SSM_INTENSITY_RANGE_COLOR = "steelblue"
+SSM_INTENSITY_RANGE_COLOR = "navy"
 FORESTPLOT_EXCLUDED_EFFECTS = frozenset(
     {
         "GPU Memory Utilization",
