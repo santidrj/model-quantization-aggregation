@@ -8,6 +8,17 @@ from src.data.utils import read_scopus_quantization_papers
 ARXIV_API = "http://export.arxiv.org/api/query"
 
 
+def _opensearch_text_value(value: str | dict[str, str] | None) -> str:
+    """Normalize OpenSearch Atom fields that may be bare text or ``{#text: ...}``."""
+    if value is None:
+        return "0"
+    if isinstance(value, str):
+        return value
+    if isinstance(value, dict) and "#text" in value:
+        return str(value["#text"])
+    raise TypeError(f"Unexpected OpenSearch field shape: {value!r}")
+
+
 def download_arxiv_papers(query: str, max_results: int) -> list[dict[str, str]]:
     """Download papers from arXiv based on the query.
 
@@ -30,11 +41,20 @@ def download_arxiv_papers(query: str, max_results: int) -> list[dict[str, str]]:
     }
     # Make the request
     response = requests.get(ARXIV_API, params=params)
+    response.raise_for_status()
 
-    # Parse the response
+    # Parse the response. OpenSearch fields may be bare strings or ``{#text: ...}``
+    # depending on whether attributes are present in the Atom feed.
     parsed_response = xmltodict.parse(response.text)["feed"]
-    print(f"Found {parsed_response['opensearch:totalResults']['#text']} papers on arXiv.")
-    return parsed_response["entry"]
+    total_results = _opensearch_text_value(parsed_response.get("opensearch:totalResults"))
+    print(f"Found {total_results} papers on arXiv.")
+
+    entries = parsed_response.get("entry", [])
+    if entries is None:
+        return []
+    if isinstance(entries, dict):
+        return [entries]
+    return list(entries)
 
 
 def papers_dict_to_polars_df(papers: list[dict[str, str]]) -> pl.DataFrame:
