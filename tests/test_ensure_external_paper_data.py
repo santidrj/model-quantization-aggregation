@@ -2,10 +2,12 @@ from pathlib import Path
 from zipfile import ZipFile
 
 import pytest
+import requests
 
 from src.data.ensure_external_paper_data import (
     ArchiveMember,
     RemoteArchiveSource,
+    _default_download_archive,
     ensure_external_paper_data,
 )
 
@@ -113,3 +115,71 @@ def test_download_failure_raises_runtime_error_naming_expected_files(tmp_path: P
 
     assert isinstance(exc_info.value.__cause__, ConnectionError)
     assert not (dest / "data.csv").exists()
+
+
+def test_default_download_archive_retries_transient_http_errors(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    destination = tmp_path / "archive.zip"
+    attempts: list[int] = []
+    fail_times = 2
+
+    class FakeResponse:
+        def __init__(self, status_code: int, content: bytes = b"") -> None:
+            self.status_code = status_code
+            self.content = content
+
+        def raise_for_status(self) -> None:
+            if self.status_code >= requests.codes.bad_request:
+                raise requests.HTTPError(
+                    f"{self.status_code} error",
+                    response=self,  # type: ignore[arg-type]
+                )
+
+        def iter_content(self, chunk_size: int = 1024 * 1024):  # noqa: ARG002
+            yield self.content
+
+    def fake_get(url: str, stream: bool = False, timeout=None):  # noqa: ANN001, ARG001
+        attempts.append(1)
+        if len(attempts) <= fail_times:
+            return FakeResponse(504)
+        return FakeResponse(200, b"zip-bytes")
+
+    monkeypatch.setattr(requests, "get", fake_get)
+    monkeypatch.setattr("src.data.ensure_external_paper_data.time.sleep", lambda *_: None)
+
+    _default_download_archive("https://example.test/archive.zip", destination, attempts=5, backoff_seconds=0.01)
+
+    assert destination.read_bytes() == b"zip-bytes"
+    assert len(attempts) == fail_times + 1
+
+
+def test_default_download_archive_does_not_retry_client_errors(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    destination = tmp_path / "archive.zip"
+    attempts: list[int] = []
+
+    class FakeResponse:
+        status_code = 404
+
+        def raise_for_status(self) -> None:
+            raise requests.HTTPError("404 error", response=self)  # type: ignore[arg-type]
+
+        def iter_content(self, chunk_size: int = 1024 * 1024):  # noqa: ARG002
+            yield b""
+
+    def fake_get(url: str, stream: bool = False, timeout=None):  # noqa: ANN001, ARG001
+        attempts.append(1)
+        return FakeResponse()
+
+    monkeypatch.setattr(requests, "get", fake_get)
+    monkeypatch.setattr("src.data.ensure_external_paper_data.time.sleep", lambda *_: None)
+
+    with pytest.raises(requests.HTTPError, match="404"):
+        _default_download_archive("https://example.test/archive.zip", destination, attempts=5, backoff_seconds=0.01)
+
+    assert len(attempts) == 1
+    assert not destination.exists()

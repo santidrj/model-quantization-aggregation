@@ -3,11 +3,15 @@ from dataclasses import dataclass
 from pathlib import Path
 import shutil
 import tempfile
+import time
 from zipfile import ZipFile
 
 import requests
 
 DEFAULT_EXTERNAL_ARTIFACT = "paper-data.csv"
+DEFAULT_DOWNLOAD_ATTEMPTS = 5
+DEFAULT_DOWNLOAD_RETRY_BACKOFF_SECONDS = 5.0
+_RETRYABLE_HTTP_STATUS_CODES = frozenset({408, 429, 500, 502, 503, 504})
 
 
 @dataclass(frozen=True)
@@ -22,13 +26,41 @@ class RemoteArchiveSource:
     members: tuple[ArchiveMember, ...]
 
 
-def _default_download_archive(url: str, destination: Path) -> None:
-    response = requests.get(url, stream=True, timeout=(60, 3600))
-    response.raise_for_status()
-    with destination.open("wb") as handle:
-        for chunk in response.iter_content(chunk_size=1024 * 1024):
-            if chunk:
-                handle.write(chunk)
+def _default_download_archive(
+    url: str,
+    destination: Path,
+    *,
+    attempts: int = DEFAULT_DOWNLOAD_ATTEMPTS,
+    backoff_seconds: float = DEFAULT_DOWNLOAD_RETRY_BACKOFF_SECONDS,
+) -> None:
+    """Download ``url`` to ``destination``, retrying transient HTTP/network failures."""
+    last_error: Exception | None = None
+    for attempt in range(1, attempts + 1):
+        try:
+            response = requests.get(url, stream=True, timeout=(60, 3600))
+            response.raise_for_status()
+            with destination.open("wb") as handle:
+                for chunk in response.iter_content(chunk_size=1024 * 1024):
+                    if chunk:
+                        handle.write(chunk)
+            return
+        except requests.HTTPError as exc:
+            last_error = exc
+            if destination.exists():
+                destination.unlink()
+            status = exc.response.status_code if exc.response is not None else None
+            if status not in _RETRYABLE_HTTP_STATUS_CODES or attempt >= attempts:
+                raise
+            time.sleep(backoff_seconds * attempt)
+        except (requests.RequestException, OSError) as exc:
+            last_error = exc
+            if destination.exists():
+                destination.unlink()
+            if attempt >= attempts:
+                break
+            time.sleep(backoff_seconds * attempt)
+    assert last_error is not None
+    raise last_error
 
 
 def ensure_external_paper_data(
