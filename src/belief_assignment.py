@@ -775,34 +775,49 @@ def mass_preserving_sensitivity_rows(
 
 
 def render_sensitivity_mass_preserving_table(rows: list[SynthesisRow] | None = None) -> str:
-    """Render the Results sensitivity table for the D--S root belief split."""
+    """Render the Results sensitivity table for the D--S root belief split.
+
+    Columns pair each mass-preserving outcome with the published main aggregation
+    (``PUBLISHED_TABLE``) so intensity and belief deltas are visible in one scan.
+    Conflict is the mass-preserving recombination's last pairwise ``K``.
+    """
     synthesis_rows = rows if rows is not None else mass_preserving_sensitivity_rows()
     by_effect = {row.effect: row for row in synthesis_rows}
+    main_by_effect = {row.effect: row for row in PUBLISHED_TABLE}
     lines = [
         r"\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X"
-        r">{\centering\arraybackslash}m{2cm}"
-        r">{\centering\arraybackslash}m{1cm}"
-        r">{\centering\arraybackslash}m{1.2cm}"
-        r">{\centering\arraybackslash}m{0.9cm}"
-        r">{\centering\arraybackslash}m{0.9cm}}",
+        r">{\centering\arraybackslash}m{1.5cm}"
+        r">{\centering\arraybackslash}m{0.85cm}"
+        r">{\centering\arraybackslash}m{1.5cm}"
+        r">{\centering\arraybackslash}m{0.85cm}"
+        r">{\centering\arraybackslash}m{1.0cm}"
+        r">{\centering\arraybackslash}m{0.8cm}"
+        r">{\centering\arraybackslash}m{0.8cm}}",
         r"\toprule",
         (
-            r"\textbf{Effect} & \textbf{Direction \& intensity} & \textbf{Belief} & "
-            r"\textbf{Conflict} & \textbf{Studies} & \textbf{Models} \\"
+            r"\textbf{Effect} & \multicolumn{2}{c}{Main} & \multicolumn{2}{c}{Mass-preserving}"
+            r" & \textbf{Conflict} & \textbf{Studies} & \textbf{Models} \\"
+        ),
+        r"\cmidrule(lr){2-3} \cmidrule(lr){4-5}",
+        (
+            r" & Intensity & Belief & Intensity & Belief"
+            r" & & & \\"
         ),
         r"\midrule",
     ]
     for group_label, effect_names in _SENSITIVITY_EFFECT_GROUPS:
-        lines.append(rf"\multicolumn{{6}}{{l}}{{\textit{{{group_label}}}}} \\")
+        lines.append(rf"\multicolumn{{8}}{{l}}{{\textit{{{group_label}}}}} \\")
         for effect_name in effect_names:
             row = by_effect[effect_name]
-            belief = _latex_belief_percent(row.belief_percent)
+            main = main_by_effect[effect_name]
             lines.append(
                 " & ".join(
                     [
                         _EFFECT_LATEX_NAME.get(row.effect, row.effect),
+                        _latex_intensity(format_intensity(main.intensity)),
+                        _latex_belief_percent(main.belief_percent),
                         _latex_intensity(format_intensity(row.intensity)),
-                        belief,
+                        _latex_belief_percent(row.belief_percent),
                         _two_decimals(row.conflict),
                         str(row.n_primary_studies),
                         str(row.n_evidence_models),

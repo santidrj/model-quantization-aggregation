@@ -347,6 +347,14 @@ def test_render_sensitivity_mass_preserving_table_includes_accuracy():
     assert "83\\%" in latex or "83%" in latex
 
 
+def test_render_sensitivity_mass_preserving_table_pairs_main_and_mass_preserving():
+    latex = render_sensitivity_mass_preserving_table()
+    assert r"\multicolumn{2}{c}{Main}" in latex
+    assert r"\multicolumn{2}{c}{Mass-preserving}" in latex
+    accuracy_line = next(line for line in latex.splitlines() if line.startswith("Accuracy &"))
+    assert accuracy_line.startswith("Accuracy & I & 91\\% & I & 83\\%")
+
+
 def test_write_sensitivity_mass_preserving_table_writes_fragment(tmp_path):
     path = write_sensitivity_mass_preserving_table(output_dir=tmp_path)
     assert path.name == "sensitivity-mass-preserving.tex"
