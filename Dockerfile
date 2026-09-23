@@ -5,13 +5,14 @@ FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
 
 WORKDIR /app
 
-# Copy only dependency files first for better layer caching
+# The project package includes src/, and uv sync installs the mq console script.
 COPY pyproject.toml uv.lock ./
+COPY src/ ./src/
 
 # Install dependencies using uv sync (uses lock file for reproducibility)
 # Using --no-dev to exclude development dependencies
 ENV UV_PROJECT_ENVIRONMENT=/app/.venv
-RUN uv sync --no-dev
+RUN uv sync --frozen --no-dev
 
 # -----------------------------------------------------------------------------
 # Stage 2: Runtime stage - Minimal image with only runtime requirements
@@ -49,11 +50,11 @@ COPY data/ ./data/
 COPY pyproject.toml ./
 COPY figures.mplstyle ./
 
-# Create reports directory for output
-RUN mkdir -p reports/figures
+# Create report directories for figure and table outputs
+RUN mkdir -p reports/figures reports/tables
 
 # Expose Jupyter notebook port
 EXPOSE 8888
 
-# Default command: Start Jupyter Lab
-CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+# Default command: Start Jupyter Lab without a token so the documented URL opens directly.
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--ServerApp.token=", "--ServerApp.password="]

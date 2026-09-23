@@ -40,6 +40,19 @@ def reproduce_tables() -> None:
     _print_paths(paths, "Validated table outputs")
 
 
+@reproduce.command("review", help="Run the review reproduction bar, stopping if external paper data is missing.")
+def reproduce_review() -> None:
+    paths = workflows.reproduce_review()
+    _print_paths(paths, "Validated review outputs")
+
+
+@reproduce.command("notebook", help="Run one review notebook headlessly.")
+@click.argument("notebook_id", type=click.Choice(list(workflows.REVIEW_NOTEBOOKS)))
+def reproduce_notebook(notebook_id: str) -> None:
+    path = workflows.reproduce_notebook(notebook_id)
+    click.echo(f"Executed notebook: {path}")
+
+
 @reproduce.command("full-pipeline", help="Regenerate processed evidence and optionally the core figures.")
 @click.option(
     "--download-missing",

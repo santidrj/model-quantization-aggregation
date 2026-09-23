@@ -49,7 +49,7 @@ The local thesis PDF is intentionally excluded by `/PauloSergio_Thesis.pdf` in `
 8. `comparison_records` computes all four assignments; Santos selection is the literature audit, while `manuscript_comparison_records` uses the Evidence Factory-compatible selector.
 9. `write_all_validated_outputs` writes `data/processed/validated-synthesis.json` and every manuscript fragment derived from it, with assertions on corpus size, counts, intensity, belief, conflict, and delta.
 
-Notebook [`5.3-belief-assignment.ipynb`](../notebooks/5.3-belief-assignment.ipynb) executes the gate, comparison, trace example, and table generation.
+`mq reproduce tables` calls `write_all_validated_outputs`, which executes the gate, comparison, and table generation. `tests/test_dempster_shafer.py` and `tests/test_belief_assignment.py` are the executable checks for that path.
 
 ## Upstream discount and rounding
 
@@ -216,8 +216,7 @@ Record observations without assigning an automated approval status.
 ```bash
 uv run pytest tests/test_dempster_shafer.py tests/test_belief_assignment.py
 uv run pytest
-PYTHONPATH="$PWD" uv run jupyter nbconvert --to notebook --execute \
-  notebooks/5.3-belief-assignment.ipynb --output /tmp/5.3-belief-assignment.executed.ipynb
+uv run mq reproduce tables
 uv run ruff check .
 uv run ruff format --check .
 uv run deptry .

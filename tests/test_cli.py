@@ -27,6 +27,40 @@ def test_papers_list_prints_keys(monkeypatch: pytest.MonkeyPatch) -> None:
     assert result.output == "paper-a\npaper-b\n"
 
 
+def test_reproduce_notebook_rejects_selection_notebooks() -> None:
+    runner = CliRunner()
+
+    result = runner.invoke(cli.main, ["reproduce", "notebook", "1.0"])
+
+    assert result.exit_code == CLI_USAGE_ERROR
+    assert "'1.0' is not one of '3.0', '4.0', '5.0', '5.1', '6.0'" in result.output
+
+
+def test_reproduce_notebook_reports_the_executed_path(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        cli.workflows,
+        "reproduce_notebook",
+        lambda notebook_id: Path(f"notebooks/{notebook_id}-executed.ipynb"),
+    )
+
+    runner = CliRunner()
+    result = runner.invoke(cli.main, ["reproduce", "notebook", "3.0"])
+
+    assert result.exit_code == 0
+    assert "Executed notebook: notebooks/3.0-executed.ipynb" in result.output
+
+
+def test_reproduce_review_reports_workflow_outputs(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(cli.workflows, "reproduce_review", lambda: [Path("reports/tables/belief-assignment.tex")])
+
+    runner = CliRunner()
+    result = runner.invoke(cli.main, ["reproduce", "review"])
+
+    assert result.exit_code == 0
+    assert "Validated review outputs" in result.output
+    assert "reports/tables/belief-assignment.tex" in result.output
+
+
 def test_reproduce_full_pipeline_passes_flags(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

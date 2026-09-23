@@ -148,10 +148,10 @@ _Avoid_: Grouping key, join key (as separate concepts); configuration columns
 
 **External paper data**:
 The study-provided experimental datasets consumed by evidence extraction for a given paper, kept under that paper's external data folder. Study-native precision labels may remain here; alias → canonical rewriting happens when loading into this project's metadata and processed outputs.
-_Avoid_: Raw data (when referring to these study inputs), replication package (when referring to the full upstream archive rather than the files this project keeps)
+_Avoid_: Raw data, raw data results (when the granularity level or the study's full upstream archive is meant), replication package (when this review's public deposit is meant)
 
 **Evidence granularity**:
-How recoverable a primary study's reported experimental results are for evidence extraction and meta-analysis. The levels are tabular summary (numeric results in tables or text), chart-only summary (results mainly in figures), and replication package (run-level or package-backed numbers).
+How recoverable a primary study's reported experimental results are for evidence extraction and meta-analysis. The levels are tabular summary (numeric results in tables or text), chart-only summary (results mainly in figures), and raw data results (run-level or package-backed numbers).
 _Avoid_: Data quality, comparative, precise (as public language for these levels)
 
 **Tabular summary**:
@@ -162,9 +162,13 @@ _Avoid_: Comparative, summary statistics (when the granularity level is meant)
 Evidence granularity in which the study's usable results are mainly in figures, so extraction depends on chart reading or digitization.
 _Avoid_: Comparative (charts), summary statistics (charts)
 
-**Replication package**:
+**Raw data results**:
 Evidence granularity in which run-level or otherwise package-backed experimental numbers are available beyond paper tables and figures. Distinct from external paper data, which is the subset of study inputs this project keeps for extraction.
-_Avoid_: Precise, raw data (when this granularity level is meant)
+_Avoid_: Replication package, precise
+
+**Replication package**:
+The public deposit of this review: the code, notebooks, and data a reader uses to reproduce it. Distinct from a primary study's raw data results and from external paper data.
+_Avoid_: Raw data results, external paper data, manuscript
 
 **Domain**:
 The primary application area a study addresses (e.g. image classification, code generation), one label per included study. Stored as the short manuscript display string used in summary tables. Distinct from the study's dataset list: datasets may motivate or illustrate the domain, but Domain is not a compression of `datasets`.

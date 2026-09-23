@@ -36,6 +36,15 @@ from src.validated_synthesis import write_all_validated_outputs
 
 NOTEBOOKS_DIR = ROOT_DIR / "notebooks"
 EVIDENCE_ANALYSIS_NOTEBOOK = NOTEBOOKS_DIR / "5.0-evidence-analysis.ipynb"
+REVIEW_NOTEBOOKS = {
+    "3.0": NOTEBOOKS_DIR / "3.0-final-selection-analysis.ipynb",
+    "4.0": NOTEBOOKS_DIR / "4.0-paper-metadata-analysis.ipynb",
+    "5.0": EVIDENCE_ANALYSIS_NOTEBOOK,
+    "5.1": NOTEBOOKS_DIR / "5.1-subgroup-ptq-w-int8-a-int8.ipynb",
+    "6.0": NOTEBOOKS_DIR / "6.0-appendix-worked-examples.ipynb",
+}
+# Notebook 5.0 already runs inside reproduce figures, so the bar does not run it again.
+REVIEW_NOTEBOOK_ORDER = tuple(notebook_id for notebook_id in REVIEW_NOTEBOOKS if notebook_id != "5.0")
 DEFAULT_DOWNLOAD_MAX_RESULTS = 1000
 DEFAULT_DOWNLOAD_QUERY = (
     '(ti:("machine learning" OR ML OR "deep learning" OR DL OR "large language model?" OR "LLM?" OR '
@@ -420,6 +429,27 @@ def run_notebook_headless(notebook_path: Path = EVIDENCE_ANALYSIS_NOTEBOOK) -> P
     executed_path = output_dir / executed_notebook
     validate_paths_exist([executed_path], label="executed notebook")
     return executed_path
+
+
+def reproduce_review() -> list[Path]:
+    statuses = ensure_external_data()
+    validate_external_data_ready(statuses)
+    paths: list[Path] = []
+    paths.extend(run_evidence_extraction_workflow())
+    paths.extend(reproduce_figures(run_notebook=True))
+    paths.extend(reproduce_tables())
+    for notebook_id in REVIEW_NOTEBOOK_ORDER:
+        paths.append(reproduce_notebook(notebook_id))
+    return paths
+
+
+def reproduce_notebook(notebook_id: str) -> Path:
+    try:
+        notebook_path = REVIEW_NOTEBOOKS[notebook_id]
+    except KeyError as exc:
+        allowed = ", ".join(REVIEW_NOTEBOOKS)
+        raise ValueError(f"Unknown review notebook {notebook_id!r}. Expected one of: {allowed}.") from exc
+    return run_notebook_headless(notebook_path)
 
 
 def reproduce_figures(*, run_notebook: bool = True) -> list[Path]:

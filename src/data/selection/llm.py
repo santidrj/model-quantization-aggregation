@@ -9,8 +9,6 @@ from google import genai
 from google.genai.types import GenerateContentConfig, ThinkingConfig
 import polars as pl
 
-from src.config import INTERIM_DATA_DIR
-
 
 class LikertScale(IntEnum):
     STRONGLY_DISAGREE = 1
@@ -198,36 +196,6 @@ def _criteria_filter(operator: str) -> pl.Expr:
     threshold = pl.lit(LikertScale.NEITHER_AGREE_NOR_DISAGREE)
     expressions = [getattr(pl.col(column_name), operator)(threshold) for column_name in INCLUSION_CRITERIA_COLUMNS]
     return pl.any_horizontal(*expressions) if operator == "__lt__" else pl.all_horizontal(*expressions)
-
-
-def gemini_batched_query(client: genai.Client, batch_number: int, query: str) -> pl.DataFrame:
-    """
-    Query a Gemini model in batches.
-
-    The results are saved to a parquet file in the interim data directory.
-
-    Parameters
-    ----------
-    client : genai.Client
-        The Gemini client.
-    batch_number : int
-        The batch number.
-    query : str
-        The query message.
-
-    Returns
-    -------
-    pl.DataFrame
-        The results of the query in a polars DataFrame.
-    """
-    results = gemini_query(client, query)
-    result_df = pl.from_dict(results).transpose(
-        include_header=True,
-        header_name="Title",
-        column_names=["IC1", "IC2", "IC3", "IC4", "IC5"],
-    )
-    result_df.write_parquet(INTERIM_DATA_DIR / f"{GEMINI_MODEL}-batch-{batch_number}-results.parquet")
-    return result_df
 
 
 def combine_llm_scores(llm_scores: list[pl.DataFrame]) -> pl.DataFrame:

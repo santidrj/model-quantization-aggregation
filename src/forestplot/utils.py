@@ -96,94 +96,6 @@ def draw_ci(  # noqa: PLR0913
     return ax
 
 
-def draw_markers(data: pl.DataFrame, estimate: str, y_tick_label: str, ax: Axes, **kwargs: Any) -> Axes:
-    """
-    Draws markers on the given axis.
-
-    Parameters
-    ----------
-    data : pl.DataFrame
-        The data frame containing the estimates.
-    estimate : str
-        The column name for the estimate.
-    y_tick_label : str
-        The label for the y-tick.
-    ax : Axes
-        The axis to draw on.
-    color : str
-        The color of the markers.
-
-    Returns
-    -------
-    Axes
-        The axis with the markers drawn.
-    """
-    marker = kwargs.get("marker", "s")
-    markersize = kwargs.get("markersize", 40)
-    markercolor = kwargs.get("markercolor", "darkslategray")
-    markeralpha = kwargs.get("markeralpha", 0.8)
-    ax.scatter(
-        y=y_tick_label,
-        x=estimate,
-        data=data,
-        marker=marker,
-        s=markersize,
-        color=markercolor,
-        alpha=markeralpha,
-    )
-    return ax
-
-
-def format_xticks(  # noqa: PLR0913
-    data: pl.DataFrame,  # noqa: PLR0913
-    estimate: str,
-    lower_ci_col: str,
-    upper_ci_col: str,
-    ax: Axes,
-    xlim: tuple | list | None = None,
-    **kwargs: Any,
-) -> Axes:
-    """
-    Formats the x-ticks on the given axis.
-
-    Parameters
-    ----------
-    data : pl.DataFrame
-        The data frame containing the estimates and confidence intervals.
-    estimate : str
-        The column name for the estimate.
-    lower_ci_col : str
-        The column name for the lower confidence interval.
-    upper_ci_col : str
-        The column name for the higher confidence interval.
-    ax : Axes
-        The axis to format.
-
-    Returns
-    -------
-    Axes
-        The axis with formatted x-ticks.
-    """
-    nticks = kwargs.get("nticks", 5)
-    xtick_size = kwargs.get("xtick_size", 10)
-    xticklabels = kwargs.get("xticklabels")
-
-    x_min = data.select(lower_ci_col).min().item(0, 0)
-    x_max = data.select(upper_ci_col).max().item(0, 0)
-
-    ax.set_xlim(x_min - 0.8, x_max + 0.8)
-
-    ax.xaxis.set_major_locator(plt.MaxNLocator(nticks))
-    ax.tick_params(axis="x", labelsize=xtick_size)
-
-    if xticklabels:
-        ax.set_xticklabels(xticklabels)
-    if xlim:
-        ax.set_xlim(xlim[0], xlim[1])
-
-    return ax
-
-
 def draw_ref_xline(
     ax: Axes,
     y_max: float,
@@ -268,42 +180,6 @@ def right_flush_yticklabels(data: pl.DataFrame, yticklabel: str, flush: bool, ax
         yax.set_tick_params(pad=pad)
 
     return pad
-
-
-def draw_ylabel1(ylabel: str, pad: float, ax: Axes, **kwargs: Any) -> Axes:
-    """
-    Draw ylabel title for the left-hand side y-axis.
-
-    Parameters
-    ----------
-    ylabel (str)
-            Title of the left-hand side y-axis.
-    pad (float)
-            Window wdith of figure
-    ax (Matplotlib Axes)
-            Axes to operate on.
-
-    Returns
-    -------
-            Matplotlib Axes object.
-    """
-    fontsize = kwargs.get("fontsize", 12)
-    ax.set_ylabel("")
-    if ylabel is not None:
-        # Retrieve settings from kwargs
-        ylabel1_size = kwargs.get("ylabel1_size", 1 + fontsize)
-        ylabel1_fontweight = kwargs.get("ylabel1_fontweight", "bold")
-        ylabel_loc = kwargs.get("ylabel_loc", "top")
-        ylabel_angle = kwargs.get("ylabel_angle", "horizontal")
-        ax.set_ylabel(
-            ylabel,
-            loc=ylabel_loc,
-            labelpad=-pad,
-            rotation=ylabel_angle,
-            size=ylabel1_size,
-            fontweight=ylabel1_fontweight,
-        )
-    return ax
 
 
 def draw_text(x: float, y: float, text: str, ax: Axes, rotation=0) -> Axes:
