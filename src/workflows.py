@@ -1,0 +1,482 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+from google import genai
+from matplotlib.patches import FancyBboxPatch
+import matplotlib.pyplot as plt
+import polars as pl
+
+from src.config import FIGURES_DIR, INTERIM_DATA_DIR, PROCESSED_DATA_DIR, ROOT_DIR, TABLES_DIR, processed_paper_path
+from src.data.download import clean_titles, download_arxiv_papers, papers_dict_to_polars_df
+from src.data.papers.entities import Paper, Papers
+from src.data.selection.manifest import (
+    MANIFEST_PARQUET_NAME,
+    MANIFEST_SUMMARY_NAME,
+    build_frozen_selection_artifacts,
+    write_selection_manifest,
+)
+from src.data.selection.select_papers import (
+    PAPERS_FILENAME,
+    SAMPLE_PAPERS_FILENAME,
+    SCORES_FILENAME,
+    collect_query_results,
+    load_selection_papers,
+    scores_to_frame,
+    write_scores,
+)
+from src.data.utils import read_scopus_quantization_papers
+from src.run_evidence_extraction import extract_knowledge_from
+from src.tables.studies_summary import generate_studies_summary_tables
+from src.validated_synthesis import write_all_validated_outputs
+
+NOTEBOOKS_DIR = ROOT_DIR / "notebooks"
+EVIDENCE_ANALYSIS_NOTEBOOK = NOTEBOOKS_DIR / "5.0-evidence-analysis.ipynb"
+REVIEW_NOTEBOOKS = {
+    "3.0": NOTEBOOKS_DIR / "3.0-final-selection-analysis.ipynb",
+    "4.0": NOTEBOOKS_DIR / "4.0-paper-metadata-analysis.ipynb",
+    "5.0": EVIDENCE_ANALYSIS_NOTEBOOK,
+    "5.1": NOTEBOOKS_DIR / "5.1-subgroup-ptq-w-int8-a-int8.ipynb",
+    "6.0": NOTEBOOKS_DIR / "6.0-appendix-worked-examples.ipynb",
+}
+# Notebook 5.0 already runs inside reproduce figures, so the bar does not run it again.
+REVIEW_NOTEBOOK_ORDER = tuple(notebook_id for notebook_id in REVIEW_NOTEBOOKS if notebook_id != "5.0")
+DEFAULT_DOWNLOAD_MAX_RESULTS = 1000
+DEFAULT_DOWNLOAD_QUERY = (
+    '(ti:("machine learning" OR ML OR "deep learning" OR DL OR "large language model?" OR "LLM?" OR '
+    '"neural network?" OR "?NN?" OR "f?undational model?" OR agent) AND (quantization OR quantize OR '
+    'quantized) AND ("energy consumption" OR "energy efficien*" OR "sustain*" OR "carbon footprint" OR '
+    '"carbon emission") ANDNOT ("FL" OR "federated learning")) OR (abs:("machine learning" OR ML OR '
+    '"deep learning" OR DL OR "large language model?" OR "LLM?" OR "neural network?" OR "?NN?" OR '
+    '"f?undational model?" OR agent) AND (quantization OR quantize OR quantized) AND ("energy '
+    'consumption" OR "energy efficien*" OR "sustain*" OR "carbon footprint" OR "carbon emission") '
+    'ANDNOT ("FL" OR "federated learning")) AND submittedDate:[202201010000 TO 202502040000]'
+)
+CORE_FIGURES = (
+    FIGURES_DIR / "metrics-usage-distribution.pdf",
+    FIGURES_DIR / "correctness-forestplot.pdf",
+    FIGURES_DIR / "resource-efficiency-forestplot.pdf",
+    FIGURES_DIR / "performance-forestplot.pdf",
+)
+CORE_TABLES = (
+    TABLES_DIR / "studies-quasi-experiments.tex",
+    TABLES_DIR / "studies-observational.tex",
+    TABLES_DIR / "aggregated-effects.tex",
+    TABLES_DIR / "belief-assignment.tex",
+    TABLES_DIR / "leave-one-study-out.tex",
+    TABLES_DIR / "sensitivity-mass-preserving.tex",
+    TABLES_DIR / "subgroup-ptq-w-int8-a-int8.tex",
+    TABLES_DIR / "intensity-thresholds.tex",
+    TABLES_DIR / "result-macros.tex",
+    TABLES_DIR / "effective-sample-size.tex",
+    TABLES_DIR / "discount-parameter-sensitivity.tex",
+    TABLES_DIR / "intensity-threshold-sensitivity.tex",
+)
+PROCESSED_OUTPUT_FILENAMES = (
+    "improvement_metrics.parquet",
+    "improvement_statistics_by_configuration.parquet",
+    "improvement_statistics_by_precision.parquet",
+    "effects_by_configuration.json",
+    "effects_by_precision.json",
+)
+GEMINI_API_KEY_ENV_VAR = "GEMINI_API_KEY"
+
+
+@dataclass(frozen=True)
+class ExternalDataStatus:
+    paper_key: str
+    status: str
+    message: str
+
+
+def get_selected_papers(paper_keys: list[str] | None = None) -> list[Paper]:
+    papers_by_key = {paper.value.KEY: paper.value for paper in Papers}
+    if paper_keys is None:
+        return list(papers_by_key.values())
+
+    unknown_keys = sorted(set(paper_keys) - set(papers_by_key))
+    if unknown_keys:
+        available = ", ".join(sorted(papers_by_key))
+        requested = ", ".join(unknown_keys)
+        raise ValueError(f"Unknown paper key(s): {requested}. Available keys: {available}")
+
+    return [papers_by_key[key] for key in paper_keys]
+
+
+def list_paper_keys() -> list[str]:
+    return sorted(paper.value.KEY for paper in Papers)
+
+
+def _missing_external_members(paper: Paper) -> list[str]:
+    if paper.REMOTE_ARCHIVE_SOURCE is not None:
+        return [
+            member.local_filename
+            for member in paper.REMOTE_ARCHIVE_SOURCE.members
+            if not Path(paper.external_data_path(member.local_filename)).is_file()
+        ]
+
+    default_path = Path(paper.external_data_path())
+    return [] if default_path.is_file() else [default_path.name]
+
+
+def ensure_external_data(
+    paper_keys: list[str] | None = None,
+    *,
+    download_missing: bool = False,
+) -> list[ExternalDataStatus]:
+    statuses: list[ExternalDataStatus] = []
+
+    for paper in get_selected_papers(paper_keys):
+        missing_files = _missing_external_members(paper)
+        if not missing_files:
+            statuses.append(ExternalDataStatus(paper.KEY, "present", "All required external data is present."))
+            continue
+
+        if paper.REMOTE_ARCHIVE_SOURCE is not None and download_missing:
+            paper.ensure_external_data()
+            statuses.append(
+                ExternalDataStatus(
+                    paper.KEY,
+                    "downloaded",
+                    f"Downloaded missing external data: {', '.join(missing_files)}.",
+                )
+            )
+            continue
+
+        if paper.REMOTE_ARCHIVE_SOURCE is not None:
+            statuses.append(
+                ExternalDataStatus(
+                    paper.KEY,
+                    "missing-downloadable",
+                    "Missing downloadable external data: "
+                    f"{', '.join(missing_files)}. Re-run with --download-missing to fetch it.",
+                )
+            )
+            continue
+
+        readme_path = Path(paper.external_data_path("README.md"))
+        statuses.append(
+            ExternalDataStatus(
+                paper.KEY,
+                "missing-manual",
+                f"Missing manually supplied external data: {', '.join(missing_files)}. See {readme_path}.",
+            )
+        )
+
+    return statuses
+
+
+def validate_external_data_ready(statuses: list[ExternalDataStatus]) -> None:
+    blocking = [status for status in statuses if status.status.startswith("missing")]
+    if not blocking:
+        return
+
+    details = "\n".join(f"- {status.paper_key}: {status.message}" for status in blocking)
+    raise RuntimeError(f"External data is not ready for all requested papers:\n{details}")
+
+
+def download_paper_catalog(
+    query: str = DEFAULT_DOWNLOAD_QUERY,
+    *,
+    max_results: int = DEFAULT_DOWNLOAD_MAX_RESULTS,
+    output_path: Path = INTERIM_DATA_DIR / PAPERS_FILENAME,
+) -> Path:
+    arxiv_papers = download_arxiv_papers(query, max_results)
+    arxiv_df = papers_dict_to_polars_df(arxiv_papers)
+    scopus_df = read_scopus_quantization_papers().sort("Year", descending=False)
+
+    papers = (
+        clean_titles(pl.concat([scopus_df, arxiv_df], how="diagonal_relaxed"))
+        .with_columns(pl.col("Title").str.to_lowercase().alias("Temp Title"))
+        .unique("Temp Title", keep="first", maintain_order=True)
+        .drop("Temp Title")
+    )
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    papers.write_csv(output_path)
+    return output_path
+
+
+def validate_gemini_api_key() -> None:
+    if os.getenv(GEMINI_API_KEY_ENV_VAR):
+        return
+    raise RuntimeError(
+        f"Missing {GEMINI_API_KEY_ENV_VAR}. Set it in your environment or .env before running LLM selection."
+    )
+
+
+def run_llm_selection(
+    *,
+    papers_path: Path = INTERIM_DATA_DIR / PAPERS_FILENAME,
+    sample_papers_path: Path = INTERIM_DATA_DIR / SAMPLE_PAPERS_FILENAME,
+    output_path: Path = INTERIM_DATA_DIR / SCORES_FILENAME,
+) -> Path:
+    validate_gemini_api_key()
+
+    relevant_data = load_selection_papers(papers_path=papers_path, sample_papers_path=sample_papers_path)
+    client = genai.Client()
+    scores_df = scores_to_frame(collect_query_results(client, relevant_data))
+    write_scores(scores_df, output_path=output_path)
+    return output_path
+
+
+def build_selection_manifest_outputs(
+    *,
+    interim_dir: Path = INTERIM_DATA_DIR,
+    processed_dir: Path = PROCESSED_DATA_DIR,
+) -> list[Path]:
+    """Build the frozen selection manifest and summary under ``data/processed/``."""
+    manifest, summary = build_frozen_selection_artifacts(
+        interim_dir=interim_dir,
+        processed_dir=processed_dir,
+    )
+    parquet_path = processed_dir / MANIFEST_PARQUET_NAME
+    summary_path = processed_dir / MANIFEST_SUMMARY_NAME
+    write_selection_manifest(manifest, summary, parquet_path, summary_path)
+    macros_path = write_selection_macros(summary, TABLES_DIR / "selection-manifest-macros.tex")
+    figure_path = write_selection_prisma_figure(summary, FIGURES_DIR / "selection-prisma-flow.pdf")
+    return [parquet_path, summary_path, macros_path, figure_path]
+
+
+def write_selection_macros(summary: dict, path: Path) -> Path:
+    """Write LaTeX macros for study-selection counts derived from the selection manifest."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    recall = summary["calibration_recall"]
+    audit = summary["negative_audit"]
+    n_cal_neg = summary["n_calibration_unique"] - summary["n_calibration_positive"]
+
+    def pct(value: float) -> str:
+        return f"{100.0 * value:.1f}"
+
+    by_source = summary.get("n_search_by_source", {})
+    n_scopus = by_source.get("Scopus", 0)
+    n_arxiv = by_source.get("arXiv", 0)
+
+    lines = [
+        r"% Generated from data/processed/selection-manifest-summary.json. Do not edit by hand.",
+        rf"\newcommand{{\SelectionNSearch}}{{{summary['n_search']}}}",
+        rf"\newcommand{{\SelectionNSearchScopus}}{{{n_scopus}}}",
+        rf"\newcommand{{\SelectionNSearchArxiv}}{{{n_arxiv}}}",
+        rf"\newcommand{{\SelectionNCalibration}}{{{summary['n_calibration_unique']}}}",
+        rf"\newcommand{{\SelectionNCalibrationNested}}{{{summary['n_calibration_nested']}}}",
+        rf"\newcommand{{\SelectionNCalibrationOrphans}}{{{summary['n_calibration_orphans']}}}",
+        rf"\newcommand{{\SelectionNRemaining}}{{{summary['n_remaining_search']}}}",
+        rf"\newcommand{{\SelectionNLlmRetained}}{{{summary['n_llm_prescreen_retained']}}}",
+        rf"\newcommand{{\SelectionNCalibrationPositive}}{{{summary['n_calibration_positive']}}}",
+        rf"\newcommand{{\SelectionNCalibrationNegative}}{{{n_cal_neg}}}",
+        rf"\newcommand{{\SelectionNTitleAbstractPool}}{{{summary['n_title_abstract_pool']}}}",
+        rf"\newcommand{{\SelectionNTitleAbstractFulltext}}{{{summary['n_title_abstract_to_fulltext']}}}",
+        rf"\newcommand{{\SelectionNFulltextDatabase}}{{{summary['n_fulltext_included_database']}}}",
+        rf"\newcommand{{\SelectionNSnowball}}{{{summary['n_snowball_included']}}}",
+        rf"\newcommand{{\SelectionNFinal}}{{{summary['n_final_included']}}}",
+        rf"\newcommand{{\SelectionCalibrationRecallPct}}{{{pct(recall['estimate'])}}}",
+        rf"\newcommand{{\SelectionCalibrationRecallLowPct}}{{{pct(recall['jeffreys_low'])}}}",
+        rf"\newcommand{{\SelectionCalibrationRecallHighPct}}{{{pct(recall['jeffreys_high'])}}}",
+        rf"\newcommand{{\SelectionNegativeAuditFN}}{{{audit['false_negatives']}}}",
+        rf"\newcommand{{\SelectionNegativeAuditN}}{{{audit['trials']}}}",
+        rf"\newcommand{{\SelectionNegativeAuditFNRateHighPct}}{{{pct(audit['false_negative_rate_jeffreys_high'])}}}",
+        "",
+    ]
+    path.write_text("\n".join(lines))
+    return path
+
+
+def write_selection_prisma_figure(summary: dict, path: Path) -> Path:
+    """Render a PRISMA-style flow figure from selection-manifest summary counts."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig, ax = plt.subplots(figsize=(10, 8))
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 12)
+    ax.axis("off")
+
+    def box(x: float, y: float, w: float, h: float, text: str) -> None:
+        patch = FancyBboxPatch(
+            (x, y),
+            w,
+            h,
+            boxstyle="round,pad=0.02,rounding_size=0.15",
+            linewidth=1.2,
+            edgecolor="black",
+            facecolor="white",
+        )
+        ax.add_patch(patch)
+        ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=9)
+
+    by_source = summary.get("n_search_by_source", {})
+    source_bits = ", ".join(f"{name} = {count}" for name, count in sorted(by_source.items()))
+    search_label = f"Database search\nN = {summary['n_search']}"
+    if source_bits:
+        search_label = f"{search_label}\n({source_bits})"
+    box(2.5, 10.5, 5, 1.0, search_label)
+    box(
+        0.3,
+        8.6,
+        4.2,
+        1.4,
+        f"Calibration subset\nN = {summary['n_calibration_unique']}\n"
+        f"(nested {summary['n_calibration_nested']}; "
+        f"orphans {summary['n_calibration_orphans']})",
+    )
+    box(5.5, 8.6, 4.2, 1.4, f"Remaining search hits\nN = {summary['n_remaining_search']}")
+    box(
+        5.5,
+        6.8,
+        4.2,
+        1.4,
+        f"LLM pre-screen retention\nN = {summary['n_llm_prescreen_retained']}",
+    )
+    box(
+        2.5,
+        5.0,
+        5,
+        1.4,
+        "Title–abstract screening pool\n"
+        f"{summary['n_llm_prescreen_retained']} LLM pre-screen retention + "
+        f"{summary['n_calibration_positive']} calibration positives\n"
+        f"= {summary['n_title_abstract_pool']}",
+    )
+    box(
+        2.5,
+        3.4,
+        5,
+        1.2,
+        f"Retained for full-text assessment\nN = {summary['n_title_abstract_to_fulltext']}",
+    )
+    box(
+        2.5,
+        1.8,
+        5,
+        1.2,
+        f"Included after full-text (database path)\nN = {summary['n_fulltext_included_database']}",
+    )
+    box(
+        2.5,
+        0.3,
+        5,
+        1.2,
+        "Final included studies\n"
+        f"{summary['n_fulltext_included_database']} database + "
+        f"{summary['n_snowball_included']} snowball = {summary['n_final_included']}",
+    )
+
+    ax.annotate("", xy=(5, 10.0), xytext=(5, 10.5), arrowprops={"arrowstyle": "->", "color": "black"})
+    ax.annotate("", xy=(7.6, 8.6), xytext=(7.6, 10.5), arrowprops={"arrowstyle": "->", "color": "black"})
+    ax.annotate("", xy=(2.4, 8.6), xytext=(5, 10.5), arrowprops={"arrowstyle": "->", "color": "black"})
+    ax.annotate("", xy=(7.6, 8.2), xytext=(7.6, 8.6), arrowprops={"arrowstyle": "->", "color": "black"})
+    ax.annotate("", xy=(5, 6.4), xytext=(7.6, 7.5), arrowprops={"arrowstyle": "->", "color": "black"})
+    ax.annotate(
+        "",
+        xy=(5, 6.4),
+        xytext=(2.4, 8.6),
+        arrowprops={"arrowstyle": "->", "color": "black", "connectionstyle": "arc3,rad=0.15"},
+    )
+    ax.annotate("", xy=(5, 4.6), xytext=(5, 5.0), arrowprops={"arrowstyle": "->", "color": "black"})
+    ax.annotate("", xy=(5, 3.0), xytext=(5, 3.4), arrowprops={"arrowstyle": "->", "color": "black"})
+    ax.annotate("", xy=(5, 1.5), xytext=(5, 1.8), arrowprops={"arrowstyle": "->", "color": "black"})
+
+    fig.tight_layout()
+    fig.savefig(path, bbox_inches="tight")
+    plt.close(fig)
+    return path
+
+
+def run_evidence_extraction_workflow(
+    paper_keys: list[str] | None = None,
+    *,
+    download_missing: bool = False,
+) -> list[Path]:
+    statuses = ensure_external_data(paper_keys, download_missing=download_missing)
+    validate_external_data_ready(statuses)
+
+    output_paths: list[Path] = []
+    for paper in get_selected_papers(paper_keys):
+        extract_knowledge_from(paper)
+        for filename in PROCESSED_OUTPUT_FILENAMES:
+            output_paths.append(processed_paper_path(paper.KEY, filename))
+
+    validate_paths_exist(output_paths, label="processed outputs")
+    return output_paths
+
+
+def run_notebook_headless(notebook_path: Path = EVIDENCE_ANALYSIS_NOTEBOOK) -> Path:
+    notebook_path = Path(notebook_path)
+    executed_notebook = notebook_path.stem + ".executed.ipynb"
+    output_dir = ROOT_DIR / ".tmp" / "executed-notebooks"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "jupyter",
+            "nbconvert",
+            "--to",
+            "notebook",
+            "--execute",
+            "--output",
+            executed_notebook,
+            "--output-dir",
+            str(output_dir),
+            str(notebook_path),
+        ],
+        check=True,
+    )
+
+    executed_path = output_dir / executed_notebook
+    validate_paths_exist([executed_path], label="executed notebook")
+    return executed_path
+
+
+def reproduce_review() -> list[Path]:
+    statuses = ensure_external_data()
+    validate_external_data_ready(statuses)
+    paths: list[Path] = []
+    paths.extend(run_evidence_extraction_workflow())
+    paths.extend(reproduce_figures(run_notebook=True))
+    paths.extend(reproduce_tables())
+    for notebook_id in REVIEW_NOTEBOOK_ORDER:
+        paths.append(reproduce_notebook(notebook_id))
+    return paths
+
+
+def reproduce_notebook(notebook_id: str) -> Path:
+    try:
+        notebook_path = REVIEW_NOTEBOOKS[notebook_id]
+    except KeyError as exc:
+        allowed = ", ".join(REVIEW_NOTEBOOKS)
+        raise ValueError(f"Unknown review notebook {notebook_id!r}. Expected one of: {allowed}.") from exc
+    return run_notebook_headless(notebook_path)
+
+
+def reproduce_figures(*, run_notebook: bool = True) -> list[Path]:
+    if run_notebook:
+        run_notebook_headless()
+    validate_paths_exist(CORE_FIGURES, label="core figure outputs")
+    return list(CORE_FIGURES)
+
+
+def reproduce_tables() -> list[Path]:
+    paths = list(generate_studies_summary_tables(output_dir=TABLES_DIR))
+    paths.extend(write_all_validated_outputs())
+    validate_paths_exist(CORE_TABLES, label="core table outputs")
+    return paths
+
+
+def reproduce_full_pipeline(*, download_missing: bool = False, run_notebook: bool = True) -> list[Path]:
+    output_paths = run_evidence_extraction_workflow(download_missing=download_missing)
+    if run_notebook:
+        output_paths.extend(reproduce_figures(run_notebook=True))
+    return output_paths
+
+
+def validate_paths_exist(paths: list[Path] | tuple[Path, ...], *, label: str) -> None:
+    missing = [Path(path) for path in paths if not Path(path).exists()]
+    if not missing:
+        return
+
+    details = "\n".join(f"- {path}" for path in missing)
+    raise RuntimeError(f"Missing expected {label}:\n{details}")

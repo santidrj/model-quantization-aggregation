@@ -1,6 +1,7 @@
 [
     {
-        "quantization_precision": "ptq-w8a8",
+        "quantization_method": "ptq",
+        "precision_configuration": "w-int8, a-int8",
         "precision": {
             "improvement": -24.211,
             "std": null,
@@ -69,7 +70,8 @@
         }
     },
     {
-        "quantization_precision": "qat-w8a8",
+        "quantization_method": "qat",
+        "precision_configuration": "w-int8, a-int8",
         "precision": {
             "improvement": -9.474,
             "std": null,

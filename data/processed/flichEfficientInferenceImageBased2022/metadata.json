@@ -1,0 +1,33 @@
+{
+  "title": "Efficient Inference Of Image-Based Neural Network Models In Reconfigurable Systems With Pruning And Quantization",
+  "study_type": "controlled experiment",
+  "domain": "Skin lesion",
+  "data_quality": "comparative",
+  "quantization_schema": {
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
+      "w-int8"
+    ],
+    "quantization_method": [
+      "ptq"
+    ],
+    "frameworks": [
+      "N2D2"
+    ]
+  },
+  "hardware": [
+    {
+      "device": {
+        "model": "Alveo U200",
+        "board": "Xilinx ALVEO U200 FPGA board",
+        "CPU": "Intel i7-7800-X @ 3.45 GHz"
+      }
+    }
+  ],
+  "models": [
+    "VGG16"
+  ],
+  "datasets": [
+    "ISIC skin lesion dataset"
+  ]
+}

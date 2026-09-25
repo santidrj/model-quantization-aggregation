@@ -16,18 +16,21 @@ This replication package consists of the following components:
 2. **Source Code**:
    - Located in the [src](src) directory, it includes scripts for data processing, analysis, and evidence extraction.
    - Key modules:
-     - [data/papers/entities.py](data/papers/entities.py) & [data/papers/knowledge_extraction.py](data/papers/knowledge_extraction.py): Define the structure and data extraction logic for the papers analyzed.
-     - [data/download.py](data/download.py): Downloads the list of papers from arXiv and merges them with the Scopus list.
-     - [data/selection/llm.py](data/selection/llm.py): Implements logic for selecting studies using Gemini 3.0 Flash.
+     - [src/data/papers/entities.py](src/data/papers/entities.py) & [src/data/papers/knowledge_extraction.py](src/data/papers/knowledge_extraction.py): Define the structure and data extraction logic for the papers analyzed.
+     - [src/data/download.py](src/data/download.py): Downloads the list of papers from arXiv and merges them with the Scopus list.
+     - [src/data/selection/llm.py](src/data/selection/llm.py): Implements logic for selecting studies using Gemini 3.0 Flash.
+     - [dempster_shafer.py](src/dempster_shafer.py) & [belief_assignment.py](src/belief_assignment.py): Combine belief assignments, reproduce Evidence Factory outputs, and emit full audit traces.
 
 3. **Jupyter Notebooks**:
    - Located in the [notebooks](notebooks) directory, these notebooks contain the analysis and visualization of the data.
    - Notebooks include:
      - [1.0-llm-promt-refinement.ipynb](notebooks/1.0-llm-promt-refinement.ipynb): Refines the prompt for LLMs and the selection of LLM.
      - [2.0-model-quantization-paper-selection.ipynb](notebooks/2.0-model-quantization-paper-selection.ipynb): Filters the raw list of papers using the selected GEMINI 3.0.
-     - [3.0-final-selection-analysis.ipynb](notebooks/3.0-final-selection-analysis.ipynb): Analyzes the final selection of papers.
-     - [4.0-paper-metadata-analysis.ipynb](notebooks/4.0-paper-metadata-analysis.ipynb): Analyzes metadata from selected papers.
-     - [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb): Analyzes evidence extracted from the papers and generates the forest plot.
+     - [3.0-final-selection-analysis.ipynb](notebooks/3.0-final-selection-analysis.ipynb): Analyzes the final selection of papers. On the review bar.
+     - [4.0-paper-metadata-analysis.ipynb](notebooks/4.0-paper-metadata-analysis.ipynb): Characterizes manually extracted paper metadata. On the review bar.
+     - [5.0-evidence-analysis.ipynb](notebooks/5.0-evidence-analysis.ipynb): Reproduces the paper's evidence figures (Fig. 6, Fig. 7, Fig. 8, and Fig. 10). On the review bar.
+     - [5.1-subgroup-ptq-w-int8-a-int8.ipynb](notebooks/5.1-subgroup-ptq-w-int8-a-int8.ipynb): Subgroup analysis for `ptq` from `full-fp32` to `w-int8, a-int8`. On the review bar.
+     - [6.0-appendix-worked-examples.ipynb](notebooks/6.0-appendix-worked-examples.ipynb): Recomputes manuscript appendix examples. On the review bar.
 
 4. **Documentation**:
    - [data/processed/evidence-diagrams-mapping.md](data/processed/evidence-diagrams-mapping.md): Links to evidence diagrams generated during the study.
@@ -48,11 +51,14 @@ The project is organized as follows:
 ├── notebooks/
 │   ├── 1.0-llm-promt-refinement.ipynb
 │   ├── 2.0-model-quantization-paper-selection.ipynb
-│   ├── 3.0-second-selection-analysis.ipynb
+│   ├── 3.0-final-selection-analysis.ipynb
 │   ├── 4.0-paper-metadata-analysis.ipynb
-│   └── 5.0-evidence-analysis.ipynb
+│   ├── 5.0-evidence-analysis.ipynb
+│   ├── 5.1-subgroup-ptq-w-int8-a-int8.ipynb
+│   └── 6.0-appendix-worked-examples.ipynb
 ├── reports/
-│   └── figures/
+│   ├── figures/
+│   └── tables/
 ├── src/
 │   ├── data/
 │   │   ├── papers/                         <- Contains the logic for extracting and analyzing data from papers
@@ -80,8 +86,8 @@ The project is organized as follows:
    - Clone the repository:
 
      ```bash
-     git clone <repository-url>
-     cd green-tactics-synthesis
+     git clone https://github.com/santidrj/model-quantization-aggregation
+     cd model-quantization-aggregation
      ```
 
    - Install dependencies:  
@@ -97,50 +103,127 @@ The project is organized as follows:
      pip install -r requirements.txt
      ```
 
-   - **Using Docker** (recommended for reproducibility):  
-     A pre-built Docker image is available on Docker Hub:
+   - **Using Docker** (this version of the replication package):  
+     A pre-built image is published on [GitHub Container Registry](https://github.com/users/santidrj/packages/container/model-quantization-aggregation). Pull it (or build locally from the `Dockerfile` if you are changing the package):
 
      ```bash
-     docker pull santidr/model-quantization-aggregation
+     export MQ_IMAGE=ghcr.io/santidrj/model-quantization-aggregation:latest
+     docker pull "$MQ_IMAGE"
      ```
 
-     Run the container with Jupyter Lab:
+     The image for this README revision is also tagged `ghcr.io/santidrj/model-quantization-aggregation:df8ed79` (short git commit). Use that tag when you need a fixed image digest tied to this replication package state.
+
+     Jupyter Lab is the default command and listens on port 8888 with no token:
 
      ```bash
-     docker run -it -p 8888:8888 santidr/model-quantization-aggregation
+     docker run -it -p 8888:8888 "$MQ_IMAGE"
      ```
 
-     To use LLM features (paper selection), pass your API key:
+     Notebooks 1.0 and 2.0 call Gemini. Pass a key when you run those notebooks yourself:
 
      ```bash
      docker run -it -p 8888:8888 \
        -e GEMINI_API_KEY=your_key \
-       santidr/model-quantization-aggregation
+       "$MQ_IMAGE"
      ```
 
-     To persist data changes, mount local directories:
+     The review bar needs external paper data mounted at `/app/data/external` and a writable `reports/` directory:
 
      ```bash
-     docker run -it -p 8888:8888 \
-       -v $(pwd)/data:/app/data \
-       -v $(pwd)/reports:/app/reports \
-       santidr/model-quantization-aggregation
+     docker run --rm \
+       -v "$(pwd)/data/external:/app/data/external" \
+       -v "$(pwd)/reports:/app/reports" \
+       "$MQ_IMAGE" \
+       mq reproduce review
      ```
 
-2. **Getting the Data**:
-   - Run the download script to fetch the list of papers from arXiv and merge it with the Scopus list:
+     To build the image locally instead of pulling:
 
      ```bash
-     python src/data/downlad.py
+     docker build -t ghcr.io/santidrj/model-quantization-aggregation:local .
+     export MQ_IMAGE=ghcr.io/santidrj/model-quantization-aggregation:local
      ```
 
-   - We do not provide the raw data from the selected papers to prevent potential copyright issues. However, we provide instructions on how to obtain the data in each paper's README file. Located in the [data/external](data/external) directory.
+2. **CLI overview**:
+   - The project installs an `mq` command via `uv sync`.
+   - Use `mq reproduce ...` for deterministic replication workflows.
+   - Use `mq papers ...` for paper-maintenance workflows, including live LLM selection.
+   - Use `mq extraction ...` for lower-level evidence extraction commands.
 
-3. **Extracting the evidence**:
-   - Use the [run_evidence_extraction.py](src/run_evidence_extraction.py) module to extract the evidence from the selected papers.
+3. **Paper data and maintenance**:
+   - Refresh the candidate paper catalog from Scopus and arXiv:
 
-4. **Explore the data with Jupyter Notebooks**:
-   - Open the Jupyter notebooks in the [notebooks](notebooks) directory to explore the data and analysis.
+     ```bash
+     uv run mq papers download
+     ```
+
+   - We do not commit external paper data from the selected studies (copyright / size). Most papers expect a local `paper-data.csv` under [data/external](data/external); each paper folder's README explains how to obtain it.
+   - Preflight all external study inputs without downloading anything implicitly:
+
+     ```bash
+     uv run mq papers ensure-external-data
+     ```
+
+   - For papers with a remote archive descriptor (currently Alizadeh and Gonzalez), opt in to fetching missing files:
+
+     ```bash
+     uv run mq papers ensure-external-data --download-missing
+     ```
+
+   - Run the non-deterministic LLM scoring workflow only with explicit acknowledgement:
+
+     ```bash
+     uv run mq papers select --run-llm
+     ```
+
+## Reproducing the paper
+
+Pull the published image (see **Using Docker** above), mount external paper data, and mount a writable `reports/` directory:
+
+```bash
+export MQ_IMAGE=ghcr.io/santidrj/model-quantization-aggregation:latest
+docker pull "$MQ_IMAGE"
+docker run --rm \
+  -v "$(pwd)/data/external:/app/data/external" \
+  -v "$(pwd)/reports:/app/reports" \
+  "$MQ_IMAGE" \
+  mq reproduce review
+```
+
+The same bar on a local checkout, after `uv sync` and the same external paper data:
+
+```bash
+uv run mq reproduce review
+```
+
+`mq reproduce review` stops if any required external file is missing. It runs these steps, which you can also run one at a time:
+
+1. `uv run mq papers ensure-external-data`
+2. `uv run mq extraction run`
+3. `uv run mq reproduce figures` — notebook 5.0. Outputs in [reports/figures/](reports/figures/):
+
+   | Output file | Paper figure |
+   |---|---|
+   | `metrics-usage-distribution.pdf` | Fig. 10 |
+   | `correctness-forestplot.pdf` | Fig. 6 |
+   | `resource-efficiency-forestplot.pdf` | Fig. 7 |
+   | `performance-forestplot.pdf` | Fig. 8 |
+
+4. `uv run mq reproduce tables` — studies-summary fragments in [reports/tables/](reports/tables/) and `data/processed/validated-synthesis.json`.
+5. `uv run mq reproduce notebook 3.0`
+6. `uv run mq reproduce notebook 4.0`
+7. `uv run mq reproduce notebook 5.1`
+8. `uv run mq reproduce notebook 6.0`
+
+`mq reproduce notebook` also accepts `5.0`. Notebooks 1.0 and 2.0 stay manual Jupyter runs and need `GEMINI_API_KEY`.
+
+`uv run mq reproduce full-pipeline` still regenerates processed evidence and notebook 5.0 together. Add `--no-notebooks` to stop after processed outputs.
+
+### Other commands
+
+- Run extraction for a subset of papers: `uv run mq extraction run --paper <paper-key> --paper <paper-key>`
+- List supported paper keys: `uv run mq papers list`
+- Belief-assignment checks: `uv run pytest tests/test_dempster_shafer.py tests/test_belief_assignment.py` (after `uv run mq reproduce tables`)
 
 ## Notes
 

@@ -1,0 +1,14 @@
+.git
+.github
+.venv
+.scratch
+.cursor
+automation
+tests
+reports
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.ruff_cache
+.mypy_cache
+*.egg-info

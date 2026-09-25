@@ -1,0 +1,37 @@
+{
+  "title": "Implementing ultra-lightweight co-inference model in ubiquitous edge device for atrial fibrillation detection",
+  "study_type": "controlled experiment",
+  "domain": "Atrial fib.",
+  "data_quality": "comparative",
+  "quantization_schema": {
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
+      "w-int8"
+    ],
+    "quantization_method": [
+      "ptq"
+    ],
+    "quantization_techniques": [
+      "Max-min"
+    ]
+  },
+  "hardware": [
+    {
+      "device": {
+        "model": "ATmega2560",
+        "board": "Arduino Mega",
+        "OS": null,
+        "CPU": "8-bit AVR RISC microcontroller, 16 MHz",
+        "GPU": null,
+        "RAM": "8 KB SRAM",
+        "Storage": "256 KB Flash, 4 KB EEPROM"
+      }
+    }
+  ],
+  "models": [
+    "Multilayer Perceptron (MLP)"
+  ],
+  "datasets": [
+    "PhysioNet/CinC Challenge 2017 Atrial Fibrillation Database"
+  ]
+}

@@ -1,18 +1,32 @@
 {
   "title": "Energy-Efficient Respiratory Anomaly Detection in Premature Newborn Infants",
   "study_type": "controlled experiment",
+  "domain": "Respiratory det.",
   "data_quality": "comparative",
   "energy_measurement": {
-    "measurement_method": ["analytical"],
-    "software_tools": ["QTools"],
+    "measurement_method": [
+      "analytical"
+    ],
+    "software_tools": [
+      "QTools"
+    ],
     "repetitions": 1
   },
   "quantization_schema": {
-    "baseline_precision": "fp64",
-    "target_precision": ["q0.2", "q0.4", "q0.8", "q0.16", "q0.32"],
-    "quantization_targets": ["w-q0.2, a-q0.2", "w-q0.4, a-q0.4", "w-q0.8, a-q0.8", "w-q0.16, a-q0.16", "w-q0.32, a-q0.32"],
-    "quantization_method": "quantization-aware training",
-    "frameworks": ["QKeras"]
+    "baseline_precision_configuration": "full-fp64",
+    "precision_configurations": [
+      "w-q0.2, a-q0.2",
+      "w-q0.4, a-q0.4",
+      "w-q0.8, a-q0.8",
+      "w-q0.16, a-q0.16",
+      "w-q0.32, a-q0.32"
+    ],
+    "quantization_method": [
+      "qat"
+    ],
+    "frameworks": [
+      "QKeras"
+    ]
   },
   "hardware": [
     {
@@ -23,6 +37,10 @@
       }
     }
   ],
-  "models": ["1DCNN"],
-  "datasets": ["SimBaby"]
+  "models": [
+    "1DCNN"
+  ],
+  "datasets": [
+    "SimBaby"
+  ]
 }

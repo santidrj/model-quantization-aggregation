@@ -3,9 +3,20 @@ from os import PathLike
 
 import numpy as np
 import polars as pl
-from statsmodels.stats import descriptivestats as sms
 
+from src.belief_discounts import (
+    DEFAULT_SATURATION_SIZE,
+    DEFAULT_VARIABILITY_CUTOFF,
+    DEFAULT_VARIABILITY_K,
+    variability_reliability_expr,
+)
 from src.data.papers.entities import CorrectnessMetrics, Paper, Papers
+from src.data.papers.metric_polarity import is_minimized_correctness_metric
+from src.data.papers.precision_nomenclature import (
+    normalize_quantization_method,
+    parse_precision_label,
+    precision_configuration_sort_key,
+)
 from src.effect_intensity import (
     CorrectnessIntensity,
     EffectIntensity,
@@ -13,19 +24,25 @@ from src.effect_intensity import (
     LatencyIntensity,
     ResourceUsageIntensity,
 )
+from src.experimental_units import (
+    cluster_columns_from_unit_columns,
+    collapse_metric_to_units,
+    unit_columns_for_configuration,
+    unit_columns_for_precision,
+    unit_level_statistics,
+)
 
 CORRECTNESS_METRICS = CorrectnessMetrics()
 Q1 = 0.25
 Q3 = 0.75
-DISCOUNT_FACTOR = 0.1
-STABILIZATION_SIZE = 3  # Computed as the median of the number of observations per study
-EPSILON = 1e-10
+DISCOUNT_FACTOR = DEFAULT_VARIABILITY_K
+STABILIZATION_SIZE = DEFAULT_SATURATION_SIZE
+MIN_SAMPLE_SIZE_FOR_VARIABILITY_DISCOUNT = DEFAULT_VARIABILITY_CUTOFF
 
 STATS_COLUMNS_ORDER = [
     "configuration",
-    "n_subjects",
     "effect",
-    "nobs",
+    "n_eff",
     "mean",
     "lower_ci",
     "upper_ci",
@@ -33,12 +50,29 @@ STATS_COLUMNS_ORDER = [
 ]
 
 
+def _cluster_sample_size_expr(unit_columns: list[str], improvement_column: str) -> pl.Expr:
+    cluster_columns = cluster_columns_from_unit_columns(unit_columns)
+    return (
+        pl.struct(cluster_columns)
+        .filter(pl.col(improvement_column).is_not_null())
+        .n_unique()
+        .alias(f"{improvement_column}_sample_size")
+    )
+
+
+def _cluster_ids_for_units(units: pl.DataFrame, unit_columns: list[str]) -> pl.Series:
+    cluster_columns = cluster_columns_from_unit_columns(unit_columns)
+    cluster_key = pl.concat_str([pl.col(column).cast(pl.String) for column in cluster_columns], separator="\0")
+    return units.select(cluster_key).to_series()
+
+
 class KnowledgeExtractor:
-    PRECISION_COLUMN = "quantization_precision"
+    PRECISION_COLUMN = "precision_configuration"
+    METHOD_COLUMN = "quantization_method"
 
     def __init__(  # noqa: PLR0913
         self,
-        df: pl.DataFrame,
+        df: pl.DataFrame | pl.LazyFrame,
         paper: Paper,
     ):
         """
@@ -57,17 +91,106 @@ class KnowledgeExtractor:
         self.resource_efficiency_columns = paper.RESOURCE_EFFICIENCY_COLUMNS.metrics()
 
         columns = df.collect_schema().names() if type(df) is pl.LazyFrame else df.columns
-        self.df = df.drop(
-            [
-                col
-                for col in columns
-                if col
-                not in [self.paper.QUANTIZATION_PRECISION_COL]
-                + [col_name for _, col_name in self.correctness_columns + self.resource_efficiency_columns]
-                + (self.paper.GROUPING_COLUMNS or [])
-                + (self.paper.EXPERIMENT_RUN_KEY or [])
-            ]
-        ).rename({self.paper.QUANTIZATION_PRECISION_COL: self.PRECISION_COLUMN})
+        method_source = self.paper.QUANTIZATION_METHOD_COL
+        keep = (
+            [self.paper.QUANTIZATION_PRECISION_COL]
+            + ([method_source] if method_source and method_source in columns else [])
+            + [col_name for _, col_name in self.correctness_columns + self.resource_efficiency_columns]
+            + (self.paper.GROUPING_COLUMNS or [])
+            + (self.paper.CONFIGURATION_COLUMNS or [])
+            + (self.paper.EXPERIMENT_RUN_KEY or [])
+        )
+        self.df = df.drop([col for col in columns if col not in keep]).rename(
+            {self.paper.QUANTIZATION_PRECISION_COL: self.PRECISION_COLUMN}
+        )
+        if method_source and method_source in keep and method_source != self.METHOD_COLUMN:
+            self.df = self.df.rename({method_source: self.METHOD_COLUMN})
+
+        self.df = self._canonicalize_precision_and_method(self.df)
+
+    def _canonicalize_precision_and_method(self, df: pl.DataFrame | pl.LazyFrame) -> pl.DataFrame | pl.LazyFrame:
+        columns = df.collect_schema().names() if type(df) is pl.LazyFrame else df.columns
+        default_method = self.paper.QUANTIZATION_METHOD
+        baseline = self.paper.BASELINE_PRECISION
+
+        def _parse_label(label: str) -> dict[str, str | None]:
+            method, config = parse_precision_label(label, baseline_precision_configuration=baseline)
+            return {"method": method, "config": config}
+
+        df = (
+            df.with_columns(
+                pl.col(self.PRECISION_COLUMN)
+                .map_elements(_parse_label, return_dtype=pl.Struct({"method": pl.String, "config": pl.String}))
+                .alias("_parsed")
+            )
+            .with_columns(
+                pl.col("_parsed").struct.field("config").alias(self.PRECISION_COLUMN),
+                pl.col("_parsed").struct.field("method").alias("_method_from_label"),
+            )
+            .drop("_parsed")
+        )
+
+        if self.METHOD_COLUMN in columns:
+            df = df.with_columns(
+                pl.col(self.METHOD_COLUMN)
+                .map_elements(
+                    lambda value: normalize_quantization_method(value) if value is not None else None,
+                    return_dtype=pl.String,
+                )
+                .alias(self.METHOD_COLUMN)
+            )
+            df = df.with_columns(
+                pl.coalesce(pl.col(self.METHOD_COLUMN), pl.col("_method_from_label")).alias(self.METHOD_COLUMN)
+            )
+        else:
+            df = df.with_columns(pl.col("_method_from_label").alias(self.METHOD_COLUMN))
+
+        if default_method is not None:
+            df = df.with_columns(pl.col(self.METHOD_COLUMN).fill_null(default_method))
+
+        quantized = df.filter(pl.col(self.PRECISION_COLUMN) != baseline)
+        null_methods = quantized.select(pl.col(self.METHOD_COLUMN).is_null().any())
+        has_null = null_methods.collect().item() if type(null_methods) is pl.LazyFrame else null_methods.item()
+        if has_null:
+            raise ValueError(
+                f"Paper {self.paper.KEY} is missing quantization_method on one or more quantized rows "
+                "and has no single QUANTIZATION_METHOD default"
+            )
+
+        # Baseline rows are excluded from by-precision aggregation; fill only for a typed column.
+        return df.with_columns(pl.col(self.METHOD_COLUMN).fill_null(default_method or "qat")).drop("_method_from_label")
+
+    def _by_precision_key(self) -> list[str]:
+        return [self.METHOD_COLUMN, self.PRECISION_COLUMN]
+
+    def _sort_effects_by_precision(self, effects: pl.DataFrame) -> pl.DataFrame:
+        """Order by quantization method, then precision configuration sort key (ADR 0003)."""
+        methods = effects[self.METHOD_COLUMN].to_list()
+        precisions = effects[self.PRECISION_COLUMN].to_list()
+        order = sorted(
+            range(len(methods)),
+            key=lambda i: (methods[i], precision_configuration_sort_key(precisions[i])),
+        )
+        return effects[order]
+
+    def _sort_frame_by_precision_configuration(self, frame: pl.DataFrame) -> pl.DataFrame:
+        """Order rows whose `configuration` struct carries method + precision (ADR 0003)."""
+        methods = frame["configuration"].struct.field(self.METHOD_COLUMN).to_list()
+        precisions = frame["configuration"].struct.field(self.PRECISION_COLUMN).to_list()
+        order = sorted(
+            range(len(methods)),
+            key=lambda i: (methods[i], precision_configuration_sort_key(precisions[i]), i),
+        )
+        return frame[order]
+
+    def _configuration_key(self) -> list[str]:
+        if self.paper.GROUPING_COLUMNS is None:
+            return self._by_precision_key()
+        return [
+            *[variable for variable in self.paper.GROUPING_COLUMNS if variable != "Model"],
+            *self._by_precision_key(),
+            *(self.paper.CONFIGURATION_COLUMNS or []),
+        ]
 
     def extract_knowledge(self):
         """
@@ -95,7 +218,7 @@ class KnowledgeExtractor:
             DataFrame containing improvement metrics.
         """
         baseline_data = self.df.filter(pl.col(self.PRECISION_COLUMN) == self.paper.BASELINE_PRECISION).drop(
-            self.PRECISION_COLUMN
+            *self._by_precision_key()
         )
         quantization_data = self.df.filter(pl.col(self.PRECISION_COLUMN) != self.paper.BASELINE_PRECISION)
 
@@ -105,26 +228,35 @@ class KnowledgeExtractor:
                 if self.paper.EXPERIMENT_RUN_KEY is not None
                 else self.paper.GROUPING_COLUMNS
             )
-            group_key = [variable for variable in self.paper.GROUPING_COLUMNS if variable != "Model"] + [
-                self.PRECISION_COLUMN
-            ]
+            group_key = self._configuration_key()
             quantization_data = quantization_data.join(
                 baseline_data, on=join_key, how="inner", suffix="_baseline"
             ).with_columns(pl.struct(pl.col(*group_key)).alias("configuration"))
         else:
             quantization_data = quantization_data.join(baseline_data, how="cross", suffix="_baseline").with_columns(
-                pl.struct(pl.col(self.PRECISION_COLUMN)).alias("configuration")
+                pl.struct(pl.col(*self._by_precision_key())).alias("configuration")
             )
 
-        # Compute the relative improvement for each metric
-        # Note: We use the baseline value to compute the improvement, so we need to replace 0 with a small value
-        # to avoid division by zero resulting in NaN values or infinite values.
+        # Compute the relative improvement for each metric.
+        # Polarity (maximized vs minimized) is defined globally; see ADR 0004.
+        maximized_correctness_columns = [
+            (metric, col) for metric, col in self.correctness_columns if not is_minimized_correctness_metric(metric)
+        ]
+        minimized_correctness_columns = [
+            (metric, col) for metric, col in self.correctness_columns if is_minimized_correctness_metric(metric)
+        ]
         self.improvement_metrics = quantization_data.with_columns(
             *[
                 ((pl.col(col) - pl.col(f"{col}_baseline")) / pl.col(f"{col}_baseline") * 100)
                 .cast(pl.Float64)
                 .alias(f"{metric}_improvement")
-                for metric, col in self.correctness_columns
+                for metric, col in maximized_correctness_columns
+            ]
+            + [
+                ((pl.col(f"{col}_baseline") - pl.col(col)) / pl.col(f"{col}_baseline") * 100)
+                .cast(pl.Float64)
+                .alias(f"{metric}_improvement")
+                for metric, col in minimized_correctness_columns
             ]
             + [
                 ((pl.col(f"{col}_baseline") - pl.col(col)) / pl.col(f"{col}_baseline") * 100)
@@ -149,6 +281,43 @@ class KnowledgeExtractor:
 
         return self.improvement_metrics
 
+    def _metric_names(self) -> list[str]:
+        return [metric for metric, _ in self.correctness_columns + self.resource_efficiency_columns]
+
+    def _aggregate_metric_at_precision(self, metric: str) -> pl.DataFrame:
+        improvement_column = f"{metric}_improvement"
+        unit_columns = unit_columns_for_precision(metric, self.paper)
+        units = collapse_metric_to_units(self.improvement_metrics, metric, unit_columns)
+        return units.group_by(self._by_precision_key()).agg(
+            pl.col(improvement_column).mean().cast(pl.Float64).alias(improvement_column),
+            pl.col(improvement_column).std().cast(pl.Float64).alias(f"{improvement_column}_std"),
+            pl.col(improvement_column).quantile(Q1).alias(f"{improvement_column}_q1"),
+            pl.col(improvement_column).quantile(Q3).alias(f"{improvement_column}_q3"),
+            _cluster_sample_size_expr(unit_columns, improvement_column),
+        )
+
+    def _aggregate_metric_at_configuration(self, metric: str) -> pl.DataFrame:
+        improvement_column = f"{metric}_improvement"
+        available_columns = set(self.improvement_metrics.columns)
+        unit_columns = unit_columns_for_configuration(metric, self.paper, available_columns)
+        units = collapse_metric_to_units(self.improvement_metrics, metric, unit_columns)
+        return units.group_by("configuration").agg(
+            pl.col(improvement_column).mean().cast(pl.Float64).alias(improvement_column),
+            pl.col(improvement_column).std().cast(pl.Float64).alias(f"{improvement_column}_std"),
+            pl.col(improvement_column).quantile(Q1).alias(f"{improvement_column}_q1"),
+            pl.col(improvement_column).quantile(Q3).alias(f"{improvement_column}_q3"),
+            _cluster_sample_size_expr(unit_columns, improvement_column),
+        )
+
+    def _join_metric_precision_frames(
+        self, frames: list[pl.DataFrame], *, group_columns: list[str] | None = None
+    ) -> pl.DataFrame:
+        join_on = group_columns or self._by_precision_key()
+        combined = frames[0]
+        for frame in frames[1:]:
+            combined = combined.join(frame, on=join_on, how="full", coalesce=True)
+        return combined
+
     def compute_effects_by_precision(self) -> pl.DataFrame:
         """
         Compute aggregated effects grouped by quantization precision.
@@ -164,36 +333,10 @@ class KnowledgeExtractor:
         if not hasattr(self, "improvement_metrics"):
             self.compute_improvement()
 
-        self.effects_by_precision = self.improvement_metrics.group_by(self.PRECISION_COLUMN).agg(
-            [
-                pl.col("^*_improvement$").mean().cast(pl.Float64),
-                pl.col("^*_improvement$").std().cast(pl.Float64).name.suffix("_std"),
-                pl.col("^*_improvement$").quantile(Q1).name.suffix("_q1"),
-                pl.col("^*_improvement$").quantile(Q3).name.suffix("_q3"),
-            ]
-        )
-
-        if self.paper.GROUPING_COLUMNS is not None:
-            sample_size_by_precision = (
-                self.improvement_metrics.with_columns(
-                    pl.struct(self.paper.GROUPING_COLUMNS + [self.PRECISION_COLUMN]).alias("samples")
-                )
-                .unique("samples")
-                .group_by(self.PRECISION_COLUMN)
-                .agg(pl.col("^*_improvement$").count().name.suffix("_sample_size"))
-            )
-        else:
-            sample_size_by_precision = (
-                self.improvement_metrics.unique("configuration")
-                .group_by(self.PRECISION_COLUMN)
-                .agg(pl.col("^*_improvement$").count().name.suffix("_sample_size"))
-            )
-
-        self.effects_by_precision = self.effects_by_precision.join(sample_size_by_precision, on=self.PRECISION_COLUMN)
-
-        self.effects_by_precision = (
-            self._enrich_data(self.effects_by_precision).sort(self.PRECISION_COLUMN).drop(pl.col("^*_sample_size$"))
-        )
+        metric_frames = [self._aggregate_metric_at_precision(metric) for metric in self._metric_names()]
+        self.effects_by_precision = self._join_metric_precision_frames(metric_frames)
+        self.effects_by_precision = self._enrich_data(self.effects_by_precision).drop(pl.col("^*_sample_size$"))
+        self.effects_by_precision = self._sort_effects_by_precision(self.effects_by_precision)
 
         return self.effects_by_precision
 
@@ -213,36 +356,14 @@ class KnowledgeExtractor:
         if not hasattr(self, "improvement_metrics"):
             self.compute_improvement()
 
-        self.effects_by_configuration = self.improvement_metrics.group_by("configuration").agg(
-            [
-                pl.col("^*_improvement$").mean().cast(pl.Float64),
-                pl.col("^*_improvement$").std().cast(pl.Float64).name.suffix("_std"),
-                pl.col("^*_improvement$").quantile(Q1).name.suffix("_q1"),
-                pl.col("^*_improvement$").quantile(Q3).name.suffix("_q3"),
-            ]
+        metric_frames = [self._aggregate_metric_at_configuration(metric) for metric in self._metric_names()]
+        self.effects_by_configuration = self._join_metric_precision_frames(
+            metric_frames, group_columns=["configuration"]
         )
-
-        if self.paper.GROUPING_COLUMNS is not None:
-            sample_size = (
-                self.improvement_metrics.with_columns(
-                    pl.struct(self.paper.GROUPING_COLUMNS + [self.PRECISION_COLUMN]).alias("samples")
-                )
-                .unique("samples")
-                .group_by("configuration")
-                .agg(pl.col("^*_improvement$").count().name.suffix("_sample_size"))
-            )
-        else:
-            sample_size = (
-                self.improvement_metrics.unique("configuration")
-                .group_by("configuration")
-                .agg(pl.col("^*_improvement$").count().name.suffix("_sample_size"))
-            )
-
-        self.effects_by_configuration = self.effects_by_configuration.join(sample_size, on="configuration")
 
         self.effects_by_configuration = (
             self._enrich_data(self.effects_by_configuration)
-            .sort(pl.col("configuration").struct.field(self.PRECISION_COLUMN))
+            .sort(*[pl.col("configuration").struct.field(column) for column in self._configuration_key()])
             .drop(pl.col("^*_sample_size$"))
         )
 
@@ -308,6 +429,20 @@ class KnowledgeExtractor:
 
         return self._add_effect_intensity(enriched_data)
 
+    def _statistics_for_metric_group(
+        self,
+        metric: str,
+        subset: pl.DataFrame,
+        unit_columns: list[str],
+    ) -> dict[str, float | int | str | None]:
+        improvement_column = f"{metric}_improvement"
+        units = collapse_metric_to_units(subset, metric, unit_columns)
+        stats = unit_level_statistics(
+            units[improvement_column],
+            cluster_ids=_cluster_ids_for_units(units, unit_columns),
+        )
+        return {"effect": improvement_column, **stats}
+
     def _get_improvement_statistics_by_precision(self) -> pl.DataFrame:
         """
         Calculate improvement statistics grouped by precision using statsmodels.
@@ -320,77 +455,51 @@ class KnowledgeExtractor:
             DataFrame containing detailed statistics for each precision group.
         """
         df = self.improvement_metrics.select(pl.col("configuration", "^.+_improvement$"))
+        precision_key = pl.struct(
+            pl.col("configuration").struct.field(self.METHOD_COLUMN),
+            pl.col("configuration").struct.field(self.PRECISION_COLUMN),
+        )
         eff_df = []
-        for k, group in df.group_by(pl.col("configuration").struct.field(self.PRECISION_COLUMN)):
+        for k, _group in df.group_by(precision_key):
             key = k[0]
-            n_subjects = (
-                1
-                if self.paper.GROUPING_COLUMNS is None
-                else self.improvement_metrics.filter(pl.col("configuration").struct.field(self.PRECISION_COLUMN) == key)
-                .select("Model")
-                .n_unique()
+            method = key[self.METHOD_COLUMN]
+            precision = key[self.PRECISION_COLUMN]
+            subset = self.improvement_metrics.filter(
+                (pl.col(self.METHOD_COLUMN) == method) & (pl.col(self.PRECISION_COLUMN) == precision)
             )
-            metrics = group.drop(pl.col("configuration"))
-            if group.height == 1:
-                stats = (
-                    metrics.transpose(include_header=True, header_name="effect", column_names=["mean"])
-                    .with_columns(nobs=1, lower_ci=None, upper_ci=None)
-                    .select(["effect", "nobs", "mean", "lower_ci", "upper_ci"])
-                )
-            else:
-                # Select only metrics with more than one unique value to avoid NaN in stats
-                # This is important for the statsmodels function to work properly
-                metrics_with_change = metrics.select(
-                    col.name for col in metrics.select(pl.all().n_unique() > 1) if col.all()
-                )
-
-                stats = (
-                    pl.from_pandas(sms.describe(metrics_with_change, stats=["nobs", "mean", "ci"], alpha=0.05).T)
-                    .with_columns(pl.Series(name="effect", values=metrics_with_change.columns))
-                    .select(["effect", "nobs", "mean", "lower_ci", "upper_ci"])
-                )
-
-                # Add the metrics with no change to the stats
-                metrics_no_change = metrics.select(
-                    col.name for col in metrics.select(pl.all().n_unique() == 1) if col.all()
-                )
-                if metrics_no_change.height > 0:
-                    no_change_stats = (
-                        metrics_no_change.unique()
-                        .transpose(include_header=True, header_name="effect", column_names=["mean"])
-                        .with_columns(nobs=metrics_no_change.height, lower_ci=None, upper_ci=None)
-                    )
-
-                    # Reorder the columns to match the stats DataFrame
-                    no_change_stats = no_change_stats.select(stats.columns)
-                    stats = pl.concat([stats, no_change_stats], how="vertical_relaxed")
-
-            beliefs = pl.concat(
+            stats = pl.DataFrame(
                 [
-                    self.effects_by_precision.filter(pl.col(self.PRECISION_COLUMN) == key)
-                    .unnest(metric)
-                    .select("belief")
-                    .unique()
-                    .rename({"belief": f"{metric}_improvement"})
-                    for metric, _ in self.correctness_columns + self.resource_efficiency_columns
-                ],
-                how="horizontal",
-            ).transpose(include_header=True, header_name="effect", column_names=["belief"])
+                    self._statistics_for_metric_group(
+                        metric,
+                        subset,
+                        unit_columns_for_precision(metric, self.paper),
+                    )
+                    for metric in self._metric_names()
+                ]
+            )
+            beliefs = self._collect_beliefs(
+                self.effects_by_precision.filter(
+                    (pl.col(self.METHOD_COLUMN) == method) & (pl.col(self.PRECISION_COLUMN) == precision)
+                ),
+            )
             stats = stats.join(beliefs, on="effect", how="inner")
 
             stats = stats.with_columns(
                 pl.Series(
-                    "configuration", [key] * stats.height, dtype=pl.Struct([pl.Field(self.PRECISION_COLUMN, pl.String)])
-                ),
-                pl.lit(n_subjects).alias("n_subjects"),
+                    "configuration",
+                    [key] * stats.height,
+                    dtype=pl.Struct(
+                        [
+                            pl.Field(self.METHOD_COLUMN, pl.String),
+                            pl.Field(self.PRECISION_COLUMN, pl.String),
+                        ]
+                    ),
+                )
             )
-
-            # Reorder columns
             stats = stats.select(STATS_COLUMNS_ORDER)
-
             eff_df.append(stats)
 
-        return pl.concat(eff_df, how="vertical_relaxed")
+        return self._sort_frame_by_precision_configuration(pl.concat(eff_df, how="vertical_relaxed"))
 
     def _get_improvement_statistics_by_configuration(self) -> pl.DataFrame:
         """
@@ -404,68 +513,32 @@ class KnowledgeExtractor:
             DataFrame containing detailed statistics for each configuration.
         """
         df = self.improvement_metrics.select(pl.col("configuration", "^.+_improvement$"))
+        available_columns = set(self.improvement_metrics.columns)
         eff_df = []
-        for k, group in df.group_by("configuration"):
+        for k, _group in df.group_by("configuration"):
             key = k[0]
-            n_subjects = (
-                1
-                if self.paper.GROUPING_COLUMNS is None
-                else self.improvement_metrics.filter(pl.col("configuration") == key).select("Model").n_unique()
-            )
-            metrics = group.drop(pl.col("configuration"))
-            if group.height == 1:
-                stats = metrics.transpose(
-                    include_header=True, header_name="effect", column_names=["mean"]
-                ).with_columns(nobs=1, lower_ci=None, upper_ci=None)
-            else:
-                # Select only metrics with more than one unique value to avoid NaN in stats
-                # This is important for the statsmodels function to work properly
-                metrics_with_change = metrics.select(
-                    col.name for col in metrics.select(pl.all().n_unique() > 1) if col.all()
-                )
-
-                stats = pl.from_pandas(
-                    sms.describe(metrics_with_change, stats=["nobs", "mean", "ci"], alpha=0.05).T
-                ).with_columns(pl.Series(name="effect", values=metrics_with_change.columns))
-
-                # Add the metrics with no change to the stats
-                metrics_no_change = metrics.select(
-                    col.name for col in metrics.select(pl.all().n_unique() == 1) if col.all()
-                )
-                if metrics_no_change.height > 0:
-                    no_change_stats = (
-                        metrics_no_change.unique()
-                        .transpose(include_header=True, header_name="effect", column_names=["mean"])
-                        .with_columns(nobs=metrics_no_change.height, lower_ci=None, upper_ci=None)
-                    )
-
-                    # Reorder the columns to match the stats DataFrame
-                    no_change_stats = no_change_stats.select(stats.columns)
-                    stats = pl.concat([stats, no_change_stats], how="vertical_relaxed")
-
-            beliefs = pl.concat(
+            subset = self.improvement_metrics.filter(pl.col("configuration") == key)
+            stats = pl.DataFrame(
                 [
-                    self.effects_by_configuration.filter(pl.col("configuration") == key)
-                    .unnest(metric)
-                    .select("belief")
-                    .unique()
-                    .rename({"belief": f"{metric}_improvement"})
-                    for metric, _ in self.correctness_columns + self.resource_efficiency_columns
-                ],
-                how="horizontal",
-            ).transpose(include_header=True, header_name="effect", column_names=["belief"])
+                    self._statistics_for_metric_group(
+                        metric,
+                        subset,
+                        unit_columns_for_configuration(metric, self.paper, available_columns),
+                    )
+                    for metric in self._metric_names()
+                ]
+            )
+            beliefs = self._collect_beliefs(
+                self.effects_by_configuration.filter(pl.col("configuration") == key),
+            )
             stats = stats.join(beliefs, on="effect", how="inner")
 
             stats = stats.with_columns(
                 pl.Series(
                     "configuration", [key] * stats.height, dtype=pl.Struct([pl.Field(k, pl.String) for k in key])
                 ),
-                pl.lit(n_subjects).alias("n_subjects"),
             )
-
-            # Reorder columns
             stats = stats.select(STATS_COLUMNS_ORDER)
-
             eff_df.append(stats)
 
         return pl.concat(eff_df, how="vertical_relaxed")
@@ -481,12 +554,26 @@ class KnowledgeExtractor:
         pl.DataFrame
             DataFrame containing detailed statistics for the study.
         """
-        df = self.improvement_metrics.select(pl.col("configuration", "^.+_improvement$"))
-        col_names = pl.Series(name="effect", values=df.drop("configuration").columns)
-        stats = pl.from_pandas(
-            sms.describe(df.drop("configuration"), stats=["nobs", "mean", "ci"], alpha=0.05).T
-        ).with_columns(col_names)
+        stats = pl.DataFrame(
+            [
+                self._statistics_for_metric_group(
+                    metric,
+                    self.improvement_metrics,
+                    unit_columns_for_precision(metric, self.paper),
+                )
+                for metric in self._metric_names()
+            ]
+        )
         return stats
+
+    def _collect_beliefs(self, effects_frame: pl.DataFrame) -> pl.DataFrame:
+        return pl.concat(
+            [
+                effects_frame.unnest(metric).select("belief").unique().rename({"belief": f"{metric}_improvement"})
+                for metric, _ in self.correctness_columns + self.resource_efficiency_columns
+            ],
+            how="horizontal",
+        ).transpose(include_header=True, header_name="effect", column_names=["belief"])
 
     def get_improvement_statistics(self, by_precision=False, by_study=False) -> pl.DataFrame:
         """
@@ -526,7 +613,8 @@ class KnowledgeExtractor:
             .str.replace_all("Miou", "mIoU")
             .str.replace_all("Map 5 95", "mAP@0.5:0.95", literal=True)
             .str.replace_all("Map 5", "mAP@0.5", literal=True)
-            .str.replace_all("Map", "mAP", literal=True),
+            .str.replace_all("Map", "mAP", literal=True)
+            .str.replace_all("Bleu", "BLEU", literal=True),
             # pl.when(pl.col("nobs") == 1).then(pl.col("mean")).otherwise(pl.col("upper_ci")).alias("upper_ci"),
             # pl.when(pl.col("nobs") == 1).then(pl.col("mean")).otherwise(pl.col("lower_ci")).alias("lower_ci"),
         ).filter(pl.col("mean").is_not_null())
@@ -587,14 +675,15 @@ class KnowledgeExtractor:
 
     def _add_variability_discount(self, df: pl.DataFrame) -> pl.DataFrame:
         """
-        Calculate a discount factor based on data variability (IQR).
+        Calculate a discount factor from Kvålseth's second-order CV (V_2).
 
-        High variability relative to the mean effect sizes decreases the discount factor.
+        α_v = exp(-k V_2) with V_2 = σ / sqrt(σ² + μ²) on experimental-unit relative
+        improvements; α_v = 1 when cluster n_eff is at most the cutoff.
 
         Parameters
         ----------
         df : pl.DataFrame
-            DataFrame containing quartile information (Q1, Q3).
+            DataFrame containing mean, std, and quartile information.
 
         Returns
         -------
@@ -606,11 +695,13 @@ class KnowledgeExtractor:
             df = df.with_columns(
                 (pl.col(f"{metric}_q3") - pl.col(f"{metric}_q1")).round(3).alias(f"{metric}_iqr")
             ).with_columns(
-                pl.when(pl.col(f"{metric}_sample_size") > 4)
-                .then((np.e ** (-DISCOUNT_FACTOR * (pl.col(f"{metric}_iqr") / (pl.col(metric) + EPSILON).abs()))))
-                .otherwise(pl.lit(1))
-                .round(3)
-                .alias(f"{metric}_variability_discount")
+                variability_reliability_expr(
+                    pl.col(f"{metric}_sample_size"),
+                    pl.col(f"{metric}_std"),
+                    pl.col(metric),
+                    k=DEFAULT_VARIABILITY_K,
+                    cutoff=DEFAULT_VARIABILITY_CUTOFF,
+                ).alias(f"{metric}_variability_discount")
             )
         return df
 

@@ -1,20 +1,36 @@
 {
   "title": "Model Quantization and Synthetic Aperture Data Analyses Increasing Throughput and Energy Efficiency",
   "study_type": "controlled experiment",
+  "domain": "Obj. detect.",
   "data_quality": "comparative",
   "energy_measurement": {
-    "measurement_method": ["software-based"],
-    "software_tools": ["nvidia-smi", "tegrastats"],
+    "measurement_method": [
+      "software-based"
+    ],
+    "software_tools": [
+      "nvidia-smi",
+      "tegrastats"
+    ],
     "repetitions": 250
   },
   "quantization_schema": {
-    "baseline_precision": "fp32",
-    "target_precision": ["fp16", "int8"],
-    "quantization_targets": ["w-int8, a-int8", "w-fp16, a-fp16"],
-    "quantization_method": "post-training quantization",
-    "quantization_techniques": ["static quantization"],
-    "frameworks": ["TensorFlow"],
-    "formats": ["TensorRT"]
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
+      "w-int8, a-int8",
+      "w-fp16, a-fp16"
+    ],
+    "quantization_method": [
+      "ptq"
+    ],
+    "quantization_techniques": [
+      "static quantization"
+    ],
+    "frameworks": [
+      "TensorFlow"
+    ],
+    "formats": [
+      "TensorRT"
+    ]
   },
   "hardware": [
     {
@@ -33,6 +49,10 @@
       }
     }
   ],
-  "models": ["YOLOv4"],
-  "datasets": ["MSTAR Dataset"]
+  "models": [
+    "YOLOv4"
+  ],
+  "datasets": [
+    "MSTAR Dataset"
+  ]
 }

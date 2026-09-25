@@ -9,8 +9,6 @@ from google import genai
 from google.genai.types import GenerateContentConfig, ThinkingConfig
 import polars as pl
 
-from src.config import INTERIM_DATA_DIR
-
 
 class LikertScale(IntEnum):
     STRONGLY_DISAGREE = 1
@@ -33,6 +31,9 @@ GEMINI_CONFIG = GenerateContentConfig(
     max_output_tokens=8192,
     response_mime_type="application/json",
 )
+
+REQUIRED_QUERY_COLUMNS = ("Title", "Abstract", "Author Keywords")
+INCLUSION_CRITERIA_COLUMNS = ("IC1", "IC2", "IC3", "IC4", "IC5", "IC6")
 
 QUERY_CONTEXT = """**Role:** You are an expert Software Engineering Researcher conducting a Systematic Literature Review (SLR) on "Resource-Efficient Deep Learning via Quantization."
 
@@ -180,34 +181,21 @@ def gemini_query(client: genai.Client, query: str, json_file: str | os.PathLike[
     return json_response
 
 
-def gemini_batched_query(client: genai.Client, batch_number: int, query: str) -> pl.DataFrame:
-    """
-    Query a Gemini model in batches.
+def _require_query_columns(papers: pl.DataFrame) -> None:
+    missing_columns = set(REQUIRED_QUERY_COLUMNS) - set(papers.columns)
+    if missing_columns:
+        raise ValueError(f"Missing columns: {missing_columns}")
 
-    The results are saved to a parquet file in the interim data directory.
 
-    Parameters
-    ----------
-    client : genai.Client
-        The Gemini client.
-    batch_number : int
-        The batch number.
-    query : str
-        The query message.
+def _build_context_message(papers: pl.DataFrame) -> str:
+    relevant_data = papers.select([pl.col(column_name) for column_name in REQUIRED_QUERY_COLUMNS])
+    return "\n\n".join(create_paper_context_message(paper) for paper in relevant_data.to_dicts())
 
-    Returns
-    -------
-    pl.DataFrame
-        The results of the query in a polars DataFrame.
-    """
-    results = gemini_query(client, query)
-    result_df = pl.from_dict(results).transpose(
-        include_header=True,
-        header_name="Title",
-        column_names=["IC1", "IC2", "IC3", "IC4", "IC5"],
-    )
-    result_df.write_parquet(INTERIM_DATA_DIR / f"{GEMINI_MODEL}-batch-{batch_number}-results.parquet")
-    return result_df
+
+def _criteria_filter(operator: str) -> pl.Expr:
+    threshold = pl.lit(LikertScale.NEITHER_AGREE_NOR_DISAGREE)
+    expressions = [getattr(pl.col(column_name), operator)(threshold) for column_name in INCLUSION_CRITERIA_COLUMNS]
+    return pl.any_horizontal(*expressions) if operator == "__lt__" else pl.all_horizontal(*expressions)
 
 
 def combine_llm_scores(llm_scores: list[pl.DataFrame]) -> pl.DataFrame:
@@ -289,13 +277,7 @@ def get_excluded_papers(paper_scores: pl.DataFrame) -> pl.DataFrame:
         The excluded papers.
     """
 
-    return paper_scores.filter(
-        (pl.col("IC1") < LikertScale.NEITHER_AGREE_NOR_DISAGREE)
-        | (pl.col("IC2") < LikertScale.NEITHER_AGREE_NOR_DISAGREE)
-        | (pl.col("IC3") < LikertScale.NEITHER_AGREE_NOR_DISAGREE)
-        | (pl.col("IC4") < LikertScale.NEITHER_AGREE_NOR_DISAGREE)
-        | (pl.col("IC5") < LikertScale.NEITHER_AGREE_NOR_DISAGREE)
-    )
+    return paper_scores.filter(_criteria_filter("__lt__"))
 
 
 def get_included_papers(paper_scores: pl.DataFrame) -> pl.DataFrame:
@@ -315,13 +297,7 @@ def get_included_papers(paper_scores: pl.DataFrame) -> pl.DataFrame:
         The included papers.
     """
 
-    return paper_scores.filter(
-        (pl.col("IC1") > LikertScale.NEITHER_AGREE_NOR_DISAGREE)
-        & (pl.col("IC2") > LikertScale.NEITHER_AGREE_NOR_DISAGREE)
-        & (pl.col("IC3") > LikertScale.NEITHER_AGREE_NOR_DISAGREE)
-        & (pl.col("IC4") > LikertScale.NEITHER_AGREE_NOR_DISAGREE)
-        & (pl.col("IC5") > LikertScale.NEITHER_AGREE_NOR_DISAGREE)
-    )
+    return paper_scores.filter(_criteria_filter("__gt__"))
 
 
 def get_manual_review_papers(
@@ -353,7 +329,8 @@ def get_manual_review_papers(
 
     processed_papers = pl.concat([excluded_papers, included_papers])
 
-    return paper_scores.filter(~pl.col("Title").is_in(processed_papers.get_column("Title")))
+    processed_titles = processed_papers.select(pl.col("Title").implode()).to_series()
+    return paper_scores.filter(~pl.col("Title").is_in(processed_titles))
 
 
 def assign_inclusion(paper_scores: pl.DataFrame, conservative=True) -> pl.DataFrame:
@@ -408,15 +385,8 @@ def build_query(papers: pl.DataFrame) -> str:
         If the DataFrame does not have the columns 'Title', 'Abstract', and 'Author Keywords'.
     """
 
-    missing_columns = set(["Title", "Abstract", "Author Keywords"]) - set(papers.columns)
-    if missing_columns:
-        raise ValueError(f"Missing columns: {missing_columns}")
-
-    relevant_data = papers.select([pl.col("Title"), pl.col("Abstract"), pl.col("Author Keywords")])
-
-    papers_context_message = "\n\n".join(create_paper_context_message(paper) for paper in relevant_data.to_dicts())
-
-    return f"{QUERY_CONTEXT}\n\n{papers_context_message}"
+    _require_query_columns(papers)
+    return f"{QUERY_CONTEXT}\n\n{_build_context_message(papers)}"
 
 
 def build_batched_query(papers: pl.DataFrame, batch_size: int) -> Generator[str, None, None]:
@@ -435,12 +405,8 @@ def build_batched_query(papers: pl.DataFrame, batch_size: int) -> Generator[str,
     str
         The query message.
     """
-
-    missing_columns = set(["Title", "Abstract", "Author Keywords"]) - set(papers.columns)
-    if missing_columns:
-        raise ValueError(f"Missing columns: {missing_columns}")
-
-    relevant_data = papers.select([pl.col("Title"), pl.col("Abstract"), pl.col("Author Keywords")])
+    _require_query_columns(papers)
+    relevant_data = papers.select([pl.col(column_name) for column_name in REQUIRED_QUERY_COLUMNS])
 
     for i in range(0, len(relevant_data), batch_size):
         batch = relevant_data.slice(i, batch_size)

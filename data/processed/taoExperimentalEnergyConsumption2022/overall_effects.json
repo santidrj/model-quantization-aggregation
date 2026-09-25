@@ -8,7 +8,7 @@
             "variability_discount": 1.0,
             "discount_factor": 0.283,
             "p_value": 0.717,
-            "belief": 0.182,
+            "belief": 0.186,
             "intensity": "weakly negative - indiferent"
         },
         "f1_score": {
@@ -19,7 +19,7 @@
             "variability_discount": 1.0,
             "discount_factor": 0.283,
             "p_value": 0.717,
-            "belief": 0.182,
+            "belief": 0.186,
             "intensity": "weakly negative"
         },
         "inference_energy_consumption": {
@@ -30,7 +30,7 @@
             "variability_discount": 1.0,
             "discount_factor": 0.283,
             "p_value": 0.717,
-            "belief": 0.182,
+            "belief": 0.186,
             "intensity": "weakly positive - positive"
         },
         "inference_power_draw": {
@@ -41,7 +41,7 @@
             "variability_discount": 1.0,
             "discount_factor": 0.283,
             "p_value": 0.717,
-            "belief": 0.182,
+            "belief": 0.186,
             "intensity": "weakly positive"
         },
         "inference_latency": {
@@ -52,7 +52,7 @@
             "variability_discount": 1.0,
             "discount_factor": 0.283,
             "p_value": 0.717,
-            "belief": 0.182,
+            "belief": 0.186,
             "intensity": "indiferent - weakly positive"
         },
         "storage_size": {
@@ -63,7 +63,7 @@
             "variability_discount": 1.0,
             "discount_factor": 0.283,
             "p_value": 0.717,
-            "belief": 0.182,
+            "belief": 0.186,
             "intensity": "strongly positive"
         }
     }

@@ -1,17 +1,25 @@
 {
   "title": "Verifiable and Energy Efficient Medical Image Analysis with Quantised Self-attentive Deep Neural Networks",
   "study_type": "controlled experiment",
+  "domain": "Medical class.",
   "data_quality": "comparative",
   "energy_measurement": {
     "measurement_method": "analytical"
   },
   "quantization_schema": {
-    "baseline_precision": "fp32",
-    "target_precision": ["int8"],
-    "quantization_targets": ["w-int8, a-int8"],
-    "quantization_method": "post-training quantization",
-    "frameworks": ["PyTorch"],
-    "formats": ["FBGEMM"]
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
+      "w-int8, a-int8"
+    ],
+    "quantization_method": [
+      "ptq"
+    ],
+    "frameworks": [
+      "PyTorch"
+    ],
+    "formats": [
+      "FBGEMM"
+    ]
   },
   "hardware": [
     {
@@ -24,6 +32,14 @@
       }
     }
   ],
-  "models": ["ResNet18", "UNet-small", "SUMNet", "SaDNN"],
-  "datasets": ["ChestX-ray8", "Medical Segmentation Decathlon Dataset"]
+  "models": [
+    "ResNet18",
+    "UNet-small",
+    "SUMNet",
+    "SaDNN"
+  ],
+  "datasets": [
+    "ChestX-ray8",
+    "Medical Segmentation Decathlon Dataset"
+  ]
 }

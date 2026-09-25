@@ -2,7 +2,8 @@
     {
         "configuration": {
             "Device": "Jetson AGX",
-            "quantization_precision": "fp16"
+            "quantization_method": "ptq",
+            "precision_configuration": "w-fp16, a-fp16"
         },
         "mAP": {
             "improvement": -4.246,
@@ -13,7 +14,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.19,
-            "intensity": "weakly negative - indiferent"
+            "intensity": "weakly negative - indifferent"
         },
         "inference_latency": {
             "improvement": 66.387,
@@ -40,125 +41,9 @@
     },
     {
         "configuration": {
-            "Device": "Jetson Nano",
-            "quantization_precision": "fp16"
-        },
-        "mAP": {
-            "improvement": -0.087,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.19,
-            "intensity": "indiferent"
-        },
-        "inference_latency": {
-            "improvement": 66.667,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.19,
-            "intensity": "strongly positive"
-        },
-        "storage_size": {
-            "improvement": 49.628,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.19,
-            "intensity": "positive - strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "workstation",
-            "quantization_precision": "fp16"
-        },
-        "mAP": {
-            "improvement": -43.896,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.19,
-            "intensity": "strongly negative"
-        },
-        "inference_latency": {
-            "improvement": 52.638,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.19,
-            "intensity": "strongly positive"
-        },
-        "storage_size": {
-            "improvement": 67.257,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.19,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
-            "Device": "workstation",
-            "quantization_precision": "int8"
-        },
-        "mAP": {
-            "improvement": -54.528,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.19,
-            "intensity": "strongly negative"
-        },
-        "inference_latency": {
-            "improvement": 62.214,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.19,
-            "intensity": "strongly positive"
-        },
-        "storage_size": {
-            "improvement": 82.738,
-            "std": null,
-            "iqr": 0.0,
-            "sample_size_discount": 0.283,
-            "variability_discount": 1.0,
-            "discount_factor": 0.283,
-            "p_value": 0.717,
-            "belief": 0.19,
-            "intensity": "strongly positive"
-        }
-    },
-    {
-        "configuration": {
             "Device": "Jetson AGX",
-            "quantization_precision": "int8"
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8, a-int8"
         },
         "mAP": {
             "improvement": -20.558,
@@ -197,7 +82,48 @@
     {
         "configuration": {
             "Device": "Jetson Nano",
-            "quantization_precision": "int8"
+            "quantization_method": "ptq",
+            "precision_configuration": "w-fp16, a-fp16"
+        },
+        "mAP": {
+            "improvement": -0.087,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "indifferent"
+        },
+        "inference_latency": {
+            "improvement": 66.667,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 49.628,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "positive - strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "Jetson Nano",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8, a-int8"
         },
         "mAP": {
             "improvement": -0.262,
@@ -208,7 +134,7 @@
             "discount_factor": 0.283,
             "p_value": 0.717,
             "belief": 0.19,
-            "intensity": "indiferent"
+            "intensity": "indifferent"
         },
         "inference_latency": {
             "improvement": 80.0,
@@ -223,6 +149,86 @@
         },
         "storage_size": {
             "improvement": 65.627,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "workstation",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-fp16, a-fp16"
+        },
+        "mAP": {
+            "improvement": -43.896,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "strongly negative"
+        },
+        "inference_latency": {
+            "improvement": 52.638,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 67.257,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "strongly positive"
+        }
+    },
+    {
+        "configuration": {
+            "Device": "workstation",
+            "quantization_method": "ptq",
+            "precision_configuration": "w-int8, a-int8"
+        },
+        "mAP": {
+            "improvement": -54.528,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "strongly negative"
+        },
+        "inference_latency": {
+            "improvement": 62.214,
+            "std": null,
+            "iqr": 0.0,
+            "sample_size_discount": 0.283,
+            "variability_discount": 1.0,
+            "discount_factor": 0.283,
+            "p_value": 0.717,
+            "belief": 0.19,
+            "intensity": "strongly positive"
+        },
+        "storage_size": {
+            "improvement": 82.738,
             "std": null,
             "iqr": 0.0,
             "sample_size_discount": 0.283,

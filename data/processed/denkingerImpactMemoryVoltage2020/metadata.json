@@ -1,17 +1,31 @@
 {
   "title": "Impact of Memory Voltage Scaling on Accuracy and Resilience of Deep Learning Based Edge Devices",
   "study_type": "controlled experiment",
+  "domain": "Coffee rec.",
   "data_quality": "comparative",
   "energy_measurement": {
-    "measurement_method": ["analytical"]
+    "measurement_method": [
+      "analytical"
+    ]
   },
   "quantization_schema": {
-    "baseline_precision": "fp32",
-    "target_precision": ["q0.4", "q0.8", "q0.16", "q0,32"],
-    "quantization_targets": ["w-q0.8, a-q0.16", "w-q0.4, a-q0.32", "w-q0.4, a-q0.8"],
-    "quantization_method": "quantization-aware training",
-    "formats": ["power-of-two"]
+    "baseline_precision_configuration": "full-fp32",
+    "precision_configurations": [
+      "w-q0.8, a-q0.16",
+      "w-q0.4, a-q0.32",
+      "w-q0.4, a-q0.8"
+    ],
+    "quantization_method": [
+      "qat"
+    ],
+    "formats": [
+      "power-of-two"
+    ]
   },
-  "models": ["Custom CNN"],
-  "datasets": ["Unknown"]
+  "models": [
+    "Custom CNN"
+  ],
+  "datasets": [
+    "Unknown"
+  ]
 }
