@@ -169,6 +169,10 @@ cython_debug/
 # Local copyrighted reference material (not distributed)
 /PauloSergio_Thesis.pdf
 
+# Local agent / editor scratch (not part of the replication package)
+.scratch/
+.cursor/
+
 # EvidenceFactory Playwright automation
 automation/node_modules/
 automation/dist/

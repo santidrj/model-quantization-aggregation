@@ -2,7 +2,7 @@
 .github
 .venv
 .scratch
-.agents
+.cursor
 automation
 tests
 reports
