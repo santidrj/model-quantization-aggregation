@@ -104,11 +104,19 @@ The project is organized as follows:
      ```
 
    - **Using Docker** (this version of the replication package):  
-     Build the image from the repository. Jupyter Lab is the default command and listens on port 8888 with no token.
+     A pre-built image is published on [GitHub Container Registry](https://github.com/users/santidrj/packages/container/model-quantization-aggregation). Pull it (or build locally from the `Dockerfile` if you are changing the package):
 
      ```bash
-     docker build -t model-quantization-aggregation .
-     docker run -it -p 8888:8888 model-quantization-aggregation
+     export MQ_IMAGE=ghcr.io/santidrj/model-quantization-aggregation:latest
+     docker pull "$MQ_IMAGE"
+     ```
+
+     The image for this README revision is also tagged `ghcr.io/santidrj/model-quantization-aggregation:df8ed79` (short git commit). Use that tag when you need a fixed image digest tied to this replication package state.
+
+     Jupyter Lab is the default command and listens on port 8888 with no token:
+
+     ```bash
+     docker run -it -p 8888:8888 "$MQ_IMAGE"
      ```
 
      Notebooks 1.0 and 2.0 call Gemini. Pass a key when you run those notebooks yourself:
@@ -116,7 +124,7 @@ The project is organized as follows:
      ```bash
      docker run -it -p 8888:8888 \
        -e GEMINI_API_KEY=your_key \
-       model-quantization-aggregation
+       "$MQ_IMAGE"
      ```
 
      The review bar needs external paper data mounted at `/app/data/external` and a writable `reports/` directory:
@@ -125,8 +133,15 @@ The project is organized as follows:
      docker run --rm \
        -v "$(pwd)/data/external:/app/data/external" \
        -v "$(pwd)/reports:/app/reports" \
-       model-quantization-aggregation \
+       "$MQ_IMAGE" \
        mq reproduce review
+     ```
+
+     To build the image locally instead of pulling:
+
+     ```bash
+     docker build -t ghcr.io/santidrj/model-quantization-aggregation:local .
+     export MQ_IMAGE=ghcr.io/santidrj/model-quantization-aggregation:local
      ```
 
 2. **CLI overview**:
@@ -163,14 +178,15 @@ The project is organized as follows:
 
 ## Reproducing the paper
 
-Build the image, mount external paper data, and mount a writable `reports/` directory:
+Pull the published image (see **Using Docker** above), mount external paper data, and mount a writable `reports/` directory:
 
 ```bash
-docker build -t model-quantization-aggregation .
+export MQ_IMAGE=ghcr.io/santidrj/model-quantization-aggregation:latest
+docker pull "$MQ_IMAGE"
 docker run --rm \
   -v "$(pwd)/data/external:/app/data/external" \
   -v "$(pwd)/reports:/app/reports" \
-  model-quantization-aggregation \
+  "$MQ_IMAGE" \
   mq reproduce review
 ```
 
