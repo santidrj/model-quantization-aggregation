@@ -36,7 +36,6 @@ This replication package consists of the following components:
    - [data/processed/evidence-diagrams-mapping.md](data/processed/evidence-diagrams-mapping.md): Links to evidence diagrams generated during the study.
    - `data/processed/{paperkey}/metadata.json`: Contains metadata for the specific paper.
    - `data/processed/{paperkey}/systematic-studies-quality-evaluation.md`: Contains the filled quality evaluation form for the specific paper.
-   - [docs/dempster-shafer-audit.md](docs/dempster-shafer-audit.md): Maps D-S equations and policies to code, tests, traces, and known verification limits.
 
 ### Project Structure
 
@@ -208,9 +207,7 @@ uv run mq reproduce review
 
 - Run extraction for a subset of papers: `uv run mq extraction run --paper <paper-key> --paper <paper-key>`
 - List supported paper keys: `uv run mq papers list`
-- [Dempster–Shafer computation audit](docs/dempster-shafer-audit.md) — equations, source authority, code traceability, and the reviewer checklist. `mq reproduce tables` writes the validated synthesis. The executable checks are [tests/test_dempster_shafer.py](tests/test_dempster_shafer.py) and [tests/test_belief_assignment.py](tests/test_belief_assignment.py).
-
-Domain terminology is defined in [CONTEXT.md](CONTEXT.md).
+- Belief-assignment checks: `uv run pytest tests/test_dempster_shafer.py tests/test_belief_assignment.py` (after `uv run mq reproduce tables`)
 
 ## Notes
 

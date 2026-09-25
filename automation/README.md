@@ -76,5 +76,5 @@ The plan/catalog logic lives in `src/evidence_editor_sync.py` (`uv run python -m
 ## Config
 
 - Named targets and semantic map: `src/config.ts` (`EF_TARGET`, `EF_SYNTHESIS_ID`)
-- Domain language: `CONTEXT.md`
+- Domain language: `automation/CONTEXT.md` and `automation/evidence-editor/CONTEXT.md`
 - Phase 1 network notes: `docs/phase1-network-analysis.md`
