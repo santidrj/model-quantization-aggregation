@@ -1,6 +1,6 @@
 # Replication Package
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18401926.svg)](https://doi.org/10.5281/zenodo.18401926)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24355365.svg)](https://doi.org/10.5281/zenodo.24355365)
 
 Replication package for the paper:
 
