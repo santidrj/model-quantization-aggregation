@@ -1,6 +1,6 @@
 [project]
 name = "model-quantization-aggregation"
-version = "2.0"
+version = "2.1.1"
 description = ""
 authors = [{name = "Santiago del Rey", email = "santiago.del.rey@upc.edu"}]
 readme = "README.md"
