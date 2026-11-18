@@ -9,6 +9,7 @@ from src.validated_synthesis import (
     build_validated_synthesis,
     forestplot_overlay_frame,
     render_aggregated_effects_table,
+    render_loo_prose,
     render_result_macros,
     validate_synthesis,
     write_all_validated_outputs,
@@ -89,7 +90,8 @@ def test_subgroup_has_nine_studies_and_complete_source_list():
 
 def test_aggregated_effects_table_uses_validated_beliefs():
     latex = render_aggregated_effects_table(build_validated_synthesis())
-    assert r"GPU utilization & \{I, WP\} & \textbf{97\%}" in latex
+    assert r"GPU utilization & \{I, WP\} & 97\%" in latex
+    assert r"Accuracy & I & \textbf{91\%}" in latex
     assert "Inf. power draw" in latex and "74\\%" in latex
     assert "Inf. latency" in latex and "100\\%" in latex
     assert "F$_1$-score" in latex
@@ -123,8 +125,60 @@ def test_intensity_reconciliation_intersects_primary_and_mass_preserving():
     assert recon["RAM Usage"]["intensity"] is None
     assert recon["RAM Usage"]["has_theory_arrow"] is False
     assert recon["Storage Size"]["differs_from_primary"] is False
-    macros = render_result_macros(payload)
+
+
+def test_theory_inclusion_keeps_five_effects_and_drops_gpu_utilization():
+    payload = build_validated_synthesis()
+    theory = payload["theory"]["effects"]
+    included = {effect for effect, record in theory.items() if record["included"]}
+    assert included == {
+        "Accuracy",
+        "Storage Size",
+        "GPU Power Draw",
+        "Inference Energy Consumption",
+        "Inference Latency",
+    }
+    gpu_util = theory["GPU Utilization"]
+    assert gpu_util["passes_primary"] is True
+    assert gpu_util["passes_dependence"] is False
+    assert (gpu_util["mass_preserving_belief_percent"], gpu_util["loo_belief_percent"]) == (74, 67)
+    assert theory["Accuracy"]["loo_belief_percent"] == 78  # noqa: PLR2004
+    assert theory["Accuracy"]["mass_preserving_belief_percent"] == 83  # noqa: PLR2004
+
+
+def test_theory_macros_follow_inclusion_rule_and_primary_intensity():
+    macros = render_result_macros(build_validated_synthesis())
+    assert r"\newcommand{\TheoryNEffects}{five}" in macros
     assert r"\newcommand{\TheoryAccuracyIntensity}{I}" in macros
     assert r"\newcommand{\TheoryAccuracyProse}{indifferently}" in macros
-    assert r"\newcommand{\TheoryInfLatencyIntensity}{SP}" in macros
+    assert r"\newcommand{\TheoryInfLatencyIntensity}{\{P, SP\}}" in macros
+    assert r"\newcommand{\TheoryGPUUtilHasArrow}{false}" in macros
+    assert r"\newcommand{\TheoryCheckGPUUtilMassPres}{74\%}" in macros
+    assert r"\newcommand{\TheoryCheckGPUUtilLOO}{0.67}" in macros
+    assert r"\newcommand{\TheoryCheckGPUUtilLOOOmitted}{S14}" in macros
+    assert r"\newcommand{\TheoryCheckAccuracyLOO}{0.78}" in macros
+    assert r"\newcommand{\TheoryCheckInfLatencyLOOOmitted}{S6}" in macros
     assert r"\newcommand{\TheoryRAMUsageHasArrow}{false}" in macros
+
+
+def test_validate_synthesis_flags_wrong_theory_inclusion():
+    payload = build_validated_synthesis()
+    payload["theory"]["effects"]["GPU Utilization"]["included"] = True
+    assert "GPU Utilization: theory inclusion mismatch" in validate_synthesis(payload)
+
+
+def test_loo_prose_derives_contribution_counts_from_payload():
+    payload = build_validated_synthesis()
+    prose = render_loo_prose(payload)
+    assert "one evidence model" not in prose
+    assert "S4 (the largest contributor, with 11 of 41 accuracy evidence models)" in prose
+    assert "S6 (the largest contributor, with 17 of 62 storage-size evidence models)" in prose
+    assert "configuration multiplicity within a single study" in prose
+    assert "83\\% under the mass-preserving split" in prose
+
+
+def test_validate_synthesis_flags_wrong_omitted_model_count():
+    payload = build_validated_synthesis()
+    payload["leave_one_study_out"]["effects"]["Accuracy"]["omissions"][0]["omitted_study_n_models"] = 1
+    failures = validate_synthesis(payload)
+    assert "Accuracy: omitted-study model count mismatch for S4" in failures

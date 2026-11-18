@@ -272,6 +272,8 @@ def write_selection_macros(summary: dict, path: Path) -> Path:
         rf"\newcommand{{\SelectionNTitleAbstractFulltext}}{{{summary['n_title_abstract_to_fulltext']}}}",
         rf"\newcommand{{\SelectionNFulltextDatabase}}{{{summary['n_fulltext_included_database']}}}",
         rf"\newcommand{{\SelectionNSnowball}}{{{summary['n_snowball_included']}}}",
+        rf"\newcommand{{\SelectionNSnowballBackwardCandidates}}{{{summary['n_snowball_backward_candidates']}}}",
+        rf"\newcommand{{\SelectionNSnowballForwardCandidates}}{{{summary['n_snowball_forward_candidates']}}}",
         rf"\newcommand{{\SelectionNFinal}}{{{summary['n_final_included']}}}",
         rf"\newcommand{{\SelectionCalibrationRecallPct}}{{{pct(recall['estimate'])}}}",
         rf"\newcommand{{\SelectionCalibrationRecallLowPct}}{{{pct(recall['jeffreys_low'])}}}",

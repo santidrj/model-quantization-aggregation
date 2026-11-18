@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections import Counter
 from dataclasses import dataclass
 from enum import Enum
 import json
@@ -598,6 +599,8 @@ class LeaveOneStudyOutRow:
     omitted_study_id: str
     loo_intensity: frozenset[str]
     loo_belief: float
+    omitted_study_n_models: int
+    max_study_n_models: int
 
     @property
     def belief_delta(self) -> float:
@@ -631,6 +634,8 @@ def leave_one_study_out_records(
         study_ids = sorted(contributing_study_ids(loaded, expected.effect), key=study_id_sort_key)
         if len(study_ids) < _MIN_STUDIES_FOR_LEAVE_ONE_OUT:
             continue
+        per_study = Counter(model.study_id for model in loaded if expected.effect in model.effects)
+        max_study_n_models = max(per_study.values())
         candidates: list[LeaveOneStudyOutRow] = []
         for study_id in study_ids:
             remaining = [model for model in loaded if model.study_id != study_id]
@@ -645,6 +650,8 @@ def leave_one_study_out_records(
                     omitted_study_id=study_id,
                     loo_intensity=loo.intensity,
                     loo_belief=loo.belief,
+                    omitted_study_n_models=per_study[study_id],
+                    max_study_n_models=max_study_n_models,
                 )
             )
         worst = min(candidates, key=lambda row: (row.loo_belief, *study_id_sort_key(row.omitted_study_id)))
@@ -653,6 +660,80 @@ def leave_one_study_out_records(
         else:
             records.extend(candidates)
     return records
+
+
+THEORY_PRIMARY_MIN_PERCENT = 80
+THEORY_DEPENDENCE_MIN_PERCENT = 80
+THEORY_INCLUSION_RULE = (
+    f"An effect enters the theory when its primary aggregated belief exceeds {THEORY_PRIMARY_MIN_PERCENT}% "
+    f"and it retains at least {THEORY_DEPENDENCE_MIN_PERCENT}% belief under at least one dependence check: "
+    "the mass-preserving belief split or the largest-drop leave-one-study-out omission."
+)
+
+
+@dataclass(frozen=True)
+class TheoryInclusion:
+    effect: str
+    primary_belief_percent: int
+    mass_preserving_belief_percent: int
+    loo_belief_percent: int | None
+    passes_primary: bool
+    passes_dependence: bool
+
+    @property
+    def included(self) -> bool:
+        return self.passes_primary and self.passes_dependence
+
+
+def theory_inclusion(
+    main_rows: list[SynthesisRow],
+    mass_preserving_rows: list[SynthesisRow],
+    loo_rows: list[LeaveOneStudyOutRow],
+) -> dict[str, TheoryInclusion]:
+    """Apply the theory-inclusion rule to every main-table effect.
+
+    The leave-one-study-out check uses the lowest remaining belief across the
+    reported omissions; effects reported by a single study have no such check.
+    """
+    mass_by_effect = {row.effect: row for row in mass_preserving_rows}
+    loo_by_effect: dict[str, int] = {}
+    for row in loo_rows:
+        percent = round(row.loo_belief * 100)
+        loo_by_effect[row.effect] = min(percent, loo_by_effect.get(row.effect, percent))
+    records: dict[str, TheoryInclusion] = {}
+    for row in main_rows:
+        mass_percent = mass_by_effect[row.effect].belief_percent
+        loo_percent = loo_by_effect.get(row.effect)
+        passes_dependence = mass_percent >= THEORY_DEPENDENCE_MIN_PERCENT or (
+            loo_percent is not None and loo_percent >= THEORY_DEPENDENCE_MIN_PERCENT
+        )
+        records[row.effect] = TheoryInclusion(
+            effect=row.effect,
+            primary_belief_percent=row.belief_percent,
+            mass_preserving_belief_percent=mass_percent,
+            loo_belief_percent=loo_percent,
+            passes_primary=row.belief_percent > THEORY_PRIMARY_MIN_PERCENT,
+            passes_dependence=passes_dependence,
+        )
+    return records
+
+
+def included_theory_effects(
+    models: list[EvidenceModel] | None = None,
+    *,
+    assignment: MassAssignment = MassAssignment.PUBLISHED_ANALOGUE,
+    selection_policy: HypothesisSelectionPolicy = HypothesisSelectionPolicy.EVIDENCE_FACTORY_COMPAT,
+) -> frozenset[str]:
+    """Effects that satisfy ``THEORY_INCLUSION_RULE`` under the main pooling."""
+    loaded = models if models is not None else load_evidence_models()
+    main_rows = [
+        synthesis_row(loaded, expected.effect, assignment, selection_policy=selection_policy)
+        for expected in PUBLISHED_TABLE
+    ]
+    mass_rows = mass_preserving_sensitivity_rows(loaded, selection_policy=selection_policy)
+    loo_rows = leave_one_study_out_records(loaded, assignment=assignment, selection_policy=selection_policy)
+    records = theory_inclusion(main_rows, mass_rows, loo_rows)
+    return frozenset(effect for effect, record in records.items() if record.included)
 
 
 _EFFECT_LATEX_NAME = {
@@ -701,11 +782,8 @@ def _two_decimals(value: float) -> str:
     return f"{value:.2f}"
 
 
-_HIGH_BELIEF_EMPHASIS_PERCENT = 97
-
-
-def _latex_belief_percent(value: int) -> str:
-    if value >= _HIGH_BELIEF_EMPHASIS_PERCENT:
+def _latex_belief_percent(value: int, *, bold: bool) -> str:
+    if bold:
         return rf"\textbf{{{value}\%}}"
     return f"{value}\\%"
 
@@ -774,25 +852,32 @@ def mass_preserving_sensitivity_rows(
     ]
 
 
-def render_sensitivity_mass_preserving_table(rows: list[SynthesisRow] | None = None) -> str:
+def render_sensitivity_mass_preserving_table(
+    rows: list[SynthesisRow] | None = None,
+    *,
+    theory_effects: frozenset[str] | None = None,
+) -> str:
     """Render the Results sensitivity table for the D--S root belief split.
 
     Columns pair each mass-preserving outcome with the published main aggregation
     (``PUBLISHED_TABLE``) so intensity and belief deltas are visible in one scan.
     Conflict is the mass-preserving recombination's last pairwise ``K``.
+    Main beliefs are bold when the effect is in the theory (``theory_effects``;
+    computed from the inclusion rule when omitted).
     """
     synthesis_rows = rows if rows is not None else mass_preserving_sensitivity_rows()
     by_effect = {row.effect: row for row in synthesis_rows}
     main_by_effect = {row.effect: row for row in PUBLISHED_TABLE}
+    theory = theory_effects if theory_effects is not None else included_theory_effects()
     lines = [
         r"\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X"
         r">{\centering\arraybackslash}m{1.5cm}"
         r">{\centering\arraybackslash}m{0.85cm}"
         r">{\centering\arraybackslash}m{1.5cm}"
         r">{\centering\arraybackslash}m{0.85cm}"
-        r">{\centering\arraybackslash}m{1.0cm}"
-        r">{\centering\arraybackslash}m{0.8cm}"
-        r">{\centering\arraybackslash}m{0.8cm}}",
+        r">{\centering\arraybackslash}m{1.2cm}"
+        r">{\centering\arraybackslash}m{1.2cm}"
+        r">{\centering\arraybackslash}m{1.2cm}}",
         r"\toprule",
         (
             r"\textbf{Effect} & \multicolumn{2}{c}{Main} & \multicolumn{2}{c}{Mass-preserving}"
@@ -815,9 +900,9 @@ def render_sensitivity_mass_preserving_table(rows: list[SynthesisRow] | None = N
                     [
                         _EFFECT_LATEX_NAME.get(row.effect, row.effect),
                         _latex_intensity(format_intensity(main.intensity)),
-                        _latex_belief_percent(main.belief_percent),
+                        _latex_belief_percent(main.belief_percent, bold=effect_name in theory),
                         _latex_intensity(format_intensity(row.intensity)),
-                        _latex_belief_percent(row.belief_percent),
+                        _latex_belief_percent(row.belief_percent, bold=False),
                         _two_decimals(row.conflict),
                         str(row.n_primary_studies),
                         str(row.n_evidence_models),
@@ -835,12 +920,16 @@ def write_sensitivity_mass_preserving_table(
     rows: list[SynthesisRow] | None = None,
     *,
     output_dir: Path | None = None,
+    theory_effects: frozenset[str] | None = None,
 ) -> Path:
     """Write the mass-preserving sensitivity tabular fragment."""
     directory = output_dir if output_dir is not None else TABLES_DIR
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / SENSITIVITY_MASS_PRESERVING_TABLE_FILENAME
-    path.write_text(render_sensitivity_mass_preserving_table(rows), encoding="utf-8")
+    path.write_text(
+        render_sensitivity_mass_preserving_table(rows, theory_effects=theory_effects),
+        encoding="utf-8",
+    )
     return path
 
 
@@ -852,7 +941,7 @@ def render_leave_one_study_out_table(records: list[LeaveOneStudyOutRow] | None =
         r">{\centering\arraybackslash}Xc>{\centering\arraybackslash}Xc}",
         r"\toprule",
         (
-            r"Effect & Studies & Models & Full intensity & Full belief & Omitted study"
+            r"Effect & Studies & Models & Full intensity & Full belief & Omitted study (models)"
             r" & LOO intensity & LOO belief & $\Delta$ belief \\"
         ),
         r"\midrule",
@@ -867,7 +956,7 @@ def render_leave_one_study_out_table(records: list[LeaveOneStudyOutRow] | None =
                     str(row.n_evidence_models),
                     _latex_intensity(format_intensity(row.full_intensity)),
                     _two_decimals(row.full_belief),
-                    row.omitted_study_id,
+                    f"{row.omitted_study_id} ({row.omitted_study_n_models})",
                     _latex_intensity(format_intensity(row.loo_intensity)) + intensity_note,
                     _two_decimals(row.loo_belief),
                     f"{row.belief_delta:+.2f}",

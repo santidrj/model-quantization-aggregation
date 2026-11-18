@@ -20,6 +20,8 @@
     "Scopus": 1176,
     "arXiv": 50
   },
+  "n_snowball_backward_candidates": 54,
+  "n_snowball_forward_candidates": 6,
   "n_snowball_included": 5,
   "n_title_abstract_pool": 571,
   "n_title_abstract_to_fulltext": 84,

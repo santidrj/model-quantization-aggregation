@@ -190,3 +190,5 @@ def test_frozen_selection_manifest_matches_published_decomposition():
     assert summary["n_fulltext_included_database"] == 16  # noqa: PLR2004
     assert summary["n_snowball_included"] == 5  # noqa: PLR2004
     assert summary["n_final_included"] == 21  # noqa: PLR2004
+    assert summary["n_snowball_backward_candidates"] == 54  # noqa: PLR2004
+    assert summary["n_snowball_forward_candidates"] == 6  # noqa: PLR2004

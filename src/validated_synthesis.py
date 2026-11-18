@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 import json
 from math import floor, log10
@@ -13,6 +13,7 @@ import polars as pl
 
 from src.belief_assignment import (
     PUBLISHED_TABLE,
+    THEORY_INCLUSION_RULE,
     EvidenceModel,
     LeaveOneStudyOutRow,
     MassAssignment,
@@ -23,6 +24,7 @@ from src.belief_assignment import (
     manuscript_comparison_records,
     mass_preserving_sensitivity_rows,
     synthesis_row,
+    theory_inclusion,
     write_belief_assignment_table,
     write_leave_one_study_out_table,
     write_sensitivity_mass_preserving_table,
@@ -50,7 +52,7 @@ from src.intensity_threshold_sensitivity import write_intensity_threshold_sensit
 
 VALIDATED_SYNTHESIS_FILENAME = "validated-synthesis.json"
 VALIDATED_SYNTHESIS_PATH = PROCESSED_DATA_DIR / VALIDATED_SYNTHESIS_FILENAME
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 4
 MAIN_SELECTION_POLICY = HypothesisSelectionPolicy.EVIDENCE_FACTORY_COMPAT
 MAIN_ASSIGNMENT = MassAssignment.PUBLISHED_ANALOGUE
 SUBGROUP_BASELINE = "full-fp32"
@@ -64,7 +66,6 @@ LEAVE_ONE_OUT_RULE = (
 )
 FORESTPLOT_CLIP = 100
 SLIGHTLY_REINFORCED_MAX_PERCENT = 5
-HIGH_BELIEF_EMPHASIS_PERCENT = 97
 ZERO_CONFLICT = 1e-12
 SCIENTIFIC_CONFLICT = 0.01
 CONFLICT_ABS = 1e-9
@@ -282,8 +283,8 @@ def _latex_conflict(value: float) -> str:
     return f"{value:.2f}"
 
 
-def _latex_belief_percent(value: int) -> str:
-    if value >= HIGH_BELIEF_EMPHASIS_PERCENT:
+def _latex_belief_percent(value: int, *, bold: bool) -> str:
+    if bold:
         return rf"\textbf{{{value}\%}}"
     return f"{value}\\%"
 
@@ -365,6 +366,9 @@ def _loo_payload(rows: Sequence[LeaveOneStudyOutRow]) -> dict[str, Any]:
             "omissions": [
                 {
                     "omitted_study_id": row.omitted_study_id,
+                    "omitted_study_n_models": row.omitted_study_n_models,
+                    "max_study_n_models": row.max_study_n_models,
+                    "n_evidence_models": row.n_evidence_models,
                     "full_intensity": _ordered_atoms(row.full_intensity),
                     "full_belief": row.full_belief,
                     "loo_intensity": _ordered_atoms(row.loo_intensity),
@@ -376,6 +380,32 @@ def _loo_payload(rows: Sequence[LeaveOneStudyOutRow]) -> dict[str, Any]:
             ],
         }
     return {"rule": LEAVE_ONE_OUT_RULE, "effects": effects}
+
+
+def _theory_payload(
+    main_rows: Sequence[SynthesisRow],
+    mass_preserving: Sequence[SynthesisRow],
+    loo_rows: Sequence[LeaveOneStudyOutRow],
+) -> dict[str, Any]:
+    records = theory_inclusion(list(main_rows), list(mass_preserving), list(loo_rows))
+    return {
+        "rule": THEORY_INCLUSION_RULE,
+        "effects": {
+            effect: {
+                "included": record.included,
+                "primary_belief_percent": record.primary_belief_percent,
+                "mass_preserving_belief_percent": record.mass_preserving_belief_percent,
+                "loo_belief_percent": record.loo_belief_percent,
+                "passes_primary": record.passes_primary,
+                "passes_dependence": record.passes_dependence,
+            }
+            for effect, record in records.items()
+        },
+    }
+
+
+def _theory_effect_names(payload: Mapping[str, Any]) -> frozenset[str]:
+    return frozenset(effect for effect, record in payload["theory"]["effects"].items() if record["included"])
 
 
 def build_validated_synthesis(models: list[EvidenceModel] | None = None) -> dict[str, Any]:
@@ -463,6 +493,11 @@ def build_validated_synthesis(models: list[EvidenceModel] | None = None) -> dict
         },
         "intensity_reconciliation": _intensity_reconciliation_effects(main_effects, mass_preserving),
         "leave_one_study_out": _loo_payload(loo_rows),
+        "theory": _theory_payload(
+            [row for row in main_effects if row.effect in {expected.effect for expected in PUBLISHED_TABLE}],
+            mass_preserving,
+            loo_rows,
+        ),
         "subgroup": {
             "baseline_precision_configuration": SUBGROUP_BASELINE,
             "quantization_method": SUBGROUP_METHOD,
@@ -541,6 +576,19 @@ def validate_synthesis(payload: Mapping[str, Any], models: list[EvidenceModel] |
         if bool(recon["differs_from_primary"]) != (actual.intensity != check_intensity):
             failures.append(f"{expected.effect}: differs_from_primary mismatch")
 
+    theory_records = theory_inclusion(
+        [
+            synthesis_row(loaded, expected.effect, MAIN_ASSIGNMENT, selection_policy=MAIN_SELECTION_POLICY)
+            for expected in PUBLISHED_TABLE
+        ],
+        mass_preserving_sensitivity_rows(loaded, selection_policy=MAIN_SELECTION_POLICY),
+        leave_one_study_out_records(loaded, assignment=MAIN_ASSIGNMENT, selection_policy=MAIN_SELECTION_POLICY),
+    )
+    stored_theory = payload["theory"]["effects"]
+    for effect, record in theory_records.items():
+        if bool(stored_theory[effect]["included"]) != record.included:
+            failures.append(f"{effect}: theory inclusion mismatch")
+
     counts = payload["counts"]
     increased = [name for name, row in payload["effects"].items() if int(row["delta_percent"]) > 0]
     decreased = [name for name, row in payload["effects"].items() if int(row["delta_percent"]) < 0]
@@ -575,6 +623,12 @@ def validate_synthesis(payload: Mapping[str, Any], models: list[EvidenceModel] |
                 failures.append(f"{effect}: reported all omissions despite a belief decrease")
         elif float(omissions[0]["loo_belief"]) >= float(omissions[0]["full_belief"]):
             failures.append(f"{effect}: selected omission does not decrease belief")
+        actual_counts = Counter(model.study_id for model in loaded if effect in model.effects)
+        for item in omissions:
+            if int(item["omitted_study_n_models"]) != actual_counts[item["omitted_study_id"]]:
+                failures.append(f"{effect}: omitted-study model count mismatch for {item['omitted_study_id']}")
+            if int(item["max_study_n_models"]) != max(actual_counts.values()):
+                failures.append(f"{effect}: largest per-study model count mismatch")
     return failures
 
 
@@ -661,6 +715,7 @@ def render_aggregated_effects_table(payload: Mapping[str, Any] | None = None) ->
         ),
         r"\midrule",
     ]
+    theory = _theory_effect_names(data)
     for group_label, effect_names in _EFFECT_GROUPS:
         lines.append(r"\rowcolor{gray!20}%")
         lines.append(rf"\multicolumn{{7}}{{l}}{{\textit{{{group_label}}}}} \\")
@@ -671,7 +726,7 @@ def render_aggregated_effects_table(payload: Mapping[str, Any] | None = None) ->
                     [
                         _EFFECT_LATEX_NAME[effect],
                         _latex_intensity(row["intensity_label"]),
-                        _latex_belief_percent(int(row["belief_percent"])),
+                        _latex_belief_percent(int(row["belief_percent"]), bold=effect in theory),
                         _latex_conflict(float(row["conflict"])),
                         _delta_phrase(int(row["delta_percent"])),
                         str(row["n_primary_studies"]),
@@ -737,6 +792,31 @@ def _study_macros(study_ids: Sequence[str]) -> str:
     return ", ".join(_STUDY_MACRO[study_id] for study_id in study_ids)
 
 
+def _theory_macro_lines(data: Mapping[str, Any]) -> list[str]:
+    """Macros for theory membership, primary intensities, and dependence-check beliefs."""
+    lines: list[str] = []
+    theory = _theory_effect_names(data)
+    lines.append(rf"\newcommand{{\TheoryNEffects}}{{{_cardinal(len(theory))}}}")
+    loo_effects = data["leave_one_study_out"]["effects"]
+    for effect, stem in _MACRO_STEM.items():
+        in_theory = effect in theory
+        lines.append(rf"\newcommand{{\Theory{stem}HasArrow}}{{{'true' if in_theory else 'false'}}}")
+        check = data["theory"]["effects"][effect]
+        lines.append(rf"\newcommand{{\TheoryCheck{stem}MassPres}}{{{check['mass_preserving_belief_percent']}\%}}")
+        if check["loo_belief_percent"] is not None:
+            worst = min(loo_effects[effect]["omissions"], key=lambda item: float(item["loo_belief"]))
+            lines.append(rf"\newcommand{{\TheoryCheck{stem}LOO}}{{{float(worst['loo_belief']):.2f}}}")
+            lines.append(rf"\newcommand{{\TheoryCheck{stem}LOOOmitted}}{{{worst['omitted_study_id']}}}")
+        if in_theory:
+            record = data["effects"][effect]
+            lines.append(rf"\newcommand{{\Theory{stem}Intensity}}{{{_latex_intensity(record['intensity_label'])}}}")
+            lines.append(rf"\newcommand{{\Theory{stem}Prose}}{{{_intensity_prose(record['intensity'])}}}")
+        else:
+            lines.append(rf"\newcommand{{\Theory{stem}Intensity}}{{}}")
+            lines.append(rf"\newcommand{{\Theory{stem}Prose}}{{}}")
+    return lines
+
+
 def render_result_macros(payload: Mapping[str, Any] | None = None) -> str:
     data = payload if payload is not None else load_validated_synthesis()
     lines = [
@@ -766,17 +846,7 @@ def render_result_macros(payload: Mapping[str, Any] | None = None) -> str:
     lines.append(
         rf"\newcommand{{\MassPresLatencyIntensity}}{{{_latex_intensity(mass['Inference Latency']['intensity_label'])}}}"
     )
-    recon = data["intensity_reconciliation"]["effects"]
-    for effect, stem in _MACRO_STEM.items():
-        record = recon[effect]
-        has_arrow = "true" if record["has_theory_arrow"] else "false"
-        lines.append(rf"\newcommand{{\Theory{stem}HasArrow}}{{{has_arrow}}}")
-        if record["has_theory_arrow"]:
-            lines.append(rf"\newcommand{{\Theory{stem}Intensity}}{{{_latex_intensity(record['intensity_label'])}}}")
-            lines.append(rf"\newcommand{{\Theory{stem}Prose}}{{{_intensity_prose(record['intensity'])}}}")
-        else:
-            lines.append(rf"\newcommand{{\Theory{stem}Intensity}}{{}}")
-            lines.append(rf"\newcommand{{\Theory{stem}Prose}}{{}}")
+    lines.extend(_theory_macro_lines(data))
     subgroup = data["subgroup"]
     lines.append(rf"\newcommand{{\SubgroupNStudies}}{{{subgroup['n_primary_studies']}}}")
     lines.append(rf"\newcommand{{\SubgroupNModels}}{{{subgroup['n_evidence_models']}}}")
@@ -801,6 +871,16 @@ def render_result_macros(payload: Mapping[str, Any] | None = None) -> str:
     return "\n".join(lines)
 
 
+def _loo_contribution_phrase(item: Mapping[str, Any], effect_label: str) -> str:
+    """Describe the omitted study's share of an effect's evidence models, e.g. '11 of 41 accuracy evidence models'."""
+    n_omitted = int(item["omitted_study_n_models"])
+    n_total = int(item["n_evidence_models"])
+    noun = "evidence model" if n_omitted == 1 else "evidence models"
+    largest = int(item["max_study_n_models"]) == n_omitted
+    prefix = "the largest contributor, with " if largest else ""
+    return f"{prefix}{n_omitted} of {n_total} {effect_label} {noun}"
+
+
 def render_loo_prose(payload: Mapping[str, Any] | None = None) -> str:
     data = payload if payload is not None else load_validated_synthesis()
     loo = data["leave_one_study_out"]
@@ -808,6 +888,24 @@ def render_loo_prose(payload: Mapping[str, Any] | None = None) -> str:
     storage = loo["effects"]["Storage Size"]["omissions"][0]
     latency = loo["effects"]["Inference Latency"]["omissions"][0]
     accuracy = loo["effects"]["Accuracy"]["omissions"][0]
+    accuracy_mass_preserving = data["mass_preserving_sensitivity"]["effects"]["Accuracy"]["belief_percent"]
+    accuracy_is_largest = int(accuracy["omitted_study_n_models"]) == int(accuracy["max_study_n_models"])
+    if accuracy_is_largest and int(accuracy["omitted_study_n_models"]) > 1:
+        accuracy_reading = (
+            rf"Accuracy's largest drop (${float(accuracy['full_belief']):.2f}$ to "
+            rf"${float(accuracy['loo_belief']):.2f}$) arises from omitting {accuracy['omitted_study_id']} "
+            rf"({_loo_contribution_phrase(accuracy, 'accuracy')}). Part of accuracy's pooled belief therefore "
+            rf"reflects configuration multiplicity within a single study, consistent with its decrease to "
+            rf"{accuracy_mass_preserving}\% under the mass-preserving split "
+            rf"(Table~\ref{{tab:sensitivity-mass-preserving}})."
+        )
+    else:
+        accuracy_reading = (
+            rf"Accuracy's largest drop (${float(accuracy['full_belief']):.2f}$ to "
+            rf"${float(accuracy['loo_belief']):.2f}$) arises from omitting {accuracy['omitted_study_id']} "
+            rf"({_loo_contribution_phrase(accuracy, 'accuracy')}), so it is not driven by the study with the "
+            rf"most accuracy configurations."
+        )
     extra = ""
     if all_report:
         clauses = []
@@ -819,13 +917,13 @@ def render_loo_prose(payload: Mapping[str, Any] | None = None) -> str:
     return (
         rf"Table~\ref{{tab:leave-one-study-out}} recomputes the main discounted pooling under the following "
         rf"rule. {LEAVE_ONE_OUT_RULE} Intensities marked with \textsuperscript{{*}} change under that "
-        rf"omission. Storage size is unchanged when the largest contributing study "
-        rf"({storage['omitted_study_id']}, 17 evidence models) is removed, whereas inference latency drops "
-        rf"from belief ${float(latency['full_belief']):.2f}$ to ${float(latency['loo_belief']):.2f}$ under "
-        rf"the same omission while retaining intensity "
-        rf"{_latex_intensity(format_intensity(frozenset(latency['full_intensity'])))}. Accuracy's largest "
-        rf"drop arises from omitting {accuracy['omitted_study_id']} (one evidence model), illustrating that "
-        rf"high belief is not explained solely by configuration multiplicity.{extra}"
+        rf"omission; parentheses after the omitted study give its evidence models for that effect. "
+        rf"Storage size is unchanged when {storage['omitted_study_id']} "
+        rf"({_loo_contribution_phrase(storage, 'storage-size')}) is removed, whereas inference latency drops "
+        rf"from belief ${float(latency['full_belief']):.2f}$ to ${float(latency['loo_belief']):.2f}$ when "
+        rf"{latency['omitted_study_id']} ({_loo_contribution_phrase(latency, 'latency')}) is omitted, while "
+        rf"retaining intensity {_latex_intensity(format_intensity(frozenset(latency['full_intensity'])))}. "
+        rf"{accuracy_reading}{extra}"
         "\n"
     )
 
@@ -886,7 +984,7 @@ def write_validated_tables(
     written = [
         write_belief_assignment_table(manuscript_comparison_records(), output_dir=directory),
         write_leave_one_study_out_table(output_dir=directory),
-        write_sensitivity_mass_preserving_table(output_dir=directory),
+        write_sensitivity_mass_preserving_table(output_dir=directory, theory_effects=_theory_effect_names(data)),
     ]
     fragments = {
         AGGREGATED_EFFECTS_TABLE_FILENAME: render_aggregated_effects_table(data),
