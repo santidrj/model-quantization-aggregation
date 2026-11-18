@@ -11,6 +11,7 @@ from typing import Any
 
 import polars as pl
 
+from src.accuracy_breakdown import accuracy_breakdown
 from src.belief_assignment import (
     PUBLISHED_TABLE,
     THEORY_INCLUSION_RULE,
@@ -52,7 +53,7 @@ from src.intensity_threshold_sensitivity import write_intensity_threshold_sensit
 
 VALIDATED_SYNTHESIS_FILENAME = "validated-synthesis.json"
 VALIDATED_SYNTHESIS_PATH = PROCESSED_DATA_DIR / VALIDATED_SYNTHESIS_FILENAME
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 MAIN_SELECTION_POLICY = HypothesisSelectionPolicy.EVIDENCE_FACTORY_COMPAT
 MAIN_ASSIGNMENT = MassAssignment.PUBLISHED_ANALOGUE
 SUBGROUP_BASELINE = "full-fp32"
@@ -69,7 +70,9 @@ SLIGHTLY_REINFORCED_MAX_PERCENT = 5
 ZERO_CONFLICT = 1e-12
 SCIENTIFIC_CONFLICT = 0.01
 CONFLICT_ABS = 1e-9
+BELIEF_ABS = 1e-9
 AGGREGATED_EFFECTS_TABLE_FILENAME = "aggregated-effects.tex"
+ACCURACY_BREAKDOWN_TABLE_FILENAME = "accuracy-breakdown.tex"
 SUBGROUP_TABLE_FILENAME = "subgroup-ptq-w-int8-a-int8.tex"
 RESULT_MACROS_FILENAME = "result-macros.tex"
 INTENSITY_THRESHOLDS_TABLE_FILENAME = "intensity-thresholds.tex"
@@ -498,6 +501,11 @@ def build_validated_synthesis(models: list[EvidenceModel] | None = None) -> dict
             mass_preserving,
             loo_rows,
         ),
+        "accuracy_breakdown": accuracy_breakdown(
+            loaded,
+            assignment=MAIN_ASSIGNMENT,
+            selection_policy=MAIN_SELECTION_POLICY,
+        ),
         "subgroup": {
             "baseline_precision_configuration": SUBGROUP_BASELINE,
             "quantization_method": SUBGROUP_METHOD,
@@ -588,6 +596,25 @@ def validate_synthesis(payload: Mapping[str, Any], models: list[EvidenceModel] |
     for effect, record in theory_records.items():
         if bool(stored_theory[effect]["included"]) != record.included:
             failures.append(f"{effect}: theory inclusion mismatch")
+
+    expected_breakdown = accuracy_breakdown(
+        loaded,
+        assignment=MAIN_ASSIGNMENT,
+        selection_policy=MAIN_SELECTION_POLICY,
+    )
+    stored_breakdown = payload["accuracy_breakdown"]
+    if stored_breakdown["n_evidence_models"] != payload["effects"]["Accuracy"]["n_evidence_models"]:
+        failures.append("accuracy breakdown: evidence-model count differs from the aggregated accuracy row")
+    if stored_breakdown["selected_intensity"] != payload["effects"]["Accuracy"]["intensity"]:
+        failures.append("accuracy breakdown: selected intensity differs from the aggregated accuracy row")
+    if (
+        abs(float(stored_breakdown["belief_indifferent"]) - float(payload["effects"]["Accuracy"]["belief"]))
+        > BELIEF_ABS
+    ):
+        failures.append("accuracy breakdown: Bel({I}) differs from the aggregated accuracy belief")
+    for key in ("n_indifferent_only", "n_strictly_negative", "n_negative_mean", "n_strong_loss"):
+        if stored_breakdown[key] != expected_breakdown[key]:
+            failures.append(f"accuracy breakdown: {key} mismatch")
 
     counts = payload["counts"]
     increased = [name for name, row in payload["effects"].items() if int(row["delta_percent"]) > 0]
@@ -741,6 +768,85 @@ def render_aggregated_effects_table(payload: Mapping[str, Any] | None = None) ->
     return "\n".join(lines)
 
 
+def _accuracy_breakdown_macro_lines(data: Mapping[str, Any]) -> list[str]:
+    """Counts and combined beliefs that explain the pooled accuracy intensity."""
+    acc = data["accuracy_breakdown"]
+    counts = {
+        "NModels": acc["n_evidence_models"],
+        "NIndifferent": acc["n_indifferent_only"],
+        "NIncludingIndifferent": acc["n_including_indifferent"],
+        "NStrictlyNegative": acc["n_strictly_negative"],
+        "NPositive": acc["n_positive_intensity"],
+        "NNegativeMean": acc["n_negative_mean"],
+        "NModerateLoss": acc["n_moderate_loss"],
+        "NStrongLoss": acc["n_strong_loss"],
+        "NSteps": acc["n_combination_steps"],
+    }
+    lines = [rf"\newcommand{{\AccuracyEM{name}}}{{{value}}}" for name, value in counts.items()]
+    lines.extend(
+        [
+            rf"\newcommand{{\AccuracyEMStrongLossStudies}}{{{', '.join(acc['strong_loss_study_ids'])}}}",
+            rf"\newcommand{{\AccuracyEMMedianRI}}{{${float(acc['median_mean_ri']):.1f}\%$}}",
+            rf"\newcommand{{\AccuracyEMMinRI}}{{${float(acc['min_mean_ri']):.1f}\%$}}",
+            rf"\newcommand{{\AccuracyBelI}}{{{float(acc['belief_indifferent']):.2f}}}",
+            rf"\newcommand{{\AccuracyBelWN}}{{{float(acc['belief_weakly_negative']):.2f}}}",
+            rf"\newcommand{{\AccuracyBelWNI}}{{{float(acc['belief_weakly_negative_or_indifferent']):.3f}}}",
+            rf"\newcommand{{\AccuracyBelBelowWN}}{{{float(acc['belief_below_weakly_negative']):.3f}}}",
+            rf"\newcommand{{\AccuracyMaxConflict}}{{{float(acc['max_pairwise_conflict']):.2f}}}",
+            rf"\newcommand{{\AccuracyLastConflict}}{{{float(acc['last_pairwise_conflict']):.2f}}}",
+        ]
+    )
+    return lines
+
+
+def _format_ri_range(low: float, high: float) -> str:
+    if round(low, 1) == round(high, 1):
+        return f"${low:.1f}$"
+    return f"${low:.1f}$ to ${high:.1f}$"
+
+
+def render_accuracy_breakdown_table(payload: Mapping[str, Any] | None = None) -> str:
+    """Accuracy evidence models grouped by assigned intensity, with combined D--S masses."""
+    data = payload if payload is not None else load_validated_synthesis()
+    acc = data["accuracy_breakdown"]
+    lines = [
+        r"\begin{tabular}{@{}lcl>{\centering\arraybackslash}p{2.6cm}c@{}}",
+        r"\toprule",
+        (
+            r"\textbf{Assigned intensity} & \textbf{Models} & \textbf{Studies} & "
+            r"\textbf{Mean RI (\%)} & \textbf{Combined mass} \\"
+        ),
+        r"\midrule",
+    ]
+    for row in acc["rows"]:
+        lines.append(
+            " & ".join(
+                [
+                    _latex_intensity(row["intensity_label"]),
+                    str(row["n_evidence_models"]),
+                    ", ".join(row["study_ids"]),
+                    _format_ri_range(float(row["min_mean_ri"]), float(row["max_mean_ri"])),
+                    f"{float(row['combined_mass']):.3f}",
+                ]
+            )
+            + r" \\"
+        )
+    lines.extend(
+        [
+            r"\midrule",
+            (
+                rf"Total & {acc['n_evidence_models']} & {acc['n_primary_studies']} studies & "
+                rf"median ${float(acc['median_mean_ri']):.1f}$ & "
+                rf"Bel(\{{WN, I\}}) $= {float(acc['belief_weakly_negative_or_indifferent']):.3f}$ \\"
+            ),
+            r"\bottomrule",
+            r"\end{tabular}",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
 def render_subgroup_table(payload: Mapping[str, Any] | None = None) -> str:
     data = payload if payload is not None else load_validated_synthesis()
     effects = data["subgroup"]["effects"]
@@ -847,6 +953,7 @@ def render_result_macros(payload: Mapping[str, Any] | None = None) -> str:
         rf"\newcommand{{\MassPresLatencyIntensity}}{{{_latex_intensity(mass['Inference Latency']['intensity_label'])}}}"
     )
     lines.extend(_theory_macro_lines(data))
+    lines.extend(_accuracy_breakdown_macro_lines(data))
     subgroup = data["subgroup"]
     lines.append(rf"\newcommand{{\SubgroupNStudies}}{{{subgroup['n_primary_studies']}}}")
     lines.append(rf"\newcommand{{\SubgroupNModels}}{{{subgroup['n_evidence_models']}}}")
@@ -991,6 +1098,7 @@ def write_validated_tables(
         SUBGROUP_TABLE_FILENAME: render_subgroup_table(data),
         RESULT_MACROS_FILENAME: render_result_macros(data),
         PROSE_LOO_FILENAME: render_loo_prose(data),
+        ACCURACY_BREAKDOWN_TABLE_FILENAME: render_accuracy_breakdown_table(data),
         PROSE_SUBGROUP_INTRO_FILENAME: render_subgroup_intro(data),
         PROSE_SUBGROUP_NOTE_FILENAME: render_subgroup_note(data),
         PROSE_SUBGROUP_LATENCY_FILENAME: render_subgroup_latency_prose(data),
