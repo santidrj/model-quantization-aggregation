@@ -352,7 +352,7 @@ def test_render_sensitivity_mass_preserving_table_pairs_main_and_mass_preserving
     assert r"\multicolumn{2}{c}{Main}" in latex
     assert r"\multicolumn{2}{c}{Mass-preserving}" in latex
     accuracy_line = next(line for line in latex.splitlines() if line.startswith("Accuracy &"))
-    assert accuracy_line.startswith("Accuracy & I & 91\\% & I & 83\\%")
+    assert accuracy_line.startswith("Accuracy & I & \\textbf{91\\%} & I & 83\\%")
 
 
 def test_write_sensitivity_mass_preserving_table_writes_fragment(tmp_path):
@@ -465,3 +465,27 @@ def test_write_belief_assignment_table_writes_fragment(tmp_path):
     assert "0.50" in text
     assert "0.40" in text
     assert "0.38" in text
+
+
+def test_leave_one_study_out_reports_omitted_study_model_counts():
+    records = {row.effect: row for row in leave_one_study_out_records()}
+    accuracy = records["Accuracy"]
+    assert accuracy.omitted_study_n_models == 11  # noqa: PLR2004
+    assert accuracy.max_study_n_models == accuracy.omitted_study_n_models
+    assert records["Storage Size"].omitted_study_n_models == 17  # noqa: PLR2004
+    assert records["GPU Utilization"].omitted_study_n_models == 2  # noqa: PLR2004
+
+
+def test_render_leave_one_study_out_table_lists_omitted_model_counts():
+    latex = render_leave_one_study_out_table()
+    assert "Omitted study (models)" in latex
+    assert "Accuracy & 10 & 41 & I & 0.91 & S4 (11) & I & 0.78" in latex
+
+
+def test_sensitivity_table_bolds_main_belief_only_for_theory_effects():
+    latex = render_sensitivity_mass_preserving_table(
+        theory_effects=frozenset({"Accuracy", "Storage Size"}),
+    )
+    assert r"Accuracy & I & \textbf{91\%} & I & 83\%" in latex
+    assert r"GPU utilization & \{I, WP\} & 97\% & I & 74\%" in latex
+    assert "m{1.2cm}}" in latex

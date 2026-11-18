@@ -9,6 +9,7 @@ from pathlib import Path
 import polars as pl
 
 from src.data.selection.screening_metrics import jeffreys_interval, proportion
+from src.data.selection.snowballing import SNOWBALLING_LOG_NAME, snowballing_candidate_counts
 from src.data.selection.title_key import canonical_title_key
 
 FULLTEXT_RELEVANCE = frozenset({1, -1})
@@ -264,4 +265,5 @@ def build_frozen_selection_artifacts(
         negative_audit_false_negatives=NEGATIVE_AUDIT_FALSE_NEGATIVES,
         negative_audit_trials=NEGATIVE_AUDIT_TRIALS,
     )
+    summary.update(snowballing_candidate_counts(interim_dir / SNOWBALLING_LOG_NAME))
     return manifest, summary

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 5,
   "selection_policy": "evidence_factory_compat",
   "assignment": "published_analogue",
   "corpus": {
@@ -1420,6 +1420,9 @@
         "omissions": [
           {
             "omitted_study_id": "S4",
+            "omitted_study_n_models": 11,
+            "max_study_n_models": 11,
+            "n_evidence_models": 41,
             "full_intensity": [
               "I"
             ],
@@ -1438,6 +1441,9 @@
         "omissions": [
           {
             "omitted_study_id": "S12",
+            "omitted_study_n_models": 1,
+            "max_study_n_models": 8,
+            "n_evidence_models": 9,
             "full_intensity": [
               "I"
             ],
@@ -1456,6 +1462,9 @@
         "omissions": [
           {
             "omitted_study_id": "S3",
+            "omitted_study_n_models": 2,
+            "max_study_n_models": 2,
+            "n_evidence_models": 4,
             "full_intensity": [
               "I"
             ],
@@ -1474,6 +1483,9 @@
         "omissions": [
           {
             "omitted_study_id": "S6",
+            "omitted_study_n_models": 17,
+            "max_study_n_models": 17,
+            "n_evidence_models": 62,
             "full_intensity": [
               "SP"
             ],
@@ -1492,6 +1504,9 @@
         "omissions": [
           {
             "omitted_study_id": "S14",
+            "omitted_study_n_models": 2,
+            "max_study_n_models": 2,
+            "n_evidence_models": 3,
             "full_intensity": [
               "I",
               "WP"
@@ -1511,6 +1526,9 @@
         "omissions": [
           {
             "omitted_study_id": "S14",
+            "omitted_study_n_models": 2,
+            "max_study_n_models": 2,
+            "n_evidence_models": 5,
             "full_intensity": [
               "I",
               "WP"
@@ -1531,6 +1549,9 @@
         "omissions": [
           {
             "omitted_study_id": "S3",
+            "omitted_study_n_models": 2,
+            "max_study_n_models": 2,
+            "n_evidence_models": 5,
             "full_intensity": [
               "SP"
             ],
@@ -1545,6 +1566,9 @@
           },
           {
             "omitted_study_id": "S13",
+            "omitted_study_n_models": 1,
+            "max_study_n_models": 2,
+            "n_evidence_models": 5,
             "full_intensity": [
               "SP"
             ],
@@ -1559,6 +1583,9 @@
           },
           {
             "omitted_study_id": "S14",
+            "omitted_study_n_models": 2,
+            "max_study_n_models": 2,
+            "n_evidence_models": 5,
             "full_intensity": [
               "SP"
             ],
@@ -1577,6 +1604,9 @@
         "omissions": [
           {
             "omitted_study_id": "S18",
+            "omitted_study_n_models": 1,
+            "max_study_n_models": 2,
+            "n_evidence_models": 3,
             "full_intensity": [
               "SP"
             ],
@@ -1595,6 +1625,9 @@
         "omissions": [
           {
             "omitted_study_id": "S13",
+            "omitted_study_n_models": 1,
+            "max_study_n_models": 8,
+            "n_evidence_models": 10,
             "full_intensity": [
               "WP"
             ],
@@ -1613,6 +1646,9 @@
         "omissions": [
           {
             "omitted_study_id": "S16",
+            "omitted_study_n_models": 8,
+            "max_study_n_models": 8,
+            "n_evidence_models": 27,
             "full_intensity": [
               "SP"
             ],
@@ -1631,6 +1667,9 @@
         "omissions": [
           {
             "omitted_study_id": "S6",
+            "omitted_study_n_models": 17,
+            "max_study_n_models": 17,
+            "n_evidence_models": 51,
             "full_intensity": [
               "P",
               "SP"
@@ -1647,6 +1686,224 @@
         ]
       }
     }
+  },
+  "theory": {
+    "rule": "An effect enters the theory when its primary aggregated belief exceeds 80% and it retains at least 80% belief under at least one dependence check: the mass-preserving belief split or the largest-drop leave-one-study-out omission.",
+    "effects": {
+      "Accuracy": {
+        "included": true,
+        "primary_belief_percent": 91,
+        "mass_preserving_belief_percent": 83,
+        "loo_belief_percent": 78,
+        "passes_primary": true,
+        "passes_dependence": true
+      },
+      "F1 Score": {
+        "included": false,
+        "primary_belief_percent": 72,
+        "mass_preserving_belief_percent": 74,
+        "loo_belief_percent": 42,
+        "passes_primary": false,
+        "passes_dependence": false
+      },
+      "mAP": {
+        "included": false,
+        "primary_belief_percent": 45,
+        "mass_preserving_belief_percent": 45,
+        "loo_belief_percent": 30,
+        "passes_primary": false,
+        "passes_dependence": false
+      },
+      "Storage Size": {
+        "included": true,
+        "primary_belief_percent": 100,
+        "mass_preserving_belief_percent": 100,
+        "loo_belief_percent": 100,
+        "passes_primary": true,
+        "passes_dependence": true
+      },
+      "GPU Utilization": {
+        "included": false,
+        "primary_belief_percent": 97,
+        "mass_preserving_belief_percent": 74,
+        "loo_belief_percent": 67,
+        "passes_primary": true,
+        "passes_dependence": false
+      },
+      "GPU Power Draw": {
+        "included": true,
+        "primary_belief_percent": 98,
+        "mass_preserving_belief_percent": 96,
+        "loo_belief_percent": 86,
+        "passes_primary": true,
+        "passes_dependence": true
+      },
+      "GPU Energy Consumption": {
+        "included": false,
+        "primary_belief_percent": 74,
+        "mass_preserving_belief_percent": 85,
+        "loo_belief_percent": 91,
+        "passes_primary": false,
+        "passes_dependence": true
+      },
+      "RAM Usage": {
+        "included": false,
+        "primary_belief_percent": 47,
+        "mass_preserving_belief_percent": 41,
+        "loo_belief_percent": 35,
+        "passes_primary": false,
+        "passes_dependence": false
+      },
+      "Inference Power Draw": {
+        "included": false,
+        "primary_belief_percent": 74,
+        "mass_preserving_belief_percent": 78,
+        "loo_belief_percent": 65,
+        "passes_primary": false,
+        "passes_dependence": false
+      },
+      "Inference Energy Consumption": {
+        "included": true,
+        "primary_belief_percent": 100,
+        "mass_preserving_belief_percent": 99,
+        "loo_belief_percent": 89,
+        "passes_primary": true,
+        "passes_dependence": true
+      },
+      "Inference Latency": {
+        "included": true,
+        "primary_belief_percent": 100,
+        "mass_preserving_belief_percent": 92,
+        "loo_belief_percent": 75,
+        "passes_primary": true,
+        "passes_dependence": true
+      }
+    }
+  },
+  "accuracy_breakdown": {
+    "effect": "Accuracy",
+    "n_evidence_models": 41,
+    "n_primary_studies": 10,
+    "rows": [
+      {
+        "intensity": [
+          "SN"
+        ],
+        "intensity_label": "SN",
+        "n_evidence_models": 5,
+        "study_ids": [
+          "S4"
+        ],
+        "min_mean_ri": -91.16800689697266,
+        "max_mean_ri": -89.27203369140625,
+        "combined_mass": 0.0006521825974807575
+      },
+      {
+        "intensity": [
+          "N"
+        ],
+        "intensity_label": "N",
+        "n_evidence_models": 1,
+        "study_ids": [
+          "S16"
+        ],
+        "min_mean_ri": -16.6622576713562,
+        "max_mean_ri": -16.6622576713562,
+        "combined_mass": 0.0006917991925817583
+      },
+      {
+        "intensity": [
+          "N",
+          "WN"
+        ],
+        "intensity_label": "{N, WN}",
+        "n_evidence_models": 2,
+        "study_ids": [
+          "S13",
+          "S16"
+        ],
+        "min_mean_ri": -13.792052068803372,
+        "max_mean_ri": -11.215167999267578,
+        "combined_mass": 0.001026988345488066
+      },
+      {
+        "intensity": [
+          "WN"
+        ],
+        "intensity_label": "WN",
+        "n_evidence_models": 9,
+        "study_ids": [
+          "S2",
+          "S9",
+          "S11",
+          "S16"
+        ],
+        "min_mean_ri": -9.347225666046143,
+        "max_mean_ri": -6.546811835664565,
+        "combined_mass": 0.08665999219956273
+      },
+      {
+        "intensity": [
+          "WN",
+          "I"
+        ],
+        "intensity_label": "{WN, I}",
+        "n_evidence_models": 8,
+        "study_ids": [
+          "S2",
+          "S4",
+          "S7",
+          "S9",
+          "S11",
+          "S16"
+        ],
+        "min_mean_ri": -4.809622764587402,
+        "max_mean_ri": -2.0393402818138475,
+        "combined_mass": 0.0031272685575955417
+      },
+      {
+        "intensity": [
+          "I"
+        ],
+        "intensity_label": "I",
+        "n_evidence_models": 16,
+        "study_ids": [
+          "S2",
+          "S4",
+          "S8",
+          "S9",
+          "S10",
+          "S11",
+          "S14",
+          "S16"
+        ],
+        "min_mean_ri": -1.3832384052075013,
+        "max_mean_ri": 1.4041987260575715,
+        "combined_mass": 0.9074893015777279
+      }
+    ],
+    "n_indifferent_only": 16,
+    "n_including_indifferent": 24,
+    "n_strictly_negative": 17,
+    "n_positive_intensity": 0,
+    "n_negative_mean": 34,
+    "n_moderate_loss": 17,
+    "n_strong_loss": 5,
+    "strong_loss_study_ids": [
+      "S4"
+    ],
+    "median_mean_ri": -3.360703468322754,
+    "min_mean_ri": -91.16800689697266,
+    "selected_intensity": [
+      "I"
+    ],
+    "belief_indifferent": 0.9074893015777279,
+    "belief_weakly_negative": 0.08665999219956273,
+    "belief_weakly_negative_or_indifferent": 0.9972765623348862,
+    "belief_below_weakly_negative": 0.0023709701355505847,
+    "max_pairwise_conflict": 0.5553380179120285,
+    "last_pairwise_conflict": 0.18884597898784045,
+    "n_combination_steps": 40
   },
   "subgroup": {
     "baseline_precision_configuration": "full-fp32",
